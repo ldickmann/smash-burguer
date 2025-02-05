@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import BookingsPage from '../views/BookingsPage.vue'
+import MenuPage from '../views/MenuPage.vue'
+import CartPage from '../views/CartPage.vue'
 import PaymentPage from '../views/PaymentPage.vue'
 import ConfirmationPage from '../views/ConfirmationPage.vue'
 
@@ -13,9 +14,14 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/bookings',
-      name: 'bookings',
-      component: BookingsPage,
+      path: '/menu',
+      name: 'menu',
+      component: MenuPage,
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartPage,
     },
     {
       path: '/payment',
