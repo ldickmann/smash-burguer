@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Reserva Confirmada!</h1>
-    <router-link to="/">Voltar para a Página Inicial</router-link>
+    <h1>Pedido Confirmado! 🎉</h1>
+    <p>Obrigado por comprar conosco! Seu pedido está sendo preparado.</p>
+    <router-link to="/">Voltar ao Início</router-link>
   </div>
 </template>
