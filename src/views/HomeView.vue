@@ -1,6 +1,23 @@
+<template>
+  <Header />
+  <div class="container">
+    <h1>🍔 Nossos Hambúrgueres</h1>
+    <div class="burger-list">
+      <div v-for="burger in burgers" :key="burger.id" class="burger-card">
+        <img :src="burger.image" :alt="burger.name" />
+        <h2>{{ burger.name }}</h2>
+        <p>{{ burger.description }}</p>
+        <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
+        <button @click="addToCart(burger)">Adicionar ao Carrinho</button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue'
 import { useCartStore } from '@/store/cart'
+import Header from '@/components/Header.vue'
 
 const cartStore = useCartStore()
 
@@ -33,21 +50,6 @@ const addToCart = (burger) => {
   alert(`${burger.name} foi adicionado ao carrinho!`)
 }
 </script>
-
-<template>
-  <div class="container">
-    <h1>🍔 Nossos Hambúrgueres</h1>
-    <div class="burger-list">
-      <div v-for="burger in burgers" :key="burger.id" class="burger-card">
-        <img :src="burger.image" :alt="burger.name" />
-        <h2>{{ burger.name }}</h2>
-        <p>{{ burger.description }}</p>
-        <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
-        <button @click="addToCart(burger)">Adicionar ao Carrinho</button>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .container {
