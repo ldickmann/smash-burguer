@@ -1,0 +1,24 @@
+@use '../../assets/styles/variables.scss' as *;
+
+header {
+  background-color: $primary-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+h1 {
+  margin: 0;
+  color: $secondary-color;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  color: $secondary-color;
+  text-decoration: none;
+}

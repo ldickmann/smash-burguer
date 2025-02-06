@@ -1,5 +1,6 @@
 <template>
-  <Header />
+  <Header title="Smash Burgers" />
+  <Banner classBanner="banner" image="/images/banner-burguer.jpg" alt="Hambúrgueres" />
   <div class="container">
     <h1>🍔 Nossos Hambúrgueres</h1>
     <div class="burger-list">
@@ -18,6 +19,7 @@
 import { ref } from 'vue'
 import { useCartStore } from '@/store/cart'
 import Header from '@/components/Header.vue'
+import Banner from '@/components/Banner.vue'
 
 const cartStore = useCartStore()
 
@@ -51,50 +53,6 @@ const addToCart = (burger) => {
 }
 </script>
 
-<style scoped>
-.container {
-  text-align: center;
-  padding: 20px;
-}
-
-.burger-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.burger-card {
-  width: 300px;
-  padding: 15px;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.burger-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.price {
-  font-weight: bold;
-  color: #ff6600;
-}
-
-button {
-  background: #ff6600;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #e55b00;
-}
+<style scoped lang="scss">
+@use "@/assets/pages/homeView.scss";
 </style>
