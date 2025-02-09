@@ -7,18 +7,18 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import { computed } from 'vue'
-import { useCartStore } from '../store/cart'
+import { useRouter } from "vue-router";
+import { computed } from "vue";
+import { useCartStore } from "../store/cart";
 
-const router = useRouter()
-const cartStore = useCartStore()
+const router = useRouter();
+const cartStore = useCartStore();
 
-const total = computed(() => cartStore.items.reduce((sum, item) => sum + item.price, 0))
+const total = computed(() => cartStore.items.reduce((sum, item) => sum + item.price, 0));
 
 const confirmPayment = () => {
-  alert('Pagamento aprovado!')
-  cartStore.clearCart()
-  router.push('/confirmation')
-}
+  alert("Pagamento aprovado!");
+  cartStore.clearCart();
+  router.push("/confirmation");
+};
 </script>

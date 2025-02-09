@@ -9,9 +9,9 @@ const props = defineProps({
   classBanner: String,
   image: String,
   alt: String,
-})
+});
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/components/bannerStyles.scss";
+@use "@/assets/styles/components/banner";
 </style>

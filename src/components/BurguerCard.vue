@@ -8,13 +8,11 @@
 </template>
 
 <script setup>
-defineProps(['burger'])
+const props = defineProps({
+  burger: Object,
+});
 </script>
 
-<style scoped>
-.burger-card {
-  border: 1px solid #ccc;
-  padding: 15px;
-  text-align: center;
-}
+<style scoped lang="scss">
+@use "@/assets/styles/components/burger-card";
 </style>
