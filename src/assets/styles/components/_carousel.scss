@@ -2,6 +2,7 @@
 
 .custom-carousel {
   padding: 0;
+  margin: 2rem 15rem;
 }
 
 :deep(.carousel__slide) {
@@ -36,10 +37,11 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  text-align: center;
 
   h3 {
     margin: 0;
-    color: $text-color;
+    color: $primary-color;
     font-size: 1.2rem;
   }
 }
@@ -59,6 +61,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s;
+  margin-top: auto;
 
   &:hover {
     background: $quaternary-color;

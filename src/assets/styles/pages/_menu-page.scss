@@ -1,0 +1,29 @@
+@use '../base/variables' as *;
+
+.menu-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  h1 {
+    color: $primary-color;
+  }
+
+  .menu {
+    display: flex;
+    gap: 20px;
+  }
+
+  .button-cart {
+    background-color: $primary-color;
+    color: $secondary-color;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
+}
