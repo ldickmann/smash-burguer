@@ -13,6 +13,8 @@
       </div>
     </div>
   </div>
+
+  <Carousel classCarousel="carousel" classSlide="slide" />
 </template>
 
 <script setup>
@@ -20,6 +22,7 @@ import { ref } from 'vue'
 import { useCartStore } from '@/store/cart'
 import Header from '@/components/Header.vue'
 import Banner from '@/components/Banner.vue'
+import Carousel from '@/components/Carousel.vue'
 
 const cartStore = useCartStore()
 
