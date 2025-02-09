@@ -1,42 +1,30 @@
 <template>
-  <TheHeader title="Smash Burgers" />
   <BannerImage
     classBanner="banner"
     image="/images/banner-burguer.jpg"
     alt="Hambúrgueres"
   />
-  <section class="section-card">
+  <section class="section-carousel">
     <h1>🍔 Nossos Hambúrgueres</h1>
-    <div class="container">
-      <CarouselBurguer :burgers="burgers" />
+    <div class="container-carousel">
+      <CarouselBurguer :burgers="burgers" @add-to-cart="addToCart" />
     </div>
   </section>
-  <div class="container-card">
-    <BurguerCard
-      v-for="burger in burgers"
-      :key="burger.id"
-      :burger="burger"
-      @add-to-cart="addToCart"
-    />
-  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useCartStore } from "@/store/cart";
-import TheHeader from "@/components/layout/TheHeader.vue";
 import BannerImage from "@/components/BannerImage.vue";
 import CarouselBurguer from "@/components/CarouselBurguer.vue";
-import BurguerCard from "@/components/BurguerCard.vue";
 
 const cartStore = useCartStore();
 
-const burgers = ref([
+const burgers = [
   {
     id: 1,
     name: "Cheese Bacon",
     description: "Pão brioche, carne angus, cheddar e bacon crocante.",
-    price: 25.9,
+    price: 25.99,
     image: "/images/foods/cheese-bacon.jpg",
   },
   {
@@ -53,7 +41,21 @@ const burgers = ref([
     price: 24.9,
     image: "/images/foods/veggie-burger.jpg",
   },
-]);
+  {
+    id: 4,
+    name: "Batata Frita",
+    description: "Batata frita crocante e sequinha.",
+    price: 12.9,
+    image: "/images/foods/batata-frita.jpg",
+  },
+  {
+    id: 5,
+    name: "X-Salada",
+    description: "Pão brioche, pepino, tomate, alface, carne angus e queijo prato.",
+    price: 20.9,
+    image: "/images/foods/x-salada.jpg",
+  },
+];
 
 const addToCart = (burger) => {
   cartStore.addItem(burger);
