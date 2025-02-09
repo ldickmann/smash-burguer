@@ -1,6 +1,7 @@
 <template>
   <div :class="classBanner">
     <img :src="image" :alt="alt" />
+    <slot></slot>
   </div>
 </template>
 

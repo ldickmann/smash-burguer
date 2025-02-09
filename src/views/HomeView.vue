@@ -1,10 +1,21 @@
 <template>
   <BannerImage
     classBanner="banner"
-    image="/images/banner-burguer.jpg"
+    image="/images/delicious-burger-banner.jpg"
     alt="Hambúrgueres"
-  />
-  <section class="section-carousel">
+  >
+    <section class="section-welcome">
+      <div class="container-welcome">
+        <h2>Bem-vindo ao Smash Burger</h2>
+        <p>Descubra o verdadeiro sabor dos Hambúrgueres artesanais</p>
+        <div class="container-buttons">
+          <router-link to="/menu" class="cta-button primary">Ver Cardápio</router-link>
+          <a href="#carousel" class="cta-button secondary">Destaques</a>
+        </div>
+      </div>
+    </section>
+  </BannerImage>
+  <section id="#carousel" class="section-carousel">
     <h1>🍔 Nossos Hambúrgueres</h1>
     <div class="container-carousel">
       <CarouselBurguer :burgers="burgers" @add-to-cart="addToCart" />
