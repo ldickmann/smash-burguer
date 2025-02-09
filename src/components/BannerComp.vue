@@ -1,0 +1,17 @@
+<template>
+  <div :class="classBanner">
+    <img :src="image" :alt="alt" />
+  </div>
+</template>
+
+<script setup>
+const props = defineProps({
+  classBanner: String,
+  image: String,
+  alt: String,
+})
+</script>
+
+<style scoped lang="scss">
+@use "@/assets/components/bannerStyles.scss";
+</style>

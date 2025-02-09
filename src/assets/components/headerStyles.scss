@@ -1,0 +1,27 @@
+@use '../../assets/styles/variables.scss' as *;
+
+header {
+  background-color: $primary-color;
+  opacity: 0.8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  position: fixed;
+  width: 100%;
+}
+
+h1 {
+  margin: 0;
+  color: $secondary-color;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  color: $secondary-color;
+  text-decoration: none;
+}

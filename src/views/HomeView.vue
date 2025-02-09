@@ -1,6 +1,6 @@
 <template>
-  <Header title="Smash Burgers" />
-  <Banner classBanner="banner" image="/images/banner-burguer.jpg" alt="Hambúrgueres" />
+  <HeaderComponent title="Smash Burgers" />
+  <BannerComp classBanner="banner" image="/images/banner-burguer.jpg" alt="Hambúrgueres" />
   <div class="container">
     <h1>🍔 Nossos Hambúrgueres</h1>
     <div class="burger-list">
@@ -13,16 +13,22 @@
       </div>
     </div>
   </div>
-
-  <Carousel classCarousel="carousel" classSlide="slide" />
+  <div class="container">
+    <CarouselComp />
+  </div>
+  <div class="container">
+    <h1>🍟 Nossas Batatas</h1>
+    <div class="burger-list">
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useCartStore } from '@/store/cart'
-import Header from '@/components/Header.vue'
-import Banner from '@/components/Banner.vue'
-import Carousel from '@/components/Carousel.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
+import BannerComp from '@/components/BannerComp.vue'
+import CarouselComp from '@/components/CarouselComp.vue'
 
 const cartStore = useCartStore()
 
