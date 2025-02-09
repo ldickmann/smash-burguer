@@ -1,67 +1,66 @@
 <template>
-  <HeaderComponent title="Smash Burgers" />
-  <BannerComp classBanner="banner" image="/images/banner-burguer.jpg" alt="Hambúrgueres" />
-  <div class="container">
+  <TheHeader title="Smash Burgers" />
+  <BannerImage
+    classBanner="banner"
+    image="/images/banner-burguer.jpg"
+    alt="Hambúrgueres"
+  />
+  <section class="section-card">
     <h1>🍔 Nossos Hambúrgueres</h1>
-    <div class="burger-list">
-      <div v-for="burger in burgers" :key="burger.id" class="burger-card">
-        <img :src="burger.image" :alt="burger.name" />
-        <h2>{{ burger.name }}</h2>
-        <p>{{ burger.description }}</p>
-        <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
-        <button @click="addToCart(burger)">Adicionar ao Carrinho</button>
-      </div>
+    <div class="container">
+      <CarouselBurguer :burgers="burgers" />
     </div>
-  </div>
-  <div class="container">
-    <CarouselComp />
-  </div>
-  <div class="container">
-    <h1>🍟 Nossas Batatas</h1>
-    <div class="burger-list">
-    </div>
+  </section>
+  <div class="container-card">
+    <BurguerCard
+      v-for="burger in burgers"
+      :key="burger.id"
+      :burger="burger"
+      @add-to-cart="addToCart"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useCartStore } from '@/store/cart'
-import HeaderComponent from '@/components/HeaderComponent.vue'
-import BannerComp from '@/components/BannerComp.vue'
-import CarouselComp from '@/components/CarouselComp.vue'
+import { ref } from "vue";
+import { useCartStore } from "@/store/cart";
+import TheHeader from "@/components/layout/TheHeader.vue";
+import BannerImage from "@/components/BannerImage.vue";
+import CarouselBurguer from "@/components/CarouselBurguer.vue";
+import BurguerCard from "@/components/BurguerCard.vue";
 
-const cartStore = useCartStore()
+const cartStore = useCartStore();
 
 const burgers = ref([
   {
     id: 1,
-    name: 'Cheese Bacon',
-    description: 'Pão brioche, carne angus, cheddar e bacon crocante.',
+    name: "Cheese Bacon",
+    description: "Pão brioche, carne angus, cheddar e bacon crocante.",
     price: 25.9,
-    image: '/images/cheese-bacon.jpg',
+    image: "/images/foods/cheese-bacon.jpg",
   },
   {
     id: 2,
-    name: 'Smash Burger',
-    description: 'Dois smash burgers com queijo prato e cebola caramelizada.',
+    name: "Smash Burger",
+    description: "Dois smash burgers com queijo prato e cebola caramelizada.",
     price: 22.5,
-    image: '/images/smash-burger.jpg',
+    image: "/images/foods/smash-burger.jpg",
   },
   {
     id: 3,
-    name: 'Veggie Burger',
-    description: 'Hambúrguer de grão de bico com maionese vegana.',
+    name: "Veggie Burger",
+    description: "Hambúrguer de grão de bico com maionese vegana.",
     price: 24.9,
-    image: '/images/veggie-burger.jpg',
+    image: "/images/foods/veggie-burger.jpg",
   },
-])
+]);
 
 const addToCart = (burger) => {
-  cartStore.addItem(burger)
-  alert(`${burger.name} foi adicionado ao carrinho!`)
-}
+  cartStore.addItem(burger);
+  alert(`${burger.name} foi adicionado ao carrinho!`);
+};
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/pages/homeView.scss";
+@use "@/assets/styles/pages/home";
 </style>

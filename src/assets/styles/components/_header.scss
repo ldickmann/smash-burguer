@@ -1,4 +1,4 @@
-@use '../../assets/styles/variables.scss' as *;
+@use '../base/variables' as *;
 
 header {
   background-color: $primary-color;
@@ -9,6 +9,7 @@ header {
   padding: 10px 20px;
   position: fixed;
   width: 100%;
+  z-index: 999;
 }
 
 h1 {
@@ -19,9 +20,14 @@ h1 {
 nav {
   display: flex;
   gap: 20px;
-}
 
-nav a {
-  color: $secondary-color;
-  text-decoration: none;
+  a {
+    color: $secondary-color;
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $tertiary-color;
+    }
+  }
 }

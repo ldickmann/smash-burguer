@@ -21,15 +21,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useCartStore } from '../store/cart'
+import { computed } from "vue";
+import { useCartStore } from "../store/cart";
 
-const cartStore = useCartStore()
+const cartStore = useCartStore();
 
-const cartItems = computed(() => cartStore.items)
-const total = computed(() => cartStore.items.reduce((sum, item) => sum + item.price, 0))
+const cartItems = computed(() => cartStore.items);
+const total = computed(() => cartStore.items.reduce((sum, item) => sum + item.price, 0));
 
 const removeItem = (index) => {
-  cartStore.removeItem(index)
-}
+  cartStore.removeItem(index);
+};
 </script>

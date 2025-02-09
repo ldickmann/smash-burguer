@@ -13,9 +13,9 @@
 <script setup>
 const props = defineProps({
   title: String,
-})
+});
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/components/headerStyles.scss";
+@use "@/assets/styles/components/header";
 </style>
