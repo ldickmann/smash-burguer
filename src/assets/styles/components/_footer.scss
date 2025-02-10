@@ -1,45 +1,106 @@
 @use "../base/variables" as *;
+@use "../base/typography" as *;
 
 footer {
   background-color: $primary-color;
   color: $secondary-color;
-  padding: 4rem 0rem 4rem 0rem;
+  padding: 4rem 0rem 2rem 0rem;
 
   .container-general {
     display: flex;
-    flex-direction: row;
-    gap: 3rem;
+    gap: 2rem;
     width: 100%;
   }
 
-  .container-title,
-  .container-contact,
-  .container-working-hours,
-  .container-social-media {
-    flex: 1;
-    min-width: 240px;
-    display: flex;
-    flex-direction: column;
+  .container-title {
+    flex: 3;
+    margin-right: 3rem;
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-family: $font-family-secondary;
+      font-size: 4rem;
+    }
+  }
+
+  .container-working-hours,
+  .container-social-media {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+
+    h2 {
+      margin-bottom: 3rem;
+    }
+  }
+
+  .container-contact {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+
+    h2 {
+      margin-bottom: 3rem;
     }
 
-    h2,
-    h3,
-    h4,
-    p {
-      margin: 0;
+    h4 {
+      margin-top: 0;
     }
+  }
+
+  .container-address-icon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0;
+    font-size: 1.5rem;
 
     p {
-      font-size: 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .container-phone-icon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .container-email-icon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  // Icons Social Media
+  .container-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0;
+    font-size: 2rem;
+
+    img {
+      width: 38px;
+      height: 38px;
+      filter: invert(100%);
     }
   }
 
   .separator-copy {
-    margin-top: 11rem;
+    margin-top: 8rem;
   }
 
   .container-copy {

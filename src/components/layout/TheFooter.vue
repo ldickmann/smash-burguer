@@ -1,3 +1,16 @@
+<script setup>
+import SeparatorLines from "../SeparatorLines.vue";
+
+const props = defineProps({
+  title: String,
+  description: String,
+  address: String,
+  phone: String,
+  email: String,
+  workingHours: String,
+});
+</script>
+
 <template>
   <footer>
     <div class="container-utilities">
@@ -6,12 +19,20 @@
           <h1>{{ title }}</h1>
           <p>{{ description }}</p>
         </div>
-        <SeparatorLines orientation="vertical" color="#ffffff" :thickness="1" />
         <div class="container-contact">
           <h2>Address</h2>
-          <p>{{ address }}</p>
-          <p>{{ phone }}</p>
-          <p>{{ email }}</p>
+          <div class="container-address-icon">
+            <font-awesome-icon :icon="['fas', 'location-dot']" />
+            <p>{{ address }}</p>
+          </div>
+          <div class="container-phone-icon">
+            <font-awesome-icon :icon="['fas', 'phone']" />
+            <p>{{ phone }}</p>
+          </div>
+          <div class="container-email-icon">
+            <font-awesome-icon :icon="['far', 'envelope']" />
+            <p>{{ email }}</p>
+          </div>
         </div>
         <div class="container-working-hours">
           <h2>Working Hours</h2>
@@ -19,7 +40,12 @@
         </div>
         <div class="container-social-media">
           <h2>Follow Us</h2>
-          <p>{{ socialMedia }}</p>
+          <div class="container-icons">
+            <font-awesome-icon :icon="['fab', 'facebook-f']" />
+            <font-awesome-icon :icon="['fab', 'instagram']" />
+            <font-awesome-icon :icon="['fab', 'twitter']" />
+            <img src="@/assets/icons/tripadvisor-icon.svg" alt="Tripadvisor" />
+          </div>
         </div>
       </div>
       <SeparatorLines
@@ -35,24 +61,6 @@
     </div>
   </footer>
 </template>
-
-<script setup>
-import SeparatorLines from "../SeparatorLines.vue";
-
-const props = defineProps({
-  title: String,
-  description: String,
-  address: String,
-  phone: String,
-  email: String,
-  workingHours: String,
-  socialMedia: String,
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
-});
-</script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/footer';
