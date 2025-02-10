@@ -1,3 +1,19 @@
+<script setup>
+import "vue3-carousel/carousel.css";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+
+const props = defineProps({
+  burgers: Array,
+  required: true,
+});
+
+const config = {
+  height: 550,
+  itemsToShow: 3,
+  snapAlign: "center",
+};
+</script>
+
 <template>
   <Carousel v-bind="config" class="custom-carousel">
     <Slide v-for="burguer in burgers" :key="burguer.id" class="custom-slide">
@@ -20,22 +36,6 @@
     </template>
   </Carousel>
 </template>
-
-<script setup>
-import "vue3-carousel/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-
-const props = defineProps({
-  burgers: Array,
-  required: true,
-});
-
-const config = {
-  height: 550,
-  itemsToShow: 3,
-  snapAlign: "center",
-};
-</script>
 
 <style scoped lang="scss">
 @use "@/assets/styles/components/carousel";

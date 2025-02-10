@@ -1,3 +1,9 @@
+<script setup>
+const props = defineProps({
+  burger: Object,
+});
+</script>
+
 <template>
   <div class="burger-card">
     <img :src="burger.image" :alt="burger.name" />
@@ -6,12 +12,6 @@
     <button @click="$emit('add-to-cart', burger)">Adicionar ao Carrinho</button>
   </div>
 </template>
-
-<script setup>
-const props = defineProps({
-  burger: Object,
-});
-</script>
 
 <style scoped lang="scss">
 @use "@/assets/styles/components/burger-card";
