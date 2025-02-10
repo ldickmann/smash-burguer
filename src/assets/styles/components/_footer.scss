@@ -1,0 +1,54 @@
+@use "../base/variables" as *;
+
+footer {
+  background-color: $primary-color;
+  color: $secondary-color;
+  padding: 4rem 0rem 4rem 0rem;
+
+  .container-general {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    width: 100%;
+  }
+
+  .container-title,
+  .container-contact,
+  .container-working-hours,
+  .container-social-media {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .separator-copy {
+    margin-top: 11rem;
+  }
+
+  .container-copy {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
