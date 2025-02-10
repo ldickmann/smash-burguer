@@ -1,4 +1,4 @@
-@use '../base/variables' as *;
+@use "../base/variables" as *;
 
 .separator-container {
   display: flex;
@@ -10,5 +10,17 @@
     flex: 1;
     height: 2px;
     background-color: $septenary-color;
+  }
+
+  &.vertical {
+    flex-direction: column;
+    height: 100%;
+    margin: 0 20px;
+
+    .separator-line {
+      width: 2px;
+      height: 100%;
+      min-height: 100px;
+    }
   }
 }
