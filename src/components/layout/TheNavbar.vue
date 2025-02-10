@@ -1,3 +1,9 @@
+<script setup>
+const props = defineProps({
+  title: String,
+});
+</script>
+
 <template>
   <header>
     <div class="header-container">
@@ -11,12 +17,6 @@
     </div>
   </header>
 </template>
-
-<script setup>
-const props = defineProps({
-  title: String,
-});
-</script>
 
 <style scoped lang="scss">
 @use "@/assets/styles/components/navbar";

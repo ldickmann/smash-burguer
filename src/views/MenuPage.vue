@@ -2,15 +2,8 @@
   <div class="menu-page">
     <h1>Cardápio com os melhores Hambúrgueres 🍔</h1>
     <div class="menu">
-      <BurguerCard
-        v-for="burger in burgers"
-        :key="burger.id"
-        :burger="burger"
-        @add-to-cart="addToCart"
-      />
+      <BurguerCard v-for="burger in burgers" :key="burger.id" :burger="burger" @add-to-cart="addToCart" />
     </div>
-
-    <!-- <button @click="cartStore.clearCart">Limpar Carrinho</button> -->
 
     <button class="button-cart">
       <router-link to="/cart">Ir para o Carrinho</router-link>

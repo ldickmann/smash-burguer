@@ -1,23 +1,3 @@
-<template>
-  <div class="separator-container" :class="{ vertical: orientation === 'vertical' }">
-    <div
-      class="separator-line"
-      :style="{
-        backgroundColor: color,
-        [orientation === 'vertical' ? 'width' : 'height']: `${thickness}px`,
-      }"
-    ></div>
-    <slot></slot>
-    <div
-      class="separator-line"
-      :style="{
-        backgroundColor: color,
-        [orientation === 'vertical' ? 'width' : 'height']: `${thickness}px`,
-      }"
-    ></div>
-  </div>
-</template>
-
 <script setup>
 const props = defineProps({
   color: {
@@ -35,6 +15,20 @@ const props = defineProps({
   },
 });
 </script>
+
+<template>
+  <div class="separator-container" :class="{ vertical: orientation === 'vertical' }">
+    <div class="separator-line" :style="{
+      backgroundColor: color,
+      [orientation === 'vertical' ? 'width' : 'height']: `${thickness}px`,
+    }"></div>
+    <slot></slot>
+    <div class="separator-line" :style="{
+      backgroundColor: color,
+      [orientation === 'vertical' ? 'width' : 'height']: `${thickness}px`,
+    }"></div>
+  </div>
+</template>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/separator';

@@ -1,6 +1,11 @@
+<script setup>
+import TheFooter from "@/components/layout/TheFooter.vue";
+import TheNavbar from "@/components/layout/TheNavbar.vue";
+</script>
+
 <template>
   <div class="main-layout">
-    <Navbar title="Smash Burgers" />
+    <TheNavbar title="Smash Burgers" />
     <main>
       <slot />
     </main>
@@ -14,8 +19,3 @@
     />
   </div>
 </template>
-
-<script setup>
-import TheFooter from "@/components/layout/TheFooter.vue";
-import Navbar from "@/components/layout/Navbar.vue";
-</script>
