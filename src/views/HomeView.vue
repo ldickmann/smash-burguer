@@ -1,7 +1,7 @@
 <template>
   <BannerImage
     classBanner="banner"
-    image="/images/delicious-burger-banner.jpg"
+    image="/images/banner-burger-black.jpg"
     alt="Hambúrgueres"
   >
     <section class="section-welcome">
