@@ -1,0 +1,41 @@
+@use "sass:map";
+
+// Definição de breakpoints
+$breakpoints: (
+  "xs": 480px,
+  "sm": 768px,
+  "md": 1024px,
+  "lg": 1280px,
+  "xl": 1440px
+);
+
+// Mixin para media queries
+@mixin respond-to($size) {
+  @if map.has-key($breakpoints, $size) {
+    @media (max-width: map.get($breakpoints, $size)) {
+      @content;
+    }
+  } @else {
+    @warn "O breakpoint #{$size} não existe. Certifique-se de definir corretamente no mapa `$breakpoints`.";
+  }
+}
+
+// Mixin para centralizar elementos
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: center;
+  align-items: center;
+}
+
+// Mixin para esconder elementos no mobile
+@mixin hide-on-mobile {
+  @include respond-to("sm") {
+    display: none;
+  }
+}
+
+// Mixin para aplicar um gradiente de fundo
+@mixin gradient-bg($color1, $color2) {
+  background: linear-gradient(to right, $color1, $color2);
+}
