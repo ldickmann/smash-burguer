@@ -18,6 +18,7 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 - [SASS](https://sass-lang.com/) - Pré-processador CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de Build
 - [Vue 3 Carousel](https://ismail9k.github.io/vue3-carousel/) - Componente de Carrossel
+- [font-awesome]() - 
 
 ## 📦 Instalação
 
