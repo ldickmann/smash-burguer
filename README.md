@@ -5,10 +5,11 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 ## 🚀 Funcionalidades
 
 - Cardápio interativo com carrossel de hambúrgueres
-- Carrinho de compras
+- Carrinho de compras com gestão de itens
 - Processo de checkout
 - Design responsivo
 - Cálculos de preço em tempo real
+- Interface intuitiva e amigável
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -18,7 +19,10 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 - [SASS](https://sass-lang.com/) - Pré-processador CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de Build
 - [Vue 3 Carousel](https://ismail9k.github.io/vue3-carousel/) - Componente de Carrossel
-- [font-awesome]() - 
+- [Font Awesome](https://fontawesome.com/) - Ícones vetoriais
+- [ESLint](https://eslint.org/) - Linter de JavaScript
+- [Prettier](https://prettier.io/) - Formatador de código
+
 
 ## 📦 Instalação
 
@@ -26,6 +30,7 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 
 ```bash
 git clone https://github.com/ldickmann/smash-burger.git
+cd smash-burger
 ```
 
 2. Instale as dependências:
@@ -40,6 +45,11 @@ yarn install
 yarn dev
 ```
 
+4. Acesse no navegador:
+```bash
+http://localhost:5173
+```
+
 ## 🔧 Scripts Disponíveis
 
 - `yarn dev` - Inicia o servidor de desenvolvimento
@@ -50,10 +60,14 @@ yarn dev
 ```
 src/
 ├── assets/          # Recursos estáticos e estilos globais
+│   ├── icons/       # Ícones da aplicação
+│   ├── styles/      # Arquivos SCSS
+│   └── main.scss    # Arquivo principal de estilos
 ├── components/      # Componentes Vue reutilizáveis
 ├── layouts/         # Componentes de layout
 ├── router/         # Configuração do Vue Router
 ├── store/          # Módulos do Pinia store
+├── plugins/        # Plugins e configurações
 └── views/          # Componentes de página
 ```
 
@@ -77,4 +91,6 @@ Este projeto está em desenvolvimento ativo. Próximas funcionalidades:
 
 ## 👤 Autor | Desenvolvedor
 
-Lucas Elias Dickmann - [GitHub](https://github.com/ldickmann)
+Lucas Elias Dickmann
+
+💼 [LinkedIn](https://www.linkedin.com/in/lucas-dickmann) | 📂 [GitHub](https://github.com/ldickmann)
