@@ -1,35 +1,45 @@
-@use '../base/variables' as *;
-@use '../base/typography' as *;
+@use "../base/variables" as *;
+@use "../base/typography" as *;
+@use "../base/mixins" as *;
 
 header {
   background-color: $color-green-background;
   opacity: 0.8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px 0;
   position: fixed;
   width: 100%;
   z-index: 999;
+  padding: 20px 0;
+
+  @include flex-center();
 
   .header-container {
-    display: flex;
+    @include flex-center();
     justify-content: space-between;
-    align-items: center;
     width: 100%;
     max-width: 1200px;
+    padding: 0 20px;
   }
-}
 
-h1 {
-  color: $secondary-color;
-  font-family: $font-family-secondary;
-  font-size: 2.3rem;
+  h1 {
+    color: $secondary-color;
+    font-family: $font-family-secondary;
+    font-size: 2.3rem;
+
+    // Responsividade utilizando mixins telas < 768px
+    @include respond-to("sm") {
+      font-size: 1.8rem;
+    }
+
+    // Responsividade utilizando mixins telas < 480px
+    @include respond-to("xs") {
+      display: none;
+    }
+  }
 }
 
 nav {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
 
   a {
     color: $secondary-color;
@@ -40,5 +50,10 @@ nav {
     &:hover {
       color: $color-text-quaternary;
     }
+  }
+
+  // Responsividade utilizando mixins telas < 768px
+  @include respond-to("sm") {
+    gap: 1rem;
   }
 }

@@ -6,7 +6,7 @@
           <h1>{{ title }}</h1>
           <p>{{ description }}</p>
         </div>
-        <SeparatorLines orientation="vertical" color="#ffffff" thickness="1" />
+        <SeparatorLines orientation="vertical" color="#ffffff" :thickness="1" />
         <div class="container-contact">
           <h2>Address</h2>
           <p>{{ address }}</p>
@@ -25,7 +25,7 @@
       <SeparatorLines
         orientation="horizontal"
         color="#ffffff"
-        thickness="1"
+        :thickness="1"
         class="separator-copy"
       />
       <div class="container-copy">

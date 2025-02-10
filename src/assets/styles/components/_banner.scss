@@ -1,13 +1,14 @@
-@use '../base/variables' as *;
-@use '../base/typography' as *;
+@use "../base/variables" as *;
+@use "../base/typography" as *;
+@use "../base/mixins" as *;
 
 .banner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
-  padding: 10rem 0;
-  gap: 13rem;
+  padding: 8rem 0;
+  gap: 8rem;
 
   .content-wrapper {
     flex: 0 1 auto;
@@ -43,6 +44,21 @@
 
       &:hover {
         transform: scale(1.05) translateY(-10px);
+      }
+    }
+  }
+
+  @include respond-to("md") {
+    flex-direction: column;
+    gap: 4rem;
+    padding: 5rem 3%;
+  }
+
+  @include respond-to("sm") {
+    .content-wrapper {
+      padding-top: 5rem;
+      h1 {
+        font-size: 3.5rem;
       }
     }
   }
