@@ -2,6 +2,7 @@
   <div :class="classBanner">
     <div class="content-wrapper">
       <h1>{{ title }}</h1>
+      <SeparatorLines />
       <p>{{ paragraph }}</p>
     </div>
     <div class="image-wrapper">
@@ -11,6 +12,8 @@
 </template>
 
 <script setup>
+import SeparatorLines from "@/components/SeparatorLines.vue";
+
 const props = defineProps({
   classBanner: String,
   title: String,
