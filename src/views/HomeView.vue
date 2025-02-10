@@ -1,23 +1,29 @@
 <template>
-  <BannerImage
-    classBanner="banner"
-    title="Bem-vindo ao Smash Burger"
-    paragraph="Descubra o verdadeiro sabor dos Hambúrgueres artesanais"
-    image="/images/burger-banner-solo.jpg"
-    alt="Hambúrgueres"
-  />
-  <section id="#carousel" class="section-carousel">
-    <h1>🍔 Nossos Hambúrgueres</h1>
-    <div class="container-carousel">
-      <CarouselBurguer :burgers="burgers" @add-to-cart="addToCart" />
+  <section class="banner-section">
+    <div class="container-utilities">
+      <BannerComponent
+        classBanner="banner"
+        title="Bem-vindo ao Smash Burger"
+        paragraph="Descubra o verdadeiro sabor dos Hambúrgueres artesanais"
+        image="/images/banner-burger-bg.png"
+        alt="Hambúrgueres"
+      />
+    </div>
+  </section>
+  <section class="section-carousel">
+    <div class="container-utilities">
+      <h1>🍔 Nossos Hambúrgueres 🍔</h1>
+      <div class="container-carousel">
+        <CarouselBurguer :burgers="burgers" @add-to-cart="addToCart" />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
 import { useCartStore } from "@/store/cart";
-import BannerImage from "@/components/BannerImage.vue";
 import CarouselBurguer from "@/components/CarouselBurguer.vue";
+import BannerComponent from "@/components/BannerComponent.vue";
 
 const cartStore = useCartStore();
 

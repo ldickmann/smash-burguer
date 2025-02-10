@@ -1,10 +1,16 @@
 // Base
 @use './styles/base/variables';
+@use './styles/base/typography';
 @use './styles/base/reset';
+@use './styles/base/utilities';
 
 // Components
 @use './styles/components/banner';
+@use './styles/components/burger-card';
+@use './styles/components/carousel';
 @use './styles/components/header';
+@use './styles/components/separator';
 
 // Pages
 @use './styles/pages/home';
+@use './styles/pages/menu-page';
