@@ -2,7 +2,12 @@
   <div class="menu-page">
     <h1>Cardápio com os melhores Hambúrgueres 🍔</h1>
     <div class="menu">
-      <BurguerCard v-for="burger in burgers" :key="burger.id" :burger="burger" @add-to-cart="addToCart" />
+      <BurguerCard
+        v-for="burger in burgers"
+        :key="burger.id"
+        :burger="burger"
+        @add-to-cart="addToCart"
+      />
     </div>
 
     <button class="button-cart">
