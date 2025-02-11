@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -6,13 +6,13 @@ export const useCartStore = defineStore('cart', {
   }),
   actions: {
     addItem(burger) {
-      this.items.push(burger)
+      this.items.push(burger);
     },
     removeItem(index) {
-      this.items.splice(index, 1)
+      this.items.splice(index, 1);
     },
     clearCart() {
-      this.items = []
+      this.items = [];
     },
   },
-})
+});

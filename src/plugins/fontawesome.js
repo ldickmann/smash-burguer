@@ -5,9 +5,10 @@ import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import {
   faFacebookF,
   faInstagram,
-  faTwitter
+  faTwitter,
+  faXTwitter
 } from '@fortawesome/free-brands-svg-icons'
 
-library.add(faFacebookF, faInstagram, faTwitter, faLocationDot, faPhone, faEnvelope)
+library.add(faFacebookF, faInstagram, faTwitter, faLocationDot, faPhone, faEnvelope, faXTwitter)
 
 export { FontAwesomeIcon }

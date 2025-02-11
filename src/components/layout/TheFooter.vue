@@ -1,5 +1,7 @@
 <script setup>
-import SeparatorLines from "../SeparatorLines.vue";
+import SeparatorLines from '../SeparatorLines.vue'
+import ContactInfo from './TheFooterContactInfo.vue'
+import SocialMediaLinks from './TheFooterSocialMediaLinks.vue'
 
 const props = defineProps({
   title: String,
@@ -8,7 +10,7 @@ const props = defineProps({
   phone: String,
   email: String,
   workingHours: String,
-});
+})
 </script>
 
 <template>
@@ -19,34 +21,15 @@ const props = defineProps({
           <h1>{{ title }}</h1>
           <p>{{ description }}</p>
         </div>
-        <div class="container-contact">
-          <h2>Address</h2>
-          <div class="container-address-icon">
-            <font-awesome-icon :icon="['fas', 'location-dot']" />
-            <p>{{ address }}</p>
-          </div>
-          <div class="container-phone-icon">
-            <font-awesome-icon :icon="['fas', 'phone']" />
-            <p>{{ phone }}</p>
-          </div>
-          <div class="container-email-icon">
-            <font-awesome-icon :icon="['far', 'envelope']" />
-            <p>{{ email }}</p>
-          </div>
-        </div>
+
+        <ContactInfo :address="address" :phone="phone" :email="email" />
+
         <div class="container-working-hours">
           <h2>Working Hours</h2>
-          <h4>{{ workingHours }}</h4>
+          <p>{{ workingHours }}</p>
         </div>
-        <div class="container-social-media">
-          <h2>Follow Us</h2>
-          <div class="container-icons">
-            <font-awesome-icon :icon="['fab', 'facebook-f']" />
-            <font-awesome-icon :icon="['fab', 'instagram']" />
-            <font-awesome-icon :icon="['fab', 'twitter']" />
-            <img src="@/assets/icons/tripadvisor-icon.svg" alt="Tripadvisor" />
-          </div>
-        </div>
+
+        <SocialMediaLinks />
       </div>
       <SeparatorLines
         orientation="horizontal"

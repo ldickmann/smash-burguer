@@ -1,6 +1,6 @@
 <script setup>
-import TheFooter from "@/components/layout/TheFooter.vue";
-import TheNavbar from "@/components/layout/TheNavbar.vue";
+import TheFooter from '@/components/layout/TheFooter.vue'
+import TheNavbar from '@/components/layout/TheNavbar.vue'
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import TheNavbar from "@/components/layout/TheNavbar.vue";
     </main>
     <TheFooter
       title="Smash Burgers"
-      description="The best burgers in town | We are a burger restaurant that offers the best burgers in town."
+      description=" Sabor irresistível em cada mordida! Burgers suculentos, ingredientes fresco e um toque especial que faz a diferença."
       address="Rua Beira da Praia - Navegantes, SC"
       phone="+55 47 9 9999 9999"
       email="smashBurguer@teste.com.br"
