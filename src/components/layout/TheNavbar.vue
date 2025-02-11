@@ -1,13 +1,9 @@
-<script setup>
-const props = defineProps({
-  title: String,
-})
-</script>
-
 <template>
   <header>
     <div class="header-container">
-      <h1>{{ title }}</h1>
+      <router-link to="/">
+        <h1>{{ title }}</h1>
+      </router-link>
       <nav>
         <router-link to="/">Home</router-link>
         <router-link to="/menu">Cardápio</router-link>
@@ -17,6 +13,12 @@ const props = defineProps({
     </div>
   </header>
 </template>
+
+<script setup>
+const props = defineProps({
+  title: String,
+});
+</script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/navbar';

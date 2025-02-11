@@ -1,6 +1,13 @@
 <template>
+  <BannerComponent
+    title="Cardápio"
+    paragraph="Cardápio com os melhores Hambúrgueres"
+    image="/images/fundos/banner-burger-black.jpg"
+    alt="Background de hambúrgueres e batatas fritas"
+    :overlay="true"
+  />
+
   <div class="menu-page">
-    <h1>Cardápio com os melhores Hambúrgueres 🍔</h1>
     <div class="menu">
       <BurguerCard
         v-for="burger in burgers"
@@ -20,6 +27,7 @@
 import { ref } from "vue";
 import { useCartStore } from "../store/cart";
 import BurguerCard from "../components/BurguerCard.vue";
+import BannerComponent from "@/components/BannerComponent.vue";
 
 const cartStore = useCartStore();
 

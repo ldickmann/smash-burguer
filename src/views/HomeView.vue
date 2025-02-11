@@ -2,7 +2,6 @@
   <section class="banner-section">
     <div class="container-utilities">
       <BannerComponent
-        classBanner="banner"
         title="Bem-vindo ao Smash Burger"
         paragraph="Descubra o verdadeiro sabor dos Hambúrgueres artesanais"
         image="/images/fundos/banner-burger-bg.png"
