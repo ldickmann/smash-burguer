@@ -1,15 +1,3 @@
-<script setup>
-import SeparatorLines from "@/components/SeparatorLines.vue";
-
-const props = defineProps({
-  classBanner: String,
-  title: String,
-  paragraph: String,
-  image: String,
-  alt: String,
-});
-</script>
-
 <template>
   <div :class="classBanner">
     <div class="content-wrapper">
@@ -22,6 +10,18 @@ const props = defineProps({
     </div>
   </div>
 </template>
+
+<script setup>
+import SeparatorLines from "@/components/SeparatorLines.vue";
+
+const props = defineProps({
+  classBanner: String,
+  title: String,
+  paragraph: String,
+  image: String,
+  alt: String,
+});
+</script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/banner';

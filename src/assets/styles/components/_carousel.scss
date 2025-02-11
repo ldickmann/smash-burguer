@@ -1,4 +1,4 @@
-@use '../base/variables' as *;
+@use "../base/variables" as *;
 
 .custom-carousel {
   padding: 0;
@@ -15,7 +15,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px $shadow-color;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease-in-out;
   height: 450px;
   width: 100%;
   display: flex;
@@ -27,6 +27,7 @@
   }
 }
 
+// Carousel Image
 .carousel-image {
   width: 100%;
   height: 200px;
@@ -34,6 +35,7 @@
   aspect-ratio: 16/9;
 }
 
+// Cards e demais itens dentro do Carousel
 .carousel-content {
   padding: 1rem;
   flex: 1;
@@ -48,6 +50,7 @@
   }
 }
 
+// Estilização do preço
 .price {
   color: $tertiary-color;
   font-weight: bold;
@@ -55,6 +58,7 @@
   margin: 0.5rem 0;
 }
 
+// Botão do Carousel
 .carousel-button {
   background: $tertiary-color;
   color: $secondary-color;
@@ -62,7 +66,7 @@
   padding: 0.8rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s ease-in-out;
   margin-top: auto;
 
   &:hover {
@@ -70,6 +74,7 @@
   }
 }
 
+// Botões de navegação do Carousel
 :deep(.carousel__prev),
 :deep(.carousel__next) {
   background-color: $tertiary-color;
@@ -77,6 +82,7 @@
   border-radius: 50%;
 }
 
+// Paginação do carrossel
 :deep(.carousel__pagination-button) {
   background-color: $border-color;
 }

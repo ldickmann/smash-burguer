@@ -1,29 +1,13 @@
-<script setup>
-import "vue3-carousel/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-
-const props = defineProps({
-  burgers: Array,
-  required: true,
-});
-
-const config = {
-  height: 550,
-  itemsToShow: 3,
-  snapAlign: "center",
-};
-</script>
-
 <template>
-  <Carousel v-bind="config" class="custom-carousel">
-    <Slide v-for="burguer in burgers" :key="burguer.id" class="custom-slide">
+  <Carousel v-bind="carouselConfig" class="custom-carousel">
+    <Slide v-for="burger in burgers" :key="burger.id" class="custom-slide">
       <div class="carousel-item">
-        <img :src="burguer.image" :alt="burguer.name" class="carousel-image" />
+        <img :src="burger.image" :alt="burger.name" class="carousel-image" />
         <div class="carousel-content">
-          <h3>{{ burguer.name }}</h3>
-          <p>{{ burguer.description }}</p>
-          <p class="price">R$ {{ burguer.price.toFixed(2) }}</p>
-          <button @click="$emit('add-to-cart', burguer)" class="carousel-button">
+          <h3>{{ burger.name }}</h3>
+          <p>{{ burger.description }}</p>
+          <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
+          <button @click="addToCart(burger)" class="carousel-button">
             Adicionar ao Carrinho
           </button>
         </div>
@@ -37,6 +21,31 @@ const config = {
   </Carousel>
 </template>
 
+<script setup>
+import "vue3-carousel/carousel.css";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { computed } from "vue";
+
+const props = defineProps({
+  burgers: {
+    Array,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["add-to-cart"]);
+
+const carouselConfig = computed(() => ({
+  height: 550,
+  itemsToShow: 3,
+  snapAlign: "center",
+}));
+
+const addToCart = (burger) => {
+  emit("add-to-cart", burger);
+};
+</script>
+
 <style scoped lang="scss">
-@use "@/assets/styles/components/carousel";
+@use '@/assets/styles/components/carousel';
 </style>
