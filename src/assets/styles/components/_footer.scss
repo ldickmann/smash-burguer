@@ -8,7 +8,7 @@ footer {
 
   .container-general {
     display: flex;
-    gap: 2rem;
+    gap: 3.5rem;
     width: 100%;
   }
 
@@ -19,14 +19,26 @@ footer {
     h1 {
       font-family: $font-family-secondary;
       font-size: 4rem;
+      margin-bottom: 2rem;
     }
   }
 
-  .container-working-hours,
+  .container-working-hours {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+
+    h2 {
+      margin-bottom: 3rem;
+    }
+  }
+
   .container-social-media {
     flex: 2;
     display: flex;
     flex-direction: column;
+    align-items: self-start;
     margin-top: 2rem;
 
     h2 {
@@ -44,14 +56,13 @@ footer {
       margin-bottom: 3rem;
     }
 
-    h4 {
-      margin-top: 0;
+    a {
+      font-size: 0.9rem;
     }
   }
 
   .container-address-icon {
     display: flex;
-    align-items: center;
     gap: 1rem;
     margin-top: 0;
     font-size: 1.5rem;
@@ -88,15 +99,10 @@ footer {
   // Icons Social Media
   .container-icons {
     display: flex;
+    justify-content: end;
     gap: 1rem;
     margin-top: 0;
     font-size: 2rem;
-
-    img {
-      width: 38px;
-      height: 38px;
-      filter: invert(100%);
-    }
   }
 
   .separator-copy {

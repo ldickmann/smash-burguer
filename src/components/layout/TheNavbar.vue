@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
   title: String,
-});
+})
 </script>
 
 <template>
@@ -19,5 +19,5 @@ const props = defineProps({
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/styles/components/navbar";
+@use '@/assets/styles/components/navbar';
 </style>
