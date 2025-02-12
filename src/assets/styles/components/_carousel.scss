@@ -5,10 +5,18 @@
   padding: 0;
   margin: 2rem 0;
   width: 100%;
+
+  @include respond-to("xs") {
+    margin: 0 0;
+  }
 }
 
 :deep(.carousel__slide) {
   padding: 1rem;
+
+  @include respond-to("xs") {
+    padding: 0.3rem;
+  }
 }
 
 .carousel-item {
@@ -29,7 +37,7 @@
 
   @include respond-to("xs") {
     height: 300px;
-    padding: 0.5rem;
+    padding: 0.3rem;
   }
 }
 
@@ -59,7 +67,7 @@
     font-size: 1.2rem;
 
     @include respond-to("xs") {
-      font-size: 1rem;
+      font-size: 0.8rem;
     }
   }
 
@@ -67,7 +75,7 @@
     margin: 0.5rem 0;
 
     @include respond-to("xs") {
-      font-size: 0.9rem;
+      font-size: 0.7rem;
     }
   }
 }
