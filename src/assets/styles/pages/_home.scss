@@ -1,4 +1,5 @@
 @use "../base/variables" as *;
+@use "../base/mixins" as *;
 
 .banner-section {
   background-color: $color-white-background;
@@ -29,5 +30,13 @@
     font-size: 2rem;
     text-align: center;
     z-index: 1;
+
+    @include respond-to("xs") {
+      font-size: 1.5rem;
+    }
+  }
+
+  @include respond-to("xs") {
+    padding: 2rem 1rem;
   }
 }

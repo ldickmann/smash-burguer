@@ -39,6 +39,12 @@ const carouselConfig = computed(() => ({
   height: 550,
   itemsToShow: 3,
   snapAlign: "center",
+  breakpoints: {
+    425: {
+      height: 400,
+      itemsToShow: 2,
+    },
+  },
 }));
 
 const addToCart = (burger) => {
