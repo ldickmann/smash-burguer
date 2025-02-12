@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useCartStore } from "../store/cart";
 import BurguerCard from "../components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
@@ -47,7 +47,7 @@ import ButtonsComponents from "@/components/ButtonsComponents.vue";
 
 const cartStore = useCartStore();
 
-const allBurgers = ref([
+const foods = ref([
   {
     id: 1,
     name: "Cheese Bacon",
@@ -78,7 +78,29 @@ const allBurgers = ref([
   },
 ]);
 
-const filteredBurgers = ref([...allBurgers.value]);
+const drinks = ref([
+  {
+    id: 5,
+    name: "Refrigerante",
+    price: 5.99,
+    image: "./images/drinks/refrigerante.jpg",
+    category: "drinks",
+  },
+]);
+
+const desserts = ref([
+  {
+    id: 6,
+    name: "Sorvete de Pote",
+    price: 7.99,
+    image: "./images/desserts/sorvete-pote.jpg",
+    category: "desserts",
+  },
+]);
+
+const allItems = computed(() => [...foods.value, ...drinks.value, ...desserts.value]);
+
+const filteredBurgers = ref([...allItems.value]);
 
 const addToCart = (burger) => {
   cartStore.addItem(burger);
@@ -86,13 +108,15 @@ const addToCart = (burger) => {
 
 const filterByCategory = (category) => {
   if (category === "all") {
-    filteredBurgers.value = [...allBurgers.value];
+    filteredBurgers.value = [...allItems.value];
   } else {
-    filteredBurgers.value = allBurgers.value.filter(
-      (burger) => burger.category === category
-    );
+    filteredBurgers.value = allItems.value.filter((item) => item.category === category);
   }
 };
+
+onMounted(() => {
+  filterByCategory("foods");
+});
 </script>
 
 <style scoped lang="scss">
