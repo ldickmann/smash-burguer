@@ -27,15 +27,3 @@ $breakpoints: (
   justify-content: center;
   align-items: center;
 }
-
-// Mixin para esconder elementos no mobile
-@mixin hide-on-mobile {
-  @include respond-to("sm") {
-    display: none;
-  }
-}
-
-// Mixin para aplicar um gradiente de fundo
-@mixin gradient-bg($color1, $color2) {
-  background: linear-gradient(to right, $color1, $color2);
-}

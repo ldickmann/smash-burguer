@@ -62,6 +62,20 @@ const burgers = [
     price: 20.9,
     image: "/images/foods/x-salada.jpg",
   },
+  {
+    id: 6,
+    name: "Chicken Burger",
+    description: "Pão brioche, frango empanado, alface e maionese.",
+    price: 19.9,
+    image: "/images/foods/chicken-burger.jpg",
+  },
+  {
+    id: 7,
+    name: "Burger Picanha",
+    description: "Pão brioche, carne de picanha, queijo cheddar e molho especial.",
+    price: 29.9,
+    image: "/images/foods/burger-picanha.jpg",
+  },
 ];
 
 const addToCart = (burger) => {

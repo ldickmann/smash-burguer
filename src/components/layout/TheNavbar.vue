@@ -4,20 +4,37 @@
       <router-link to="/">
         <h1>{{ title }}</h1>
       </router-link>
-      <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/menu">Cardápio</router-link>
-        <router-link to="/cart">Carrinho</router-link>
-        <router-link to="/payment">Pagamento</router-link>
+      <div class="hamburger" @click="toggleMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav :class="{ active: isMenuOpen }">
+        <router-link to="/" @click="closeMenu">Home</router-link>
+        <router-link to="/menu" @click="closeMenu">Cardápio</router-link>
+        <router-link to="/cart" @click="closeMenu">Carrinho</router-link>
+        <router-link to="/payment" @click="closeMenu">Pagamento</router-link>
       </nav>
     </div>
   </header>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 const props = defineProps({
   title: String,
 });
+
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+
+const closeMenu = () => {
+  isMenuOpen.value = false;
+};
 </script>
 
 <style scoped lang="scss">
