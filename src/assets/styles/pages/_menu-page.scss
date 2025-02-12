@@ -1,4 +1,5 @@
 @use "../base/variables" as *;
+@use "../base/mixins" as *;
 
 .menu-page {
   display: flex;
@@ -14,6 +15,10 @@
   .menu {
     display: flex;
     gap: 20px;
+
+    @include respond-to("xs") {
+      flex-direction: column;
+    }
   }
 
   .button-cart {

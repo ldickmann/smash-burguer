@@ -1,0 +1,9 @@
+.container-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+.button {
+  &:hover {
+    opacity: 0.8;
+  }
+}
