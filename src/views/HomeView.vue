@@ -17,14 +17,19 @@
       </div>
     </div>
   </section>
+  <AlertComponent v-if="showAlert" :message="alertMessage" />
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useCartStore } from "@/store/cart";
 import CarouselBurguer from "@/components/CarouselBurguer.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
+import AlertComponent from "@/components/AlertComponent.vue";
 
 const cartStore = useCartStore();
+const showAlert = ref(false);
+const alertMessage = ref("");
 
 const burgers = [
   {
@@ -80,7 +85,12 @@ const burgers = [
 
 const addToCart = (burger) => {
   cartStore.addItem(burger);
-  alert(`${burger.name} foi adicionado ao carrinho!`);
+  alertMessage.value = `${burger.name} adicionado ao carrinho!`;
+  showAlert.value = true;
+
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 2000);
 };
 </script>
 
