@@ -8,12 +8,12 @@
     <div v-else>
       <ul>
         <li v-for="(item, index) in cartItems" :key="index">
-          {{ item.name }} - R$ {{ item.price.toFixed(2) }}
+          {{ item.name }} - {{ formatPrice(item.price) }}
           <button @click="removeItem(index)">Remover</button>
         </li>
       </ul>
       <p>
-        <strong>Total: R$ {{ total.toFixed(2) }}</strong>
+        <strong>Total: {{ formatPrice(total) }}</strong>
       </p>
       <router-link to="/payment">Finalizar Pedido</router-link>
     </div>
@@ -23,6 +23,7 @@
 <script setup>
 import { computed } from "vue";
 import { useCartStore } from "../store/cart";
+import { formatPrice } from "@/utils/formatters";
 
 const cartStore = useCartStore();
 
