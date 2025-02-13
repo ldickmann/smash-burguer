@@ -1,0 +1,46 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.pix-payment-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: $color-white-background;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px $shadow-color;
+
+  form {
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: $color-text-primary;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid $border-color;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $tertiary-color;
+        }
+
+        &::placeholder {
+          color: $color-text-secondary;
+        }
+      }
+    }
+  }
+
+  @include respond-to("sm") {
+    padding: 1rem;
+  }
+}
