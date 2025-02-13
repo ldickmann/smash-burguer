@@ -18,26 +18,26 @@
 <script setup>
 const socialMediaLinks = [
   {
-    name: 'facebook',
-    icon: ['fab', 'facebook-f'],
-    url: 'https://facebook.com',
+    name: "facebook",
+    icon: ["fab", "facebook-f"],
+    url: "https://facebook.com",
   },
   {
-    name: 'instagram',
-    icon: ['fab', 'instagram'],
-    url: 'https://instagram.com',
+    name: "instagram",
+    icon: ["fab", "instagram"],
+    url: "https://instagram.com",
   },
   {
-    name: 'twitter',
-    icon: ['fab', 'twitter'],
-    url: 'https://twitter.com',
+    name: "twitter",
+    icon: ["fab", "twitter"],
+    url: "https://twitter.com",
   },
   {
-    name: 'X',
-    icon: ['fab', 'x-twitter'],
-    url: 'https://x-twitter.com',
+    name: "X",
+    icon: ["fab", "x-twitter"],
+    url: "https://x-twitter.com",
   },
-]
+];
 </script>
 
 <style scoped lang="scss">

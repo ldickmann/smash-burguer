@@ -9,17 +9,18 @@
 
   <div class="menu-page">
     <ButtonsComponents
+      class="buttons-component"
       :buttons="[
-        { label: 'Foods', category: 'foods' },
-        { label: 'Drinks', category: 'drinks' },
-        { label: 'Desserts', category: 'desserts' },
+        { label: 'Hambúrgueres', category: 'foods' },
+        { label: 'Bebidas', category: 'drinks' },
+        { label: 'Sobremesas', category: 'desserts' },
       ]"
-      backgroundColor="#e74c3c"
+      backgroundColor="#3aa876"
       fontColor="#fff"
       fontSize="18px"
       buttonSize="14px 28px"
       borderRadius="8px"
-      :gap="18"
+      :gap="20"
       @category-selected="filterByCategory"
     />
 
@@ -76,11 +77,32 @@ const foods = ref([
     image: "./images/foods/x-salada.jpg",
     category: "foods",
   },
+  {
+    id: 5,
+    name: "Chicken Burger",
+    price: 23.9,
+    image: "./images/foods/chicken-burger.jpg",
+    category: "foods",
+  },
+  {
+    id: 6,
+    name: "Burger Picanha",
+    price: 29.9,
+    image: "./images/foods/burger-picanha.jpg",
+    category: "foods",
+  },
+  {
+    id: 7,
+    name: "Batata Frita",
+    price: 10.9,
+    image: "./images/foods/batata-frita.jpg",
+    category: "foods",
+  },
 ]);
 
 const drinks = ref([
   {
-    id: 5,
+    id: 8,
     name: "Refrigerante",
     price: 5.99,
     image: "./images/drinks/refrigerante.jpg",
@@ -90,7 +112,7 @@ const drinks = ref([
 
 const desserts = ref([
   {
-    id: 6,
+    id: 9,
     name: "Sorvete de Pote",
     price: 7.99,
     image: "./images/desserts/sorvete-pote.jpg",

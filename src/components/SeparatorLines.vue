@@ -7,30 +7,30 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   color: {
     type: String,
-    default: '#38184c',
+    default: "#38184c",
   },
   orientation: {
     type: String,
-    default: 'horizontal',
-    validator: (value) => ['horizontal', 'vertical'].includes(value),
+    default: "horizontal",
+    validator: (value) => ["horizontal", "vertical"].includes(value),
   },
   thickness: {
     type: Number,
     default: 2,
   },
-})
+});
 
-const isVertical = computed(() => props.orientation === 'vertical')
+const isVertical = computed(() => props.orientation === "vertical");
 
 const separatorStyle = computed(() => ({
   backgroundColor: props.color,
-  [isVertical.value ? 'width' : 'height']: `${props.thickness}px`,
-}))
+  [isVertical.value ? "width" : "height"]: `${props.thickness}px`,
+}));
 </script>
 
 <style scoped lang="scss">

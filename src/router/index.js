@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import MenuPage from '../views/MenuPage.vue'
-import CartPage from '../views/CartPage.vue'
-import PaymentPage from '../views/PaymentPage.vue'
-import ConfirmationPage from '../views/ConfirmationPage.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import MenuPage from '../views/MenuPage.vue';
+import CartPage from '../views/CartPage.vue';
+import PaymentPage from '../views/PaymentPage.vue';
+import ConfirmationPage from '../views/ConfirmationPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +34,6 @@ const router = createRouter({
       component: ConfirmationPage,
     },
   ],
-})
+});
 
-export default router
+export default router;

@@ -1,14 +1,14 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faLocationDot, faPhone } from '@fortawesome/free-solid-svg-icons'
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faLocationDot, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import {
   faFacebookF,
   faInstagram,
   faTwitter,
   faXTwitter
-} from '@fortawesome/free-brands-svg-icons'
+} from '@fortawesome/free-brands-svg-icons';
 
-library.add(faFacebookF, faInstagram, faTwitter, faLocationDot, faPhone, faEnvelope, faXTwitter)
+library.add(faFacebookF, faInstagram, faTwitter, faLocationDot, faPhone, faEnvelope, faXTwitter);
 
-export { FontAwesomeIcon }
+export { FontAwesomeIcon };

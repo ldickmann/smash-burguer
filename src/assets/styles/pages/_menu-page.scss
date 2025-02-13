@@ -12,9 +12,17 @@
     color: $primary-color;
   }
 
+  .buttons-component {
+    @include respond-to("xs") {
+      flex-direction: column;
+    }
+  }
+
   .menu {
     display: flex;
+    justify-content: center;
     gap: 20px;
+    flex-wrap: wrap;
 
     @include respond-to("xs") {
       flex-direction: column;

@@ -23,21 +23,38 @@
 </template>
 
 <script setup>
-defineProps({
-  address: String,
-  phone: String,
-  email: String,
-})
+const props = defineProps({
+  address: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+});
 
+/**
+ * Generates a Google Maps search URL for a given address.
+ *
+ * @param {string} address - The address to search for on Google Maps.
+ * @returns {string} - The URL to search for the address on Google Maps.
+ */
 const getGoogleMapsUrl = (address) => {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
-}
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+};
 
+/**
+ * Generates a WhatsApp URL for a given phone number.
+ *
+ * @param {string} phone - The phone number to be cleaned and used in the URL.
+ * @returns {string} - The WhatsApp URL with the cleaned phone number.
+ */
 const getWhatsAppUrl = (phone) => {
-  // Remove non-numeric characters from phone number
-  const cleanPhone = phone.replace(/\D/g, '')
-  return `https://wa.me/${cleanPhone}`
-}
+  const cleanPhone = phone.replace(/\D/g, "");
+  return `https://wa.me/${cleanPhone}`;
+};
 </script>
 
 <style scoped lang="scss">
