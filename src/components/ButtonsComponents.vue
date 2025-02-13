@@ -2,12 +2,13 @@
   <div class="container-buttons" :style="{ gap: `${gap}px` }">
     <button
       v-for="button in buttons"
-      :key="button.category"
+      :key="button.id || button.category"
       class="button"
       :style="customStyle"
-      @click="selectCategory(button.category)"
+      @click="handleClick(button)"
     >
       {{ button.label }}
+      <slot :name="button.id || button.category" />
     </button>
   </div>
 </template>
@@ -46,10 +47,13 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["category-selected"]);
+const emit = defineEmits(["category-selected", "click"]);
 
-const selectCategory = (category) => {
-  emit("category-selected", category);
+const handleClick = (button) => {
+  if (button.category) {
+    emit("category-selected", button.category);
+  }
+  emit("click", button);
 };
 
 const customStyle = computed(() => ({

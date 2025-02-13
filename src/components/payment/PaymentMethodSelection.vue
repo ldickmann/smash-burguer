@@ -7,7 +7,7 @@
         :key="method.id"
         class="payment-option"
         :class="{ selected: selectedMethod === method.type }"
-        @click="selectMethod(method.type)"
+        @click="selectMethod(method)"
       >
         <img :src="method.icon" :alt="method.name" />
         <span>{{ method.name }}</span>
@@ -34,16 +34,19 @@ const emit = defineEmits(["previous", "next", "select"]);
 const paymentMethods = ref([
   {
     id: 1,
+    type: "credit",
     name: "Cartão de Crédito",
     icon: "/icons/credit-card.svg",
   },
   {
     id: 2,
+    type: "debit",
     name: "Cartão de Débito",
     icon: "/icons/debit-card.svg",
   },
   {
     id: 3,
+    type: "pix",
     name: "PIX",
     icon: "/icons/pix.svg",
   },
@@ -62,9 +65,9 @@ const nextButton = computed(() => ({
   disabled: !selectedMethod.value,
 }));
 
-const selectMethod = (id) => {
-  selectedMethod.value = type;
-  emit("select", type);
+const selectMethod = (method) => {
+  selectedMethod.value = method.type;
+  emit("select", method.type);
 };
 
 const handleButtonClick = (category) => {
