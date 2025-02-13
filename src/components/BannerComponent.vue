@@ -30,6 +30,13 @@ const props = defineProps({
   },
 });
 
+/**
+ * Computes the height of the image based on the presence of an overlay.
+ * If the overlay prop is true, the height is set to "550px".
+ * Otherwise, the height is set to the value of the height prop.
+ *
+ * @returns {string} The computed height of the image.
+ */
 const imageHeight = computed(() => (props.overlay ? "550px" : props.height));
 </script>
 

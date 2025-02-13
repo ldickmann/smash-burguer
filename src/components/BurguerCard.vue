@@ -19,10 +19,22 @@ const props = defineProps({
 
 const emit = defineEmits(["add-to-cart"]);
 
+/**
+ * Computes the formatted price of the burger.
+ * If the price is available, it formats it to two decimal places.
+ * If the price is not available, it defaults to "0.00".
+ *
+ * @computed
+ * @returns {string} The formatted price of the burger.
+ */
 const formattedPrice = computed(() =>
   props.burger.price ? props.burger.price.toFixed(2) : "0.00"
 );
 
+/**
+ * Emits an event to add the current burger to the cart.
+ * The event name is "add-to-cart" and it passes the burger object as a parameter.
+ */
 const emitAddToCart = () => {
   emit("add-to-cart", props.burger);
 };

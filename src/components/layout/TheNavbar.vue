@@ -28,10 +28,17 @@ const props = defineProps({
 
 const isMenuOpen = ref(false);
 
+/**
+ * Toggles the state of the menu.
+ * If the menu is currently open, it will be closed, and vice versa.
+ */
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
 
+/**
+ * This function is typically used to handle the closing of a navigation menu.
+ */
 const closeMenu = () => {
   isMenuOpen.value = false;
 };

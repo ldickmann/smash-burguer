@@ -31,9 +31,9 @@
 </template>
 
 <script setup>
-import SeparatorLines from '../SeparatorLines.vue'
-import ContactInfo from './TheFooterContactInfo.vue'
-import SocialMediaLinks from './TheFooterSocialMediaLinks.vue'
+import SeparatorLines from "@/components/SeparatorLines.vue";
+import ContactInfo from "@/components/layout/TheFooterContactInfo.vue";
+import SocialMediaLinks from "@/components/layout/TheFooterSocialMediaLinks.vue";
 
 const props = defineProps({
   title: String,
@@ -42,7 +42,7 @@ const props = defineProps({
   phone: String,
   email: String,
   workingHours: String,
-})
+});
 </script>
 
 <style scoped lang="scss">

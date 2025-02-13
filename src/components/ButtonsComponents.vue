@@ -58,7 +58,6 @@ const customStyle = computed(() => ({
   fontSize: props.fontSize,
   padding: props.buttonSize,
   borderRadius: props.borderRadius,
-  gap: `${props.gap}px`,
 }));
 </script>
 
