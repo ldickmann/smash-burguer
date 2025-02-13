@@ -1,18 +1,3 @@
-<script setup>
-import SeparatorLines from '../SeparatorLines.vue'
-import ContactInfo from './TheFooterContactInfo.vue'
-import SocialMediaLinks from './TheFooterSocialMediaLinks.vue'
-
-const props = defineProps({
-  title: String,
-  description: String,
-  address: String,
-  phone: String,
-  email: String,
-  workingHours: String,
-})
-</script>
-
 <template>
   <footer>
     <div class="container-utilities">
@@ -44,6 +29,21 @@ const props = defineProps({
     </div>
   </footer>
 </template>
+
+<script setup>
+import SeparatorLines from '../SeparatorLines.vue'
+import ContactInfo from './TheFooterContactInfo.vue'
+import SocialMediaLinks from './TheFooterSocialMediaLinks.vue'
+
+const props = defineProps({
+  title: String,
+  description: String,
+  address: String,
+  phone: String,
+  email: String,
+  workingHours: String,
+})
+</script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/footer';
