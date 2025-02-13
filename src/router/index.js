@@ -1,9 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import MenuPage from '../views/MenuPage.vue';
-import CartPage from '../views/CartPage.vue';
-import PaymentPage from '../views/PaymentPage.vue';
-import ConfirmationPage from '../views/ConfirmationPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,28 +6,34 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/menu',
       name: 'menu',
-      component: MenuPage,
+      component: () => import('../views/MenuPage.vue'),
     },
     {
       path: '/cart',
       name: 'cart',
-      component: CartPage,
+      component: () => import('../views/CartPage.vue'),
     },
     {
       path: '/payment',
       name: 'payment',
-      component: PaymentPage,
+      component: () => import('../views/PaymentPage.vue'),
     },
     {
       path: '/confirmation',
       name: 'confirmation',
-      component: ConfirmationPage,
+      component: () => import('../views/ConfirmationPage.vue'),
     },
+    // Rota 404 - lazy loading
+    {
+      path: '/:catchAll(.*)*',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'),
+    }
   ],
 });
 
