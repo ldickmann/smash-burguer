@@ -33,9 +33,15 @@
       />
     </div>
 
-    <button class="button-cart">
-      <router-link to="/cart">Ir para o Carrinho</router-link>
-    </button>
+    <ButtonsComponents
+      :buttons="[{ label: 'Ver Carrinho', id: 'cart-button' }]"
+      backgroundColor="#3498db"
+      fontSize="18px"
+      buttonSize="16px 32px"
+      borderRadius="8px"
+      :gap="16"
+      @click="handleButtonClick"
+    />
   </div>
 </template>
 
@@ -45,6 +51,7 @@ import { useCartStore } from "../store/cart";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonsComponents.vue";
+import router from "@/router";
 
 const cartStore = useCartStore();
 
@@ -139,6 +146,12 @@ const filterByCategory = (category) => {
 onMounted(() => {
   filterByCategory("foods");
 });
+
+const handleButtonClick = (button) => {
+  if (button.id === "cart-button") {
+    router.push("/cart");
+  }
+};
 </script>
 
 <style scoped lang="scss">

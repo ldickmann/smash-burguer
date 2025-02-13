@@ -4,15 +4,18 @@
       <h2>Confirme seu Pedido</h2>
       <div class="cart-items">
         <div v-for="item in cartItems" :key="item.id" class="cart-item">
-          <span class="item-name">{{ item.name }}</span>
-          <div class="item-details">
-            <span class="item-quantity">Qtd: {{ item.quantity }}</span>
-            <span class="item-price">{{ formatPrice(item.price) }}</span>
+          <div class="item-info">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-price">| {{ formatPrice(item.price) }}</span>
+            <span class="item-quantity">| Qtd: {{ item.quantity || 1 }}</span>
+          </div>
+          <div class="item-subtotal">
+            Preço Produto: {{ formatPrice(item.price * (item.quantity || 1)) }}
           </div>
         </div>
       </div>
       <div class="total">
-        <strong>Total: </strong>
+        <strong>Total do Pedido: </strong>
         <span>{{ formatPrice(orderTotal) }}</span>
       </div>
       <ButtonsComponents
@@ -21,7 +24,7 @@
         fontSize="18px"
         buttonSize="16px 32px"
         borderRadius="8px"
-        @category-selected="handleConfirm"
+        @click="handleConfirm"
       >
         Confirmar Pedido
       </ButtonsComponents>
@@ -44,18 +47,24 @@ const props = defineProps({
 
 const emit = defineEmits(["confirm"]);
 
+const getItemSubtotal = (item) => {
+  return item.price * (item.quantity || 1);
+};
+
 const orderTotal = computed(() => {
-  return props.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  return props.cartItems.reduce((acc, item) => {
+    return acc + getItemSubtotal(item);
+  }, 0);
 });
 
 const confirmButton = computed(() => ({
-  category: "confirm",
+  id: "confirm-order",
   label: "Confirmar Pedido",
   disabled: props.cartItems.length === 0,
 }));
 
-const handleConfirm = () => {
-  if (props.cartItems.length > 0) {
+const handleConfirm = (button) => {
+  if (button.id === "confirm-order" && props.cartItems.length > 0) {
     emit("confirm", {
       items: props.cartItems,
       total: orderTotal.value,

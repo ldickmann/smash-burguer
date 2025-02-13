@@ -38,11 +38,7 @@
           <router-link to="/menu" class="cart-page__button">
             {{ continueBuyingText }}
           </router-link>
-          <router-link
-            to="/payment"
-            class="cart-page__button--primary"
-            :disabled="isCartEmpty"
-          >
+          <router-link to="/payment" class="cart-page__button--primary">
             {{ checkoutText }}
           </router-link>
         </div>
