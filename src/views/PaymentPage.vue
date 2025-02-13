@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Pagamento 💳</h1>
-    <p>Total: R$ {{ total.toFixed(2) }}</p>
+    <p>Total: {{ formatPrice(total) }}</p>
     <button @click="confirmPayment">Pagar</button>
   </div>
 </template>
@@ -10,6 +10,7 @@
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useCartStore } from "../store/cart";
+import { formatPrice } from "@/utils/formatters";
 
 const router = useRouter();
 const cartStore = useCartStore();
