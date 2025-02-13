@@ -1,3 +1,20 @@
+<template>
+  <div class="container-social-media">
+    <h2>Follow Us</h2>
+    <div class="container-icons">
+      <a
+        v-for="link in socialMediaLinks"
+        :key="link.name"
+        :href="link.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon v-if="link.icon" :icon="link.icon" />
+      </a>
+    </div>
+  </div>
+</template>
+
 <script setup>
 const socialMediaLinks = [
   {
@@ -22,23 +39,6 @@ const socialMediaLinks = [
   },
 ]
 </script>
-
-<template>
-  <div class="container-social-media">
-    <h2>Follow Us</h2>
-    <div class="container-icons">
-      <a
-        v-for="link in socialMediaLinks"
-        :key="link.name"
-        :href="link.url"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <font-awesome-icon v-if="link.icon" :icon="link.icon" />
-      </a>
-    </div>
-  </div>
-</template>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/footer';
