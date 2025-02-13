@@ -1,21 +1,3 @@
-<script setup>
-defineProps({
-  address: String,
-  phone: String,
-  email: String,
-})
-
-const getGoogleMapsUrl = (address) => {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
-}
-
-const getWhatsAppUrl = (phone) => {
-  // Remove non-numeric characters from phone number
-  const cleanPhone = phone.replace(/\D/g, '')
-  return `https://wa.me/${cleanPhone}`
-}
-</script>
-
 <template>
   <div class="container-contact">
     <h2>Address</h2>
@@ -39,6 +21,24 @@ const getWhatsAppUrl = (phone) => {
     </div>
   </div>
 </template>
+
+<script setup>
+defineProps({
+  address: String,
+  phone: String,
+  email: String,
+})
+
+const getGoogleMapsUrl = (address) => {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+}
+
+const getWhatsAppUrl = (phone) => {
+  // Remove non-numeric characters from phone number
+  const cleanPhone = phone.replace(/\D/g, '')
+  return `https://wa.me/${cleanPhone}`
+}
+</script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/components/footer';
