@@ -23,7 +23,6 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 - [ESLint](https://eslint.org/) - Linter de JavaScript
 - [Prettier](https://prettier.io/) - Formatador de código
 
-
 ## 📦 Instalação
 
 1. Clone o repositório:
@@ -46,6 +45,7 @@ yarn dev
 ```
 
 4. Acesse no navegador:
+
 ```bash
 http://localhost:5173
 ```
@@ -65,9 +65,11 @@ src/
 │   └── main.scss    # Arquivo principal de estilos
 ├── components/      # Componentes Vue reutilizáveis
 ├── layouts/         # Componentes de layout
+├── plugins/        # Arquivos plugins para biblioteca(s) de icons
 ├── router/         # Configuração do Vue Router
 ├── store/          # Módulos do Pinia store
 ├── plugins/        # Plugins e configurações
+├── utils/          # Funções utilitárias
 └── views/          # Componentes de página
 ```
 
