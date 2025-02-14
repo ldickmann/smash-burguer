@@ -6,13 +6,18 @@
 @use "./styles/base/mixins";
 
 // Components
+@use "./styles/components/alert";
 @use "./styles/components/banner";
 @use "./styles/components/burger-card";
+@use "./styles/components/buttons";
 @use "./styles/components/carousel";
 @use "./styles/components/footer";
 @use "./styles/components/navbar";
 @use "./styles/components/separator";
 
 // Pages
+@use "./styles/pages/cart-page";
 @use "./styles/pages/home";
 @use "./styles/pages/menu-page";
+@use "./styles/pages/not-found";
+@use "./styles/pages/payment";
