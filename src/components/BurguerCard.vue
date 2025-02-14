@@ -3,12 +3,22 @@
     <img :src="burger.image" :alt="burger.name" class="burguer-image" />
     <h3>{{ burger.name }}</h3>
     <p>R$ {{ formattedPrice }}</p>
-    <button @click="emitAddToCart" class="burger-button">Adicionar ao Carrinho</button>
+    <ButtonsComponents
+      class="burger-button"
+      :buttons="[{ label: 'Adicionar ao carrinho' }]"
+      backgroundColor="#000000"
+      fontColor="#ffffff"
+      fontSize="14px"
+      buttonSize="8px 16px"
+      borderRadius="4px"
+      @click="emitAddToCart"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import ButtonsComponents from "./ButtonsComponents.vue";
 
 const props = defineProps({
   burger: {
