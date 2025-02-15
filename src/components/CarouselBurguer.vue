@@ -39,6 +39,7 @@ const carouselConfig = computed(() => ({
   height: 550,
   itemsToShow: 3,
   snapAlign: "center",
+  wrapAround: true,
   breakpoints: {
     425: {
       itemsToShow: 2,

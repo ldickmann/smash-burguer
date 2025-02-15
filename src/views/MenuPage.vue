@@ -110,16 +110,30 @@ const foods = ref([
 const drinks = ref([
   {
     id: 8,
-    name: "Refrigerante",
+    name: "Refrigerante Copo",
     price: 5.99,
     image: "./images/drinks/refrigerante.jpg",
+    category: "drinks",
+  },
+  {
+    id: 9,
+    name: "Coca Cola Lata",
+    price: 4.99,
+    image: "./images/drinks/coca-cola-lata.jpg",
+    category: "drinks",
+  },
+  {
+    id: 10,
+    name: "Suco de Abacaxi",
+    price: 6.99,
+    image: "./images/drinks/suco-abacaxi.jpg",
     category: "drinks",
   },
 ]);
 
 const desserts = ref([
   {
-    id: 9,
+    id: 11,
     name: "Sorvete de Pote",
     price: 7.99,
     image: "./images/desserts/sorvete-pote.jpg",

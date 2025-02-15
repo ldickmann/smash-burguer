@@ -71,7 +71,7 @@ const burgers = [
     id: 6,
     name: "Chicken Burger",
     description: "Pão brioche, frango empanado, alface e maionese.",
-    price: 19.9,
+    price: 23.9,
     image: "/images/foods/chicken-burger.jpg",
   },
   {
