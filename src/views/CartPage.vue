@@ -3,17 +3,7 @@
     <div class="cart-page">
       <h1 class="cart-page__title">{{ title }}</h1>
 
-      <div v-if="!userStore.isAuthenticated" class="cart-page__empty">
-        <p>Faça login para acessar seu carrinho</p>
-        <div class="cart-page__auth-buttons">
-          <router-link to="/login" class="cart-page__button">Fazer Login</router-link>
-          <router-link to="/register" class="cart-page__button">
-            Criar Conta
-          </router-link>
-        </div>
-      </div>
-
-      <div v-else-if="isCartEmpty" class="cart-page__empty">
+      <div v-if="isCartEmpty" class="cart-page__empty">
         <p>{{ emptyCartMessage }}</p>
         <router-link to="/menu" class="cart-page__button">
           {{ returnToMenuText }}
@@ -48,7 +38,33 @@
           <router-link to="/menu" class="cart-page__button">
             {{ continueBuyingText }}
           </router-link>
-          <router-link to="/payment" class="cart-page__button--primary">
+
+          <!-- Para continuar para a página de pagamento, verifica se está logado ou
+          direciona para a página de login -->
+          <div v-if="!userStore.isAuthenticated" class="cart-page__auth-notice">
+            <p>Para finalizar seu pedido, faça login ou crie uma conta</p>
+            <div class="cart-page__auth-buttons">
+              <ButtonComponent
+                :buttons="[{ label: loginText, id: 'login' }]"
+                backgroundColor="#42b983"
+                fontColor="#ffffff"
+                fontSize="16px"
+                buttonSize="0.75rem 1.5rem"
+                borderRadius="6px"
+                @click="() => $router.push('/login')"
+              />
+              <ButtonComponent
+                :buttons="[{ label: registerText, id: 'register' }]"
+                backgroundColor="#42b983"
+                fontColor="#ffffff"
+                fontSize="16px"
+                buttonSize="0.75rem 1.5rem"
+                borderRadius="6px"
+                @click="() => $router.push('/register')"
+              />
+            </div>
+          </div>
+          <router-link v-else to="/payment" class="cart-page__button--primary">
             {{ checkoutText }}
           </router-link>
         </div>
@@ -58,21 +74,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { computed } from "vue";
 import { useCartStore } from "@/store/cart";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
-
-onMounted(() => {
-  if (!userStore.isAuthenticated) {
-    router.push("/login");
-  }
-});
 
 // Computed Properties
 const cartItems = computed(() => cartStore.items);
@@ -88,6 +97,8 @@ const removeButtonText = "Remover";
 const totalLabel = "Total:";
 const continueBuyingText = "Continuar Comprando";
 const checkoutText = "Finalizar Pedido";
+const loginText = "Fazer Login";
+const registerText = "Criar Conta";
 
 // Methods
 const removeItem = (index) => {

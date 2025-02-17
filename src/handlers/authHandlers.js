@@ -1,18 +1,19 @@
-import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
 
-export const useAuthHandlers = () => {
-  const userStore = useUserStore();
+export function useAuthHandlers() {
   const router = useRouter();
+  const userStore = useUserStore();
 
   const handleLogin = async (credentials) => {
     try {
       await userStore.login(credentials);
-      router.push('/cart');
+      router.push('/');
       return { success: true };
     } catch (error) {
-      console.error('Erro no login:', error);
-      return { error: 'Email ou senha inválidos' };
+      return {
+        error: 'Email ou senha inválidos'
+      };
     }
   };
 
@@ -25,4 +26,4 @@ export const useAuthHandlers = () => {
     handleLogin,
     handleLogout
   };
-};
+}

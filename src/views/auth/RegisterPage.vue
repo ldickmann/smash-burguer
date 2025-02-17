@@ -27,15 +27,27 @@
           id="address"
           label="Endereço"
           v-model="form.address"
-          type="textarea"
+          type="text"
           required
         />
 
-        <button type="submit" class="submit-button">Criar Conta</button>
-        <p class="login-link">
-          Já tem uma conta?
-          <router-link to="/login">Fazer Login</router-link>
-        </p>
+        <ButtonComponent
+          :buttons="[{ label: 'Criar Conta', id: 'register' }]"
+          backgroundColor="#063520"
+          fontColor="#ffffff"
+          fontSize="16px"
+          buttonSize="0.75rem 1.5rem"
+          borderRadius="6px"
+        />
+        <ButtonComponent
+          :buttons="[{ label: 'Já tem uma conta? Faça login', id: 'login' }]"
+          backgroundColor="#063520"
+          fontColor="#ffffff"
+          fontSize="16px"
+          buttonSize="0.75rem 1.5rem"
+          borderRadius="6px"
+          @click="() => router.push('/login')"
+        />
       </form>
     </div>
   </section>
@@ -46,6 +58,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import FormGroup from "@/components/FormGroup.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -71,5 +84,5 @@ const handleRegister = async () => {
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/styles/pages/register";
+@use "@/assets/styles/pages/auth/register";
 </style>

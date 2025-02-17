@@ -11,6 +11,20 @@
     padding: 2rem;
     background-color: $color-blue-background;
 
+    &__auth-notice {
+      background-color: $color-white-background-secondary;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      text-align: center;
+
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        color: $color-text-quinary;
+      }
+    }
+
     &__auth-buttons {
       display: flex;
       gap: 1rem;
