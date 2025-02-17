@@ -3,7 +3,17 @@
     <div class="cart-page">
       <h1 class="cart-page__title">{{ title }}</h1>
 
-      <div v-if="isCartEmpty" class="cart-page__empty">
+      <div v-if="!userStore.isAuthenticated" class="cart-page__empty">
+        <p>Faça login para acessar seu carrinho</p>
+        <div class="cart-page__auth-buttons">
+          <router-link to="/login" class="cart-page__button">Fazer Login</router-link>
+          <router-link to="/register" class="cart-page__button">
+            Criar Conta
+          </router-link>
+        </div>
+      </div>
+
+      <div v-else-if="isCartEmpty" class="cart-page__empty">
         <p>{{ emptyCartMessage }}</p>
         <router-link to="/menu" class="cart-page__button">
           {{ returnToMenuText }}
@@ -48,12 +58,21 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useCartStore } from "../store/cart";
+import { computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useCartStore } from "@/store/cart";
+import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
 
-// Store
+const router = useRouter();
 const cartStore = useCartStore();
+const userStore = useUserStore();
+
+onMounted(() => {
+  if (!userStore.isAuthenticated) {
+    router.push("/login");
+  }
+});
 
 // Computed Properties
 const cartItems = computed(() => cartStore.items);
