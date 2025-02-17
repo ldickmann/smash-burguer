@@ -3,13 +3,21 @@
     <div class="login-container">
       <h1>Login</h1>
       <form @submit.prevent="handleLogin" class="login-form">
-        <FormGroup id="email" label="E-mail" v-model="form.email" type="email" required />
+        <FormGroup
+          id="email"
+          label="E-mail"
+          v-model="form.email"
+          type="email"
+          :error="error.email"
+          required=""
+        />
 
         <FormGroup
           id="password"
           label="Senha"
           v-model="form.password"
           type="password"
+          :error="error.password"
           required
         />
 
@@ -46,6 +54,11 @@ const userStore = useUserStore();
 const { handleLogin: authLogin } = useAuthHandlers();
 
 const form = ref({
+  email: "",
+  password: "",
+});
+
+const error = ref({
   email: "",
   password: "",
 });

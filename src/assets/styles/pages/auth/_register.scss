@@ -2,7 +2,7 @@
 @use "../../base/mixins" as *;
 
 .register-section {
-  padding: 8rem 0;
+  padding: 8rem 1rem;
   min-height: 100vh;
   background-color: $color-cream-background;
   @include flex-center;

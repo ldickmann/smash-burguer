@@ -6,6 +6,7 @@
         <button class="close-button" @click="closeModal">&times;</button>
       </div>
 
+      <!-- Corpo do Modal -->
       <div class="modal-body">
         <div class="product-details">
           <img :src="item.image" :alt="item.name" class="product-image" />
@@ -17,7 +18,10 @@
         </div>
 
         <!-- Group de Items Adicionais e input 'checkbox' -->
-        <div class="ingredients-section">
+        <div
+          class="ingredients-section"
+          v-if="item.category !== 'drinks' && defaultIngredients.length > 0"
+        >
           <h4>Deseja remover algo?</h4>
           <div class="ingredients-list">
             <div
@@ -36,12 +40,33 @@
           </div>
         </div>
 
+        <!-- Quantidade para Bebidas -->
+        <div class="additionals-section" v-if="item.category === 'drinks'">
+          <h4>Quantidade</h4>
+          <div class="additionals-list">
+            <div class="additional-item">
+              <span class="additional-name">{{ item.name }}</span>
+              <span class="additional-price">{{ formatPrice(item.price) }}</span>
+              <div class="quantity-control">
+                <button
+                  @click="decreaseQuantity(drinkQuantity)"
+                  :disabled="drinkQuantity.quantity === 0"
+                >
+                  -
+                </button>
+                <span>{{ drinkQuantity.quantity }}</span>
+                <button @click="increaseQuantity(drinkQuantity)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Group de Items Adicionais e input 'number' -->
-        <div class="additionals-section">
+        <div class="additionals-section" v-if="showAdditionals">
           <h4>Adicionais</h4>
           <div class="additionals-list">
             <div
-              v-for="additional in additionalItems"
+              v-for="additional in getAdditionalsByCategory"
               :key="additional.id"
               class="additional-item"
             >
@@ -114,23 +139,46 @@ const emit = defineEmits(["close", "add-to-cart"]);
 
 const observation = ref("");
 
-const defaultIngredients = ref([
-  { id: 1, name: "Alface", included: true },
-  { id: 2, name: "Tomate", included: true },
-  { id: 3, name: "Cebola", included: true },
-  { id: 4, name: "Queijo", included: true },
-  { id: 5, name: "Molho especial", included: true },
-]);
+const drinkQuantity = ref({ quantity: 0 });
 
-const additionalItems = ref([
+const showAdditionals = computed(() => {
+  return props.item.category === "foods" || props.item.category === "desserts";
+});
+
+const defaultIngredients = computed(() => {
+  if (!props.item.ingredients) {
+    return [];
+  }
+
+  return props.item.ingredients.map((ingredient, index) => ({
+    id: index + 1,
+    name: ingredient,
+    included: false,
+  }));
+});
+
+const foodAdditionals = ref([
   { id: 1, name: "Bacon", price: 3.5, quantity: 0 },
   { id: 2, name: "Ovo", price: 2.0, quantity: 0 },
   { id: 3, name: "Queijo Cheddar", price: 3.0, quantity: 0 },
   { id: 4, name: "Cebola Caramelizada", price: 2.5, quantity: 0 },
 ]);
 
+const dessertAdditionals = ref([
+  { id: 1, name: "Calda de Chocolate", price: 2.0, quantity: 0 },
+  { id: 2, name: "Granulado", price: 1.5, quantity: 0 },
+  { id: 3, name: "Leite Condensado", price: 2.5, quantity: 0 },
+  { id: 4, name: "Morango", price: 3.0, quantity: 0 },
+  { id: 5, name: "Nutella", price: 4.0, quantity: 0 },
+  { id: 6, name: "Paçoca", price: 1.5, quantity: 0 },
+]);
+
 const calculateTotalPrice = computed(() => {
-  const additionalsTotal = additionalItems.value.reduce(
+  if (props.item.category === "drinks") {
+    return props.item.price * (drinkQuantity.value.quantity || 1);
+  }
+
+  const additionalsTotal = getAdditionalsByCategory.value.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
@@ -151,19 +199,33 @@ const closeModal = () => {
   emit("close");
 };
 
+const getAdditionalsByCategory = computed(() => {
+  if (props.item.category === "foods") {
+    return foodAdditionals.value;
+  }
+  if (props.item.category === "desserts") {
+    return dessertAdditionals.value;
+  }
+  return [];
+});
+
 const addToCart = () => {
   const customizedItem = {
     ...props.item,
-    removedIngredients: defaultIngredients.value
-      .filter((ing) => !ing.included)
-      .map((ing) => ing.name),
-    additionals: additionalItems.value
-      .filter((add) => add.quantity > 0)
-      .map((add) => ({
-        name: add.name,
-        quantity: add.quantity,
-        price: add.price,
-      })),
+    removedIngredients:
+      props.item.category !== "drinks"
+        ? defaultIngredients.value.filter((ing) => !ing.included).map((ing) => ing.name)
+        : [],
+    additionals: showAdditionals.value
+      ? getAdditionalsByCategory.value
+          .filter((add) => add.quantity > 0)
+          .map((add) => ({
+            name: add.name,
+            quantity: add.quantity,
+            price: add.price,
+          }))
+      : [],
+    quantity: props.item.category === "drinks" ? drinkQuantity.value.quantity || 1 : 1,
     observation: observation.value,
     finalPrice: calculateTotalPrice.value,
   };
