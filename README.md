@@ -2,14 +2,17 @@
 
 Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitindo aos clientes navegar pelo cardápio, fazer pedidos e realizar pagamentos online.
 
-## 🚀 Funcionalidades
+## 🚀 Funcionalidades Implementadas
 
-- Cardápio interativo com carrossel de hambúrgueres
-- Carrinho de compras com gestão de itens
-- Processo de checkout
-- Design responsivo
-- Cálculos de preço em tempo real
-- Interface intuitiva e amigável
+- ✅ Autenticação completa de usuários (login/registro)
+- ✅ Perfil de usuário com gestão de dados
+- ✅ Cardápio interativo com carrossel de produtos
+- ✅ Carrinho de compras com gestão de itens
+- ✅ Personalização de pedidos
+- ✅ Histórico de pedidos
+- ✅ Gerenciamento de endereços com API ViaCEP
+- ✅ Design responsivo
+- ✅ Cálculos de preço em tempo real
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -22,6 +25,7 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 - [Font Awesome](https://fontawesome.com/) - Ícones vetoriais
 - [ESLint](https://eslint.org/) - Linter de JavaScript
 - [Prettier](https://prettier.io/) - Formatador de código
+- [ViaCEP API](https://viacep.com.br/) - API de CEP e Endereços
 
 ## 📦 Instalação
 
@@ -54,20 +58,24 @@ http://localhost:5173
 
 - `yarn dev` - Inicia o servidor de desenvolvimento
 - `yarn lint` - Executa o ESLint
+- `yarn format` - Formata o código com Prettier
 
 ## 🌐 Estrutura do Projeto
 
 ```
 src/
-├── assets/          # Recursos estáticos e estilos globais
+├── assets/         # Recursos estáticos e estilos globais
 │   ├── icons/       # Ícones da aplicação
 │   ├── styles/      # Arquivos SCSS
 │   └── main.scss    # Arquivo principal de estilos
-├── components/      # Componentes Vue reutilizáveis
-├── layouts/         # Componentes de layout
+├── components/     # Componentes Vue reutilizáveis
+├── handlers/       # Manipuladores de eventos e lógica de negócios
+├── layouts/        # Componentes de layout
 ├── plugins/        # Arquivos plugins para biblioteca(s) de icons
 ├── router/         # Configuração do Vue Router
-├── store/          # Módulos do Pinia store
+├── services/       # Services paracomunicação com APIs
+├── store/          # Módulos do Pinia store (deprecated)
+├── stores/         # Novo diretório para stores Pinia (recomendado)
 ├── plugins/        # Plugins e configurações
 ├── utils/          # Funções utilitárias
 └── views/          # Componentes de página
@@ -77,11 +85,20 @@ src/
 
 Este projeto está em desenvolvimento ativo. Próximas funcionalidades:
 
-- [ ] Autenticação de usuários
-- [ ] Histórico de pedidos
-- [ ] Gerenciamento de endereços
-- [ ] Integração de pagamento
+- [x] Autenticação de usuários
+  - [x] Login
+  - [x] Registro
+  - [x] Perfil do usuário
+- [x] Histórico de pedidos
+- [x] Gerenciamento de endereços
+  - [x] Integração com API ViaCEP
+  - [x] Validação de endereço
+- [ ] Integração com API de pagamento
 - [ ] Painel administrativo
+  - [ ] Gestão de produtos
+  - [ ] Gestão de pedidos
+  - [ ] Relatórios de vendas
+- [ ] Notificações em tempo real
 
 ## 📝 Como Contribuir
 
