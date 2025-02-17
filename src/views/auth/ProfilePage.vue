@@ -42,6 +42,7 @@
                 label="Celular"
                 v-model="userInfo.phone"
                 type="tel"
+                mask="phone"
                 required
                 :error="formErrors.phone"
               />
@@ -51,6 +52,7 @@
                 label="CEP"
                 v-model="userInfo.CEP"
                 type="text"
+                mask="cep"
                 required
                 :error="formErrors.CEP"
                 @blur="handleCEPBlur"

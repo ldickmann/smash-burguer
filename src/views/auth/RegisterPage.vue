@@ -59,6 +59,7 @@
           label="Celular"
           v-model="form.phone"
           type="tel"
+          mask="phone"
           :error="error.phone"
           placeholder="11 99999 9999"
           required
@@ -68,7 +69,8 @@
           id="CEP"
           label="CEP"
           v-model="form.CEP"
-          type="number"
+          type="text"
+          mask="cep"
           :error="error.CEP"
           placeholder="00000-000"
           required
