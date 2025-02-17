@@ -8,7 +8,7 @@
           <p>{{ burger.description }}</p>
           <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
           <button @click="addToCart(burger)" class="carousel-button">
-            Adicionar ao Carrinho
+            Adicionar ao Pedido
           </button>
         </div>
       </div>

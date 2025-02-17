@@ -9,6 +9,7 @@
       @input="$emit('update:modelValue', $event.target.value)"
       :required="required"
       :placeholder="placeholder"
+      :autocomplete="autocomplete"
       class="form-input"
     />
     <textarea
@@ -18,6 +19,7 @@
       @input="$emit('update:modelValue', $event.target.value)"
       :required="required"
       :placeholder="placeholder"
+      :autocomplete="autocomplete"
       class="form-textarea"
     ></textarea>
     <span v-if="error" class="form-error">{{ error }}</span>
@@ -25,7 +27,7 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   id: {
     type: String,
     required: true,
@@ -35,12 +37,12 @@ defineProps({
     default: "",
   },
   modelValue: {
-    type: [String, Number],
+    type: [String, Number, Boolean],
     default: "",
   },
   type: {
     type: String,
-    default: "text",
+    default: "input",
   },
   required: {
     type: Boolean,
@@ -54,9 +56,18 @@ defineProps({
     type: String,
     default: "",
   },
+  autocomplete: {
+    type: String,
+    default: "off",
+  },
 });
 
-defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const updateValue = (event) => {
+  const value = props.type === "checkbox" ? event.target.checked : event.target.value;
+  emit("update:modelValue", value);
+};
 </script>
 
 <style scoped lang="scss">

@@ -13,7 +13,7 @@
         <router-link to="/" @click="closeMenu">Home</router-link>
         <router-link to="/menu" @click="closeMenu">Cardápio</router-link>
         <router-link to="/cart" @click="closeMenu">Carrinho</router-link>
-        <router-link to="/payment" @click="closeMenu">Pagamento</router-link>
+        <router-link to="/profile" @click="closeMenu">Perfil</router-link>
       </nav>
     </div>
   </header>

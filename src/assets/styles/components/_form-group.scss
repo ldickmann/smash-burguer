@@ -41,4 +41,21 @@
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-left: 1rem;
+    accent-color: $tertiary-color;
+  }
+
+  &.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    label {
+      margin-bottom: 0;
+    }
+  }
 }
