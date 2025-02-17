@@ -1,0 +1,57 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.login-section {
+  padding: 8rem 0;
+  min-height: 100vh;
+  background-color: $color-cream-background;
+  @include flex-center;
+
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background-color: $secondary-color;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px $shadow-color;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: $color-text-primary;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 1rem;
+      color: $color-text-primary;
+
+      a {
+        color: $tertiary-color;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+
+        &:hover {
+          color: $quaternary-color;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  @include respond-to("sm") {
+    padding: 4rem 1rem;
+
+    .login-container {
+      max-width: 100%;
+      margin: 0 1rem;
+    }
+  }
+}

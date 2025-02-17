@@ -1,4 +1,5 @@
 <template>
+  <!-- Banner component | Tendo imagem, titulo e parágrafo -->
   <div :class="['banner', { overlay: overlay }]">
     <div class="content-wrapper">
       <h1>{{ title }}</h1>
@@ -6,6 +7,7 @@
       <p>{{ paragraph }}</p>
     </div>
     <div class="image-wrapper">
+      <!-- Exibe a imagem do banner, src e alt e estilo dinâmico de altura -->
       <img :src="image" :alt="alt" :style="{ height: imageHeight }" />
     </div>
   </div>
@@ -16,10 +18,18 @@ import { computed } from "vue";
 import SeparatorLines from "@/components/SeparatorLines.vue";
 
 const props = defineProps({
-  title: String,
-  paragraph: String,
-  image: String,
-  alt: String,
+  title: {
+    type: String,
+  },
+  paragraph: {
+    type: String,
+  },
+  image: {
+    String,
+  },
+  alt: {
+    String,
+  },
   overlay: {
     type: Boolean,
     default: false,
@@ -31,11 +41,11 @@ const props = defineProps({
 });
 
 /**
- * Computes the height of the image based on the presence of an overlay.
- * If the overlay prop is true, the height is set to "550px".
- * Otherwise, the height is set to the value of the height prop.
+ * Computa a altura da imagem com base na presença do overlay.
+ * Se o 'overlay' for true, a altura será "550px".
+ * Caso contrário, a altura será definida pelo valor da propriedade 'height'.
  *
- * @returns {string} The computed height of the image.
+ * @returns {string} A altura computada da imagem.
  */
 const imageHeight = computed(() => (props.overlay ? "550px" : props.height));
 </script>

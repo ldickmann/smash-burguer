@@ -1,0 +1,60 @@
+@use "../base/variables" as *;
+
+// Estilização do container principal do formulário
+.form-group {
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  // Estilização do rótulo (label) do formulário
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  // Estilização dos campos input e textarea
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: $secondary-color;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+
+    // Estilização, só aplica se o campo tiver erro (classe 'has-error')
+    &.has-error {
+      border-color: $color-border-error;
+
+      // Estilização quando o campo está em foco
+      &:focus {
+        border-color: $tertiary-color;
+        box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $tertiary-color;
+      box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
+    }
+  }
+
+  // Estilização do campo de texto (textarea)
+  .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  // Estilização da mensagem de erro
+  .form-error {
+    display: block;
+    color: $color-border-error;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+}
