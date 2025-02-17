@@ -10,7 +10,7 @@
       :required="required"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
-      class="form-input"
+      :class="['form-input', { 'has-error': error }]"
     />
     <textarea
       v-else
@@ -20,7 +20,7 @@
       :required="required"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
-      class="form-textarea"
+      :class="['form-textarea', { 'has-error': error }]"
     ></textarea>
     <span v-if="error" class="form-error">{{ error }}</span>
   </div>

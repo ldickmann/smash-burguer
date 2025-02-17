@@ -28,6 +28,15 @@
       border-color: $tertiary-color;
       box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
     }
+
+    &.has-error {
+      border-color: $color-border-error;
+
+      &:focus {
+        border-color: $color-border-error;
+        box-shadow: 0 0 0 2px rgba($color-border-error, 0.1);
+      }
+    }
   }
 
   .form-textarea {
