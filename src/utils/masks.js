@@ -7,15 +7,20 @@ export const maskPhone = (value) => {
   if (!value) return "";
 
   // Remove caracteres não numéricos
-  value = value.replace(/\D/g, "");
+  const numbers = value.replace(/\D/g, "");
 
   // Aplica limite de 11 caracteres
-  value = value.slice(0, 11);
+  const cleaned = numbers.slice(0, 11);
 
   // Aplica máscara
-  value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-
-  return value;
+  if (cleaned.length > 6) {
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  } else if (cleaned.length > 2) {
+    return cleaned.replace(/(\d{2})(\d{0,5})/, "($1) $2");
+  } else if (cleaned.length > 0) {
+    return cleaned.replace(/^(\d{2})/, "($1");
+  }
+  return cleaned;
 };
 
 /**
@@ -27,13 +32,14 @@ export const maskCEP = (value) => {
   if (!value) return "";
 
   // Remove caracteres não numéricos
-  value = value.replace(/\D/g, "");
+  const numbers = value.replace(/\D/g, "");
 
   // Aplica limite de 8 caracteres
-  value = value.slice(0, 8);
+  const cleaned = numbers.slice(0, 8);
 
-  // Aplica a máscara 00000-000
-  value = value.replace(/^(\d{5})(\d{3})/, '$1-$2');
-
-  return value;
+  // Aplica a máscara no formato '00000-000'
+  if (cleaned.length > 6) {
+    return cleaned.replace(/^(\d{5})(\d{3})/, "$1-$2");
+  }
+  return cleaned;
 };

@@ -84,10 +84,36 @@ export const validateBirthDate = (birthDate) => {
 // Validação de número de celular
 export const validatePhone = (phone) => {
   if (!phone) return { isValid: false, message: "O número é obrigatório" };
-  const phoneRegex = /^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/;
+
+  // Remove caracteres não numéricos
+  const cleanPhone = phone.replace(/\D/g, "");
+
+  if (cleanPhone.length !== 11) {
+    return {
+      isValid: false,
+      message: "Número inválido. O número deve conter 11 dígitos (Ex.: 11999999999)",
+    };
+  }
+
+  const ddd = cleanPhone.substring(0, 2);
+  if (parseInt(ddd) < 11 || parseInt(ddd) > 99) {
+    return {
+      isValid: false,
+      message: "DDD inválido",
+    };
+  }
+
+  // Verificação para número de celular iniciar com 9
+  if (cleanPhone[2] !== "9") {
+    return {
+      isValid: false,
+      message: "Número inválido. O número deve começar com 9.",
+    };
+  }
+
   return {
-    isValid: phoneRegex.test(phone),
-    message: phoneRegex.test(phone) ? "" : "Número inválido (Ex.: 11999999999)",
+    isValid: true,
+    message: "",
   };
 };
 
@@ -106,6 +132,7 @@ export const validateCEP = async (cep) => {
     };
   }
 
+  // Busca o CEP (endereço) na API ViaCEP
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
     const data = await response.json();
