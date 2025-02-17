@@ -29,3 +29,5 @@ coverage
 .vscode/
 
 *.tsbuildinfo
+
+/coverage

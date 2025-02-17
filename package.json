@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test:unit": "vitest",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@fontsource/bebas-neue": "^5.1.1",
@@ -35,11 +36,12 @@
     "esbuild": "^0.25.0",
     "eslint": "^9.18.0",
     "eslint-plugin-vue": "^9.32.0",
+    "happy-dom": "^17.1.0",
     "jsdom": "^26.0.0",
     "prettier": "^3.4.2",
     "sass-embedded": "^1.83.4",
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.0",
-    "vitest": "^3.0.2"
+    "vitest": "^3.0.5"
   }
 }
