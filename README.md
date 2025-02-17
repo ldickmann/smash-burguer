@@ -101,9 +101,9 @@ Este projeto está em desenvolvimento ativo. Próximas funcionalidades:
 
 ## 🧪 Testes
 
-> 🌱 **Nota do Desenvolvedor:** Este projeto marca meu início na jornada de testes automatizados! Estou utilizando Vitest para aprender e implementar testes unitários e de integração. É um trabalho em progresso, onde cada teste representa um novo aprendizado.
+> 🌱 **Nota do Desenvolvedor:** Este projeto marca meu início na jornada de testes automatizados! Utilizando Vitest, consegui atingir 100% de cobertura no ButtonComponent, que serviu como meu primeiro componente totalmente testado. É um trabalho em progresso, onde cada teste representa um novo aprendizado.
 
-O projeto possui testes unitários e de integração para garantir a qualidade do código. Para mais detalhes sobre a implementação e cobertura dos testes, consulte nossa [documentação de testes](./TESTING.md).
+Para mais detalhes sobre a implementação e cobertura dos testes, consulte nossa [documentação de testes](./TESTING.md).
 
 ## 📝 Como Contribuir
 

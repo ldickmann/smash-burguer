@@ -8,7 +8,7 @@ Implementei testes unitários para validar o funcionamento isolado de componente
 
 ### Componentes Testados
 
-- ✓ Buttons (ButtonComponent)
+- ✓ Buttons (ButtonComponent) - 100% cobertura
   - Verificação de cliques e eventos
     - Emissão de evento click
     - Emissão de evento category-selected
@@ -43,7 +43,7 @@ Implementamos testes para verificar a interação entre componentes:
 - ✓ Fluxo do carrinho de compras
 - ✓ Processo de checkout
 
-## Resultados dos Testes
+## Resultados de Cobertura
 
 ### ButtonComponent
 
@@ -52,19 +52,25 @@ Implementamos testes para verificar a interação entre componentes:
 ✓ deve emitir evento click com o botão clicado
 ✓ deve emitir category-selected quando botão tem categoria
 ✓ deve aplicar estilos personalizados
+
+Cobertura:
+- Statements: 100%
+- Branches: 75%
+- Functions: 100%
+- Lines: 100%
 ```
 
 ## Como Executar os Testes
 
 ```bash
-# Executa os testes da aplicação
-yarn test
+# Instalar dependência de cobertura
+yarn add -D @vitest/coverage-v8
 
-# Executa testes específicos do componente
-yarn test:unit ButtonComponent
+# Executar testes com cobertura
+yarn test:coverage ButtonComponent
 
-# Executa testes com relatório de cobertura
-yarn test:coverage
+# Executar todos os testes
+yarn test:unit
 ```
 
 ## Localização dos Testes
@@ -78,3 +84,22 @@ src/
 └── components/
     └── ButtonComponent.vue
 ```
+
+## Próximos Passos
+
+Com base no relatório de cobertura, planejo:
+
+1. Expandir testes para outros componentes:
+
+   - AlertComponent
+   - FormGroup
+   - BurguerCard
+   - CarouselBurguer
+
+2. Implementar testes para:
+
+   - Stores (userStore, cart)
+   - Services (authServices)
+   - Utils (formatters, masks, validators)
+
+3. Melhorar a cobertura de branches no ButtonComponent (atual: 75%)
