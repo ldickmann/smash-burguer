@@ -74,8 +74,7 @@ src/
 ├── plugins/        # Arquivos plugins para biblioteca(s) de icons
 ├── router/         # Configuração do Vue Router
 ├── services/       # Services paracomunicação com APIs
-├── store/          # Módulos do Pinia store (deprecated)
-├── stores/         # Novo diretório para stores Pinia (recomendado)
+├── stores/         # Novo diretório para stores Pinia
 ├── plugins/        # Plugins e configurações
 ├── utils/          # Funções utilitárias
 └── views/          # Componentes de página

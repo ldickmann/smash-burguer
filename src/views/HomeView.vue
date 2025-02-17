@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/stores/cart";
 import productsData from "../json/products.json";
 import CarouselBurguer from "@/components/CarouselBurguer.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
