@@ -99,6 +99,10 @@ Este projeto está em desenvolvimento ativo. Próximas funcionalidades:
   - [ ] Relatórios de vendas
 - [ ] Notificações em tempo real
 
+## 🧪 Testes
+
+O projeto possui testes unitários e de integração para garantir a qualidade do código. Para mais detalhes sobre a implementação e cobertura dos testes, consulte nossa [documentação de testes](./TESTING.md).
+
 ## 📝 Como Contribuir
 
 1. Faça um fork do projeto
