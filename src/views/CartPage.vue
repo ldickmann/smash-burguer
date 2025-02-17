@@ -19,7 +19,29 @@
           >
             <div class="cart-page__item-info">
               <span class="cart-page__item-name">{{ item.name }}</span>
-              <span class="cart-page__item-price">{{ formatPrice(item.price) }}</span>
+              <!-- Mostrar ingredientes removido se houver -->
+              <span
+                v-if="item.removedIngredients?.length"
+                class="cart-page__item-customization"
+              >
+                <strong>Sem: </strong> {{ item.removedIngredients.join(", ") }}
+              </span>
+              <!-- Mostrar itens adicionais se houver -->
+              <span v-if="item.additionals?.length" class="cart-page__item-customization">
+                <strong>Adicionais: </strong>
+                <span v-for="(add, index) in item.additionals" :key="index">
+                  {{ add.quantity }}x {{ add.name
+                  }}{{ index < item.additionals.length - 1 ? ", " : "" }}
+                </span>
+              </span>
+              <!-- Mostrar observações se houver -->
+              <span v-if="item.observation" class="cart-page__item-customization">
+                <strong>Obs: </strong> {{ item.observation }}
+              </span>
+              <!-- Mostrar preço do item -->
+              <span class="cart-page__item-price">{{
+                formatPrice(item.finalPrice)
+              }}</span>
             </div>
             <button
               @click="removeItem(index)"
@@ -38,7 +60,33 @@
           <router-link to="/menu" class="cart-page__button">
             {{ continueBuyingText }}
           </router-link>
-          <router-link to="/payment" class="cart-page__button--primary">
+
+          <!-- Para continuar para a página de pagamento, verifica se está logado ou
+          direciona para a página de login -->
+          <div v-if="!userStore.isAuthenticated" class="cart-page__auth-notice">
+            <p>Para finalizar seu pedido, faça login ou crie uma conta</p>
+            <div class="cart-page__auth-buttons">
+              <ButtonComponent
+                :buttons="[{ label: loginText, id: 'login' }]"
+                backgroundColor="#42b983"
+                fontColor="#ffffff"
+                fontSize="16px"
+                buttonSize="0.75rem 1.5rem"
+                borderRadius="6px"
+                @click="() => $router.push('/login')"
+              />
+              <ButtonComponent
+                :buttons="[{ label: registerText, id: 'register' }]"
+                backgroundColor="#42b983"
+                fontColor="#ffffff"
+                fontSize="16px"
+                buttonSize="0.75rem 1.5rem"
+                borderRadius="6px"
+                @click="() => $router.push('/register')"
+              />
+            </div>
+          </div>
+          <router-link v-else to="/payment" class="cart-page__button--primary">
             {{ checkoutText }}
           </router-link>
         </div>
@@ -49,19 +97,23 @@
 
 <script setup>
 import { computed } from "vue";
-import { useCartStore } from "../store/cart";
+import { useCartStore } from "@/store/cart";
+import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
-// Store
 const cartStore = useCartStore();
+const userStore = useUserStore();
 
-// Computed Properties
+//
 const cartItems = computed(() => cartStore.items);
 const isCartEmpty = computed(() => cartItems.value.length === 0);
-const total = computed(() => cartItems.value.reduce((sum, item) => sum + item.price, 0));
+const total = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.finalPrice, 0)
+);
 const formattedTotal = computed(() => formatPrice(total.value));
 
-// Text Constants
+//
 const title = "Seu Carrinho 🛒";
 const emptyCartMessage = "Seu carrinho está vazio.";
 const returnToMenuText = "Voltar ao Menu";
@@ -69,8 +121,10 @@ const removeButtonText = "Remover";
 const totalLabel = "Total:";
 const continueBuyingText = "Continuar Comprando";
 const checkoutText = "Finalizar Pedido";
+const loginText = "Fazer Login";
+const registerText = "Criar Conta";
 
-// Methods
+// Função para remover item do carrinho
 const removeItem = (index) => {
   cartStore.removeItem(index);
 };
