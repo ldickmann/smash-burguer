@@ -21,11 +21,15 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 - [Vue Router](https://router.vuejs.org/) - Roteador Oficial
 - [SASS](https://sass-lang.com/) - Pré-processador CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de Build
+- [Vitest](https://vitest.dev/) - Framework de Testes Unitários
+- [Vue Test Utils](https://test-utils.vuejs.org/) - Utilitários de Teste para Vue.js
 - [Vue 3 Carousel](https://ismail9k.github.io/vue3-carousel/) - Componente de Carrossel
 - [Font Awesome](https://fontawesome.com/) - Ícones vetoriais
 - [ESLint](https://eslint.org/) - Linter de JavaScript
 - [Prettier](https://prettier.io/) - Formatador de código
+- [jsdom](https://github.com/jsdom/jsdom) - Implementação JavaScript de DOM e HTML
 - [ViaCEP API](https://viacep.com.br/) - API de CEP e Endereços
+- [@testing-library/vue](https://testing-library.com/docs/vue-testing-library/intro/) - Utilitários de Teste para Vue
 
 ## 📦 Instalação
 
