@@ -10,15 +10,12 @@
           <p>{{ burger.description }}</p>
           <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
           <ButtonComponent
-            class="carousel-button"
             @click="() => addToCart(burger)"
             :buttons="[{ label: 'Adicionar ao carrinho', id: 'add-to-cart' }]"
             backgroundColor="#42b983"
             fontSize="16px"
             buttonSize="12px 24px"
             borderRadius="4px"
-            :mobileFontSize="'15px'"
-            :mobileButtonSize="'6px 12px'"
           />
         </div>
       </div>
@@ -50,19 +47,24 @@ const emit = defineEmits(["add-to-cart"]);
 
 // Configurações computadas do carousel com base nos "breakpoints"
 const carouselConfig = computed(() => ({
-  height: 550,
-  itemsToShow: 3,
   snapAlign: "center",
   wrapAround: true,
   breakpoints: {
     425: {
+      height: 350,
       itemsToShow: 2,
     },
     768: {
+      height: 500,
       itemsToShow: 2,
     },
     1024: {
+      height: 550,
       itemsToShow: 3,
+    },
+    1440: {
+      height: 600,
+      itemsToShow: 4,
     },
   },
 }));

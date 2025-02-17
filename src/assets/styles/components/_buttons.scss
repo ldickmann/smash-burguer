@@ -11,8 +11,6 @@
   transition: opacity 0.3s ease;
 
   @include respond-to("xs") {
-    font-size: var(--mobile-font-size);
-    padding: var(--mobile-button-size);
     white-space: nowrap;
   }
 

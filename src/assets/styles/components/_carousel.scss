@@ -60,6 +60,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
 
   h3 {
@@ -89,21 +91,11 @@
   margin: 0.5rem 0;
 }
 
-// Botão do Carousel dentro dos items 'cards' | ButtonComponent
-.carousel-button {
-  display: flex;
-  justify-content: center;
-  padding: 0.8rem;
-  cursor: pointer;
-  margin-top: auto;
-
+// Responsividade para o botão de 'adicionar ao carrinho'
+:deep(.button) {
   @include respond-to("xs") {
-    padding: 0.5rem;
-
-    :deep(.button) {
-      font-size: var(--mobile-font-size) !important;
-      padding: var(--mobile-button-size) !important;
-    }
+    font-size: 14px !important;
+    padding: 0.375rem 0.75rem !important;
   }
 }
 
