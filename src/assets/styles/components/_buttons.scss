@@ -1,8 +1,21 @@
+@use "../base/mixins" as *;
+
 .container-buttons {
   display: flex;
   flex-wrap: wrap;
 }
+
 .button {
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+
+  @include respond-to("xs") {
+    font-size: var(--mobile-font-size);
+    padding: var(--mobile-button-size);
+    white-space: nowrap;
+  }
+
   &:hover {
     opacity: 0.8;
   }

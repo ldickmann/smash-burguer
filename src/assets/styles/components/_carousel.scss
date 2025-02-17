@@ -76,7 +76,7 @@
     margin: 0.5rem 0;
 
     @include respond-to("xs") {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
   }
 }
@@ -87,30 +87,23 @@
   font-weight: bold;
   font-size: 1.1rem;
   margin: 0.5rem 0;
-
-  @include respond-to("xs") {
-    font-size: 1rem;
-  }
 }
 
-// Botão do Carousel
+// Botão do Carousel dentro dos items 'cards' | ButtonComponent
 .carousel-button {
-  background: $tertiary-color;
-  color: $secondary-color;
-  border: none;
+  display: flex;
+  justify-content: center;
   padding: 0.8rem;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
   margin-top: auto;
-
-  &:hover {
-    background: $quaternary-color;
-  }
 
   @include respond-to("xs") {
     padding: 0.5rem;
-    font-size: 0.9rem;
+
+    :deep(.button) {
+      font-size: var(--mobile-font-size) !important;
+      padding: var(--mobile-button-size) !important;
+    }
   }
 }
 
