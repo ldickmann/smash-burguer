@@ -7,7 +7,7 @@
   width: 100%;
 
   @include respond-to("xs") {
-    margin: 0 0;
+    margin: 0;
   }
 }
 
@@ -21,6 +21,7 @@
 
 // Estilização do item do Carousel
 .carousel-item {
+  @include flex-center(column);
   background: $secondary-color;
   border-radius: 8px;
   overflow: hidden;
@@ -28,8 +29,6 @@
   transition: transform 0.3s ease-in-out;
   height: 450px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
 
   &:hover {
@@ -56,12 +55,10 @@
 
 // Cards e demais itens dentro do Carousel
 .carousel-content {
+  @include flex-center(column);
+  justify-content: space-between;
   padding: 1rem;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   text-align: center;
 
   h3 {
