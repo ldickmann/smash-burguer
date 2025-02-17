@@ -54,7 +54,7 @@ const props = defineProps({
     type: Number,
     default: 8,
   },
-  // Responsividade para dispositivos móveis
+  // Estilização responsiva para dispositivos móveis
   mobileFontSize: {
     type: String,
     default: "10px",

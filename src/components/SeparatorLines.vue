@@ -1,4 +1,5 @@
 <template>
+  <!-- Component Separator -->
   <div class="separator-container" :class="{ vertical: isVertical }">
     <div class="separator-line" :style="separatorStyle"></div>
     <slot></slot>
@@ -25,8 +26,10 @@ const props = defineProps({
   },
 });
 
+// Propriedade computada para verificar se a orientação é vertical
 const isVertical = computed(() => props.orientation === "vertical");
 
+// Propriedade computada para estilizar a linha separadora
 const separatorStyle = computed(() => ({
   backgroundColor: props.color,
   [isVertical.value ? "width" : "height"]: `${props.thickness}px`,
