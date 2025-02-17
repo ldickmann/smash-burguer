@@ -221,7 +221,7 @@ const addToCart = () => {
     ...props.item,
     removedIngredients:
       props.item.category !== "drinks"
-        ? defaultIngredients.value.filter((ing) => !ing.included).map((ing) => ing.name)
+        ? defaultIngredients.value.filter((ing) => ing.included).map((ing) => ing.name)
         : [],
     additionals: showAdditionals.value
       ? getAdditionalsByCategory.value

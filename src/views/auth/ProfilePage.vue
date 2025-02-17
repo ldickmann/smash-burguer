@@ -4,6 +4,7 @@
       <div class="profile-content">
         <h1 class="profile-title">Meu Perfil</h1>
 
+        <!-- Container com forms de informações pessoais e histórico de pedidos -->
         <div class="profile-info">
           <!-- Informações Pessoais -->
           <div class="profile-personal">
@@ -94,16 +95,17 @@
                 :error="formErrors.state"
                 :disabled="true"
               />
-
-              <ButtonComponent
-                :buttons="[{ label: 'Salvar Alterações', id: 'save' }]"
-                backgroundColor="#42b983"
-                fontColor="#ffffff"
-                fontSize="16px"
-                buttonSize="0.75rem 1.5rem"
-                borderRadius="6px"
-              />
             </form>
+            <ButtonComponent
+              class="button-save-profile"
+              :buttons="[{ label: 'Salvar Alterações', id: 'save' }]"
+              backgroundColor="#42b983"
+              fontColor="#ffffff"
+              fontSize="16px"
+              buttonSize="0.75rem 1.5rem"
+              borderRadius="6px"
+              :gap="0"
+            />
           </div>
 
           <!-- Histórico de Pedidos -->
