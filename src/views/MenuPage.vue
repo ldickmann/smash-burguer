@@ -43,17 +43,21 @@
       @click="handleButtonClick"
     />
   </div>
+  <AlertComponent v-if="showAlert" :message="alertMessage" />
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import router from "@/router";
 import { useCartStore } from "../store/cart";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonComponent.vue";
-import router from "@/router";
+import AlertComponent from "@/components/AlertComponent.vue";
 
 const cartStore = useCartStore();
+const showAlert = ref(false);
+const alertMessage = ref("");
 
 const foods = ref([
   {
@@ -147,6 +151,12 @@ const filteredBurgers = ref([...allItems.value]);
 
 const addToCart = (burger) => {
   cartStore.addItem(burger);
+  alertMessage.value = `${burger.name} adicionado ao carrinho!`;
+  showAlert.value = true;
+
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 2000);
 };
 
 const filterByCategory = (category) => {
