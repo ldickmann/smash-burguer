@@ -49,7 +49,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import router from "@/router";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/stores/cart";
 import productsData from "../json/products.json";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
