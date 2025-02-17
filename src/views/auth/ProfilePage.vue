@@ -10,9 +10,18 @@
             <h2>Informações Pessoais</h2>
             <form @submit.prevent="handleUpdateProfile">
               <FormGroup
-                id="fullName"
-                label="Nome Completo"
-                v-model="userInfo.fullName"
+                id="firstName"
+                label="Primeiro Nome"
+                v-model="userInfo.firstName"
+                type="text"
+                required
+                :error="formErrors.fullName"
+              />
+
+              <FormGroup
+                id="lastName"
+                label="Sobrenome"
+                v-model="userInfo.lastName"
                 type="text"
                 required
                 :error="formErrors.fullName"
@@ -37,12 +46,53 @@
               />
 
               <FormGroup
-                id="address"
-                label="Endereço"
-                v-model="userInfo.address"
-                type="input"
+                id="CEP"
+                label="CEP"
+                v-model="userInfo.CEP"
+                type="text"
                 required
-                :error="formErrors.address"
+                :error="formErrors.CEP"
+                @blur="handleCEPBlur"
+              />
+
+              <FormGroup
+                id="street"
+                label="Rua"
+                v-model="userInfo.address.street"
+                type="text"
+                required
+                :error="formErrors.street"
+                :disabled="true"
+              />
+
+              <FormGroup
+                id="neighborhood"
+                label="Bairro"
+                v-model="userInfo.address.neighborhood"
+                type="text"
+                required
+                :error="formErrors.neighborhood"
+                :disabled="true"
+              />
+
+              <FormGroup
+                id="city"
+                label="Cidade"
+                v-model="userInfo.address.city"
+                type="text"
+                required
+                :error="formErrors.city"
+                :disabled="true"
+              />
+
+              <FormGroup
+                id="state"
+                label="Estado"
+                v-model="userInfo.address.state"
+                type="text"
+                required
+                :error="formErrors.state"
+                :disabled="true"
               />
 
               <ButtonComponent
@@ -94,6 +144,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
+import { validateCEP } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import AlertComponent from "@/components/AlertComponent.vue";
@@ -102,13 +153,31 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const userInfo = ref({
-  fullName: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
-  address: "",
+  CEP: "",
+  address: {
+    street: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+  },
 });
 
-const formErrors = ref({});
+const formErrors = ref({
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  CEP: "",
+  street: "",
+  neighborhood: "",
+  city: "",
+  state: "",
+});
+
 const orderHistory = ref([]);
 const showAlert = ref(false);
 const alertMessage = ref("");
@@ -123,15 +192,38 @@ onMounted(() => {
   const userData = userStore.user;
   if (userData) {
     userInfo.value = {
-      fullName: userData.fullName || "",
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
       email: userData.email || "",
       phone: userData.phone || "",
-      address: userData.address || "",
+      CEP: userData.CEP || "",
+      address: userData.address || {
+        street: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+      },
     };
   }
 
   orderHistory.value = userStore.orderHistory || [];
 });
+
+const handleCEPBlur = async () => {
+  if (userInfo.value.CEP) {
+    try {
+      const result = await validateCEP(userInfo.value.CEP);
+      if (result.isValid && result.address) {
+        userInfo.value.address = result.address;
+      } else {
+        formErrors.value.CEP = result.message;
+      }
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      formErrors.value.CEP = "Erro ao buscar CEP";
+    }
+  }
+};
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("pt-BR");

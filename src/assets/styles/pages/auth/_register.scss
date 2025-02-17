@@ -28,6 +28,30 @@
       align-items: center;
       gap: 1rem;
       width: 100%;
+
+      .form-name-container {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+      }
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1rem;
+      color: $color-text-primary;
+
+      a {
+        color: $tertiary-color;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+
+        &:hover {
+          color: $quaternary-color;
+          text-decoration: underline;
+        }
+      }
     }
   }
 }
