@@ -9,7 +9,7 @@
           v-model="form.email"
           type="email"
           :error="error.email"
-          required=""
+          required
         />
 
         <FormGroup
@@ -43,14 +43,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const router = useRouter();
 const userStore = useUserStore();
 const { handleLogin: authLogin } = useAuthHandlers();
 
