@@ -1,9 +1,9 @@
-@use "../../variables" as *;
-@use "../../mixins" as *;
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
 
 .admin-dashboard {
   min-height: 100vh;
-  background-color: $background-color;
+  background-color: $color-white-background;
   padding: 2rem;
 
   .dashboard-container {

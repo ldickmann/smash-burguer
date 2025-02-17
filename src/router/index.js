@@ -1,4 +1,5 @@
 import { useUserStore } from '@/stores/userStore';
+import { useAdminStore } from '@/stores/adminStore';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -29,6 +30,7 @@ const router = createRouter({
       name: 'confirmation',
       component: () => import('../views/ConfirmationPage.vue'),
     },
+
     // Registro e login
     {
       path: '/register',
@@ -46,11 +48,18 @@ const router = createRouter({
       component: () => import('../views/auth/ProfilePage.vue'),
       meta: { requiresAuth: true },
     },
+
     // Painel Administrativo
+    {
+      path: '/admin/login',
+      name: 'admin-login',
+      component: () => import('../views/admin/LoginAdminPage.vue'),
+    },
     {
       path: '/admin',
       name: 'admin-dashboard',
       component: () => import('../views/admin/AdminDashboard.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
       children: [
         {
           path: 'products',
@@ -68,7 +77,6 @@ const router = createRouter({
           component: () => import('../views/admin/SalesReports.vue'),
         }
       ],
-      meta: { requiresAuth: true, requiresAdmin: true },
     },
 
     // Rota 404 - lazy loading
@@ -83,14 +91,26 @@ const router = createRouter({
 // Proteção de rotas
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
+  const adminStore = useAdminStore();
 
+  // Verificar rotas admin
+  if (to.meta.requiresAdmin) {
+    if (!adminStore.isAuthenticated || !adminStore.isAdmin) {
+      next('/admin/login');
+      return;
+    }
+    next();
+    return;
+  }
+
+  // Verifica rotar de usuários normais
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
     next('/login');
-  } else if (to.meta.requiresAdmin && userStore.user?.role !== 'admin') {
-    next('/');
-  } else {
-    next();
+    return;
   }
+
+  // Rota pública
+  next();
 });
 
 export default router;
