@@ -1,5 +1,7 @@
 <template>
+  <!-- Alert component -->
   <Transition name="fade">
+    <!-- Exibe a mensagem de alerta quando 'show' for true -->
     <div v-if="show" class="alert">
       <span>{{ message }}</span>
     </div>
@@ -12,12 +14,14 @@ import { ref, watch } from "vue";
 const props = defineProps({
   message: {
     type: String,
-    required: true,
+    required: true, // A mensagem obrigatória
   },
 });
 
+// Estado reativo para exibir ou não o alerta
 const show = ref(true);
 
+// Monitora mudanças na propriedade 'message'
 watch(
   () => props.message,
   () => {

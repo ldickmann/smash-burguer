@@ -25,22 +25,5 @@ export const formatCPF = (value) => {
   return value;
 };
 
-/**
- * Formats a credit card number by removing all non-digit characters
- * and inserting a space after every 4 digits.
- *
- * @param {string} value - The credit card number to format.
- * @returns {string} - The formatted credit card number.
- */
-export const formatCardNumber = (value) => {
-  value = value.replace(/\D/g, '');
-  return value.replace(/(\d{4})(?=\d)/g, "$1 ");
-};
-
-export const formatExpiryDate = (value) => {
-  value = value.replace(/\D/g, '');
-  if (value.length >= 2) {
-    return value.substring(0, 2) + '/' + value.substring(2);
-  }
-  return value;
-};
+// Format para numero de celular
+// Format para endereço

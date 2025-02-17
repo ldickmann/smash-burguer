@@ -7,14 +7,24 @@ $quinary-color: #ff6600;
 $senary-color: #e55b00;
 $septenary-color: #38184c;
 
-$border-color: #ddd;
+// Additional Main Colors - Teste de novas cores
+$octonary-color: #ffd700;
+$nonary-color: #8b4513;
+$denary-color: #d35400;
+
 $shadow-color: rgba(0, 0, 0, 0.1);
 
 // Backgrounds Colors
 $color-white-background: #fff8e7;
 $color-white-background-secondary: #f8f9fa;
+$color-black-background: #000000;
 $color-green-background: #063520;
-$color-blue-background: #0c6e7d;
+$color-blue-background: #46adbd;
+$color-light-blue-background: #81a5c9;
+$color-cream-background: #ffefd5;
+$color-brown-background: #3e2723;
+$color-orange-background: #fff3e0;
+$color-warm-gray-background: #f5f5f5;
 
 // Text Colors
 $color-text-primary: #2d2d2d;
@@ -22,3 +32,12 @@ $color-text-secondary: #a4a4a4;
 $color-text-tertiary: #c04848;
 $color-text-quaternary: #210234;
 $color-text-quinary: #2c3e50;
+
+// Border Colors
+$border-color: #ddd;
+$color-border-primary: #e0e0e0;
+$color-border-secondary: #010101;
+$color-border-tertiary: #bf360c;
+$color-border-quaternary: #795548;
+$color-border-accent: #ffd700;
+$color-border-error: #ff0000;
