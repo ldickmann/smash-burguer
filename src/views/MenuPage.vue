@@ -49,7 +49,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import router from "@/router";
-import { useCartStore } from "../store/cart";
+import { useCartStore } from "@/store/cart";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonComponent.vue";
@@ -63,6 +63,8 @@ const foods = ref([
   {
     id: 1,
     name: "Cheese Bacon",
+    description:
+      "Hambúrguer artesanal com queijo e bacon crocante, alface, tomate e maionese",
     price: 25.99,
     image: "./images/foods/cheese-bacon.jpg",
     category: "foods",
@@ -70,6 +72,8 @@ const foods = ref([
   {
     id: 2,
     name: "Smash Burger",
+    description:
+      "Hambúrguer artesanal com queijo, cebola caramelizada, alface, tomate e maionese",
     price: 22.5,
     image: "./images/foods/smash-burger.jpg",
     category: "foods",
@@ -77,6 +81,8 @@ const foods = ref([
   {
     id: 3,
     name: "Veggie Burger",
+    description:
+      "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
     price: 24.9,
     image: "./images/foods/veggie-burger.jpg",
     category: "foods",
@@ -84,6 +90,8 @@ const foods = ref([
   {
     id: 4,
     name: "X-Salada",
+    description:
+      "Hambúrguer artesanal com queijo, alface, tomate, cebola, maionese e ketchup",
     price: 20.9,
     image: "./images/foods/x-salada.jpg",
     category: "foods",
@@ -91,6 +99,8 @@ const foods = ref([
   {
     id: 5,
     name: "Chicken Burger",
+    description:
+      "Hambúrguer artesanal de frango com queijo, alface, tomate, pepino e maionese",
     price: 23.9,
     image: "./images/foods/chicken-burger.jpg",
     category: "foods",
@@ -98,6 +108,8 @@ const foods = ref([
   {
     id: 6,
     name: "Burger Picanha",
+    description:
+      "Hambúrguer artesanal de picanha com queijo, alface, tomate, cebola, pickles e maionese",
     price: 29.9,
     image: "./images/foods/burger-picanha.jpg",
     category: "foods",
@@ -105,6 +117,7 @@ const foods = ref([
   {
     id: 7,
     name: "Batata Frita",
+    description: "Porção de batata frita crocante",
     price: 10.9,
     image: "./images/foods/batata-frita.jpg",
     category: "foods",

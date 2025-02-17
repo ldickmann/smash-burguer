@@ -5,20 +5,28 @@
     <p>R$ {{ formattedPrice }}</p>
     <ButtonsComponents
       class="burger-button"
-      :buttons="[{ label: 'Adicionar ao carrinho' }]"
+      :buttons="[{ label: 'Adicionar ao pedido' }]"
       backgroundColor="#000000"
       fontColor="#ffffff"
       fontSize="14px"
       buttonSize="8px 16px"
       borderRadius="4px"
-      @click="emitAddToCart"
+      @click="openModal"
     />
   </div>
+  <ModalAdditional
+    v-if="showModal"
+    :show="showModal"
+    :item="burger"
+    @close="closeModal"
+    @add-to-cart="handleAddToCart"
+  />
 </template>
 
 <script setup>
-import { computed } from "vue";
-import ButtonsComponents from "./ButtonComponent.vue";
+import { computed, ref } from "vue";
+import ButtonsComponents from "@/components/ButtonComponent.vue";
+import ModalAdditional from "@/components/ModalAdditional.vue";
 
 const props = defineProps({
   burger: {
@@ -27,7 +35,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["add-to-cart"]);
+const emit = defineEmits(["addToCart"]);
+
+const showModal = ref(false);
 
 /**
  * Computes the formatted price of the burger.
@@ -41,12 +51,20 @@ const formattedPrice = computed(() =>
   props.burger.price ? props.burger.price.toFixed(2) : "0.00"
 );
 
-/**
- * Emits an event to add the current burger to the cart.
- * The event name is "add-to-cart" and it passes the burger object as a parameter.
- */
-const emitAddToCart = () => {
-  emit("add-to-cart", props.burger);
+// Open the modal and set the selected item to the burger.
+const openModal = () => {
+  showModal.value = true;
+};
+
+// Close the modal.
+const closeModal = () => {
+  showModal.value = false;
+};
+
+// Handle the addition of the burger to the cart.
+const handleAddToCart = (customizedItem) => {
+  emit("addToCart", customizedItem);
+  closeModal();
 };
 </script>
 
