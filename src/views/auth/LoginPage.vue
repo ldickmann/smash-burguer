@@ -46,6 +46,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { useAuthHandlers } from "@/handlers/authHandlers";
+import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
@@ -63,15 +64,26 @@ const error = ref({
   password: "",
 });
 
+const validateForm = () => {
+  const emailValidation = validateEmail(form.value.email);
+  const passwordValidation = validatePassword(form.value.password);
+
+  error.value.email = emailValidation.message;
+  error.value.password = passwordValidation.message;
+
+  return emailValidation.isValid && passwordValidation.isValid;
+};
+
 const handleLogin = async () => {
+  if (!validateForm()) return;
+
   try {
     const result = await authLogin(form.value);
     if (result?.error) {
       alert(result.error);
     }
   } catch (error) {
-    console.error("Erro no login:", error);
-    alert("Email ou senha inválidos");
+    alert("Erro ao fazer login", error);
   }
 };
 </script>

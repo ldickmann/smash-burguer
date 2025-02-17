@@ -3,12 +3,13 @@
 
 .cart-page-section {
   padding: 9rem 0;
-  background-color: $color-white-background;
+  background-color: $color-cream-background;
 
   .cart-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    border-radius: 8px;
     background-color: $color-blue-background;
 
     &__auth-notice {
