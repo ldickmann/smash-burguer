@@ -2,87 +2,36 @@
 @use "../../base/mixins" as *;
 
 .admin-dashboard {
-  min-height: 100vh;
+  display: flex;
   background-color: $color-white-background;
-  padding: 2rem;
+  min-height: 100vh;
 
-  .dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+  .dashboard-main {
+    flex: 1;
+    margin-left: 250px;
+    padding: 2rem;
 
-  .dashboard-title {
-    color: $primary-color;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    svg {
-      color: $primary-color;
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
     }
-  }
-
-  .dashboard-navbar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 3rem;
-
-    .nav-item {
-      flex: 0 1 300px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      background-color: $secondary-color;
-      border-radius: 1rem;
-      text-decoration: none;
-      color: $color-text-primary;
-      box-shadow: 0 4px 6px $shadow-color;
-      transition: transform 0.3s ease;
-
-      svg {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: $primary-color;
-      }
-
-      span {
-        font-size: 1.2rem;
-        font-weight: 600;
-        text-align: center;
-      }
-
-      &:hover {
-        transform: translateY(-0.5rem);
-        background-color: rgba($primary-color, 0.15);
-
-        svg {
-          transform: scale(1.1);
-        }
-      }
-
-      &.router-link-active {
-        background-color: rgba($primary-color, 0.2);
-        border: 2px solid $primary-color;
-      }
-    }
-  }
-
-  @include respond-to("sm") {
-    padding: 1rem;
 
     .dashboard-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: $color-text-quinary;
       font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
     }
 
     .dashboard-navbar {
-      flex-direction: column;
-
-      .nav-item {
-        width: 100%;
-      }
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
     }
   }
 }

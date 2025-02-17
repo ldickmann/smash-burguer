@@ -18,6 +18,7 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 
 - [Vue.js 3](https://vuejs.org/) - Framework JavaScript Progressivo
 - [Pinia](https://pinia.vuejs.org/) - Gerenciamento de Estado
+- [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) - Plugin de Persistência para Pinia
 - [Vue Router](https://router.vuejs.org/) - Roteador Oficial
 - [SASS](https://sass-lang.com/) - Pré-processador CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de Build

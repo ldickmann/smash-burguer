@@ -1,41 +1,44 @@
 <template>
-  <div class="admin-login">
-    <form @submit.prevent="handleLogin" class="login-form">
-      <h2>Login Administrativo</h2>
+  <section class="admin-section">
+    <div class="admin-login">
+      <form novalidate @submit.prevent="handleLogin" class="login-form">
+        <h2>Login Administrativo</h2>
 
-      <FormGroup
-        id="email"
-        label="Email"
-        v-model="credentials.email"
-        type="email"
-        required
-      />
+        <FormGroup
+          id="email"
+          label="Email"
+          v-model="credentials.email"
+          type="email"
+          :error="error.email"
+          required
+        />
 
-      <FormGroup
-        id="password"
-        label="Senha"
-        v-model="credentials.password"
-        type="password"
-        required
-      />
+        <FormGroup
+          id="password"
+          label="Senha"
+          v-model="credentials.password"
+          type="password"
+          :error="error.password"
+          required
+        />
 
-      <ButtonComponent
-        :buttons="[{ label: 'Entrar', id: 'login' }]"
-        type="submit"
-        backgroundColor="#42b983"
-      />
-    </form>
-  </div>
+        <ButtonComponent
+          :buttons="[{ label: 'Entrar', id: 'login' }]"
+          type="submit"
+          backgroundColor="#42b983"
+        />
+      </form>
+    </div>
+  </section>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
+import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const router = useRouter();
 const adminStore = useAdminStore();
 
 const credentials = ref({
@@ -43,12 +46,31 @@ const credentials = ref({
   password: "",
 });
 
+const error = ref({
+  email: "",
+  password: "",
+});
+
+const validateForm = () => {
+  const emailValidation = validateEmail(credentials.value.email);
+  const passwordValidation = validatePassword(credentials.value.password);
+
+  error.value.email = emailValidation.message;
+  error.value.password = passwordValidation.message;
+
+  return emailValidation.isValid && passwordValidation.isValid;
+};
+
 const handleLogin = async () => {
+  if (!validateForm()) return;
+
   try {
-    await adminStore.login(credentials.value);
-    router.push("/admin");
+    const result = await adminStore.login(credentials.value);
+    if (result?.error) {
+      alert(result.error);
+    }
   } catch (error) {
-    alert("Credenciais de administrador inválidas");
+    alert("Erro ao realizar login");
   }
 };
 </script>

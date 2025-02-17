@@ -2,80 +2,97 @@ import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { createRouter, createWebHistory } from 'vue-router';
 
+// Layouts imports
+import MainLayout from '@/layouts/MainLayout.vue';
+import AdminLayout from '@/layouts/AdminLayout.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue'),
-    },
-    {
-      path: '/menu',
-      name: 'menu',
-      component: () => import('../views/MenuPage.vue'),
-    },
-    {
-      path: '/cart',
-      name: 'cart',
-      component: () => import('../views/CartPage.vue'),
-    },
-    {
-      path: '/payment',
-      name: 'payment',
-      component: () => import('../views/PaymentPage.vue'),
-    },
-    {
-      path: '/confirmation',
-      name: 'confirmation',
-      component: () => import('../views/ConfirmationPage.vue'),
+      component: MainLayout,
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('../views/HomeView.vue'),
+        },
+        {
+          path: 'menu',
+          name: 'menu',
+          component: () => import('../views/MenuPage.vue'),
+        },
+        {
+          path: 'cart',
+          name: 'cart',
+          component: () => import('../views/CartPage.vue'),
+        },
+        {
+          path: 'payment',
+          name: 'payment',
+          component: () => import('../views/PaymentPage.vue'),
+        },
+        {
+          path: 'confirmation',
+          name: 'confirmation',
+          component: () => import('../views/ConfirmationPage.vue'),
+        },
+
+        // Registro e login
+        {
+          path: 'register',
+          name: 'register',
+          component: () => import('../views/auth/RegisterPage.vue'),
+        },
+        {
+          path: 'login',
+          name: 'login',
+          component: () => import('../views/auth/LoginPage.vue'),
+        },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: () => import('../views/auth/ProfilePage.vue'),
+          meta: { requiresAuth: true },
+        },
+      ],
     },
 
-    // Registro e login
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/auth/RegisterPage.vue'),
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/auth/LoginPage.vue'),
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('../views/auth/ProfilePage.vue'),
-      meta: { requiresAuth: true },
-    },
-
-    // Painel Administrativo
-    {
-      path: '/admin/login',
-      name: 'admin-login',
-      component: () => import('../views/admin/LoginAdminPage.vue'),
-    },
+    // Rotas admin
     {
       path: '/admin',
-      name: 'admin-dashboard',
-      component: () => import('../views/admin/AdminDashboard.vue'),
-      meta: { requiresAuth: true, requiresAdmin: true },
+      component: AdminLayout,
       children: [
+        {
+          path: 'login',
+          name: 'admin-login',
+          component: () => import('../views/admin/LoginAdminPage.vue'),
+        },
+        {
+          path: '',
+          name: 'admin-dashboard',
+          component: () => import('../views/admin/AdminDashboard.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
         {
           path: 'products',
           name: 'product-management',
           component: () => import('../views/admin/ProductManagement.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
         },
         {
           path: 'orders',
           name: 'order-management',
           component: () => import('../views/admin/OrderManagement.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
         },
         {
           path: 'reports',
           name: 'sales-reports',
           component: () => import('../views/admin/SalesReports.vue'),
-        }
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
       ],
     },
 
