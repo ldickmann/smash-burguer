@@ -1,35 +1,49 @@
 <template>
-  <section class="section-payment">
-    <div class="payment-container">
-      <div class="payment-steps">
-        <h1 class="payment-title">Finalizar Pedido</h1>
+  <section class="section-profile">
+    <div class="profile-container">
+      <div class="profile-content">
+        <h1 class="profile-title">Meu Perfil</h1>
 
-        <!-- Step 1: Order Confirmation -->
-        <OrderConfirmation
-          v-if="currentStep === 1"
-          :cart-items="cartStore.items"
-          @confirm="handleOrderConfirm"
-        />
+        <div class="profile-info">
+          <div class="user-details">
+            <h2>Informações Pessoais</h2>
+            <form @submit.prevent="updateUserInfo">
+              <FormGroup
+                id="fullName"
+                label="Nome Completo"
+                v-model="userInfo.fullName"
+                required
+                type="text"
+              />
 
-        <!-- Step 2: Payment Method Selection -->
-        <PaymentMethodSelection
-          v-if="currentStep === 2"
-          @previous="previousStep"
-          @next="nextStep"
-          @select="selectPaymentMethod"
-        />
+              <FormGroup
+                id="phone"
+                label="Celular"
+                v-model="userInfo.phone"
+                required
+                type="tel"
+              />
 
-        <!-- Step 3: Payment Details -->
-        <div v-if="currentStep === 3" class="payment-details">
-          <h2>Detalhes do Pagamento</h2>
+              <FormGroup
+                id="address"
+                label="Endereço"
+                v-model="userInfo.address"
+                required
+                type="textarea"
+              />
 
-          <PixPaymentForm
-            v-if="selectedPaymentMethod === 'pix'"
-            @previous="previousStep"
-            @next="handlePixPayment"
-          />
+              <button type="submit" class="save-button">Salvar Alterações</button>
+            </form>
+          </div>
 
-          <CardPaymentForm v-else @previous="previousStep" @next="handleCardPayment" />
+          <!-- Histórico de Pedidos -->
+          <div class="order-history">
+            <h2>Histórico de Pedidos</h2>
+            <div v-if="orderHistory.length" class="orders-list">
+              <!-- ... código do histórico de pedidos ... -->
+            </div>
+            <p v-else class="no-orders">Nenhum pedido realizado ainda.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -37,49 +51,48 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useCartStore } from "@/store/cart";
-import OrderConfirmation from "@/components/payment/OrderConfirmation.vue";
-import PaymentMethodSelection from "@/components/payment/PaymentMethodSelection.vue";
-import PixPaymentForm from "@/components/payment/PixPaymentForm.vue";
-import CardPaymentForm from "@/components/payment/CardPaymentForm.vue";
+import { useUserStore } from "@/stores/userStore";
+import FormGroup from "@/components/FormGroup.vue";
 
 const router = useRouter();
-const cartStore = useCartStore();
+const userStore = useUserStore();
 
-const currentStep = ref(1);
-const selectedPaymentMethod = ref(null);
+const userInfo = ref({
+  fullName: "",
+  phone: "",
+  address: "",
+});
+const orderHistory = ref([]);
 
-const handleOrderConfirm = () => {
-  nextStep();
-};
+onMounted(() => {
+  if (!userStore.isAuthenticated) {
+    router.push("/login");
+    return;
+  }
 
-const nextStep = () => {
-  currentStep.value++;
-};
+  // Carregar dados do usuário
+  const userData = userStore.user;
+  if (userData) {
+    userInfo.value = {
+      fullName: userData.fullName || "",
+      phone: userData.phone || "",
+      address: userData.address || "",
+    };
+  }
 
-const previousStep = () => {
-  currentStep.value--;
-};
+  orderHistory.value = userStore.orderHistory || [];
+});
 
-const selectPaymentMethod = (methodType) => {
-  selectedPaymentMethod.value = methodType;
-};
-
-const handlePaymentSuccess = () => {
-  cartStore.clearCart();
-  router.push("/confirmation");
-};
-
-const handlePixPayment = (data) => {
-  console.log("PIX payment data:", data);
-  handlePaymentSuccess();
-};
-
-const handleCardPayment = (data) => {
-  console.log("Card payment data:", data);
-  handlePaymentSuccess();
+const updateUserInfo = async () => {
+  try {
+    await userStore.updateProfile(userInfo.value);
+    alert("Perfil atualizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao atualizar perfil:", error);
+    alert("Erro ao atualizar perfil");
+  }
 };
 </script>
 
