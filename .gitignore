@@ -31,3 +31,4 @@ coverage
 *.tsbuildinfo
 
 /coverage
+createAdmin.html
