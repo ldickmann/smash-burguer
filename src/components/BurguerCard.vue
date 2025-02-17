@@ -18,7 +18,7 @@
 
 <script setup>
 import { computed } from "vue";
-import ButtonsComponents from "./ButtonsComponents.vue";
+import ButtonsComponents from "./ButtonComponent.vue";
 
 const props = defineProps({
   burger: {

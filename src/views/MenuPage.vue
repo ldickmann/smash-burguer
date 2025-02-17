@@ -50,7 +50,7 @@ import { ref, computed, onMounted } from "vue";
 import { useCartStore } from "../store/cart";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
-import ButtonsComponents from "@/components/ButtonsComponents.vue";
+import ButtonsComponents from "@/components/ButtonComponent.vue";
 import router from "@/router";
 
 const cartStore = useCartStore();
