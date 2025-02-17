@@ -1,7 +1,7 @@
 @use "../base/mixins" as *;
 
 .container-buttons {
-  display: flex;
+  @include flex-center;
   flex-wrap: wrap;
 }
 
