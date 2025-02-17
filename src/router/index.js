@@ -49,7 +49,7 @@ const router = createRouter({
     // Painel Administrativo
     {
       path: '/admin',
-      name: 'admin',
+      name: 'admin-dashboard',
       component: () => import('../views/admin/AdminDashboard.vue'),
       children: [
         {
@@ -70,6 +70,7 @@ const router = createRouter({
       ],
       meta: { requiresAuth: true, requiresAdmin: true },
     },
+
     // Rota 404 - lazy loading
     {
       path: '/:catchAll(.*)*',
@@ -85,6 +86,8 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
     next('/login');
+  } else if (to.meta.requiresAdmin && userStore.user?.role !== 'admin') {
+    next('/');
   } else {
     next();
   }

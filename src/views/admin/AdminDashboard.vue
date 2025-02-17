@@ -1,12 +1,28 @@
 <template>
   <section class="admin-dashboard">
-    <h1>Painel Administrativo</h1>
-    <nav>
-      <router-link to="/admin/products">Gestão de Produtos</router-link>
-      <router-link to="/admin/orders">Gestão de Pedidos</router-link>
-      <router-link to="/admin/reports">Relatórios de Vendas</router-link>
-    </nav>
-    <router-view />
+    <div class="dashboard-container">
+      <h1 class="dashboard-title">
+        <font-awesome-icon :icon="['fas', 'tachometer-alt']" />
+        Painel Administrativo
+      </h1>
+
+      <nav class="dashboard-navbar">
+        <router-link to="/admin/products" class="nav-item">
+          <font-awesome-icon :icon="['fas', 'utensils']" />
+          <span>Gestão de Produtos</span>
+        </router-link>
+        <router-link to="/admin/orders" class="nav-item">
+          <font-awesome-icon :icon="['fas', 'shopping-cart']" />
+          <span>Gestão de Pedidos</span>
+        </router-link>
+        <router-link to="/admin/reports" class="nav-item">
+          <font-awesome-icon :icon="['fas', 'chart-line']" />
+          <span>Relatórios de Vendas</span>
+        </router-link>
+      </nav>
+
+      <router-view />
+    </div>
   </section>
 </template>
 
