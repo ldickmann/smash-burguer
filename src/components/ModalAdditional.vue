@@ -16,6 +16,7 @@
           </div>
         </div>
 
+        <!-- Group de Items Adicionais e input 'checkbox' -->
         <div class="ingredients-section">
           <h4>Deseja remover algo?</h4>
           <div class="ingredients-list">
@@ -35,6 +36,7 @@
           </div>
         </div>
 
+        <!-- Group de Items Adicionais e input 'number' -->
         <div class="additionals-section">
           <h4>Adicionais</h4>
           <div class="additionals-list">
@@ -59,6 +61,7 @@
           </div>
         </div>
 
+        <!-- Form Group Componente - Campo de Observação -->
         <div class="observation-section">
           <FormGroup
             id="observation"
@@ -70,6 +73,7 @@
         </div>
       </div>
 
+      <!-- Botão Adicionar ao Pedido -->
       <div class="modal-footer">
         <ButtonComponent
           :buttons="[{ label: 'Adicionar ao Pedido', id: 'add-to-cart' }]"
