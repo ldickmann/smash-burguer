@@ -10,12 +10,12 @@
           <p>{{ burger.description }}</p>
           <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
           <ButtonComponent
-            @click="() => addToCart(burger)"
-            :buttons="[{ label: 'Adicionar ao carrinho', id: 'add-to-cart' }]"
+            :buttons="[{ label: 'Adicionar ao Pedido', id: 'add-to-cart' }]"
             backgroundColor="#42b983"
             fontSize="16px"
             buttonSize="12px 24px"
             borderRadius="4px"
+            @click="() => openModal(burger)"
           />
         </div>
       </div>
@@ -27,13 +27,23 @@
       <Pagination />
     </template>
   </Carousel>
+
+  <!-- Modal Component que aparece ao clicar para adicionar -->
+  <ModalAdditional
+    v-if="showModal"
+    :show="showModal"
+    :item="selectedItem"
+    @close="closeModal"
+    @add-to-cart="handleAddToCart"
+  />
 </template>
 
 <script setup>
 import "vue3-carousel/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import ModalAdditional from "@/components/ModalAdditional.vue";
 
 const props = defineProps({
   burgers: {
@@ -43,7 +53,9 @@ const props = defineProps({
 });
 
 // Define eventos emitidos pelo componente
-const emit = defineEmits(["add-to-cart"]);
+const emit = defineEmits(["addToCart"]);
+const showModal = ref(false);
+const selectedItem = ref(null);
 
 // Configurações computadas do carousel com base nos "breakpoints"
 const carouselConfig = computed(() => ({
@@ -69,9 +81,22 @@ const carouselConfig = computed(() => ({
   },
 }));
 
-// Função para adicionar um burger ao carrinho, emitindo o evento "add-to-cart"
-const addToCart = (burger) => {
-  emit("add-to-cart", burger);
+//Função para abrir o modal ao clicar no botão
+const openModal = (burger) => {
+  selectedItem.value = burger;
+  showModal.value = true;
+};
+
+// Função para fechar o modal
+const closeModal = () => {
+  showModal.value = false;
+  selectedItem.value = null;
+};
+
+// Função para adicionar o item ao carrinho
+const handleAddToCart = (customizedItem) => {
+  emit("addToCart", customizedItem); // Emite o evento para adicionar ao carrinho
+  closeModal();
 };
 </script>
 
