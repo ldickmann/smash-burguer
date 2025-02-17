@@ -127,7 +127,7 @@ export const validateCEP = async (cep) => {
   if (cleanCEP.length !== 8) {
     return {
       isValid: false,
-      message: "CEP inválido (Ex.: 00000-000)",
+      message: "CEP inválido. Devem conter 8 dígitos",
       address: null,
     };
   }
@@ -136,6 +136,8 @@ export const validateCEP = async (cep) => {
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
     const data = await response.json();
+
+    console.log('Resposta da API:', data); // Debug
 
     if (data.erro) {
       return {
@@ -153,10 +155,10 @@ export const validateCEP = async (cep) => {
         neighborhood: data.bairro,
         city: data.localidade,
         state: data.uf,
-        cep: data.cep,
       }
     };
   } catch (error) {
+    console.error('Erro de requisição:', error);
     return {
       isValid: false,
       message: "Erro ao buscar CEP",

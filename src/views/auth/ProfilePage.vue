@@ -55,7 +55,7 @@
                 mask="cep"
                 required
                 :error="formErrors.CEP"
-                @blur="handleCEPBlur"
+                @input="handleCEPInput"
               />
 
               <FormGroup
@@ -107,6 +107,7 @@
               buttonSize="0.75rem 1.5rem"
               borderRadius="6px"
               :gap="0"
+              @click="handleUpdateProfile"
             />
           </div>
 
@@ -213,20 +214,45 @@ onMounted(() => {
   orderHistory.value = userStore.orderHistory || [];
 });
 
-const handleCEPBlur = async () => {
-  if (userInfo.value.CEP) {
+const handleCEPInput = async () => {
+  formErrors.value.CEP = "";
+
+  const cleanCEP = userInfo.value.CEP.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+  if (cleanCEP.length === 8) {
     try {
-      const result = await validateCEP(userInfo.value.CEP);
+      const result = await validateCEP(cleanCEP);
+      console.log("Resultado da validação:", result); // Debug
+
       if (result.isValid && result.address) {
-        userInfo.value.address = result.address;
+        // Atualiza os campos de endereço de forma reativa
+        Object.assign(userInfo.value.address, {
+          street: result.address.street || "",
+          neighborhood: result.address.neighborhood || "",
+          city: result.address.city || "",
+          state: result.address.state || "",
+        });
+
+        formErrors.value.CEP = ""; // Limpa erro se existir
       } else {
-        formErrors.value.CEP = result.message;
+        formErrors.value.CEP = "CEP não encontrado";
+        resetAddressFields();
       }
     } catch (error) {
       console.error("Erro ao buscar CEP:", error);
       formErrors.value.CEP = "Erro ao buscar CEP";
+      resetAddressFields();
     }
   }
+};
+
+const resetAddressFields = () => {
+  Object.assign(userInfo.value.address, {
+    street: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+  });
 };
 
 const formatDate = (date) => {
