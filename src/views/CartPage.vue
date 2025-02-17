@@ -19,7 +19,29 @@
           >
             <div class="cart-page__item-info">
               <span class="cart-page__item-name">{{ item.name }}</span>
-              <span class="cart-page__item-price">{{ formatPrice(item.price) }}</span>
+              <!-- Mostrar ingredientes removido se houver -->
+              <span
+                v-if="item.removedIngredients?.length"
+                class="cart-page__item-customization"
+              >
+                <strong>Sem: </strong> {{ item.removedIngredients.join(", ") }}
+              </span>
+              <!-- Mostrar itens adicionais se houver -->
+              <span v-if="item.additionals?.length" class="cart-page__item-customization">
+                <strong>Adicionais: </strong>
+                <span v-for="(add, index) in item.additionals" :key="index">
+                  {{ add.quantity }}x {{ add.name
+                  }}{{ index < item.additionals.length - 1 ? ", " : "" }}
+                </span>
+              </span>
+              <!-- Mostrar observações se houver -->
+              <span v-if="item.observation" class="cart-page__item-customization">
+                <strong>Obs: </strong> {{ item.observation }}
+              </span>
+              <!-- Mostrar preço do item -->
+              <span class="cart-page__item-price">{{
+                formatPrice(item.finalPrice)
+              }}</span>
             </div>
             <button
               @click="removeItem(index)"
@@ -83,13 +105,15 @@ import ButtonComponent from "@/components/ButtonComponent.vue";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
-// Computed Properties
+//
 const cartItems = computed(() => cartStore.items);
 const isCartEmpty = computed(() => cartItems.value.length === 0);
-const total = computed(() => cartItems.value.reduce((sum, item) => sum + item.price, 0));
+const total = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.finalPrice, 0)
+);
 const formattedTotal = computed(() => formatPrice(total.value));
 
-// Text Constants
+//
 const title = "Seu Carrinho 🛒";
 const emptyCartMessage = "Seu carrinho está vazio.";
 const returnToMenuText = "Voltar ao Menu";
@@ -100,7 +124,7 @@ const checkoutText = "Finalizar Pedido";
 const loginText = "Fazer Login";
 const registerText = "Criar Conta";
 
-// Methods
+// Função para remover item do carrinho
 const removeItem = (index) => {
   cartStore.removeItem(index);
 };

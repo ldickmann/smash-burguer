@@ -3,21 +3,22 @@
 
 .cart-page-section {
   padding: 9rem 0;
-  background-color: $color-cream-background;
+  background-color: $color-orange-background;
 
   .cart-page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
     border-radius: 8px;
-    background-color: $color-blue-background;
+    background-color: $color-brown-background;
 
     &__auth-notice {
       background-color: $color-white-background-secondary;
+      box-shadow: 0 2px 8px rgba($color-brown-background, 0.1);
       border-radius: 8px;
       padding: 1.5rem;
-      margin-top: 1rem;
       text-align: center;
+      margin-top: 2rem;
 
       p {
         font-size: 1.1rem;
@@ -36,16 +37,16 @@
     &__title {
       @include flex-center;
       font-size: 2rem;
-      color: $color-text-primary;
+      color: $color-text-secondary;
       margin-bottom: 2rem;
     }
 
     &__empty {
       @include flex-center(column);
       padding: 3rem 1rem;
-      background-color: $secondary-color;
+      background-color: $color-white-background-secondary;
       border-radius: 8px;
-      box-shadow: 0 2px 8px $shadow-color;
+      box-shadow: 0 2px 8px rgba($color-brown-background, 0.1);
 
       p {
         font-size: 1.2rem;
@@ -55,7 +56,7 @@
     }
 
     &__content {
-      background-color: $secondary-color;
+      background-color: $color-white-background;
       border-radius: 8px;
       box-shadow: 0 2px 8px $shadow-color;
     }
@@ -69,7 +70,7 @@
     &__item {
       @include flex-center;
       justify-content: space-between;
-      padding: 1rem;
+      padding: 1.5rem;
       border-bottom: 1px solid $border-color;
 
       &:last-child {
@@ -89,9 +90,26 @@
       color: $color-text-primary;
     }
 
+    &__item-customization {
+      font-size: 0.9rem;
+      color: $color-text-tertiary;
+
+      strong {
+        color: $color-text-tertiary;
+        margin-right: 0.25rem;
+      }
+    }
+
+    &__item-quantity {
+      font-size: 0.9rem;
+      color: $color-text-tertiary;
+      font-weight: 500;
+    }
+
     &__item-price {
       font-size: 1rem;
       color: $color-text-tertiary;
+      font-weight: 600;
     }
 
     &__summary {
@@ -101,6 +119,30 @@
       border-radius: 0 0 8px 8px;
       @include flex-center(column);
       gap: 1rem;
+
+      .cart-page__total {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2rem;
+        background-color: $color-white-background-secondary;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        box-shadow: 0 2px 4px rgba($color-brown-background, 0.15);
+
+        span {
+          font-weight: 600;
+          color: $color-text-primary;
+        }
+
+        strong {
+          font-size: 1.6rem;
+          color: $color-text-tertiary;
+          font-weight: 700;
+        }
+      }
     }
 
     &__total {

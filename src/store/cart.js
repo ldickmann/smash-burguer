@@ -5,8 +5,12 @@ export const useCartStore = defineStore('cart', {
     items: [],
   }),
   actions: {
-    addItem(burger) {
-      this.items.push(burger);
+    addItem(item) {
+      const itemToAdd = {
+        ...item,
+        finalPrice: item.finalPrice || item.price,
+      };
+      this.items.push(itemToAdd);
     },
     removeItem(index) {
       this.items.splice(index, 1);
