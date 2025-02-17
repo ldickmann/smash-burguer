@@ -1,27 +1,32 @@
 @use "../base/variables" as *;
-@use "../base/mixins" as *;
 
 .form-group {
+  width: 100%;
   margin-bottom: 1.5rem;
 
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: $color-text-primary;
   }
 
   .form-input,
   .form-textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid var($color-border-secondary);
+    border: 1px solid $border-color;
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    background-color: $secondary-color;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
 
     &:focus {
       outline: none;
+      border-color: $tertiary-color;
+      box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
     }
   }
 
@@ -32,7 +37,7 @@
 
   .form-error {
     display: block;
-    color: var(--color-error);
+    color: $color-text-tertiary;
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
