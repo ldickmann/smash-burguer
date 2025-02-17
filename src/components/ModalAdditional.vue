@@ -1,6 +1,8 @@
 <template>
+  <!-- Modal Overlay é exibido se a propriedade 'show' for verdadeira -->
   <div class="modal-overlay" v-if="show" @click.self="closeModal">
     <div class="modal-content">
+      <!-- Cabeçalho do Modal com título e botão de fechar -->
       <div class="modal-header">
         <h2>Personalizar Pedido</h2>
         <button class="close-button" @click="closeModal">&times;</button>
@@ -17,7 +19,7 @@
           </div>
         </div>
 
-        <!-- Group de Items Adicionais e input 'checkbox' -->
+        <!-- Ingredientes adicionais para itens que não são bebidas -->
         <div
           class="ingredients-section"
           v-if="item.category !== 'drinks' && defaultIngredients.length > 0"
@@ -61,7 +63,7 @@
           </div>
         </div>
 
-        <!-- Group de Items Adicionais e input 'number' -->
+        <!-- Items Adicionais (com checkbox) para Comidas e Sobremesas -->
         <div class="additionals-section" v-if="showAdditionals">
           <h4>Adicionais</h4>
           <div class="additionals-list">
@@ -86,7 +88,7 @@
           </div>
         </div>
 
-        <!-- Form Group Componente - Campo de Observação -->
+        <!-- Campo de Observação -->
         <div class="observation-section">
           <FormGroup
             id="observation"
@@ -98,7 +100,7 @@
         </div>
       </div>
 
-      <!-- Botão Adicionar ao Pedido -->
+      <!-- Rodapé com botão de adicionar pedido -->
       <div class="modal-footer">
         <ButtonComponent
           :buttons="[{ label: 'Adicionar ao Pedido', id: 'add-to-cart' }]"
@@ -126,6 +128,7 @@ const props = defineProps({
     type: Object,
     required: true,
     validator(value) {
+      // Validação para garantir que o objeto item tenha as propriedades necessárias
       return (
         value.hasOwnProperty("name") &&
         value.hasOwnProperty("price") &&
@@ -135,12 +138,13 @@ const props = defineProps({
   },
 });
 
+// Emite eventos para para o componente pai para fechar o modal e adicionar o item ao carrinho
 const emit = defineEmits(["close", "add-to-cart"]);
 
-const observation = ref("");
+const observation = ref(""); // Observação do pedido (usuário)
+const drinkQuantity = ref({ quantity: 0 }); // Quantidade de bebidas
 
-const drinkQuantity = ref({ quantity: 0 });
-
+// Função computada para mostrar ingredientes adicionais conforme a categoria
 const showAdditionals = computed(() => {
   return props.item.category === "foods" || props.item.category === "desserts";
 });
@@ -173,6 +177,7 @@ const dessertAdditionals = ref([
   { id: 6, name: "Paçoca", price: 1.5, quantity: 0 },
 ]);
 
+// Função computada para calcular o preço total do pedido
 const calculateTotalPrice = computed(() => {
   if (props.item.category === "drinks") {
     return props.item.price * (drinkQuantity.value.quantity || 1);
@@ -199,6 +204,7 @@ const closeModal = () => {
   emit("close");
 };
 
+// Função para obter os adicionais pela categoria do item
 const getAdditionalsByCategory = computed(() => {
   if (props.item.category === "foods") {
     return foodAdditionals.value;
@@ -209,6 +215,7 @@ const getAdditionalsByCategory = computed(() => {
   return [];
 });
 
+// Função para adicionar o item personalizado ao carrinho
 const addToCart = () => {
   const customizedItem = {
     ...props.item,

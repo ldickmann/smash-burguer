@@ -1,6 +1,8 @@
 <template>
+  <!-- Component Navbar -->
   <header>
     <div class="header-container">
+      <!-- Link para a página home -->
       <router-link to="/">
         <h1>{{ title }}</h1>
       </router-link>
@@ -9,6 +11,8 @@
         <span></span>
         <span></span>
       </div>
+
+      <!-- Navegação com classes dinâmicas para exibição do menu -->
       <nav :class="{ active: isMenuOpen }">
         <router-link to="/" @click="closeMenu">Home</router-link>
         <router-link to="/menu" @click="closeMenu">Cardápio</router-link>
@@ -26,19 +30,15 @@ const props = defineProps({
   title: String,
 });
 
+// Estado reativo que controla a exibição do menu
 const isMenuOpen = ref(false);
 
-/**
- * Toggles the state of the menu.
- * If the menu is currently open, it will be closed, and vice versa.
- */
+// Altera o estado do menu de navegação
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
 
-/**
- * This function is typically used to handle the closing of a navigation menu.
- */
+// Fecha o menu de navegação quando um link é clicado
 const closeMenu = () => {
   isMenuOpen.value = false;
 };

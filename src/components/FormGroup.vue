@@ -1,6 +1,10 @@
 <template>
+  <!-- FormGroup component -->
   <div class="form-group">
+    <!-- Exibe p rótulo apenas se a prop label for passada -->
     <label :for="id" v-if="label">{{ label }}</label>
+    <!-- Exibe input ou textarea de acordo com a prop type -->
+    <!-- Se o type for diferente de textarea, exibe um input padrão -->
     <input
       v-if="type !== 'textarea'"
       :id="id"
@@ -12,6 +16,8 @@
       :autocomplete="autocomplete"
       :class="['form-input', { 'has-error': error }]"
     />
+
+    <!-- Se o type for textarea, exibe o input textarea -->
     <textarea
       v-else
       :id="id"
@@ -22,6 +28,8 @@
       :autocomplete="autocomplete"
       :class="['form-textarea', { 'has-error': error }]"
     ></textarea>
+
+    <!-- Exibe a mensagem de erro caso a prop error seja passada -->
     <span v-if="error" class="form-error">{{ error }}</span>
   </div>
 </template>
@@ -62,12 +70,13 @@ const props = defineProps({
   },
 });
 
+// Define o evento que será emitido para atualizar o valor do input
 const emit = defineEmits(["update:modelValue"]);
 
-const updateValue = (event) => {
-  const value = props.type === "checkbox" ? event.target.checked : event.target.value;
-  emit("update:modelValue", value);
-};
+// const updateValue = (event) => {
+//   const value = props.type === "checkbox" ? event.target.checked : event.target.value;
+//   emit("update:modelValue", value);
+// };
 </script>
 
 <style scoped lang="scss">
