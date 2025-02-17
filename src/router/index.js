@@ -46,6 +46,30 @@ const router = createRouter({
       component: () => import('../views/auth/ProfilePage.vue'),
       meta: { requiresAuth: true },
     },
+    // Painel Administrativo
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/admin/AdminDashboard.vue'),
+      children: [
+        {
+          path: 'products',
+          name: 'product-management',
+          component: () => import('../views/admin/ProductManagement.vue'),
+        },
+        {
+          path: 'orders',
+          name: 'order-management',
+          component: () => import('../views/admin/OrderManagement.vue'),
+        },
+        {
+          path: 'reports',
+          name: 'sales-reports',
+          component: () => import('../views/admin/SalesReports.vue'),
+        }
+      ],
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
     // Rota 404 - lazy loading
     {
       path: '/:catchAll(.*)*',
