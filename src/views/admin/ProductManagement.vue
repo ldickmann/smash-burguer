@@ -42,8 +42,47 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
 import AdminCard from "@/components/admin/AdminCard.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+
+const products = ref([]);
+const loading = ref(true);
+const showAddModal = ref(false);
+
+const fetchProducts = async () => {
+  try {
+    loading.value = true;
+    // Adicionar a chamada para a API aqui
+    // Produtos simulados
+    products.value = [
+      {
+        id: 1,
+        name: "Smash Burger Classic",
+        description: "Hambúrguer smash com queijo cheddar",
+        price: 25.9,
+        image: "https://example.com/burger-image.jpg",
+      },
+      // Add mais produtos aqui
+    ];
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const editProduct = (product) => {
+  console.log("Editing product:", product);
+};
+
+const deleteProduct = (productId) => {
+  console.log("Produto excluído:", productId);
+};
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
 
 <style scoped lang="scss">
