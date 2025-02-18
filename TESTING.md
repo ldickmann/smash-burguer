@@ -22,10 +22,11 @@ Implementei testes unitários para validar o funcionamento isolado de componente
   - Visibilidade inicial do alerta
   - Ocultação automática após 3 segundos
   - Reset do timer ao mudar a mensagem
-- ✓ Inputs e Forms
-  - Validação de campos obrigatórios
-  - Verificação de formatos (nome, sobrenome, email, senha, telefone e CEP)
-  - Teste de máscaras de input
+- ✓ BannerComponent - 100% cobertura
+  - Renderização com props padrão
+  - Altura da imagem com overlay
+  - Altura personalizada sem overlay
+  - Aplicação da classe overlay
 
 ### Funções Testadas
 
@@ -72,6 +73,21 @@ Cobertura:
 ✓ deve mostrar alerta inicialmente
 ✓ deve ocultar alerta após 3 segundos
 ✓ deve resetar timer quando mensagem muda
+
+Cobertura:
+- Statements: 100%
+- Branches: 100%
+- Functions: 100%
+- Lines: 100%
+```
+
+### BannerComponent
+
+```bash
+✓ deve renderizar propriamente com props padrão
+✓ deve computar altura correta da imagem com overlay
+✓ deve aplicar altura personalizada quando overlay é false
+✓ deve adicionar classe overlay quando prop overlay é true
 
 Cobertura:
 - Statements: 100%
