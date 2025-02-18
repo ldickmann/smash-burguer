@@ -1,14 +1,14 @@
 <template>
   <section class="product-management">
     <div class="management-container">
-      <header class="page-header">
+      <div class="page-header">
         <h2>Gestão de Produtos</h2>
         <ButtonComponent
           :buttons="[{ label: 'Novo Produto', id: 'add' }]"
           backgroundColor="#42b983"
           @click="showAddModal = true"
         />
-      </header>
+      </div>
     </div>
 
     <div class="products-list">

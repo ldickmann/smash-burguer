@@ -10,6 +10,8 @@ import {
   faUtensils,
   faShoppingCart,
   faChartLine,
+  faBars,
+  faSignOutAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faTwitter, faXTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -29,6 +31,8 @@ library.add(
   faUtensils,
   faShoppingCart,
   faChartLine,
+  faBars,
+  faSignOutAlt
 );
 
 export { FontAwesomeIcon };
