@@ -18,15 +18,12 @@
       <div class="navbar-notifications">
         <div class="notification-item" @click="toggleMessages">
           <font-awesome-icon :icon="['far', 'envelope']" />
-          <span v-if="messageCount" class="notification-dot"></span>
         </div>
         <div class="notification-item" @click="toggleAlerts">
           <font-awesome-icon :icon="['fas', 'bell']" />
-          <span v-if="alertCount" class="notification-dot"></span>
         </div>
         <div class="notification-item" @click="toggleTasks">
           <font-awesome-icon :icon="['fas', 'tasks']" />
-          <span v-if="taskCount" class="notification-dot"></span>
         </div>
       </div>
 

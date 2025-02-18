@@ -19,7 +19,7 @@ import {
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faFacebookF, faInstagram, faTwitter, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faInstagram, faTwitter, faXTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 library.add(
   faFacebookF,
@@ -42,7 +42,9 @@ library.add(
   faTasks,
   faUser,
   faCog,
-  faMagnifyingGlass
+  faMagnifyingGlass,
+  faGithub,
+  faLinkedin
 );
 
 export { FontAwesomeIcon };
