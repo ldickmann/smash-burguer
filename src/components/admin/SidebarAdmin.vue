@@ -1,5 +1,9 @@
 <template>
-  <aside class="admin-sidebar" :class="{ 'sidebar-collapsed': isCollapsed }">
+  <aside
+    class="admin-sidebar"
+    :class="{ 'sidebar-collapsed': isCollapsed }"
+    ref="sidebarRef"
+  >
     <div class="sidebar-container">
       <button class="toggle-button" @click="toggleSidebar" aria-label="Toggle Sidebar">
         <font-awesome-icon :icon="['fas', 'bars']" />
@@ -55,14 +59,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
-import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const router = useRouter();
 const adminStore = useAdminStore();
 const isCollapsed = ref(false);
+const sidebarRef = ref(null);
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;
@@ -73,6 +77,25 @@ const handleLogout = () => {
   router.push("/admin/login");
 };
 
+// Função para fechar a sidebar ao clicar fora dela ou em um link
+const handleClickOutside = (event) => {
+  if (
+    window.innerWidth <= 576 &&
+    !isCollapsed.value &&
+    sidebarRef.value &&
+    !sidebarRef.value.contains(event.target)
+  ) {
+    isCollapsed.value = true;
+  }
+};
+
+// Adiciona o evento de click que fecha a sidebar quando clicar em uma rota (link)
+router.afterEach(() => {
+  if (window.innerWidth <= 576) {
+    isCollapsed.value = true;
+  }
+});
+
 onMounted(() => {
   const checkWindowSize = () => {
     if (window.innerWidth <= 576) {
@@ -82,6 +105,12 @@ onMounted(() => {
 
   checkWindowSize();
   window.addEventListener("resize", checkWindowSize);
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", checkWindowSize);
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
