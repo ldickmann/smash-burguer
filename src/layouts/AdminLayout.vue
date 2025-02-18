@@ -3,20 +3,22 @@
     <SidebarAdmin />
     <div class="admin-content">
       <header class="admin-header">
-        <NavbarAdmin />
+        <TheNavbarAdmin />
       </header>
       <main class="admin-main">
         <RouterView />
       </main>
-      <!-- Codificar o Footer do AdminLayout.vue -->
-      <footer class="admin-footer"></footer>
+      <footer class="footer-admin__layout">
+        <TheFooterAdmin />
+      </footer>
     </div>
   </section>
 </template>
 
 <script setup>
-import NavbarAdmin from "@/components/admin/NavbarAdmin.vue";
 import SidebarAdmin from "@/components/admin/SidebarAdmin.vue";
+import TheFooterAdmin from "@/components/admin/TheFooterAdmin.vue";
+import TheNavbarAdmin from "@/components/admin/TheNavbarAdmin.vue";
 </script>
 
 <style scoped lang="scss">
