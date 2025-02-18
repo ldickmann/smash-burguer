@@ -1,14 +1,12 @@
 <template>
-  <section class="admin-dashboard">
-    <main class="dashboard-main">
-      <div class="dashboard-container">
-        <h1 class="dashboard-title">
-          <font-awesome-icon :icon="['fas', 'tachometer-alt']" />
-          Painel Administrativo
-        </h1>
-      </div>
-    </main>
-  </section>
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+      <h1 class="dashboard-title">
+        <font-awesome-icon :icon="['fas', 'tachometer-alt']" />
+        Painel Administrativo
+      </h1>
+    </div>
+  </main>
 </template>
 
 <script setup></script>
