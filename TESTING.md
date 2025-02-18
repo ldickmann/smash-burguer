@@ -17,6 +17,11 @@ Implementei testes unitários para validar o funcionamento isolado de componente
     - Cores (background e fonte)
     - Tamanho da fonte
     - Padding e border-radius
+- ✓ AlertComponent - 100% cobertura
+  - Renderização inicial com mensagem
+  - Visibilidade inicial do alerta
+  - Ocultação automática após 3 segundos
+  - Reset do timer ao mudar a mensagem
 - ✓ Inputs e Forms
   - Validação de campos obrigatórios
   - Verificação de formatos (nome, sobrenome, email, senha, telefone e CEP)
@@ -60,6 +65,21 @@ Cobertura:
 - Lines: 100%
 ```
 
+### AlertComponent
+
+```bash
+✓ deve renderizar componente com mensagem
+✓ deve mostrar alerta inicialmente
+✓ deve ocultar alerta após 3 segundos
+✓ deve resetar timer quando mensagem muda
+
+Cobertura:
+- Statements: 100%
+- Branches: 100%
+- Functions: 100%
+- Lines: 100%
+```
+
 ## Como Executar os Testes
 
 ```bash
@@ -91,7 +111,6 @@ Com base no relatório de cobertura, planejo:
 
 1. Expandir testes para outros componentes:
 
-   - AlertComponent
    - FormGroup
    - BurguerCard
    - CarouselBurguer
