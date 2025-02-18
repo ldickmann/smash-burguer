@@ -31,9 +31,10 @@
   .sidebar-container {
     display: flex;
     align-items: center;
-    padding: 1.5rem;
+    padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    min-height: 64px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 55px;
 
     .logo {
       width: 100%;

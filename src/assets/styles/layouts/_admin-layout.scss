@@ -4,11 +4,11 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background-color: $color-white-background;
 
-  .admin-main {
+  .admin-content {
     flex: 1;
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
     margin-left: 250px;
     width: calc(100% - 250px);
     min-height: 100vh;
@@ -17,13 +17,41 @@
       margin-left 0.3s ease,
       width 0.3s ease;
 
+    @include respond-to("xs") {
+      margin-left: 50px;
+      width: calc(100% - 50px);
+    }
+  }
+
+  .admin-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 55px;
+    width: calc(100% - 250px);
+    background-color: $color-text-quinary;
+    z-index: 100;
+    transition: width 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @include respond-to("xs") {
+      width: calc(100% - 50px);
+    }
+  }
+
+  .admin-main {
+    margin-top: 75px;
+    flex: 1;
+    padding: 2rem;
+    background-color: $color-white-background;
+
     @include respond-to("sm") {
       padding: 1rem;
     }
 
     @include respond-to("xs") {
-      margin-left: 50px;
-      width: calc(100% - 50px);
       padding: 0.5rem;
     }
   }

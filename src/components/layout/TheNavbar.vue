@@ -1,6 +1,6 @@
 <template>
   <!-- Component Navbar -->
-  <header>
+  <header class="main-header">
     <div class="header-container">
       <!-- Link para a página home -->
       <router-link to="/">
@@ -13,7 +13,7 @@
       </div>
 
       <!-- Navegação com classes dinâmicas para exibição do menu -->
-      <nav :class="{ active: isMenuOpen }">
+      <nav class="navbar-main" :class="{ active: isMenuOpen }">
         <router-link to="/" @click="closeMenu">Home</router-link>
         <router-link to="/menu" @click="closeMenu">Cardápio</router-link>
         <router-link to="/cart" @click="closeMenu">Carrinho</router-link>

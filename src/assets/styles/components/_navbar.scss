@@ -2,7 +2,7 @@
 @use "../base/typography" as *;
 @use "../base/mixins" as *;
 
-header {
+.main-header {
   background-color: $color-green-background;
   opacity: 0.8;
   position: fixed;
@@ -37,7 +37,7 @@ header {
   }
 }
 
-nav {
+.navbar-main {
   display: flex;
   gap: 3rem;
 
@@ -102,7 +102,7 @@ nav {
   @include respond-to("xs") {
     flex-wrap: wrap;
 
-    nav {
+    .navbar-main {
       display: none;
 
       &.active {
