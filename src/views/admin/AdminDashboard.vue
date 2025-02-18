@@ -1,6 +1,5 @@
 <template>
   <section class="admin-dashboard">
-    <SidebarAdmin />
     <main class="dashboard-main">
       <div class="dashboard-container">
         <h1 class="dashboard-title">
@@ -12,9 +11,7 @@
   </section>
 </template>
 
-<script setup>
-import SidebarAdmin from "@/components/admin/SidebarAdmin.vue";
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 @use '@/assets/styles/pages/admin/admin-dashboard';

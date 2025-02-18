@@ -1,0 +1,26 @@
+@use "../base/variables" as *;
+@use "../base/mixins" as *;
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: $color-white-background;
+
+  .admin-main {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 250px;
+    width: 100%;
+    min-height: 100vh;
+    background-color: $color-white-background;
+    transition: margin-left 0.3s ease;
+
+    @include respond-to("sm") {
+      padding: 1rem;
+    }
+
+    @include respond-to("xs") {
+      padding: 0.5rem;
+    }
+  }
+}

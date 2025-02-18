@@ -26,6 +26,7 @@
           :buttons="[{ label: 'Entrar', id: 'login' }]"
           type="submit"
           backgroundColor="#42b983"
+          @click="handleLogin"
         />
       </form>
     </div>
@@ -35,10 +36,12 @@
 <script setup>
 import { ref } from "vue";
 import { useAdminStore } from "@/stores/adminStore";
+import { useRouter } from "vue-router";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
+const router = useRouter();
 const adminStore = useAdminStore();
 
 const credentials = ref({
@@ -68,6 +71,8 @@ const handleLogin = async () => {
     const result = await adminStore.login(credentials.value);
     if (result?.error) {
       alert(result.error);
+    } else {
+      router.push("/admin");
     }
   } catch (error) {
     alert("Erro ao realizar login");

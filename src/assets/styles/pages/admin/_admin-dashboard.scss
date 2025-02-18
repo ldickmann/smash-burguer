@@ -2,36 +2,34 @@
 @use "../../base/mixins" as *;
 
 .admin-dashboard {
-  display: flex;
-  background-color: $color-white-background;
-  min-height: 100vh;
-
-  .dashboard-main {
-    flex: 1;
-    margin-left: 250px;
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: $secondary-color;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px $shadow-color;
     padding: 2rem;
 
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    @include respond-to("sm") {
+      padding: 1rem;
+    }
+  }
+
+  .dashboard-title {
+    @include flex-center;
+    gap: 0.75rem;
+    color: $color-text-quinary;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+
+    svg {
+      color: $tertiary-color;
     }
 
-    .dashboard-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: $color-text-quinary;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .dashboard-navbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 3rem;
+    @include respond-to("sm") {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
     }
   }
 }
