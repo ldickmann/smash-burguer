@@ -10,16 +10,20 @@
     flex: 1;
     padding: 2rem;
     margin-left: 250px;
-    width: 100%;
+    width: calc(100% - 250px);
     min-height: 100vh;
     background-color: $color-white-background;
-    transition: margin-left 0.3s ease;
+    transition:
+      margin-left 0.3s ease,
+      width 0.3s ease;
 
     @include respond-to("sm") {
       padding: 1rem;
     }
 
     @include respond-to("xs") {
+      margin-left: 50px;
+      width: calc(100% - 50px);
       padding: 0.5rem;
     }
   }
