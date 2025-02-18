@@ -140,32 +140,26 @@
 
     .sidebar-container {
       justify-content: center;
+
+      .logo {
+        h2 {
+          display: none;
+        }
+      }
     }
 
-    .logo h2,
     .nav-item span,
     .logout-button span {
-      opacity: 0;
-      width: 0;
+      display: none;
     }
 
     &.sidebar-collapsed {
       width: 50px;
 
-      .sidebar-container {
-        justify-content: center;
-      }
-
       .nav-item,
       .logout-button {
         justify-content: center;
-      }
-
-      .logo h2,
-      .nav-item span,
-      .logout-button span {
-        opacity: 0;
-        width: 0;
+        padding: 0.75rem;
       }
     }
 
@@ -173,14 +167,15 @@
       width: 250px;
 
       .sidebar-container {
-        justify-content: flex-start;
+        .logo {
+          margin-left: 0.5rem;
+        }
       }
 
       .logo h2,
       .nav-item span,
       .logout-button span {
-        opacity: 1;
-        width: auto;
+        display: block;
       }
     }
   }

@@ -58,10 +58,53 @@ const fetchProducts = async () => {
     products.value = [
       {
         id: 1,
-        name: "Smash Burger Classic",
-        description: "Hambúrguer smash com queijo cheddar",
-        price: 25.9,
-        image: "https://example.com/burger-image.jpg",
+        name: "Smash Burger",
+        description:
+          "Hambúrguer artesanal com queijo, cebola caramelizada, alface, tomate e maionese",
+        ingredients: [
+          "Pão de hambúrguer",
+          "Hambúrguer artesanal",
+          "Queijo",
+          "Cebola caramelizada",
+          "Alface",
+          "Tomate",
+          "Maionese",
+        ],
+        price: 22.5,
+        image: "/images/foods/smash-burger.jpg",
+      },
+      {
+        id: 3,
+        name: "Veggie Burger",
+        description:
+          "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
+        ingredients: [
+          "Pão de hambúrguer",
+          "Hambúrguer de soja",
+          "Queijo",
+          "Alface",
+          "Tomate",
+          "Maionese",
+        ],
+        price: 24.9,
+        image: "/images/foods/veggie-burger.jpg",
+      },
+      {
+        id: 4,
+        name: "Chicken Burger",
+        description:
+          "Hambúrguer artesanal de frango com queijo, alface, tomate, pepino e maionese",
+        ingredients: [
+          "Pão de hambúrguer",
+          "Hambúrguer de frango",
+          "Queijo",
+          "Alface",
+          "Tomate",
+          "Pepino",
+          "Maionese",
+        ],
+        price: 23.9,
+        image: "/images/foods/chicken-burger.jpg",
       },
       // Add mais produtos aqui
     ];
