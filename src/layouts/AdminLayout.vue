@@ -1,13 +1,21 @@
 <template>
-  <div class="admin-layout">
+  <section class="admin-layout">
     <SidebarAdmin />
-    <main class="admin-main">
-      <RouterView />
-    </main>
-  </div>
+    <div class="admin-content">
+      <header class="admin-header">
+        <NavbarAdmin />
+      </header>
+      <main class="admin-main">
+        <RouterView />
+      </main>
+      <!-- Codificar o Footer do AdminLayout.vue -->
+      <footer class="admin-footer"></footer>
+    </div>
+  </section>
 </template>
 
 <script setup>
+import NavbarAdmin from "@/components/admin/NavbarAdmin.vue";
 import SidebarAdmin from "@/components/admin/SidebarAdmin.vue";
 </script>
 
