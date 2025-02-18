@@ -12,6 +12,11 @@ import {
   faChartLine,
   faBars,
   faSignOutAlt,
+  faBell,
+  faTasks,
+  faUser,
+  faCog,
+  faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faTwitter, faXTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -32,7 +37,12 @@ library.add(
   faShoppingCart,
   faChartLine,
   faBars,
-  faSignOutAlt
+  faSignOutAlt,
+  faBell,
+  faTasks,
+  faUser,
+  faCog,
+  faMagnifyingGlass
 );
 
 export { FontAwesomeIcon };
