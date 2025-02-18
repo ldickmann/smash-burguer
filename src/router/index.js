@@ -59,16 +59,17 @@ const router = createRouter({
       ],
     },
 
+    {
+      path: '/admin/login',
+      name: 'admin-login',
+      component: () => import('../views/admin/LoginAdminPage.vue'),
+    },
+
     // Rotas admin
     {
       path: '/admin',
       component: AdminLayout,
       children: [
-        {
-          path: 'login',
-          name: 'admin-login',
-          component: () => import('../views/admin/LoginAdminPage.vue'),
-        },
         {
           path: '',
           name: 'admin-dashboard',
