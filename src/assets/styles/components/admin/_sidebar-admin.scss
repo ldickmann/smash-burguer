@@ -141,10 +141,8 @@
     .sidebar-container {
       justify-content: center;
 
-      .logo {
-        h2 {
-          display: none;
-        }
+      .logo h2 {
+        display: none;
       }
     }
 
@@ -166,10 +164,8 @@
     &:not(.sidebar-collapsed) {
       width: 250px;
 
-      .sidebar-container {
-        .logo {
-          margin-left: 0.5rem;
-        }
+      .sidebar-container .logo {
+        margin-left: 0.5rem;
       }
 
       .logo h2,

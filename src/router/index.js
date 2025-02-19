@@ -56,6 +56,13 @@ const router = createRouter({
           component: () => import('../views/auth/ProfilePage.vue'),
           meta: { requiresAuth: true },
         },
+
+        // Página para testes
+        {
+          path: 'playground',
+          name: 'playground',
+          component: () => import('../views/Playground.vue'),
+        }
       ],
     },
 
