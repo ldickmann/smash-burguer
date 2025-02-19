@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Create Admin User</title>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Create Admin User</h1>
+  <div id="status"></div>
+  <script>
+    function createAdmin() {
+      localStorage.clear();
+
+      const adminUser = {
+        firstName: 'Admin',
+        lastName: 'User',
+        email: 'luksadmin@gmail.com',
+        password: 'Dick1234$',
+        role: 'admin'
+      };
+
+      try {
+        localStorage.setItem('admin', JSON.stringify(adminUser));
+
+        const savedAdmin = localStorage.getItem('admin');
+        const parsedAdmin = JSON.parse(savedAdmin);
+
+        if (parsedAdmin && parsedAdmin.email === adminUser.email) {
+          document.getElementById('status').innerHTML = `
+                        <h3 class="success">✅ Admin criado com sucesso!</h3>
+                        <p><strong>Dados salvos:</strong></p>
+                        <pre>${JSON.stringify(parsedAdmin, null, 2)}</pre>
+                        <p><strong>Próximos passos:</strong></p>
+                        <ol>
+                            <li>Verifique os dados acima</li>
+                            <li>Acesse: <a href="/admin/login">Login Admin</a></li>
+                            <li>Use as credenciais:</li>
+                            <ul>
+                                <li>Email: ${adminUser.email}</li>
+                                <li>Senha: ${adminUser.password}</li>
+                            </ul>
+                        </ol>
+                    `;
+        } else {
+          throw new Error('Falha na verificação dos dados salvos');
+        }
+      } catch (error) {
+        document.getElementById('status').innerHTML = `
+                    <h3 class="error">❌ Erro ao criar admin:</h3>
+                    <p>${error.message}</p>
+                `;
+      }
+    }
+
+    createAdmin();
+  </script>
+</body>
+
+</html>
