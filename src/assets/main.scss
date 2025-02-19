@@ -19,16 +19,24 @@
 
 // Admin Components
 @use "./styles/components/admin/admin-card";
+@use "./styles/components/admin/footer-admin";
+@use "./styles/components/admin/navbar-admin";
+@use "./styles/components/admin/sidebar-admin";
+
+// Layouts
+@use "./styles/layouts/admin-layout";
 
 // Pages
-@use "./styles/pages/auth/login";
-@use "./styles/pages/auth/profile";
-@use "./styles/pages/auth/register";
 @use "./styles/pages/cart-page";
 @use "./styles/pages/home";
 @use "./styles/pages/menu-page";
 @use "./styles/pages/not-found";
 @use "./styles/pages/payment";
+
+// Auth Pages
+@use "./styles/pages/auth/login";
+@use "./styles/pages/auth/profile";
+@use "./styles/pages/auth/register";
 
 // Admin Pages
 @use "./styles/pages/admin/admin-dashboard";
@@ -36,4 +44,3 @@
 @use "./styles/pages/admin/order-management";
 @use "./styles/pages/admin/product-management";
 @use "./styles/pages/admin/sales-reports";
-
