@@ -97,7 +97,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
 import ButtonComponent from "@/components/ButtonComponent.vue";

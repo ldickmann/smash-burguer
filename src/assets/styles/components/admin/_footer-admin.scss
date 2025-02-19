@@ -1,0 +1,25 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.admin-footer {
+  padding: 1rem 0;
+  letter-spacing: 0.07rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+
+  .container-copy {
+    p {
+      margin: 0;
+      font-size: 0.8rem;
+    }
+  }
+
+  .developer-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    a {
+      font-size: 1.5rem;
+    }
+  }
+}

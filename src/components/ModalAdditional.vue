@@ -119,6 +119,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { formatPrice } from "@/utils/formatters";
+import productsData from "../json/products.json";
 import FormGroup from "./FormGroup.vue";
 import ButtonComponent from "./ButtonComponent.vue";
 
@@ -161,21 +162,11 @@ const defaultIngredients = computed(() => {
   }));
 });
 
-const foodAdditionals = ref([
-  { id: 1, name: "Bacon", price: 3.5, quantity: 0 },
-  { id: 2, name: "Ovo", price: 2.0, quantity: 0 },
-  { id: 3, name: "Queijo Cheddar", price: 3.0, quantity: 0 },
-  { id: 4, name: "Cebola Caramelizada", price: 2.5, quantity: 0 },
-]);
-
-const dessertAdditionals = ref([
-  { id: 1, name: "Calda de Chocolate", price: 2.0, quantity: 0 },
-  { id: 2, name: "Granulado", price: 1.5, quantity: 0 },
-  { id: 3, name: "Leite Condensado", price: 2.5, quantity: 0 },
-  { id: 4, name: "Morango", price: 3.0, quantity: 0 },
-  { id: 5, name: "Nutella", price: 4.0, quantity: 0 },
-  { id: 6, name: "Paçoca", price: 1.5, quantity: 0 },
-]);
+// Adicionais de comidas e sobremesas trazidos do JSON
+const foodAdditionals = ref(JSON.parse(JSON.stringify(productsData.foodAdditionals)));
+const dessertAdditionals = ref(
+  JSON.parse(JSON.stringify(productsData.dessertAdditionals))
+);
 
 // Função computada para calcular o preço total do pedido
 const calculateTotalPrice = computed(() => {

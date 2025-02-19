@@ -29,3 +29,6 @@ coverage
 .vscode/
 
 *.tsbuildinfo
+
+/coverage
+createAdmin.html
