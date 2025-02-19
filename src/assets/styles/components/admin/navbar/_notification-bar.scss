@@ -1,0 +1,14 @@
+@use "../../../base/variables" as *;
+
+.navbar-notifications {
+  display: flex;
+  gap: 1.5rem;
+
+  .notification-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    color: $secondary-color;
+  }
+}

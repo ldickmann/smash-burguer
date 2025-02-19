@@ -1,0 +1,30 @@
+@use "../../../base/variables" as *;
+
+.navbar-search {
+  display: flex;
+  margin-left: 2rem;
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 0.25rem 1rem;
+    gap: 0.5rem;
+    border: 1px solid $color-border-accent;
+    color: $secondary-color;
+
+    input {
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 8px;
+
+      &::placeholder {
+        color: $color-text-gray-str;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
