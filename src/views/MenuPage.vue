@@ -49,7 +49,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import router from "@/router";
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/stores/cart";
+import productsData from "../json/products.json";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonComponent.vue";
@@ -59,165 +60,10 @@ const cartStore = useCartStore();
 const showAlert = ref(false);
 const alertMessage = ref("");
 
-const foods = ref([
-  {
-    id: 1,
-    name: "Cheese Bacon",
-    description:
-      "Hambúrguer artesanal com queijo e bacon crocante, alface, tomate e maionese",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer artesanal",
-      "Queijo",
-      "Bacon",
-      "Alface",
-      "Tomate",
-      "Maionese",
-    ],
-    price: 25.99,
-    image: "./images/foods/cheese-bacon.jpg",
-    category: "foods",
-  },
-  {
-    id: 2,
-    name: "Smash Burger",
-    description:
-      "Hambúrguer artesanal com queijo, cebola caramelizada, alface, tomate e maionese",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer artesanal",
-      "Queijo",
-      "Cebola caramelizada",
-      "Alface",
-      "Tomate",
-      "Maionese",
-    ],
-    price: 22.5,
-    image: "./images/foods/smash-burger.jpg",
-    category: "foods",
-  },
-  {
-    id: 3,
-    name: "Veggie Burger",
-    description:
-      "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer de soja",
-      "Queijo",
-      "Alface",
-      "Tomate",
-      "Maionese",
-    ],
-    price: 24.9,
-    image: "./images/foods/veggie-burger.jpg",
-    category: "foods",
-  },
-  {
-    id: 4,
-    name: "X-Salada",
-    description:
-      "Hambúrguer artesanal com queijo, alface, tomate, cebola, maionese e ketchup",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer artesanal",
-      "Queijo",
-      "Alface",
-      "Tomate",
-      "Cebola",
-      "Maionese",
-      "Ketchup",
-    ],
-    price: 20.9,
-    image: "./images/foods/x-salada.jpg",
-    category: "foods",
-  },
-  {
-    id: 5,
-    name: "Chicken Burger",
-    description:
-      "Hambúrguer artesanal de frango com queijo, alface, tomate, pepino e maionese",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer de frango",
-      "Queijo",
-      "Alface",
-      "Tomate",
-      "Pepino",
-      "Maionese",
-    ],
-    price: 23.9,
-    image: "./images/foods/chicken-burger.jpg",
-    category: "foods",
-  },
-  {
-    id: 6,
-    name: "Burger Picanha",
-    description:
-      "Hambúrguer artesanal de picanha com queijo, alface, tomate, cebola, pickles e maionese",
-    ingredients: [
-      "Pão de hambúrguer",
-      "Hambúrguer de picanha",
-      "Queijo",
-      "Alface",
-      "Tomate",
-      "Cebola",
-      "Pickles",
-      "Maionese",
-    ],
-    price: 29.9,
-    image: "./images/foods/burger-picanha.jpg",
-    category: "foods",
-  },
-  {
-    id: 7,
-    name: "Batata Frita",
-    description: "Porção de batata frita crocante",
-    ingredients: ["Batata", "Sal"],
-    price: 10.9,
-    image: "./images/foods/batata-frita.jpg",
-    category: "foods",
-  },
-]);
-
-const drinks = ref([
-  {
-    id: 8,
-    name: "Refrigerante Copo",
-    description: "Refrigerante em copo de 500ml",
-    price: 5.99,
-    image: "./images/drinks/refrigerante.jpg",
-    category: "drinks",
-  },
-  {
-    id: 9,
-    name: "Coca Cola Lata",
-    description: "Lata de Coca Cola 350ml",
-    price: 4.99,
-    image: "./images/drinks/coca-cola-lata.jpg",
-    category: "drinks",
-  },
-  {
-    id: 10,
-    name: "Suco de Abacaxi",
-    description: "Suco natural de abacaxi 500ml",
-    price: 6.99,
-    image: "./images/drinks/suco-abacaxi.jpg",
-    category: "drinks",
-  },
-]);
-
-const desserts = ref([
-  {
-    id: 11,
-    name: "Sorvete de Pote",
-    description: "Sorvete de creme em pote 500ml",
-    ingredients: ["Leite", "Açúcar", "Creme de leite"],
-    price: 7.99,
-    image: "./images/desserts/sorvete-pote.jpg",
-    category: "desserts",
-  },
-]);
+// Define as comidas, bebidas e sobremesas disponíveis através do JSON
+const foods = ref(productsData.menuItems.foods);
+const drinks = ref(productsData.menuItems.drinks);
+const desserts = ref(productsData.menuItems.desserts);
 
 const allItems = computed(() => [...foods.value, ...drinks.value, ...desserts.value]);
 

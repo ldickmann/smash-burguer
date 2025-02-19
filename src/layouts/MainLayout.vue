@@ -2,7 +2,7 @@
   <div class="main-layout">
     <TheNavbar title="Smash Burgers" />
     <main>
-      <slot />
+      <RouterView />
     </main>
     <TheFooter
       title="Smash Burgers"

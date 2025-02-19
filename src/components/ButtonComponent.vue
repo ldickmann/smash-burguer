@@ -4,8 +4,6 @@
     class="container-buttons"
     :style="{
       gap: `${gap}px`,
-      '--mobile-font-size': mobileFontSize,
-      '--mobile-button-size': mobileButtonSize,
     }"
   >
     <!-- Itera sobre a lista de botões e cria um botão para cada item -->
@@ -53,15 +51,6 @@ const props = defineProps({
   gap: {
     type: Number,
     default: 8,
-  },
-  // Estilização responsiva para dispositivos móveis
-  mobileFontSize: {
-    type: String,
-    default: "10px",
-  },
-  mobileButtonSize: {
-    type: String,
-    default: "8px 16px",
   },
 });
 
