@@ -1,7 +1,7 @@
 <template>
   <!-- Burger card component -->
   <div class="burger-card">
-    <img :src="burger.image" :alt="burger.name" class="burguer-image" />
+    <img :src="burger.image" :alt="burger.name" class="burguer-image" loading="lazy" />
     <h3>{{ burger.name }}</h3>
     <p>R$ {{ formattedPrice }}</p>
     <!-- Button component para adicionar o item ao pedido -->
@@ -63,6 +63,7 @@ const openModal = () => {
 // Função para fechar o modal
 const closeModal = () => {
   showModal.value = false;
+  document.body.style.overflow = "";
 };
 
 // Função para adicionar o item ao carrinho
