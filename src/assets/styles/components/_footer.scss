@@ -18,6 +18,39 @@ footer {
     gap: 3.5rem;
     width: 100%;
 
+    @include respond-to("md") {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 0 2rem;
+
+      .container-title {
+        flex: 1;
+        width: 100%;
+        min-width: 100%;
+        margin-right: 0;
+      }
+
+      .container-contact {
+        flex: 1;
+        min-width: 30%;
+        margin-top: 0rem;
+      }
+
+      .container-contact,
+      .container-working-hours,
+      .container-social-media {
+        flex: 1;
+        min-width: 30%;
+        margin-top: 1rem;
+
+        h1,
+        h2 {
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+
     @include respond-to("sm") {
       flex-direction: column;
       gap: 2rem;
@@ -45,6 +78,14 @@ footer {
         margin-bottom: 1rem;
       }
     }
+
+    @include respond-to("xxs") {
+      margin-right: 0;
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
   }
 
   .container-working-hours {
@@ -58,6 +99,12 @@ footer {
 
       @include respond-to("xs") {
         margin-bottom: 1rem;
+      }
+    }
+
+    @include respond-to("xxs") {
+      p {
+        font-size: 0.9rem;
       }
     }
   }
@@ -145,6 +192,17 @@ footer {
   .separator-copy {
     margin-top: 5rem;
 
+    @include respond-to("md") {
+      margin-top: 3rem;
+      padding-inline: 2rem;
+    }
+
+    @include respond-to("sm") {
+      margin-top: 3rem;
+      width: 93%;
+      margin: 0 auto;
+    }
+
     @include respond-to("xs") {
       padding-top: 1rem;
       width: 90%;
@@ -162,6 +220,10 @@ footer {
       font-size: 0.9rem;
     }
 
+    @include respond-to("md") {
+      padding: 0rem 2rem;
+    }
+
     @include respond-to("sm") {
       padding: 0rem 2rem;
       margin-top: 2rem;
@@ -172,6 +234,12 @@ footer {
       padding-top: 0rem;
       margin-top: 1rem;
       gap: 1rem;
+    }
+
+    @include respond-to("xxs") {
+      p {
+        font-size: 0.8rem;
+      }
     }
   }
 }

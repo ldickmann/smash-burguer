@@ -34,6 +34,20 @@
     @include respond-to("xs") {
       font-size: 1.5rem;
     }
+
+    @include respond-to("xxs") {
+      font-size: 1.2rem;
+    }
+  }
+
+  .container-carousel {
+    @include respond-to("xs") {
+      margin-top: 2rem;
+    }
+
+    @include respond-to("xxs") {
+      margin-top: 1rem;
+    }
   }
 
   @include respond-to("xs") {
