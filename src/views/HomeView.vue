@@ -35,14 +35,11 @@ const alertMessage = ref("");
 // Define os hambúrgueres disponíveis através do JSON
 const burgers = productsData.menuItems.foods;
 
+// Função para adicionar um item ao carrinho
 const addToCart = (burger) => {
   cartStore.addItem(burger);
   alertMessage.value = `${burger.name} adicionado ao carrinho!`;
   showAlert.value = true;
-
-  setTimeout(() => {
-    showAlert.value = false;
-  }, 2000);
 };
 </script>
 

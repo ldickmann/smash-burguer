@@ -43,13 +43,11 @@
 
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/stores/userStore";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const userStore = useUserStore();
 const { handleLogin: authLogin } = useAuthHandlers();
 
 const form = ref({

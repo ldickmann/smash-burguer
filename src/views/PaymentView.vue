@@ -2,7 +2,7 @@
   <section class="section-payment">
     <div class="payment-container">
       <h1 class="payment-title">Escolha a forma de Pagamento</h1>
-      <form @submit.prevent="handlePayment">
+      <form @submit.prevent="handleConfirmPayment">
         <div class="payment-options">
           <label>
             <input
@@ -32,13 +32,13 @@
           </label>
         </div>
         <ButtonComponent
-          :buttons="[{ label: 'Confirmar Pagamento', id: 'confirm-payment' }]"
+          :buttons="[{ label: 'Confirmar Pagamento', id: 'confirm-payment-button' }]"
           backgroundColor="#42b983"
           fontColor="#ffffff"
           fontSize="16px"
           buttonSize="1rem 2rem"
           borderRadius="4px"
-          @click="handlePayment"
+          type="submit"
         />
       </form>
     </div>
@@ -47,16 +47,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-const router = useRouter();
 const selectedPaymentMethod = ref("");
 
-const handlePayment = () => {
-  // Redireciona para a página de pagamento da API
-  router.push(`/payment/${selectedPaymentMethod.value}`);
-};
+const { handleConfirmPayment } = useButtonHandlers();
 </script>
 
 <style scoped lang="scss">

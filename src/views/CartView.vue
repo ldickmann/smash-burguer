@@ -40,22 +40,22 @@
             <p>Para finalizar seu pedido, faça login ou crie uma conta</p>
             <div class="cart-page__auth-buttons">
               <ButtonComponent
-                :buttons="[{ label: loginText, id: 'login' }]"
+                :buttons="[{ label: loginText, id: 'login-button' }]"
                 backgroundColor="#42b983"
                 fontColor="#ffffff"
                 fontSize="16px"
                 buttonSize="0.75rem 1.5rem"
                 borderRadius="6px"
-                @click="() => $router.push('/login')"
+                @click="handleLogin"
               />
               <ButtonComponent
-                :buttons="[{ label: registerText, id: 'register' }]"
+                :buttons="[{ label: registerText, id: 'register-button' }]"
                 backgroundColor="#42b983"
                 fontColor="#ffffff"
                 fontSize="16px"
                 buttonSize="0.75rem 1.5rem"
                 borderRadius="6px"
-                @click="() => $router.push('/register')"
+                @click="handleRegister"
               />
             </div>
           </div>
@@ -73,13 +73,14 @@ import { computed } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import CartItem from "@/components/CartItem.vue";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
-//
+// Define propriedades computadas para exibir informações do carrinho
 const cartItems = computed(() => cartStore.items);
 const isCartEmpty = computed(() => cartItems.value.length === 0);
 const total = computed(() =>
@@ -87,7 +88,9 @@ const total = computed(() =>
 );
 const formattedTotal = computed(() => formatPrice(total.value));
 
-//
+const { handleLogin, handleRegister } = useButtonHandlers();
+
+// Define constantes que armazenam textos exibidos na página
 const title = "Seu Carrinho 🛒";
 const emptyCartMessage = "Seu carrinho está vazio.";
 const returnToMenuText = "Voltar ao Menu";

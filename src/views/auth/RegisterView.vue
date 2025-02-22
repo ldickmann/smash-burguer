@@ -98,7 +98,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/userStore";
+import { useAuthHandlers } from "@/handlers/authHandlers";
 import {
   validateFirstName,
   validateLastName,
@@ -112,7 +112,7 @@ import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const router = useRouter();
-const userStore = useUserStore();
+const { handleRegister: authRegister } = useAuthHandlers();
 
 const form = ref({
   firstName: "",
@@ -177,14 +177,18 @@ const handleRegister = async () => {
       return;
     }
 
-    await userStore.register(form.value);
-    router.push("/login");
+    const result = await authRegister(form.value);
+    if (result?.error) {
+      alert(result.error);
+    } else {
+      router.push("/login");
+    }
   } catch (error) {
-    console.error("Erro ao criar a conta", error);
+    console.error("Erro ao criar conta", error);
     if (error.response?.data?.message) {
       alert(error.response.data.message);
     } else {
-      alert("Erro ao criar a conta. Por favor, tente novamente.");
+      alert("Erro ao criar conta. Por favor, tente novamente.");
     }
   }
 };
