@@ -1,18 +1,30 @@
 @use "../base/variables" as *;
 
-.separator-container {
+.separator {
   display: flex;
-  justify-content: center;
   align-items: center;
+  width: 100%;
 
-  .separator-line {
-    flex: 1;
-    background-color: $septenary-color;
+  &--horizontal {
+    .separator__line {
+      width: 100%;
+      margin: 1rem 0;
+    }
   }
 
-  &.vertical {
-    flex-direction: column;
+  &--vertical {
     height: 100%;
-    margin: 0 1.25rem;
+    width: auto;
+
+    .separator__line {
+      height: 100%;
+      margin: 0;
+    }
+  }
+
+  &__line {
+    border: none;
+    margin: 0;
+    padding: 0;
   }
 }

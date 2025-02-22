@@ -8,7 +8,12 @@
         @notification-click="handleNotification"
       />
 
-      <SeparatorLines orientation="vertical" color="#ffffff" :thickness="1" />
+      <SeparatorLines
+        orientation="vertical"
+        color="#ffffff"
+        :thickness="1"
+        style="height: 24px"
+      />
 
       <UserProfileBar
         :user-name="adminName"
@@ -24,9 +29,9 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
-import SearchBar from "./navbar/SearchBar.vue";
-import NotificationBar from "./navbar/NotificationBar.vue";
-import UserProfileBar from "./navbar/UserProfileBar.vue";
+import SearchBar from "@/components/admin/layout/navbar/SearchBar.vue";
+import NotificationBar from "@/components//admin/layout/navbar/NotificationBar.vue";
+import UserProfileBar from "@/components/admin/layout/navbar/UserProfileBar.vue";
 import SeparatorLines from "@/components/SeparatorLines.vue";
 
 const router = useRouter();
