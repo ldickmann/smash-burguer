@@ -73,7 +73,7 @@ import { computed } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
-import { useButtonHandlers } from "@/utils/buttonHandlers";
+import { useAuthHandlers } from "@/handlers/authHandlers";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import CartItem from "@/components/CartItem.vue";
 
@@ -88,7 +88,7 @@ const total = computed(() =>
 );
 const formattedTotal = computed(() => formatPrice(total.value));
 
-const { handleLogin, handleRegister } = useButtonHandlers();
+const { handleLogin, handleRegister } = useAuthHandlers();
 
 // Define constantes que armazenam textos exibidos na página
 const title = "Seu Carrinho 🛒";

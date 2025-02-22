@@ -22,6 +22,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
 
 const props = defineProps({
   buttons: {
@@ -57,6 +58,15 @@ const props = defineProps({
 // Define eventos emitidos pelo componente
 const emit = defineEmits(["category-selected", "click"]);
 
+// Importa os handlers de botões
+const { handleButtonClick, handleConfirmPayment } = useButtonHandlers();
+
+// Mapeamento de IDs de botões para funções de manipulação
+const buttonHandlers = {
+  "cart-button": handleButtonClick,
+  "confirm-payment-button": handleConfirmPayment,
+};
+
 /**
  * Função que lida com o clique em um botão.
  * Emite o evento "category-selected" se o botão tiver uma categoria.
@@ -69,6 +79,12 @@ const handleClick = (button) => {
     emit("category-selected", button.category);
   }
   emit("click", button);
+
+  // chama o handler apropriado com base no ID do botão
+  const handler = buttonHandlers[button.id];
+  if (handler) {
+    handler(button);
+  }
 };
 
 /**
