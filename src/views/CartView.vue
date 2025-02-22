@@ -1,8 +1,11 @@
 <template>
   <section class="cart-page-section">
     <div class="cart-page">
-      <h1 class="cart-page__title">{{ title }}</h1>
+      <header>
+        <h1 class="cart-page__title">{{ title }}</h1>
+      </header>
 
+      <!-- Se o carrinho estiver vazio, exibe mensagem e botão para voltar ao menu -->
       <div v-if="isCartEmpty" class="cart-page__empty">
         <p>{{ emptyCartMessage }}</p>
         <router-link to="/menu" class="cart-page__button">
@@ -12,47 +15,17 @@
 
       <div v-else class="cart-page__content">
         <ul class="cart-page__list">
-          <li
+          <CartItem
             v-for="(item, index) in cartItems"
             :key="item.id || index"
-            class="cart-page__item"
-          >
-            <div class="cart-page__item-info">
-              <span class="cart-page__item-name">{{ item.name }}</span>
-              <!-- Mostrar ingredientes removido se houver -->
-              <span
-                v-if="item.removedIngredients?.length"
-                class="cart-page__item-customization"
-              >
-                <strong>Sem: </strong> {{ item.removedIngredients.join(", ") }}
-              </span>
-              <!-- Mostrar itens adicionais se houver -->
-              <span v-if="item.additionals?.length" class="cart-page__item-customization">
-                <strong>Adicionais: </strong>
-                <span v-for="(add, index) in item.additionals" :key="index">
-                  {{ add.quantity }}x {{ add.name
-                  }}{{ index < item.additionals.length - 1 ? ", " : "" }}
-                </span>
-              </span>
-              <!-- Mostrar observações se houver -->
-              <span v-if="item.observation" class="cart-page__item-customization">
-                <strong>Obs: </strong> {{ item.observation }}
-              </span>
-              <!-- Mostrar preço do item -->
-              <span class="cart-page__item-price">{{
-                formatPrice(item.finalPrice)
-              }}</span>
-            </div>
-            <button
-              @click="removeItem(index)"
-              class="cart-page__button cart-page__button--danger"
-            >
-              {{ removeButtonText }}
-            </button>
-          </li>
+            :item="item"
+            :index="index"
+            :removeButtonText="removeButtonText"
+            @remove="removeItem"
+          />
         </ul>
 
-        <div class="cart-page__summary">
+        <footer class="cart-page__summary">
           <p class="cart-page__total">
             <span>{{ totalLabel }}</span>
             <strong>{{ formattedTotal }}</strong>
@@ -89,7 +62,7 @@
           <router-link v-else to="/payment" class="cart-page__button--primary">
             {{ checkoutText }}
           </router-link>
-        </div>
+        </footer>
       </div>
     </div>
   </section>
@@ -101,6 +74,7 @@ import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import CartItem from "@/components/CartItem.vue";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();

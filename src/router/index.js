@@ -21,39 +21,39 @@ const router = createRouter({
         {
           path: 'menu',
           name: 'menu',
-          component: () => import('../views/MenuPage.vue'),
+          component: () => import('../views/MenuView.vue'),
         },
         {
           path: 'cart',
           name: 'cart',
-          component: () => import('../views/CartPage.vue'),
+          component: () => import('../views/CartView.vue'),
         },
         {
           path: 'payment',
           name: 'payment',
-          component: () => import('../views/PaymentPage.vue'),
+          component: () => import('../views/PaymentView.vue'),
         },
         {
           path: 'confirmation',
           name: 'confirmation',
-          component: () => import('../views/ConfirmationPage.vue'),
+          component: () => import('../views/ConfirmationView.vue'),
         },
 
         // Registro e login
         {
           path: 'register',
           name: 'register',
-          component: () => import('../views/auth/RegisterPage.vue'),
+          component: () => import('../views/auth/RegisterView.vue'),
         },
         {
           path: 'login',
           name: 'login',
-          component: () => import('../views/auth/LoginPage.vue'),
+          component: () => import('../views/auth/LoginView.vue'),
         },
         {
           path: 'profile',
           name: 'profile',
-          component: () => import('../views/auth/ProfilePage.vue'),
+          component: () => import('../views/auth/ProfileView.vue'),
           meta: { requiresAuth: true },
         },
 
@@ -69,7 +69,7 @@ const router = createRouter({
     {
       path: '/admin/login',
       name: 'admin-login',
-      component: () => import('../views/admin/LoginAdminPage.vue'),
+      component: () => import('../views/admin/LoginAdminView.vue'),
     },
 
     // Rotas admin
