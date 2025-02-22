@@ -32,6 +32,10 @@
       &:hover {
         transform: scale(1.05);
       }
+
+      @include respond-to("xxs") {
+        font-size: 1.5rem;
+      }
     }
   }
 
