@@ -60,6 +60,11 @@ const error = ref({
   password: "",
 });
 
+/**
+ * Valida o formulário de login verificando os campos de e-mail e senha.
+ *
+ * @returns {boolean} - Retorna true se e-mail e senha forem válidos, caso contrário, false.
+ */
 const validateForm = () => {
   const emailValidation = validateEmail(form.value.email);
   const passwordValidation = validatePassword(form.value.password);
@@ -70,6 +75,18 @@ const validateForm = () => {
   return emailValidation.isValid && passwordValidation.isValid;
 };
 
+/**
+ * Lida com o processo de login.
+ *
+ * Esta função primeiro valida o formulário. Se o formulário não for válido, ele retorna antes.
+ * Se o formulário for válido, ele tenta fazer login usando a função `authLogin` com os dados do formulário.
+ * Se a tentativa de login retornar um erro, ele alerta o usuário com a mensagem de erro.
+ * Se ocorrer uma exceção durante a tentativa de login, ele alerta o usuário com uma mensagem de erro genérica.
+ *
+ * @async
+ * @function handleLogin
+ * @returns {Promise<void>}
+ */
 const handleLogin = async () => {
   if (!validateForm()) return;
 
