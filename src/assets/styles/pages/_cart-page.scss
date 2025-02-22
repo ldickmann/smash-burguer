@@ -67,51 +67,6 @@
       margin: 0;
     }
 
-    &__item {
-      @include flex-center;
-      justify-content: space-between;
-      padding: 1.5rem;
-      border-bottom: 1px solid $border-color;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
-
-    &__item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    &__item-name {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: $color-text-primary;
-    }
-
-    &__item-customization {
-      font-size: 0.9rem;
-      color: $color-text-tertiary;
-
-      strong {
-        color: $color-text-tertiary;
-        margin-right: 0.25rem;
-      }
-    }
-
-    &__item-quantity {
-      font-size: 0.9rem;
-      color: $color-text-tertiary;
-      font-weight: 500;
-    }
-
-    &__item-price {
-      font-size: 1rem;
-      color: $color-text-tertiary;
-      font-weight: 600;
-    }
-
     &__summary {
       padding: 1.5rem;
       background-color: $color-white-background;
@@ -206,11 +161,11 @@
         font-size: 1.5rem;
       }
 
-      &__item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
+      // &__item {
+      //   flex-direction: column;
+      //   align-items: flex-start;
+      //   gap: 1rem;
+      // }
 
       &__summary {
         padding: 1rem;
@@ -231,13 +186,13 @@
         font-size: 1.25rem;
       }
 
-      &__item-name {
-        font-size: 1rem;
-      }
+      // &__item-name {
+      //   font-size: 1rem;
+      // }
 
-      &__item-price {
-        font-size: 0.9rem;
-      }
+      // &__item-price {
+      //   font-size: 0.9rem;
+      // }
     }
   }
 
