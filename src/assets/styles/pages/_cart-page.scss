@@ -161,12 +161,6 @@
         font-size: 1.5rem;
       }
 
-      // &__item {
-      //   flex-direction: column;
-      //   align-items: flex-start;
-      //   gap: 1rem;
-      // }
-
       &__summary {
         padding: 1rem;
       }
@@ -185,15 +179,11 @@
       &__title {
         font-size: 1.25rem;
       }
-
-      // &__item-name {
-      //   font-size: 1rem;
-      // }
-
-      // &__item-price {
-      //   font-size: 0.9rem;
-      // }
     }
+  }
+
+  @include respond-to("md") {
+    padding: 8rem 1rem 4rem;
   }
 
   @include respond-to("xs") {

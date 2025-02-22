@@ -198,15 +198,16 @@ footer {
     }
 
     @include respond-to("sm") {
-      margin-top: 3rem;
-      width: 93%;
-      margin: 0 auto;
+      padding: 1rem 2rem;
     }
 
     @include respond-to("xs") {
-      padding-top: 1rem;
-      width: 90%;
-      margin: 0 auto;
+      margin-top: 1rem;
+      padding: 0rem 1rem;
+    }
+
+    @include respond-to("xxs") {
+      padding: 1rem 1rem;
     }
   }
 
