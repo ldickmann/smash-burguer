@@ -17,6 +17,8 @@ import {
   faUser,
   faCog,
   faMagnifyingGlass,
+  faCirclePlus,
+  faCircleMinus,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faTwitter, faXTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -44,7 +46,9 @@ library.add(
   faCog,
   faMagnifyingGlass,
   faGithub,
-  faLinkedin
+  faLinkedin,
+  faCirclePlus,
+  faCircleMinus,
 );
 
 export { FontAwesomeIcon };

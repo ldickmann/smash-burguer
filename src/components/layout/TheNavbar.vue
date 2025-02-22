@@ -8,7 +8,7 @@
 
       <!-- Menu Hambúrguer para dispositivos móveis -->
       <button
-        class="button-hamburger"
+        class="hamburger"
         @click="toggleMenu"
         :aria-expanded="isMenuOpen"
         aria-controls="main-nav"
@@ -33,26 +33,12 @@
           </li>
         </ul>
       </nav>
-
-      <!-- <div class="hamburger" @click="toggleMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div> -->
-
-      <!-- Navegação com classes dinâmicas para exibição do menu -->
-      <!-- <nav class="navbar-main" :class="{ active: isMenuOpen }">
-        <router-link to="/" @click="closeMenu">Home</router-link>
-        <router-link to="/menu" @click="closeMenu">Cardápio</router-link>
-        <router-link to="/cart" @click="closeMenu">Carrinho</router-link>
-        <router-link to="/profile" @click="closeMenu">Perfil</router-link>
-      </nav> -->
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps({
   title: {
@@ -83,6 +69,26 @@ const closeMenu = () => {
   isMenuOpen.value = false;
   document.body.style.overflow = "";
 };
+
+// Função para fechar menu quando clicar fora
+const handleClickOutside = (event) => {
+  const nav = document.getElementById("main-nav");
+  const hamburger = event.target.closest(".hamburger");
+
+  if (isMenuOpen.value && !nav.contains(event.target) && !hamburger) {
+    closeMenu();
+  }
+};
+
+// Adiciona o evento quando o componente é montado
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+// Remove o evento quando o componente é desmontado
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped lang="scss">

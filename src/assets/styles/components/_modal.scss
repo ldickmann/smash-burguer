@@ -102,7 +102,8 @@
 }
 
 .ingredients-section,
-.additionals-section {
+.additionals-section,
+.observation-section {
   margin-bottom: 2rem;
 
   h4 {
@@ -118,64 +119,64 @@
   gap: 0.5rem;
 }
 
-.ingredient-item {
-  @include flex-center();
-  justify-content: flex-start;
-  gap: 0.75rem;
+// .ingredient-item {
+//   @include flex-center();
+//   justify-content: flex-start;
+//   gap: 0.75rem;
 
-  input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    accent-color: $tertiary-color;
-    cursor: pointer;
-  }
+//   input[type="checkbox"] {
+//     width: 24px;
+//     height: 24px;
+//     accent-color: $tertiary-color;
+//     cursor: pointer;
+//   }
 
-  label {
-    font-size: 1rem;
-    color: $color-text-primary;
-    cursor: pointer;
-  }
-}
+//   label {
+//     font-size: 1rem;
+//     color: $color-text-primary;
+//     cursor: pointer;
+//   }
+// }
 
-.additional-item {
-  @include flex-center();
-  padding: 0.5rem 0;
-  border-bottom: 1px solid $border-color;
+// .additional-item {
+//   @include flex-center();
+//   padding: 0.5rem 0;
+//   border-bottom: 1px solid $border-color;
 
-  .additional-name {
-    flex: 1;
-  }
+//   .additional-name {
+//     flex: 1;
+//   }
 
-  .additional-price {
-    color: $quinary-color;
-    margin: 0 1rem;
-  }
+//   .additional-price {
+//     color: $quinary-color;
+//     margin: 0 1rem;
+//   }
 
-  .quantity-control {
-    @include flex-center();
-    gap: 0.5rem;
+//   .quantity-control {
+//     @include flex-center();
+//     gap: 0.5rem;
 
-    button {
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
-      background-color: $tertiary-color;
-      color: $secondary-color;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
+//     button {
+//       width: 24px;
+//       height: 24px;
+//       border-radius: 4px;
+//       background-color: $tertiary-color;
+//       color: $secondary-color;
+//       border: none;
+//       cursor: pointer;
+//       transition: background-color 0.2s;
 
-      &:disabled {
-        background-color: $border-color;
-        cursor: not-allowed;
-      }
+//       &:disabled {
+//         background-color: $border-color;
+//         cursor: not-allowed;
+//       }
 
-      &:hover:not(:disabled) {
-        background-color: $quaternary-color;
-      }
-    }
-  }
-}
+//       &:hover:not(:disabled) {
+//         background-color: $quaternary-color;
+//       }
+//     }
+//   }
+// }
 
 .modal-footer {
   @include flex-center();
