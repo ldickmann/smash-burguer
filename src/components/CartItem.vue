@@ -24,14 +24,18 @@
 import { formatPrice } from "@/utils/formatters";
 
 const props = defineProps({
-  item: Object,
-  index: Number,
-  removeButtonText: String,
+  item: {
+    type: Object,
+  },
+  index: {
+    type: Number,
+  },
+  removeButtonText: {
+    type: String,
+  },
 });
 
 const emit = defineEmits(["remove"]);
-
-const removeButtonItem = "Remover";
 
 const removeItem = () => {
   emit("remove", props.index);

@@ -48,8 +48,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import router from "@/router";
 import { useCartStore } from "@/stores/cart";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
 import productsData from "../json/products.json";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
@@ -59,6 +59,7 @@ import AlertComponent from "@/components/AlertComponent.vue";
 const cartStore = useCartStore();
 const showAlert = ref(false);
 const alertMessage = ref("");
+const { handleButtonClick } = useButtonHandlers();
 
 // Define as comidas, bebidas e sobremesas disponíveis através do JSON
 const foods = ref(productsData.menuItems.foods);
@@ -69,16 +70,14 @@ const allItems = computed(() => [...foods.value, ...drinks.value, ...desserts.va
 
 const filteredBurgers = ref([...allItems.value]);
 
+// Adiciona um item ao carrinho
 const addToCart = (burger) => {
   cartStore.addItem(burger);
   alertMessage.value = `${burger.name} adicionado ao carrinho!`;
   showAlert.value = true;
-
-  setTimeout(() => {
-    showAlert.value = false;
-  }, 2000);
 };
 
+// Filtra os itens por categoria
 const filterByCategory = (category) => {
   if (category === "all") {
     filteredBurgers.value = [...allItems.value];
@@ -90,12 +89,6 @@ const filterByCategory = (category) => {
 onMounted(() => {
   filterByCategory("foods");
 });
-
-const handleButtonClick = (button) => {
-  if (button.id === "cart-button") {
-    router.push("/cart");
-  }
-};
 </script>
 
 <style scoped lang="scss">

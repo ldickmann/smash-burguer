@@ -22,8 +22,21 @@ export function useAuthHandlers() {
     router.push('/login');
   };
 
+  const handleRegister = async (userData) => {
+    try {
+      await userStore.register(userData);
+      router.push('/login');
+      return { success: true };
+    } catch (error) {
+      return {
+        error: 'Erro ao registrar usuário'
+      };
+    }
+  };
+
   return {
     handleLogin,
-    handleLogout
+    handleLogout,
+    handleRegister
   };
 }

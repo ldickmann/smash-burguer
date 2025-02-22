@@ -6,7 +6,6 @@
 
         <!-- Container com forms de informações pessoais e histórico de pedidos -->
         <div class="profile-info">
-          <!-- Informações Pessoais -->
           <div class="profile-personal">
             <h2>Informações Pessoais</h2>
             <form @submit.prevent="handleUpdateProfile">
@@ -18,7 +17,6 @@
                 required
                 :error="formErrors.fullName"
               />
-
               <FormGroup
                 id="lastName"
                 label="Sobrenome"
@@ -27,7 +25,6 @@
                 required
                 :error="formErrors.fullName"
               />
-
               <FormGroup
                 id="email"
                 label="E-mail"
@@ -36,7 +33,6 @@
                 required
                 :error="formErrors.email"
               />
-
               <FormGroup
                 id="phone"
                 label="Celular"
@@ -46,7 +42,6 @@
                 required
                 :error="formErrors.phone"
               />
-
               <FormGroup
                 id="CEP"
                 label="CEP"
@@ -57,7 +52,6 @@
                 :error="formErrors.CEP"
                 @input="handleCEPInput"
               />
-
               <FormGroup
                 id="street"
                 label="Rua"
@@ -67,7 +61,6 @@
                 :error="formErrors.street"
                 :disabled="true"
               />
-
               <FormGroup
                 id="neighborhood"
                 label="Bairro"
@@ -77,7 +70,6 @@
                 :error="formErrors.neighborhood"
                 :disabled="true"
               />
-
               <FormGroup
                 id="city"
                 label="Cidade"
@@ -87,7 +79,6 @@
                 :error="formErrors.city"
                 :disabled="true"
               />
-
               <FormGroup
                 id="state"
                 label="Estado"
@@ -137,6 +128,18 @@
               <router-link to="/menu" class="menu-link">Ver Cardápio</router-link>
             </div>
           </div>
+
+          <!-- Botão de Logout -->
+          <ButtonComponent
+            :buttons="[{ label: 'Sair', id: 'logout' }]"
+            backgroundColor="#ff0000"
+            fontColor="#ffffff"
+            fontSize="16px"
+            buttonSize="0.75rem 1.5rem"
+            borderRadius="6px"
+            :gap="0"
+            @click="handleLogout"
+          />
         </div>
       </div>
     </div>
@@ -150,12 +153,14 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { formatPrice } from "@/utils/formatters";
 import { validateCEP } from "@/utils/validators";
+import { useAuthHandlers } from "@/handlers/authHandlers";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import AlertComponent from "@/components/AlertComponent.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
+const { handleLogout } = useAuthHandlers();
 
 const userInfo = ref({
   firstName: "",
@@ -246,6 +251,7 @@ const handleCEPInput = async () => {
   }
 };
 
+// Limpa os campos de endereço quando o CEP é alterado pelo usuário
 const resetAddressFields = () => {
   Object.assign(userInfo.value.address, {
     street: "",
@@ -259,14 +265,12 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString("pt-BR");
 };
 
+// Atualiza o perfil do usuário - Verificar pois tem que ser feito na API
 const handleUpdateProfile = async () => {
   try {
     await userStore.updateProfile(userInfo.value);
     alertMessage.value = "Perfil atualizado com sucesso!";
     showAlert.value = true;
-    setTimeout(() => {
-      showAlert.value = false;
-    }, 3000);
   } catch (error) {
     console.error("Erro ao atualizar perfil:", error);
     alertMessage.value = "Erro ao atualizar perfil";
