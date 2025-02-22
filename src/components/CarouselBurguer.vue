@@ -61,9 +61,10 @@ const selectedItem = ref(null);
 const carouselConfig = computed(() => ({
   snapAlign: "center",
   wrapAround: true,
+  pauseAutoPlayOnHover: true,
   breakpoints: {
     425: {
-      height: 350,
+      height: 370,
       itemsToShow: 2,
     },
     768: {
@@ -76,7 +77,7 @@ const carouselConfig = computed(() => ({
     },
     1440: {
       height: 600,
-      itemsToShow: 4,
+      itemsToShow: 3,
     },
   },
 }));
@@ -91,6 +92,7 @@ const openModal = (burger) => {
 const closeModal = () => {
   showModal.value = false;
   selectedItem.value = null;
+  document.body.style.overflow = "";
 };
 
 // Função para adicionar o item ao carrinho

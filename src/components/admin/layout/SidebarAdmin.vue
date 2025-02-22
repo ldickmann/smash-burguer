@@ -115,7 +115,6 @@ const handleClickOutside = (event) => {
 router.afterEach(collapseSidebarOnMobile);
 
 onMounted(() => {
-  collapseSidebarOnMobile();
   window.addEventListener("resize", collapseSidebarOnMobile);
   document.addEventListener("click", handleClickOutside);
 });
