@@ -9,6 +9,7 @@
       />
 
       <SeparatorLines
+        v-show="showSeparator"
         orientation="vertical"
         color="#ffffff"
         :thickness="1"
@@ -26,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
 import SearchBar from "@/components/admin/layout/navbar/SearchBar.vue";
@@ -82,6 +83,28 @@ const handleLogout = () => {
 };
 
 defineEmits(["search", "notification-click", "menu-select"]);
+
+// Propriedade computada para exibir o separador
+const showSeparator = computed(() => {
+  if (typeof window !== "undefined") {
+    return window.innerWidth > 480;
+  }
+  return true;
+});
+
+// Watcher para atualizar o estado do componente
+onMounted(() => {
+  window.addEventListener("resize", () => {
+    showSeparator.value = window.innerWidth > 480;
+  });
+});
+
+// Watcher para remover o listener
+onUnmounted(() => {
+  window.removeEventListener("resize", () => {
+    showSeparator.value = window.innerWidth > 480;
+  });
+});
 </script>
 
 <style scoped lang="scss">
