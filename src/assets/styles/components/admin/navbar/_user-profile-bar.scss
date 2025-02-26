@@ -47,13 +47,10 @@
 
     @include respond-to("xs") {
       position: fixed;
-      top: auto;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      border-radius: 8px 8px 0 0;
-      max-height: 80vh;
-      overflow-y: auto;
+      top: 0;
+      left: 42%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-top: 65px;
     }
 
     .dropdown-section {
