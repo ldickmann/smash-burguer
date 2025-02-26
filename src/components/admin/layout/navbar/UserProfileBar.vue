@@ -33,7 +33,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
+const profile = ref(null);
 const avatar = ref("https://github.com/ldickmann.png");
+const showMenu = ref(false);
 
 const props = defineProps({
   userName: {
@@ -46,9 +48,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["menu-select", "logout"]);
-
-// Controla o estado do menu
-const showMenu = ref(false);
 
 // Menu items
 const menuItems = [
