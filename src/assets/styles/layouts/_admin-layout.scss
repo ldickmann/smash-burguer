@@ -27,14 +27,16 @@
     position: fixed;
     top: 0;
     right: 0;
-    height: 55px;
+    height: auto;
+    min-height: 55px;
     width: calc(100% - 250px);
     background-color: $color-text-quinary;
-    z-index: 100;
+    z-index: 99;
     transition: width 0.3s ease;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
+    padding: 0.25rem 0;
 
     @include respond-to("xs") {
       width: calc(100% - 50px);
@@ -42,7 +44,7 @@
   }
 
   .admin-main {
-    margin-top: 75px;
+    margin-top: 130px;
     flex: 1;
     padding: 2rem;
     background-color: $color-white-background;
