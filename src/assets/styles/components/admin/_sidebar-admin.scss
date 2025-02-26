@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
+  z-index: 1100;
 
   .toggle-button {
     display: none;
@@ -163,6 +164,7 @@
 
     &:not(.sidebar-collapsed) {
       width: 250px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
 
       .sidebar-container .logo {
         margin-left: 0.5rem;
