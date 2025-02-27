@@ -1,3 +1,5 @@
+// Código para gerenciar os dados dos produto. Contendo os itens do menu, adicionais de comidas e adicionais de sobremesas.
+
 import { defineStore } from "pinia";
 import productsData from "../json/products.json";
 
