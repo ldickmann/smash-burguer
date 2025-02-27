@@ -1,0 +1,88 @@
+@use "../base/variables" as *;
+@use "../base/mixins" as *;
+@use "sass:color";
+
+.additionals-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.additional-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .additional-name {
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  .additional-price {
+    color: $quinary-color;
+    font-size: 0.9rem;
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  button {
+    @include flex-center();
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: $tertiary-color;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.disabled {
+      background-color: $border-color;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($tertiary-color, $lightness: -10%);
+    }
+
+    .minus-icon,
+    .plus-icon {
+      font-size: 1rem;
+      color: $secondary-color;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover:not(:disabled) {
+      .minus-icon {
+        transform: scale(1.1);
+      }
+
+      .plus-icon {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.quantity {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+  color: $color-text-primary;
+}
