@@ -1,3 +1,5 @@
+// Arquivo para importar e configurar os ícones do FontAwesome
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
