@@ -1,3 +1,5 @@
+// Simula uma chamada à API para autenticação de usuários
+
 export const authService = {
   async login(credentials) {
     try {
