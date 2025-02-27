@@ -69,12 +69,14 @@
   }
 
   &__footer {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba($shadow-color, 0.2);
+    margin: 1.5rem -1.5rem -1.5rem -1.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid $border-color;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    background-color: $color-white-background-secondary;
+    border-radius: 0 0 2rem 2rem;
   }
 }
 
