@@ -8,7 +8,7 @@
         </h1>
       </div>
 
-      <div class="reports-grid">
+      <div class="container-cards">
         <!-- Card de Vendas Totais -->
         <AdminCard title="Vendas Totais">
           <template #content>

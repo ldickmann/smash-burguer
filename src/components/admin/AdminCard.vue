@@ -5,16 +5,18 @@
     role="region"
     :aria-busy="loading"
   >
-    <header class="admin-card__header">
-      <h3 class="admin-card__title">{{ title }}</h3>
-      <slot name="header-actions"></slot>
+    <header class="card-header">
+      <h3 class="card-title">{{ title }}</h3>
+      <div class="card-actions">
+        <slot name="header-actions"></slot>
+      </div>
     </header>
 
-    <section class="admin-card__content">
+    <section class="card-content">
       <slot></slot>
     </section>
 
-    <footer v-if="$slots.footer" class="admin-card__footer">
+    <footer v-if="$slots.footer" class="card-footer">
       <slot name="footer"></slot>
     </footer>
   </article>
