@@ -18,14 +18,19 @@ Um aplicativo web em Vue.js para delivery de hambúrgueres artesanais, permitind
 
 - [Vue.js 3](https://vuejs.org/) - Framework JavaScript Progressivo
 - [Pinia](https://pinia.vuejs.org/) - Gerenciamento de Estado
+- [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) - Plugin de Persistência para Pinia
 - [Vue Router](https://router.vuejs.org/) - Roteador Oficial
 - [SASS](https://sass-lang.com/) - Pré-processador CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de Build
+- [Vitest](https://vitest.dev/) - Framework de Testes Unitários
+- [Vue Test Utils](https://test-utils.vuejs.org/) - Utilitários de Teste para Vue.js
 - [Vue 3 Carousel](https://ismail9k.github.io/vue3-carousel/) - Componente de Carrossel
 - [Font Awesome](https://fontawesome.com/) - Ícones vetoriais
 - [ESLint](https://eslint.org/) - Linter de JavaScript
 - [Prettier](https://prettier.io/) - Formatador de código
+- [jsdom](https://github.com/jsdom/jsdom) - Implementação JavaScript de DOM e HTML
 - [ViaCEP API](https://viacep.com.br/) - API de CEP e Endereços
+- [@testing-library/vue](https://testing-library.com/docs/vue-testing-library/intro/) - Utilitários de Teste para Vue
 
 ## 📦 Instalação
 
@@ -74,8 +79,7 @@ src/
 ├── plugins/        # Arquivos plugins para biblioteca(s) de icons
 ├── router/         # Configuração do Vue Router
 ├── services/       # Services paracomunicação com APIs
-├── store/          # Módulos do Pinia store (deprecated)
-├── stores/         # Novo diretório para stores Pinia (recomendado)
+├── stores/         # Novo diretório para stores Pinia
 ├── plugins/        # Plugins e configurações
 ├── utils/          # Funções utilitárias
 └── views/          # Componentes de página
@@ -99,6 +103,12 @@ Este projeto está em desenvolvimento ativo. Próximas funcionalidades:
   - [ ] Gestão de pedidos
   - [ ] Relatórios de vendas
 - [ ] Notificações em tempo real
+
+## 🧪 Testes
+
+> 🌱 **Nota do Desenvolvedor:** Este projeto marca meu início na jornada de testes automatizados! Utilizando Vitest, consegui atingir 100% de cobertura no ButtonComponent, que serviu como meu primeiro componente totalmente testado. É um trabalho em progresso, onde cada teste representa um novo aprendizado.
+
+Para mais detalhes sobre a implementação e cobertura dos testes, consulte nossa [documentação de testes](./TESTING.md).
 
 ## 📝 Como Contribuir
 

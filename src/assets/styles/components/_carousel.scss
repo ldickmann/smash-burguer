@@ -7,7 +7,7 @@
   width: 100%;
 
   @include respond-to("xs") {
-    margin: 0 0;
+    margin: 0;
   }
 }
 
@@ -21,6 +21,7 @@
 
 // Estilização do item do Carousel
 .carousel-item {
+  @include flex-center(column);
   background: $secondary-color;
   border-radius: 8px;
   overflow: hidden;
@@ -28,8 +29,6 @@
   transition: transform 0.3s ease-in-out;
   height: 450px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
 
   &:hover {
@@ -37,7 +36,7 @@
   }
 
   @include respond-to("xs") {
-    height: 300px;
+    height: 370px;
     padding: 0.3rem;
   }
 }
@@ -56,10 +55,10 @@
 
 // Cards e demais itens dentro do Carousel
 .carousel-content {
+  @include flex-center(column);
+  justify-content: space-between;
   padding: 1rem;
   flex: 1;
-  display: flex;
-  flex-direction: column;
   text-align: center;
 
   h3 {
@@ -89,21 +88,11 @@
   margin: 0.5rem 0;
 }
 
-// Botão do Carousel dentro dos items 'cards' | ButtonComponent
-.carousel-button {
-  display: flex;
-  justify-content: center;
-  padding: 0.8rem;
-  cursor: pointer;
-  margin-top: auto;
-
+// Responsividade para o botão de 'adicionar ao carrinho'
+:deep(.button) {
   @include respond-to("xs") {
-    padding: 0.5rem;
-
-    :deep(.button) {
-      font-size: var(--mobile-font-size) !important;
-      padding: var(--mobile-button-size) !important;
-    }
+    font-size: 14px !important;
+    padding: 0.375rem 0.75rem !important;
   }
 }
 

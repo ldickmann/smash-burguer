@@ -1,10 +1,14 @@
 <template>
   <!-- Component Separator -->
-  <div class="separator-container" :class="{ vertical: isVertical }">
-    <div class="separator-line" :style="separatorStyle"></div>
-    <slot></slot>
-    <div class="separator-line" :style="separatorStyle"></div>
-  </div>
+  <section
+    role="separator"
+    :aria-orientation="orientation"
+    class="separator"
+    :class="separatorClass"
+  >
+    <hr class="separator__line" :style="lineStyle" />
+    <slot />
+  </section>
 </template>
 
 <script setup>
@@ -21,18 +25,22 @@ const props = defineProps({
     validator: (value) => ["horizontal", "vertical"].includes(value),
   },
   thickness: {
-    type: Number,
+    type: [Number, String],
     default: 2,
+    validator: (value) => !isNaN(Number(value)) && Number(value) > 0,
   },
 });
 
-// Propriedade computada para verificar se a orientação é vertical
-const isVertical = computed(() => props.orientation === "vertical");
+// Propriedade computada para as classes memoizadas
+const separatorClass = computed(() => ({
+  "separator--vertical": props.orientation === "vertical",
+  "separator--horizontal": props.orientation === "horizontal",
+}));
 
-// Propriedade computada para estilizar a linha separadora
-const separatorStyle = computed(() => ({
+// Propriedade computada para estilizar a linha memoizada
+const lineStyle = computed(() => ({
   backgroundColor: props.color,
-  [isVertical.value ? "width" : "height"]: `${props.thickness}px`,
+  [props.orientation === "vertical" ? "width" : "height"]: `${props.thickness}px`,
 }));
 </script>
 

@@ -1,0 +1,19 @@
+@use "../../../base/variables" as *;
+@use "../../../base/mixins" as *;
+
+.navbar-notifications {
+  display: flex;
+  gap: 1.5rem;
+
+  @include respond-to("xs") {
+    gap: 1rem;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    color: $secondary-color;
+  }
+}
