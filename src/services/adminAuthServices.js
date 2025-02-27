@@ -1,3 +1,5 @@
+// Simula a autenticação de um administrador
+
 export const adminAuthService = {
   async login(credentials) {
     try {
