@@ -2,6 +2,8 @@
 @use "../../base/mixins" as *;
 
 .sales-reports {
+  padding: 2rem;
+
   .reports-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -29,45 +31,31 @@
   }
 
   .container-cards {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    width: 100%;
-  }
-
-  .metric-card {
-    flex: 1 1 350px;
-    min-width: 350px;
-    max-width: calc(33.33% - 1.33rem);
-    height: auto;
-    min-height: 200px;
-
-    @include respond-to("md") {
-      flex: 1 1 300px;
-      max-width: calc(50% - 1rem);
-    }
 
     @include respond-to("sm") {
-      flex: 1 1 100%;
-      min-width: 100%;
-      max-width: 100%;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+
+    @include respond-to("sm") {
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
   }
 
   .metric-card {
     @include flex-center(column);
-    padding: 2.5rem;
+    padding: 1.5rem;
     text-align: center;
-    background-color: $color-white-background-secondary;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px $shadow-color;
-    transition: transform 0.2s ease;
-    margin: 0;
-    height: 100%;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
 
     h3 {
       font-size: 2rem;
