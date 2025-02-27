@@ -25,7 +25,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    padding: 1rem;
 
     // Tamanho dos cards para diferentes breakpoints
     > * {
@@ -94,7 +93,6 @@
     padding: 1rem;
 
     .products-list {
-      gap: 1rem;
       > * {
         flex: 1 1 calc(50% - 1rem);
       }
