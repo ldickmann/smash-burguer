@@ -4,8 +4,6 @@
     class="container-buttons"
     :style="{
       gap: `${gap}px`,
-      '--mobile-font-size': mobileFontSize,
-      '--mobile-button-size': mobileButtonSize,
     }"
   >
     <!-- Itera sobre a lista de botões e cria um botão para cada item -->
@@ -24,6 +22,7 @@
 
 <script setup>
 import { computed } from "vue";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
 
 const props = defineProps({
   buttons: {
@@ -54,19 +53,19 @@ const props = defineProps({
     type: Number,
     default: 8,
   },
-  // Estilização responsiva para dispositivos móveis
-  mobileFontSize: {
-    type: String,
-    default: "10px",
-  },
-  mobileButtonSize: {
-    type: String,
-    default: "8px 16px",
-  },
 });
 
 // Define eventos emitidos pelo componente
 const emit = defineEmits(["category-selected", "click"]);
+
+// Importa os handlers de botões
+const { handleButtonClick, handleConfirmPayment } = useButtonHandlers();
+
+// Mapeamento de IDs de botões para funções de manipulação
+const buttonHandlers = {
+  "cart-button": handleButtonClick,
+  "confirm-payment-button": handleConfirmPayment,
+};
 
 /**
  * Função que lida com o clique em um botão.
@@ -80,6 +79,12 @@ const handleClick = (button) => {
     emit("category-selected", button.category);
   }
   emit("click", button);
+
+  // chama o handler apropriado com base no ID do botão
+  const handler = buttonHandlers[button.id];
+  if (handler) {
+    handler(button);
+  }
 };
 
 /**

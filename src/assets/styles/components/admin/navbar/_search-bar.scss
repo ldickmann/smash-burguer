@@ -1,0 +1,45 @@
+@use "../../../base/variables" as *;
+@use "../../../base/mixins" as *;
+
+.navbar-search {
+  display: flex;
+  margin-left: 2rem;
+  align-items: center;
+
+  @include respond-to("xs") {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 0.25rem 1rem;
+    gap: 0.5rem;
+    border: 1px solid $color-border-accent;
+    color: $secondary-color;
+
+    @include respond-to("xs") {
+      width: 100%;
+    }
+
+    input {
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 8px;
+
+      @include respond-to("xs") {
+        width: 100%;
+      }
+
+      &::placeholder {
+        color: $color-text-gray-str;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
