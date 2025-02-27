@@ -3,8 +3,7 @@
 @use "../base/mixins" as *;
 
 .banner {
-  display: flex;
-  align-items: center;
+  @include flex-center;
   justify-content: space-between;
   text-align: center;
   padding: 8rem 0;
@@ -32,10 +31,6 @@
   }
 
   .image-wrapper {
-    flex: 0 1 auto;
-    display: flex;
-    justify-content: center;
-
     img {
       width: 100%;
       max-width: 500px;
@@ -55,8 +50,6 @@
     text-align: center;
 
     .content-wrapper {
-      display: flex;
-      flex-direction: column;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -64,8 +57,8 @@
       z-index: 2;
 
       h1 {
-        font-size: 5rem;
         color: $secondary-color;
+        font-size: 5rem;
       }
 
       p {
@@ -75,11 +68,8 @@
     }
 
     .image-wrapper {
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: 100%;
+      z-index: 1;
 
       img {
         top: 0;
