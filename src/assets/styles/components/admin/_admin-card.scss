@@ -69,7 +69,6 @@
   }
 
   &__footer {
-    margin: 1.5rem -1.5rem -1.5rem -1.5rem;
     padding: 1rem 1.5rem;
     border-top: 1px solid $border-color;
     display: flex;
@@ -77,6 +76,10 @@
     gap: 1rem;
     background-color: $color-white-background-secondary;
     border-radius: 0 0 2rem 2rem;
+  }
+
+  @include respond-to("xs") {
+    padding: 1rem;
   }
 }
 

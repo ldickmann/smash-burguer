@@ -1,0 +1,86 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.sales-reports {
+  padding: 2rem;
+
+  .reports-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      color: $color-text-primary;
+      font-size: 2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      svg {
+        color: $tertiary-color;
+      }
+
+      @include respond-to("sm") {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+
+    @include respond-to("sm") {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .metric-card {
+    @include flex-center(column);
+    padding: 1.5rem;
+    text-align: center;
+
+    h3 {
+      font-size: 2rem;
+      color: $tertiary-color;
+      margin-bottom: 0.5rem;
+
+      @include respond-to("sm") {
+        font-size: 1.5rem;
+      }
+    }
+
+    p {
+      color: $color-text-secondary;
+      font-size: 1rem;
+    }
+  }
+
+  .top-products {
+    list-style: none;
+    padding: 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid $border-color;
+      color: $color-text-primary;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      span:last-child {
+        color: $tertiary-color;
+        font-weight: 500;
+      }
+    }
+  }
+}
