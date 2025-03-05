@@ -1,4 +1,9 @@
-// Validação de email
+/*
+ * Verifica se um email é fornecido e se segue o formato esperado.
+ *
+ * @param {string} email - email para ser validado
+ * @returns {object} - objeto com isValid e uma mensagem de erro se aplicável.
+ */
 export const validateEmail = (email) => {
   if (!email) return { isValid: false, message: "O email é obrigatório" };
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -8,7 +13,12 @@ export const validateEmail = (email) => {
   };
 };
 
-// Validação de senha
+/**
+ * Valida se uma senha é fornecida e se atende aos requisitos mínimos.
+ *
+ * @param {string} password - A senha a ser validada.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se necessário.
+ */
 export const validatePassword = (password) => {
   if (!password) return { isValid: false, message: "A senha é obrigatória" };
   const hasMinLength = password.length >= 6;
@@ -24,7 +34,12 @@ export const validatePassword = (password) => {
   };
 };
 
-// Validação do Primeiro Nome
+/**
+ * Valida se o primeiro nome é fornecido e se contém no mínimo 3 letras e está sem números.
+ *
+ * @param {string} firstName - O primeiro nome a ser validado.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
 export const validateFirstName = (firstName) => {
   if (!firstName) return { isValid: false, message: "O primeiro nome é obrigatório" };
   const nameRegex = /^[a-zA-ZÀ-ÿ]{3,}$/;
@@ -34,7 +49,12 @@ export const validateFirstName = (firstName) => {
   };
 };
 
-// Validação do Sobrenome
+/**
+ * Valida se o sobrenome é fornecido e se contém no mínimo 2 letras (permitindo espaços) e se está sem números.
+ *
+ * @param {string} lastName - O sobrenome a ser validado.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
 export const validateLastName = (lastName) => {
   if (!lastName) return { isValid: false, message: "O sobrenome é obrigatório" };
   const nameRegex = /^[a-zA-ZÀ-ÿ\s]{2,}$/;
@@ -44,7 +64,12 @@ export const validateLastName = (lastName) => {
   };
 };
 
-// Validação de Data de Nascimento
+/**
+ * Valida uma data de nascimento, garantindo que a data seja válida e lógica.
+ *
+ * @param {string} birthDate - A data de nascimento em formato compatível com Date.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
 export const validateBirthDate = (birthDate) => {
   if (!birthDate) return { isValid: false, message: "A data de nascimento é obrigatória" };
 
@@ -81,7 +106,12 @@ export const validateBirthDate = (birthDate) => {
   };
 };
 
-// Validação de número de celular
+/**
+ * Valida um número de celular, removendo caracteres não numéricos e verificando padrões específicos.
+ *
+ * @param {string} phone - O número de telefone a ser validado.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
 export const validatePhone = (phone) => {
   if (!phone) return { isValid: false, message: "O número é obrigatório" };
 
@@ -117,7 +147,12 @@ export const validatePhone = (phone) => {
   };
 };
 
-// Validação de CEP
+/**
+ * Valida o CEP, realizando requisição à API ViaCEP para buscar o endereço correspondente.
+ *
+ * @param {string} cep - O CEP a ser validado (pode conter formatação).
+ * @returns {Promise<Object>} Objeto promissor contendo isValid, mensagem e o endereço (se aplicável).
+ */
 export const validateCEP = async (cep) => {
   if (!cep) return { isValid: false, message: "O CEP é obrigatório" };
 
