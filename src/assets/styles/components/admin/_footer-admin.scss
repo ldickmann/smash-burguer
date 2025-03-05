@@ -1,41 +1,73 @@
 @use "../../base/variables" as *;
 @use "../../base/mixins" as *;
 
+// ===============================================
+// Estilização do Rodapé Administrativo
+// ===============================================
+//
+
 .admin-footer {
+  // Define o espaçamento, a distância entre caracteres e sombra do do rodapé.
   padding: 1rem 0;
   letter-spacing: 0.07rem;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 
+  // Responsividade: Ajusta o padding(espaçamento) do rodapé em telas menores
   @include respond-to("xs") {
-    padding: 0.87rem 0;
+    padding: 0.78rem 0;
   }
 
+  // ----------------------------------------------
+  //Container Copyrigth
+  // ----------------------------------------------
+  //
+  // Este container agrupa o texto de copyrigth e aplica layout flexível.
+  //
   .container-copy-admin {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
+    // Responsividade: Ajusta o layout em telas pequenas, alterando a direção do flex:
+    // Organiza os elementos em coluna.
+    @include respond-to("xs") {
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    // Paragráfo interno do container de copyrigth, ajusta o tamanho da fonte e zero o margin.
     p {
       margin: 0;
       font-size: 0.8rem;
 
+      // Responsividade: Ajusta o tamanho da fonte em telas menores e centraliza o texto.
       @include respond-to("xs") {
-        flex-direction: column;
-        font-size: 0.7rem;
         text-align: center;
+        font-size: 0.5rem;
       }
     }
   }
 
+  // ----------------------------------------------
+  // Container de Informações do Desenvolvedor
+  // ----------------------------------------------
+  //
+  // Este container pode incluir informações do desenvolvedor, como links(icons) para redes sociais.
+  //
   .developer-info {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-
+    // Responsividade: Ajusta o tamanho da fonte em telas menores.
     @include respond-to("xs") {
-      gap: 0.75rem;
+      p {
+        font-size: 0.5rem;
+      }
     }
 
+    // ----------------------------------------------
+    // Container de Links Sociais
+    // ----------------------------------------------
+    //
+    // Organiza os links sociais com espaçamento e define a visibilidade em telas pequenas.
+    //
     .social-links {
       display: flex;
       gap: 1rem;
@@ -44,13 +76,9 @@
         font-size: 1.5rem;
       }
 
+      /* REsponsividade: Oculta os icons de redes sociais em telas menores */
       @include respond-to("xs") {
-        justify-content: center;
-        gap: 0.5rem;
-
-        a {
-          font-size: 1rem;
-        }
+        display: none;
       }
     }
   }
