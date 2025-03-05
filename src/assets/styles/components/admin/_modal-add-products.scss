@@ -1,0 +1,81 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.modal-add-products {
+  // Overlay do modal com posicionamento fixo
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  @include flex-center();
+
+  &__container {
+    background-color: $color-white-background;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    // Utiliza flex para organização interna
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .modal-add-products__select {
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: $color-text-primary;
+      }
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          color: $color-text-primary;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid $border-color;
+          border-radius: 4px;
+        }
+      }
+
+      .modal-add-products__buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+      }
+    }
+  }
+}
