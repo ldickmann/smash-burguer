@@ -68,6 +68,7 @@
     min-height: 50px;
     &:not(.metric-card__content) {
       // Não aplica em metric-cards
+      color: $color-text-primary;
     }
   }
 

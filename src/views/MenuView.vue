@@ -33,6 +33,15 @@
       />
     </div>
 
+    <!-- Paginação -->
+    <PaginationComponent
+      v-if="totalPages > 1"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      :maxVisibleButtons="5"
+      @update:page="changePage"
+    />
+
     <ButtonsComponents
       :buttons="[{ label: 'Ver Carrinho', id: 'cart-button' }]"
       backgroundColor="#3498db"
@@ -47,28 +56,29 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useCartStore } from "@/stores/cart";
+import { useProductsStore } from "@/stores/products";
 import { useButtonHandlers } from "@/utils/buttonHandlers";
-import productsData from "../json/products.json";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonComponent.vue";
 import AlertComponent from "@/components/AlertComponent.vue";
+import PaginationComponent from "@/components/PaginationComponent.vue";
 
 const cartStore = useCartStore();
+const productsStore = useProductsStore();
 const showAlert = ref(false);
 const alertMessage = ref("");
 const { handleButtonClick } = useButtonHandlers();
 
-// Define as comidas, bebidas e sobremesas disponíveis através do JSON
-const foods = ref(productsData.menuItems.foods);
-const drinks = ref(productsData.menuItems.drinks);
-const desserts = ref(productsData.menuItems.desserts);
+// Estado para controlar a categoria atual
+const currentCategory = ref("foods");
 
-const allItems = computed(() => [...foods.value, ...drinks.value, ...desserts.value]);
-
-const filteredBurgers = ref([...allItems.value]);
+// Estado para paginação
+const currentPage = ref(1);
+const itemsPerPage = 4;
+const filteredBurgers = ref([]);
 
 // Adiciona um item ao carrinho
 const addToCart = (burger) => {
@@ -77,15 +87,49 @@ const addToCart = (burger) => {
   showAlert.value = true;
 };
 
-// Filtra os itens por categoria
+// Função para filtrar os produtos por categoria
 const filterByCategory = (category) => {
-  if (category === "all") {
-    filteredBurgers.value = [...allItems.value];
-  } else {
-    filteredBurgers.value = allItems.value.filter((item) => item.category === category);
-  }
+  currentCategory.value = category;
+  currentPage.value = 1; // Resetar para a primeira página ao mudar de categoria
+  loadCategoryItems();
 };
 
+// Função para carregar itens da categoria atual com paginação
+const loadCategoryItems = () => {
+  let allCategoryItems = [];
+  if (currentCategory.value === "foods") {
+    allCategoryItems = productsStore.foods;
+  } else if (currentCategory.value === "drinks") {
+    allCategoryItems = productsStore.drinks;
+  } else if (currentCategory.value === "desserts") {
+    allCategoryItems = productsStore.desserts;
+  }
+
+  // Aplicar paginação
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  filteredBurgers.value = allCategoryItems.slice(startIndex, startIndex + itemsPerPage);
+};
+
+// Propriedade computada para o total de páginas
+const totalPages = computed(() => {
+  let totalItems = 0;
+  if (currentCategory.value === "foods") {
+    totalItems = productsStore.foods.length;
+  } else if (currentCategory.value === "drinks") {
+    totalItems = productsStore.drinks.length;
+  } else if (currentCategory.value === "desserts") {
+    totalItems = productsStore.desserts.length;
+  }
+  return Math.ceil(totalItems / itemsPerPage);
+});
+
+// Função para mudar de página
+const changePage = (page) => {
+  currentPage.value = page;
+  loadCategoryItems();
+};
+
+// Inicializar carregando os produtos
 onMounted(() => {
   filterByCategory("foods");
 });

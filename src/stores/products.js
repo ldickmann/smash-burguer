@@ -5,33 +5,33 @@ import productsData from "../json/products.json";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
-    foodAdditionals: JSON.parse(JSON.stringify(productsData.foodAdditionals)),
-    dessertAdditionals: JSON.parse(JSON.stringify(productsData.dessertAdditionals)),
-    menuItems: JSON.parse(JSON.stringify(productsData.menuItems)),
+    foodAdditionals: [],
+    dessertAdditionals: [],
+    menuItems: {},
+    loadedCategories: []
   }),
 
   getters: {
-    foods: (state) => state.menuItems.foods,
-    drinks: (state) => state.menuItems.drinks,
-    desserts: (state) => state.menuItems.desserts,
-    allProducts: (state) => ({
-      ...state.menuItems,
-      foodAdditionals: state.foodAdditionals,
-      dessertAdditionals: state.dessertAdditionals,
-    })
-  },
-
-  actions: {
-    resetAdditionals() {
-      this.foodAdditionals = JSON.parse(JSON.stringify(productsData.foodAdditionals));
-      this.dessertAdditionals = JSON.parse(JSON.stringify(productsData.dessertAdditionals));
-    },
-
-    updateProduct(category, productId, updatedData) {
-      const product = this.menuItems[category].find(p => p.id === productId);
-      if (product) {
-        Object.assign(product, updatedData);
+    foods: (state) => {
+      if (!state.menuItems.foods) {
+        state.menuItems.foods = JSON.parse(JSON.stringify(productsData.menuItems.foods));
+        state.loadedCategories.push('foods');
       }
+      return state.menuItems.foods;
+    },
+    drinks: (state) => {
+      if (!state.menuItems.drinks) {
+        state.menuItems.drinks = JSON.parse(JSON.stringify(productsData.menuItems.drinks));
+        state.loadedCategories.push('drinks');
+      }
+      return state.menuItems.drinks;
+    },
+    desserts: (state) => {
+      if (!state.menuItems.desserts) {
+        state.menuItems.desserts = JSON.parse(JSON.stringify(productsData.menuItems.desserts));
+        state.loadedCategories.push('desserts');
+      }
+      return state.menuItems.desserts;
     }
   }
 });
