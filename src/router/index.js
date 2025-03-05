@@ -6,6 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainLayout from '@/layouts/MainLayout.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 
+// Rotas do app
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -104,7 +105,7 @@ const router = createRouter({
       ],
     },
 
-    // Rota 404 - lazy loading
+    // Rota 404 - Page Not Found - lazy loading
     {
       path: '/:catchAll(.*)*',
       name: 'NotFound',
