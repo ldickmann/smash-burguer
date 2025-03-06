@@ -15,47 +15,40 @@
   transition: width 0.3s ease;
   z-index: 1100;
 
-  .toggle-button {
-    display: none;
-    background: none;
-    border: none;
-    color: $secondary-color;
-    cursor: pointer;
-    padding: 0.5rem;
-    font-size: 1.2rem;
-
-    &:hover {
-      color: $tertiary-color;
-    }
-  }
-
   .sidebar-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     min-height: 55px;
 
     .logo {
-      width: 100%;
       display: flex;
       align-items: center;
       gap: 1rem;
-      overflow: hidden;
+
+      .burger-icon {
+        font-size: 1.7rem;
+        color: $secondary-color;
+      }
 
       h2 {
         font-family: $font-family-secondary;
+        color: $secondary-color;
         white-space: nowrap;
-        overflow: hidden;
-        opacity: 1;
         transition: opacity 0.3s ease;
       }
     }
 
-    .burger-icon {
-      font-size: 1.7rem;
-      flex-shrink: 0;
+    .close-button {
+      display: none;
+      background: transparent;
+      border: none;
+      color: $secondary-color;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
   }
 
@@ -92,9 +85,18 @@
 
       &.router-link-active {
         background-color: $tertiary-color;
-        margin: 0rem 0;
+        margin: 0;
         border-radius: 4px;
       }
+    }
+  }
+
+  &.sidebar-collapsed {
+    width: 50px;
+
+    .logo h2 {
+      opacity: 0;
+      width: 0;
     }
   }
 
@@ -134,17 +136,15 @@
   @include respond-to("xs") {
     width: 50px;
 
-    .toggle-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
     .sidebar-container {
-      justify-content: center;
+      justify-content: space-between;
 
       .logo h2 {
         display: none;
+      }
+
+      .close-button {
+        display: block;
       }
     }
 
@@ -169,6 +169,11 @@
 
       .sidebar-container .logo {
         margin-left: 0.5rem;
+      }
+
+      .logo h2 {
+        opacity: 1;
+        width: auto;
       }
 
       .logo h2,
