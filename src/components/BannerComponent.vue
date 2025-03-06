@@ -3,7 +3,13 @@
   <div :class="['banner', { overlay: overlay }]">
     <div class="content-wrapper">
       <h1>{{ title }}</h1>
-      <SeparatorLines :thickness="2" orientation="horizontal" color="#38184c" />
+      <SeparatorLines
+        :thickness="2"
+        orientation="horizontal"
+        color="#38184c"
+        marginTop="0.5rem"
+        marginBottom="0.5rem"
+      />
       <p>{{ paragraph }}</p>
     </div>
     <div class="image-wrapper">
