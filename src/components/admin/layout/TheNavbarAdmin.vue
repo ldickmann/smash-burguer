@@ -1,13 +1,29 @@
 <template>
   <nav class="navbar-admin">
-    <SearchBar @search="handleSearch" />
-
+    <div class="nav-left">
+      <!-- Botão para togglar a sidebar -->
+      <ButtonComponent
+        :buttons="[toggleButton]"
+        backgroundColor="transparent"
+        fontColor="#ffffff"
+        fontSize="1.2rem"
+        buttonSize="0.5rem"
+        borderRadius="4px"
+        @click="handleToggleSidebar"
+      >
+        <template #toggle-sidebar>
+          <div :class="{ active: isToggleActive }">
+            <font-awesome-icon :icon="['fas', 'bars']" />
+          </div>
+        </template>
+      </ButtonComponent>
+      <SearchBar @search="handleSearch" />
+    </div>
     <section class="section-divider">
       <NotificationBar
         :notifications="notifications"
         @notification-click="handleNotification"
       />
-
       <SeparatorLines
         v-show="showSeparator"
         orientation="vertical"
@@ -15,7 +31,6 @@
         :thickness="1"
         style="height: 24px"
       />
-
       <UserProfileBar
         :user-name="adminName"
         :avatar="adminAvatar"
@@ -27,86 +42,79 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
 import SearchBar from "@/components/admin/layout/navbar/SearchBar.vue";
-import NotificationBar from "@/components//admin/layout/navbar/NotificationBar.vue";
+import NotificationBar from "@/components/admin/layout/navbar/NotificationBar.vue";
 import UserProfileBar from "@/components/admin/layout/navbar/UserProfileBar.vue";
 import SeparatorLines from "@/components/SeparatorLines.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const router = useRouter();
 const adminStore = useAdminStore();
 
-// Computed properties para dados do admin
+// Dados do administrador
 const adminName = computed(() => adminStore.admin?.name || "Administrador");
 const adminAvatar = computed(() => adminStore.admin?.avatar || "");
 
-// Estado centralizado
+// Notificações (estado centralizado)
 const notifications = ref([
-  {
-    id: 1,
-    type: "messages",
-    icon: ["far", "envelope"],
-    count: 3,
-  },
-  {
-    id: 2,
-    type: "alerts",
-    icon: ["fas", "bell"],
-    count: 2,
-  },
-  {
-    id: 3,
-    type: "tasks",
-    icon: ["fas", "tasks"],
-    count: 1,
-  },
+  { id: 1, type: "messages", icon: ["far", "envelope"], count: 3 },
+  { id: 2, type: "alerts", icon: ["fas", "bell"], count: 2 },
+  { id: 3, type: "tasks", icon: ["fas", "tasks"], count: 1 },
 ]);
 
-// Handlers
-const handleSearch = (query) => {
-  console.log("Pesquisando:", query);
+// Configuração do toggle button
+const toggleButton = { id: "toggle-sidebar", label: "" };
+const isToggleActive = ref(false);
+
+// Injeção da função de toggle (fornecida pelo componente pai, ex: AdminLayout)
+const toggleSidebar = inject("toggleSidebar", () => {
+  console.warn("toggleSidebar não foi injetado");
+});
+
+const handleToggleSidebar = () => {
+  isToggleActive.value = !isToggleActive.value;
+  if (typeof toggleSidebar === "function") {
+    toggleSidebar();
+  }
 };
 
-const handleNotification = (type) => {
-  console.log("Notificação clicada:", type);
+// Defina a função para lidar com cliques fora da sidebar
+const handleClickOutside = (event) => {
+  if (isToggleActive.value && !event.target.closest(".sidebar-admin")) {
+    isToggleActive.value = false;
+  }
 };
 
-const handleMenuSelect = (item) => {
-  console.log("Item do menu selecionado:", item);
-};
-
+const handleSearch = (query) => console.log("Pesquisando:", query);
+const handleNotification = (type) => console.log("Notificação clicada:", type);
+const handleMenuSelect = (item) => console.log("Item do menu selecionado:", item);
 const handleLogout = () => {
   adminStore.logout();
   router.push("/admin/login");
 };
 
-defineEmits(["search", "notification-click", "menu-select"]);
-
-// Propriedade computada para exibir o separador
+// Exibe separador para telas maiores que 480px.
 const showSeparator = computed(() => {
-  if (typeof window !== "undefined") {
-    return window.innerWidth > 480;
-  }
-  return true;
+  return typeof window !== "undefined" ? window.innerWidth > 480 : true;
 });
 
-// Watcher para atualizar o estado do componente
+const updateSeparator = () => {
+  showSeparator.value = window.innerWidth > 480;
+};
+
 onMounted(() => {
-  window.addEventListener("resize", () => {
-    showSeparator.value = window.innerWidth > 480;
-  });
+  window.addEventListener("resize", updateSeparator);
+});
+onUnmounted(() => {
+  window.removeEventListener("resize", updateSeparator);
 });
 
-// Watcher para remover o listener
-onUnmounted(() => {
-  window.removeEventListener("resize", () => {
-    showSeparator.value = window.innerWidth > 480;
-  });
-});
+defineEmits(["search", "notification-click", "menu-select"]);
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/styles/components/admin/navbar-admin";
+@use "@/assets/styles/components/admin/_navbar-admin";
 </style>

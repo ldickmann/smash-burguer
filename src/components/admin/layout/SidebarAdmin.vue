@@ -6,13 +6,14 @@
   >
     <!-- Header Section da Sidebar -->
     <div class="sidebar-container">
-      <button class="toggle-button" @click="toggleSidebar" aria-label="Toggle Sidebar">
-        <font-awesome-icon :icon="['fas', 'bars']" />
-      </button>
       <div class="logo">
         <font-awesome-icon :icon="['fas', 'burger']" class="burger-icon" />
         <h2>Smash Burger</h2>
       </div>
+
+      <button v-if="!isCollapsed" class="close-button" @click="handleCloseSidebar">
+        <font-awesome-icon :icon="['fas', 'square-xmark']" />
+      </button>
     </div>
 
     <!-- Navegação Section da Sidebar -->
@@ -44,12 +45,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
 
-// Constantes e configurações
-const MOBILE_BREAKPOINT = 576;
+const props = defineProps({
+  isCollapsed: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["update:isCollapsed"]);
+
+const sidebarRef = ref(null);
 
 const menuItems = [
   {
@@ -78,52 +87,14 @@ const menuItems = [
 const router = useRouter();
 const adminStore = useAdminStore();
 
-// Variáveis de Estado
-const isCollapsed = ref(true);
-const sidebarRef = ref(null);
-
-// Métodos
-const toggleSidebar = () => {
-  isCollapsed.value = !isCollapsed.value;
+const handleCloseSidebar = () => {
+  emit("update:isCollapsed", true);
 };
 
 const handleLogout = () => {
   adminStore.logout();
   router.push("/admin/login");
 };
-
-const isMobileView = () => window.innerWidth <= MOBILE_BREAKPOINT;
-
-const collapseSidebarOnMobile = () => {
-  if (isMobileView()) {
-    isCollapsed.value = true;
-  }
-};
-
-// Função para fechar a sidebar ao clicar fora dela ou em um link
-const handleClickOutside = (event) => {
-  if (
-    isMobileView() &&
-    !isCollapsed.value &&
-    sidebarRef.value &&
-    !sidebarRef.value.contains(event.target)
-  ) {
-    isCollapsed.value = true;
-  }
-};
-
-// Lifecycle hooks e event handlers
-router.afterEach(collapseSidebarOnMobile);
-
-onMounted(() => {
-  window.addEventListener("resize", collapseSidebarOnMobile);
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", collapseSidebarOnMobile);
-  document.removeEventListener("click", handleClickOutside);
-});
 </script>
 
 <style scoped lang="scss">
