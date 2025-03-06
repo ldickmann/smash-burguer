@@ -50,6 +50,7 @@ import { useAdminStore } from "@/stores/adminStore";
 
 // Constantes e configurações
 const MOBILE_BREAKPOINT = 576;
+
 const menuItems = [
   {
     path: "/admin",
@@ -78,7 +79,7 @@ const router = useRouter();
 const adminStore = useAdminStore();
 
 // Variáveis de Estado
-const isCollapsed = ref(false);
+const isCollapsed = ref(true);
 const sidebarRef = ref(null);
 
 // Métodos
