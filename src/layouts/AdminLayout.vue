@@ -1,5 +1,5 @@
 <template>
-  <section class="admin-layout">
+  <section class="admin-layout" :class="{ 'sidebar-collapsed': isSidebarCollapsed }">
     <header class="admin-header">
       <TheNavbarAdmin />
     </header>
@@ -25,7 +25,7 @@ import SidebarAdmin from "@/components/admin/layout/SidebarAdmin.vue";
 import TheFooterAdmin from "@/components/admin/layout/TheFooterAdmin.vue";
 import TheNavbarAdmin from "@/components/admin/layout/TheNavbarAdmin.vue";
 
-const isSidebarCollapsed = ref(true);
+const isSidebarCollapsed = ref(false);
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
