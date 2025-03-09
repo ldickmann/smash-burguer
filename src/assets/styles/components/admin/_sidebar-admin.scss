@@ -2,8 +2,14 @@
 @use "../../base/typography" as *;
 @use "../../base/mixins" as *;
 
+// Variáveis locais
+$sidebar-width: 250px;
+$sidebar-collapsed-width: 50px;
+$border-opacity: rgba(255, 255, 255, 0.1);
+$hover-opacity: rgba(255, 255, 255, 0.1);
+
 .admin-sidebar {
-  width: 250px;
+  width: $sidebar-width;
   height: 100%;
   background-color: $color-text-quinary;
   color: $secondary-color;
@@ -15,18 +21,15 @@
   transition: width 0.3s ease;
   z-index: 1100;
 
+  // Header
   .sidebar-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    @include flex-center;
+    border-bottom: 1px solid $border-opacity;
+    border-right: 1px solid $border-opacity;
     min-height: 55px;
 
     .logo {
-      display: flex;
-      align-items: center;
+      @include flex-center;
       gap: 1rem;
 
       .burger-icon {
@@ -52,6 +55,7 @@
     }
   }
 
+  // Navigation
   .sidebar-nav {
     flex: 1;
     display: flex;
@@ -60,10 +64,9 @@
     padding: 1rem 0;
 
     .nav-item {
-      display: flex;
-      align-items: center;
+      @include flex-center;
       gap: 0.75rem;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem;
       color: $secondary-color;
       text-decoration: none;
       transition: background-color 0.2s;
@@ -80,35 +83,25 @@
       }
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: $hover-opacity;
       }
 
       &.router-link-active {
         background-color: $tertiary-color;
-        margin: 0;
         border-radius: 4px;
       }
     }
   }
 
-  &.sidebar-collapsed {
-    width: 50px;
-
-    .logo h2 {
-      opacity: 0;
-      width: 0;
-    }
-  }
-
+  // Footer
   .sidebar-footer {
     display: flex;
     padding: 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid $border-opacity;
 
     .logout-button {
       width: 100%;
-      display: flex;
-      align-items: center;
+      @include flex-center;
       gap: 0.75rem;
       padding: 0.75rem;
       background: none;
@@ -128,17 +121,26 @@
       }
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: $hover-opacity;
       }
     }
   }
 
+  // Estados
+  &.sidebar-collapsed {
+    width: $sidebar-collapsed-width;
+
+    .logo h2 {
+      opacity: 0;
+      width: 0;
+    }
+  }
+
+  // Responsividade
   @include respond-to("xs") {
-    width: 50px;
+    width: $sidebar-collapsed-width;
 
     .sidebar-container {
-      justify-content: space-between;
-
       .logo h2 {
         display: none;
       }
@@ -154,7 +156,7 @@
     }
 
     &.sidebar-collapsed {
-      width: 50px;
+      width: $sidebar-collapsed-width;
 
       .nav-item,
       .logout-button {
@@ -164,7 +166,7 @@
     }
 
     &:not(.sidebar-collapsed) {
-      width: 250px;
+      width: $sidebar-width;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
 
       .sidebar-container .logo {
