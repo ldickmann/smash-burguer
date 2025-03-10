@@ -11,9 +11,6 @@
       <main class="admin-main">
         <RouterView />
       </main>
-      <footer class="footer-admin__layout">
-        <TheFooterAdmin />
-      </footer>
     </div>
   </section>
 </template>
@@ -22,7 +19,6 @@
 import { ref, provide } from "vue";
 
 import SidebarAdmin from "@/components/admin/layout/SidebarAdmin.vue";
-import TheFooterAdmin from "@/components/admin/layout/TheFooterAdmin.vue";
 import TheNavbarAdmin from "@/components/admin/layout/TheNavbarAdmin.vue";
 
 const isSidebarCollapsed = ref(false);
