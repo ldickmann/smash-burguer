@@ -32,13 +32,8 @@
 
     <!-- Footer Section da Sidebar -->
     <div class="sidebar-footer">
-      <button
-        class="logout-button"
-        :title="isCollapsed ? 'Sair' : ''"
-        @click="handleLogout"
-      >
-        <font-awesome-icon :icon="['fas', 'sign-out-alt']" />
-        <span>Sair</span>
+      <button class="logout-button" @click="handleLogout">
+        <font-awesome-icon :icon="['fas', 'tent-arrow-turn-left']" />
       </button>
     </div>
   </aside>
