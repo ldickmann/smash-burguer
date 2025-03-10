@@ -2,14 +2,8 @@
 @use "../../base/typography" as *;
 @use "../../base/mixins" as *;
 
-// Variáveis locais
-$sidebar-width: 250px;
-$sidebar-collapsed-width: 50px;
-$border-opacity: rgba(255, 255, 255, 0.1);
-$hover-opacity: rgba(255, 255, 255, 0.1);
-
 .admin-sidebar {
-  width: $sidebar-width;
+  width: 250px;
   height: 100%;
   background-color: $color-text-quinary;
   color: $secondary-color;
@@ -70,11 +64,6 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
       text-decoration: none;
       transition: background-color 0.2s;
 
-      svg {
-        width: 20px;
-        flex-shrink: 0;
-      }
-
       span {
         white-space: nowrap;
         overflow: hidden;
@@ -87,6 +76,7 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
 
       &.router-link-active {
         background-color: $tertiary-color;
+        margin-inline: 0.25rem;
         border-radius: 4px;
       }
     }
@@ -95,7 +85,7 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
   // Footer
   .sidebar-footer {
     display: flex;
-    padding: 0.5rem;
+    padding: 0.25rem;
     border-top: 1px solid $border-opacity;
 
     // Botão de sair do footer da sidebar
@@ -108,25 +98,15 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
       cursor: pointer;
       transition: all 0.2s;
 
-      svg {
-        flex-shrink: 0;
-      }
-
-      span {
-        white-space: nowrap;
-        overflow: hidden;
-        transition: opacity 0.3s ease;
-      }
-
       &:hover {
         background-color: $hover-opacity;
       }
     }
   }
 
-  // Estados
+  // Estados da sidebar (aberta e fechada)
   &.sidebar-collapsed {
-    width: $sidebar-collapsed-width;
+    width: 50px;
 
     .logo h2 {
       opacity: 0;
@@ -134,9 +114,9 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // Responsividade
+  // Responsividade telas mobile
   @include respond-to("xs") {
-    width: $sidebar-collapsed-width;
+    width: 50px;
 
     .sidebar-container {
       .logo h2 {
@@ -154,7 +134,7 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     }
 
     &.sidebar-collapsed {
-      width: $sidebar-collapsed-width;
+      width: 50px;
 
       .nav-item,
       .logout-button {
@@ -164,7 +144,7 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     }
 
     &:not(.sidebar-collapsed) {
-      width: $sidebar-width;
+      width: 250px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     }
   }
