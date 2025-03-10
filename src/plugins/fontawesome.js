@@ -22,7 +22,7 @@ import {
   faCirclePlus,
   faCircleMinus,
   faSquareXmark,
-  faS,
+  faTentArrowTurnLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faTwitter, faXTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -54,6 +54,7 @@ library.add(
   faCirclePlus,
   faCircleMinus,
   faSquareXmark,
+  faTentArrowTurnLeft
 );
 
 export { FontAwesomeIcon };

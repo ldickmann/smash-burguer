@@ -30,7 +30,6 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
 
     .logo {
       @include flex-center;
-      gap: 1rem;
 
       .burger-icon {
         font-size: 1.7rem;
@@ -64,7 +63,7 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     padding: 1rem 0;
 
     .nav-item {
-      @include flex-center;
+      display: flex;
       gap: 0.75rem;
       padding: 0.75rem;
       color: $secondary-color;
@@ -99,13 +98,12 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     padding: 0.5rem;
     border-top: 1px solid $border-opacity;
 
+    // Botão de sair do footer da sidebar
     .logout-button {
       width: 100%;
       @include flex-center;
-      gap: 0.75rem;
+      justify-content: end;
       padding: 0.75rem;
-      background: none;
-      border: none;
       color: $secondary-color;
       cursor: pointer;
       transition: all 0.2s;
@@ -168,21 +166,6 @@ $hover-opacity: rgba(255, 255, 255, 0.1);
     &:not(.sidebar-collapsed) {
       width: $sidebar-width;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-
-      .sidebar-container .logo {
-        margin-left: 0.5rem;
-      }
-
-      .logo h2 {
-        opacity: 1;
-        width: auto;
-      }
-
-      .logo h2,
-      .nav-item span,
-      .logout-button span {
-        display: block;
-      }
     }
   }
 }
