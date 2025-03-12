@@ -224,11 +224,12 @@ footer {
 
     @include respond-to("md") {
       padding: 0rem 2rem;
+      margin-top: 2rem;
     }
 
     @include respond-to("sm") {
       padding: 0rem 2rem;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
 
     @include respond-to("xs") {
