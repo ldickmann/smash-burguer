@@ -7,7 +7,9 @@
     <!-- Header Section da Sidebar -->
     <div class="sidebar-container">
       <div class="logo">
-        <font-awesome-icon :icon="['fas', 'burger']" class="burger-icon" />
+        <div v-if="isCollapsed" class="logo-icon">
+          <font-awesome-icon :icon="['fas', 'burger']" class="burger-icon" />
+        </div>
         <h2>Smash Burger</h2>
       </div>
 
