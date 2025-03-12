@@ -5,6 +5,10 @@
   display: flex;
   gap: 1.5rem;
 
+  @include respond-to("sm") {
+    gap: 1rem;
+  }
+
   @include respond-to("xs") {
     gap: 1rem;
   }
