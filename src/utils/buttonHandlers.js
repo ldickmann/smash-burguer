@@ -5,7 +5,6 @@ import { useProductsStore } from "@/stores/products.js";
 export function useButtonHandlers() {
   const productsStore = useProductsStore();
 
-
   // Handlers de navegação
   const handleButtonClick = (button) => {
     if (button.id === "cart-button") {
@@ -39,30 +38,6 @@ export function useButtonHandlers() {
     product.value = { name: "", price: "", quantity: "", description: "", image: "" };
   };
 
-  // Handlers do componente ModalAddProduct.vue para os botões do modal
-  const handleModalButtons = (button, { selectedType, product, emit }) => {
-    if (button.id === "confirm") {
-      const newProduct = {
-        name: product.value.name,
-        description: product.value.description,
-        price: parseFloat(product.value.price),
-        quantity: parseInt(product.value.quantity),
-        image: product.value.image || "/images/foods/default-food.jpg",
-        category: selectedType.value,
-      };
-
-      // Adiciona o produto via store
-      productsStore.addProduct(newProduct);
-
-      handleFormReset(product);
-      handleCloseModal(emit);
-    } else if (button.id === "cancel") {
-      handleFormReset(product);
-    } else if (button.id === "close") {
-      handleCloseModal(emit);
-    }
-  };
-
   const handleImageUpload = (event, product) => {
     const file = event.target.files[0];
     if (file) {
@@ -82,7 +57,6 @@ export function useButtonHandlers() {
     handleDeleteProduct,
     handleCloseModal,
     handleFormReset,
-    handleModalButtons,
     handleImageUpload,
   };
 }
