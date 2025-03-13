@@ -38,14 +38,31 @@
         </div>
       </AdminCard>
     </div>
+
+    <!-- Modal para adicionar novo produto -->
+    <ModalAddProducts
+      v-if="showAddModal"
+      @close="showAddModal = false"
+      @product-added="handleProductAdded"
+    />
   </section>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useProductsStore } from "@/stores/products.js";
+import { useButtonHandlers } from "@/utils/buttonHandlers.js";
 import AdminCard from "@/components/admin/AdminCard.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import ModalAddProducts from "@/components/admin/ModalAddProducts.vue";
 
+const {
+  handleEditProduct,
+  handleDeleteProduct,
+  handleProductAdded,
+} = useButtonHandlers();
+
+const productsStore = useProductsStore();
 const products = ref([]);
 const loading = ref(true);
 const showAddModal = ref(false);
@@ -54,73 +71,21 @@ const fetchProducts = async () => {
   try {
     loading.value = true;
     // Adicionar a chamada para a API aqui
-    // Produtos simulados
-    products.value = [
-      {
-        id: 1,
-        name: "Smash Burger",
-        description:
-          "Hambúrguer artesanal com queijo, cebola caramelizada, alface, tomate e maionese",
-        ingredients: [
-          "Pão de hambúrguer",
-          "Hambúrguer artesanal",
-          "Queijo",
-          "Cebola caramelizada",
-          "Alface",
-          "Tomate",
-          "Maionese",
-        ],
-        price: 22.5,
-        image: "/images/foods/smash-burger.jpg",
-      },
-      {
-        id: 3,
-        name: "Veggie Burger",
-        description:
-          "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
-        ingredients: [
-          "Pão de hambúrguer",
-          "Hambúrguer de soja",
-          "Queijo",
-          "Alface",
-          "Tomate",
-          "Maionese",
-        ],
-        price: 24.9,
-        image: "/images/foods/veggie-burger.jpg",
-      },
-      {
-        id: 4,
-        name: "Chicken Burger",
-        description:
-          "Hambúrguer artesanal de frango com queijo, alface, tomate, pepino e maionese",
-        ingredients: [
-          "Pão de hambúrguer",
-          "Hambúrguer de frango",
-          "Queijo",
-          "Alface",
-          "Tomate",
-          "Pepino",
-          "Maionese",
-        ],
-        price: 23.9,
-        image: "/images/foods/chicken-burger.jpg",
-      },
-      // Add mais produtos aqui
-    ];
+    // Utiliza o JSON simulado de produtos definido no store
+    products.value = productsStore.foods;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error ao buscar produtos:", error);
   } finally {
     loading.value = false;
   }
 };
 
 const editProduct = (product) => {
-  console.log("Editing product:", product);
+  handleEditProduct(product);
 };
 
 const deleteProduct = (productId) => {
-  console.log("Produto excluído:", productId);
+  handleDeleteProduct(productId);
 };
 
 onMounted(() => {
