@@ -11,7 +11,7 @@
 
       <div class="modal-add-products__select">
         <label for="productType">Selecione o tipo de produto:</label>
-        <select id="productType" v-model="selectedType">
+        <select id="productType" v-model="product.category">
           <option value="foods">Novo Hambúrguer</option>
           <option value="desserts">Nova Sobremesa</option>
           <option value="drinks">Bebida</option>
@@ -105,6 +105,7 @@ const product = ref({
   quantity: "",
   description: "",
   image: "",
+  category: "foods",
 });
 
 // Evento para fechar o modal

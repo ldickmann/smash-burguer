@@ -9,39 +9,38 @@
   @include flex-center();
 
   &__container {
-    background-color: $color-white-background;
+    background-color: $secondary-color;
     padding: 2rem;
-    border-radius: 8px;
-    width: 95%;
+    margin-top: 3rem;
+    border-radius: 12px;
+    width: 90%;
     max-width: 500px;
-    box-shadow: 0 2px 8px $shadow-color;
+    max-height: 92%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
+    border-left: 6px solid $tertiary-color;
 
-  &__header {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
-  }
-
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    .modal-add-products__header {
+      display: flex;
+      justify-content: flex-end;
+    }
 
     .modal-add-products__select {
+      display: flex;
+      flex-direction: column;
+
       label {
-        display: block;
         margin-bottom: 0.5rem;
         color: $color-text-primary;
+        font-weight: 600;
       }
+
       select {
-        width: 100%;
         padding: 0.75rem;
         border: 1px solid $border-color;
-        border-radius: 4px;
+        border-radius: 6px;
         font-size: 1rem;
         transition: border-color 0.3s ease;
         &:focus {
@@ -62,7 +61,7 @@
         gap: 0.5rem;
 
         label {
-          font-weight: 500;
+          font-weight: 600;
           color: $color-text-primary;
         }
 
@@ -70,7 +69,7 @@
           width: 100%;
           padding: 0.75rem;
           border: 1px solid $border-color;
-          border-radius: 4px;
+          border-radius: 6px;
           font-size: 1rem;
           transition:
             border-color 0.3s ease,
@@ -78,17 +77,16 @@
           &:focus {
             outline: none;
             border-color: $tertiary-color;
-            box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
+            box-shadow: 0 0 0 2px rgba($tertiary-color, 0.15);
           }
         }
       }
-    }
-  }
 
-  .modal-add-products__buttons {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 2rem;
+      .modal-add-products__buttons {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+      }
+    }
   }
 }

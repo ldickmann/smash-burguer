@@ -5,8 +5,8 @@ import productsData from "../json/products.json";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
-    foodAdditionals: [],
-    dessertAdditionals: [],
+    foodAdditionals: productsData.foodAdditionals,
+    dessertAdditionals: productsData.dessertAdditionals,
     menuItems: {},
     loadedCategories: []
   }),
