@@ -33,5 +33,26 @@ export const useProductsStore = defineStore("products", {
       }
       return state.menuItems.desserts;
     }
+  },
+
+  actions: {
+    addProduct(newProduct) {
+      if (newProduct.category === "foods") {
+        this.menuItems.foods.push({
+          id: this.menuItems.foods.length + 1,
+          ...newProduct
+        });
+      } else if (newProduct.category === "drinks") {
+        this.menuItems.drinks.push({
+          id: this.menuItems.drinks.length + 1,
+          ...newProduct
+        });
+      } else if (newProduct.category === "desserts") {
+        this.menuItems.desserts.push({
+          id: this.menuItems.desserts.length + 1,
+          ...newProduct
+        });
+      }
+    }
   }
 });

@@ -1,34 +1,23 @@
 <template>
   <section class="modal-add-products">
-    <!-- Container do modal  -->
     <div class="modal-add-products__container">
       <div class="modal-add-products__header">
-        <!-- Botão para fechar o modal | Reutilizando o componente ButtonComponent -->
         <ButtonComponent
           :buttons="[{ label: 'Fechar', id: 'close' }]"
           @click="closeModal"
         />
       </div>
 
-      <!-- Seletor para definir o tipo de produto -->
       <div class="modal-add-products__select">
         <label for="productType">Selecione o tipo de produto:</label>
         <select id="productType" v-model="selectedType">
-          <option value="hamburguer">Novo Hambúrguer</option>
-          <option value="sobremesa">Nova Sobremesa</option>
-          <option value="bebida">Bebida</option>
+          <option value="foods">Novo Hambúrguer</option>
+          <option value="desserts">Nova Sobremesa</option>
+          <option value="drinks">Bebida</option>
         </select>
       </div>
 
-      <!-- Formulário para adicionar Novo Hamburguer -->
-      <!-- Formulário para adicionar Nova Sobremesa -->
-      <!-- Formulário para adicionar Bebida -->
-
-      <!-- Button para adicionar o produto (confirmar) -->
-      <!-- Button para adicionar cancelar (cancelar) -->
-
-      <!-- Formulário para adicionar o produto -->
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="handleModalButtons">
         <div class="form-group">
           <label for="name">Nome do Produto:</label>
           <input
@@ -59,16 +48,29 @@
             required
           />
         </div>
+        <!-- Exemplo de campo adicional, se necessário -->
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <input
+            type="text"
+            id="description"
+            v-model="product.description"
+            placeholder="Descrição do produto"
+          />
+        </div>
+        <div class="form-group">
+          <label for="image">Imagem:</label>
+          <input type="file" id="image" accept="image/*" required />
+        </div>
 
-        <!-- Botões: confirmar e cancelar -->
         <div class="modal-add-products__buttons">
           <ButtonComponent
-            :buttons="[{ id: 'confirm', label: 'Confirmar' }]"
-            @click="handleSubmit"
-          />
-          <ButtonComponent
-            :buttons="[{ id: 'cancel', label: 'Cancelar' }]"
-            @click="resetForm"
+            :buttons="[
+              { id: 'confirm', label: 'Confirmar' },
+              { id: 'cancel', label: 'Cancelar' },
+            ]"
+            :gap="16"
+            @click="handleModalButtons"
           />
         </div>
       </form>
@@ -78,39 +80,59 @@
 
 <script setup>
 import { ref } from "vue";
+import { useButtonHandlers } from "@/utils/buttonHandlers.js";
+import { useProductsStore } from "@/stores/products.js";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
-/* Variável para armazenar o tipo de produto selecionado */
-const selectedType = ref("hamburguer");
+// Define as variáveis dos handlers
+const { handleCloseModal, handleFormReset } = useButtonHandlers();
 
+// Variável para armazenar o tipo de produto selecionado
+const selectedType = ref("foods");
+
+// Objeto para armazenar os dados do formulário
 const product = ref({
   name: "",
   price: "",
   quantity: "",
+  description: "",
+  // verificar o código para fazer o upload da imagem
+  image: "",
 });
 
+// Emite somente o evento de fechar o modal
 const emit = defineEmits(["close"]);
 
-// Método para fechar o modal closeModal
+const productsStore = useProductsStore();
+
+// Método para fechar o modal
 const closeModal = () => {
-  emit("close");
+  handleCloseModal(emit);
 };
 
-const handleSubmit = () => {
-  // Exibe as informações do produto juntamente com o tipo selecionado
-  console.log("Produto adicionado:", { type: selectedType.value, ...product.value });
-  addProducts();
-  resetForm();
-};
+/**
+ * Lida com a ação dos botões do formulário.
+ * Se o botão for 'confirm', monta o novo produto e o encaminha para o store;
+ * Se o botão for 'cancel', reseta os campos do formulário.
+ *
+ * @param {Object} button - Objeto do botão clicado.
+ */
+const handleModalButtons = (button) => {
+  if (button && button.id === "confirm") {
+    const newProduct = {
+      type: selectedType.value,
+      ...product.value,
+      category: selectedType.value,
+      // Aqui você pode tratar o campo "image" conforme necessário
+    };
+    // Chama a ação do store para adicionar o produto
+    productsStore.addProduct(newProduct);
 
-const addProducts = () => {
-  // Lógica para adicionar o produto (ex.: chamada de API ou atualização de estado)
-  console.log({ type: selectedType.value, ...product.value });
-};
-
-/* Função para resetar o formulário */
-const resetForm = () => {
-  product.value = { name: "", price: "", quantity: "" };
+    handleFormReset(product);
+    handleCloseModal(emit);
+  } else if (button && button.id === "cancel") {
+    handleFormReset(product);
+  }
 };
 </script>
 
