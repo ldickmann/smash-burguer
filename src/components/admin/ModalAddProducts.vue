@@ -2,11 +2,14 @@
   <section class="modal-add-products">
     <div class="modal-add-products__container">
       <div class="modal-add-products__header">
-        <ButtonComponent
-          :buttons="[{ label: 'Fechar', id: 'close' }]"
-          backgroundColor="#42b983"
+        <button
+          type="button"
+          class="close-modal-admin"
           @click="closeModal"
-        />
+          aria-label="Fechar modal"
+        >
+          &times;
+        </button>
       </div>
 
       <div class="modal-add-products__select">

@@ -25,6 +25,10 @@
     .modal-add-products__header {
       display: flex;
       justify-content: flex-end;
+
+      .close-modal-admin {
+        font-size: 1.5rem;
+      }
     }
 
     .modal-add-products__select {
@@ -41,7 +45,8 @@
         padding: 0.75rem;
         border: 1px solid $border-color;
         border-radius: 6px;
-        font-size: 1rem;
+        font-weight: 600;
+        color: $color-text-primary;
         transition: border-color 0.3s ease;
         &:focus {
           outline: none;
@@ -53,7 +58,6 @@
     form {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
 
       .form-group {
         display: flex;

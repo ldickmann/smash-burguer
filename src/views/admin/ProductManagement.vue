@@ -43,7 +43,7 @@
     <ModalAddProducts
       v-if="showAddModal"
       @close="showAddModal = false"
-      @product-added="handleProductAdded"
+      @product-added="onProductAdded"
     />
   </section>
 </template>
@@ -56,11 +56,7 @@ import AdminCard from "@/components/admin/AdminCard.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import ModalAddProducts from "@/components/admin/ModalAddProducts.vue";
 
-const {
-  handleEditProduct,
-  handleDeleteProduct,
-  handleProductAdded,
-} = useButtonHandlers();
+const { handleEditProduct, handleDeleteProduct } = useButtonHandlers();
 
 const productsStore = useProductsStore();
 const products = ref([]);
@@ -80,12 +76,20 @@ const fetchProducts = async () => {
   }
 };
 
+// Métodos para editar o produto
 const editProduct = (product) => {
   handleEditProduct(product);
 };
 
+// Método para deletar o produto
 const deleteProduct = (productId) => {
   handleDeleteProduct(productId);
+};
+
+// Define a função para lidar com o evento emitido pelo ModalAddProducts
+const onProductAdded = () => {
+  showAddModal.value = false;
+  fetchProducts(); // Atualiza a lista de produtos
 };
 
 onMounted(() => {
