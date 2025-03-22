@@ -32,8 +32,9 @@
         </ul>
       </nav>
 
-      <!-- ButtonComponent -->
+      <!-- Renderiza Login ou Logout conforme a autenticação do usuário -->
       <ButtonComponent
+        v-if="!userStore.isAuthenticated"
         :buttons="[{ label: 'Login', id: 'login' }]"
         backgroundColor="#42b983"
         fontColor="#ffffff"
@@ -42,17 +43,28 @@
         borderRadius="6px"
         @click="LoginPage"
       />
+      <ButtonComponent
+        v-else
+        :buttons="[{ label: 'Logout', id: 'logout' }]"
+        backgroundColor="#3498db"
+        fontColor="#ffffff"
+        fontSize="16px"
+        buttonSize="0.75rem 1.5rem"
+        borderRadius="6px"
+        @click="Logout"
+      />
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
-import ButtonComponent from "../ButtonComponent.vue";
+import { useUserStore } from "@/stores/userStore";
 import { useButtonHandlers } from "@/utils/buttonHandlers";
+import ButtonComponent from "../ButtonComponent.vue";
 
-const { handleLoginPage } = useButtonHandlers();
+const { handleLoginPage, handleLogout } = useButtonHandlers();
 
 const route = useRoute();
 const headerRef = ref(null);
@@ -67,12 +79,20 @@ const props = defineProps({
   },
 });
 
-const navLinks = [
-  { path: "/", label: "Home" },
-  { path: "/menu", label: "Cardápio" },
-  { path: "/cart", label: "Carrinho" },
-  { path: "/profile", label: "Perfil" },
-];
+// Verifica se o usuário está logado
+const userStore = useUserStore();
+
+const navLinks = computed(() => {
+  const links = [
+    { path: "/", label: "Home" },
+    { path: "/menu", label: "Cardápio" },
+    { path: "/cart", label: "Carrinho" },
+  ];
+  if (userStore.isAuthenticated) {
+    links.push({ path: "/profile", label: "Perfil" });
+  }
+  return links;
+});
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -96,6 +116,10 @@ const handleClickOutside = (event) => {
 
 const LoginPage = () => {
   handleLoginPage();
+};
+
+const Logout = () => {
+  handleLogout();
 };
 
 onMounted(() => {
