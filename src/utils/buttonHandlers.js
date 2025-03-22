@@ -23,6 +23,12 @@ export function useButtonHandlers() {
     router.push("/login");
   };
 
+  // Handler para logout, redirecionando para a home ou login, conforme sua implementação
+  const handleLogout = () => {
+    // Lógica para limpar o estado do usuário, se necessário
+    router.push("/");
+  };
+
   // Handlers do componente ProductManagement.vue para editar produtos
   const handleEditProduct = (product) => {
     console.log("Editar produto", product);
@@ -59,6 +65,7 @@ export function useButtonHandlers() {
     handleButtonClick,
     handleConfirmPayment,
     handleLoginPage,
+    handleLogout,
     handleEditProduct,
     handleDeleteProduct,
     handleCloseModal,
