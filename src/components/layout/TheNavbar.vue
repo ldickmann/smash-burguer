@@ -31,6 +31,17 @@
           </li>
         </ul>
       </nav>
+
+      <!-- ButtonComponent -->
+      <ButtonComponent
+        :buttons="[{ label: 'Login', id: 'login' }]"
+        backgroundColor="#42b983"
+        fontColor="#ffffff"
+        fontSize="16px"
+        buttonSize="0.75rem 1.5rem"
+        borderRadius="6px"
+        @click="LoginPage"
+      />
     </div>
   </header>
 </template>
@@ -38,6 +49,10 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
+import ButtonComponent from "../ButtonComponent.vue";
+import { useButtonHandlers } from "@/utils/buttonHandlers";
+
+const { handleLoginPage } = useButtonHandlers();
 
 const route = useRoute();
 const headerRef = ref(null);
@@ -77,6 +92,10 @@ const handleClickOutside = (event) => {
   ) {
     closeMenu();
   }
+};
+
+const LoginPage = () => {
+  handleLoginPage();
 };
 
 onMounted(() => {
