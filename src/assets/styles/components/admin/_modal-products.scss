@@ -1,0 +1,111 @@
+@use "../../base/variables" as *;
+@use "../../base/mixins" as *;
+
+.modal-product {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  @include flex-center();
+  z-index: 1000;
+
+  &__container {
+    background-color: $secondary-color;
+    padding: 2rem;
+    margin-top: 3rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 92%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-left: 6px solid $tertiary-color;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    // Botão de fechar o modal
+    .close-modal-admin {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #333;
+    }
+  }
+
+  &__select {
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      color: $color-text-primary;
+      &:focus {
+        outline: none;
+        border-color: $tertiary-color;
+      }
+    }
+  }
+
+  .form-group {
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      font-size: 1rem;
+      &:focus {
+        outline: none;
+        border-color: $tertiary-color;
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .btn-confirm,
+    .btn-cancel {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .btn-confirm {
+      background-color: #3498db;
+    }
+
+    .btn-cancel {
+      background-color: #e74c3c;
+    }
+  }
+}

@@ -5,32 +5,53 @@ import productsData from "../json/products.json";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
-    foodAdditionals: JSON.parse(JSON.stringify(productsData.foodAdditionals)),
-    dessertAdditionals: JSON.parse(JSON.stringify(productsData.dessertAdditionals)),
-    menuItems: JSON.parse(JSON.stringify(productsData.menuItems)),
+    foodAdditionals: productsData.foodAdditionals,
+    dessertAdditionals: productsData.dessertAdditionals,
+    menuItems: {},
+    loadedCategories: []
   }),
 
   getters: {
-    foods: (state) => state.menuItems.foods,
-    drinks: (state) => state.menuItems.drinks,
-    desserts: (state) => state.menuItems.desserts,
-    allProducts: (state) => ({
-      ...state.menuItems,
-      foodAdditionals: state.foodAdditionals,
-      dessertAdditionals: state.dessertAdditionals,
-    })
+    foods: (state) => {
+      if (!state.menuItems.foods) {
+        state.menuItems.foods = JSON.parse(JSON.stringify(productsData.menuItems.foods));
+        state.loadedCategories.push('foods');
+      }
+      return state.menuItems.foods;
+    },
+    drinks: (state) => {
+      if (!state.menuItems.drinks) {
+        state.menuItems.drinks = JSON.parse(JSON.stringify(productsData.menuItems.drinks));
+        state.loadedCategories.push('drinks');
+      }
+      return state.menuItems.drinks;
+    },
+    desserts: (state) => {
+      if (!state.menuItems.desserts) {
+        state.menuItems.desserts = JSON.parse(JSON.stringify(productsData.menuItems.desserts));
+        state.loadedCategories.push('desserts');
+      }
+      return state.menuItems.desserts;
+    }
   },
 
   actions: {
-    resetAdditionals() {
-      this.foodAdditionals = JSON.parse(JSON.stringify(productsData.foodAdditionals));
-      this.dessertAdditionals = JSON.parse(JSON.stringify(productsData.dessertAdditionals));
-    },
-
-    updateProduct(category, productId, updatedData) {
-      const product = this.menuItems[category].find(p => p.id === productId);
-      if (product) {
-        Object.assign(product, updatedData);
+    addProduct(newProduct) {
+      if (newProduct.category === "foods") {
+        this.menuItems.foods.push({
+          id: this.menuItems.foods.length + 1,
+          ...newProduct
+        });
+      } else if (newProduct.category === "drinks") {
+        this.menuItems.drinks.push({
+          id: this.menuItems.drinks.length + 1,
+          ...newProduct
+        });
+      } else if (newProduct.category === "desserts") {
+        this.menuItems.desserts.push({
+          id: this.menuItems.desserts.length + 1,
+          ...newProduct
+        });
       }
     }
   }

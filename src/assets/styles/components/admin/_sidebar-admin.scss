@@ -13,138 +13,126 @@
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
-  z-index: 1100;
+  z-index: 999;
 
-  .toggle-button {
-    display: none;
-    background: none;
-    border: none;
-    color: $secondary-color;
-    cursor: pointer;
-    padding: 0.5rem;
-    font-size: 1.2rem;
-
-    &:hover {
-      color: $tertiary-color;
-    }
-  }
-
+  // Header
   .sidebar-container {
-    display: flex;
-    align-items: center;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    @include flex-center;
+    border-bottom: 1px solid $border-opacity;
+    border-right: 1px solid $border-opacity;
     min-height: 55px;
 
     .logo {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      overflow: hidden;
+      @include flex-center;
+
+      .burger-icon {
+        font-size: 1.7rem;
+        color: $secondary-color;
+      }
 
       h2 {
         font-family: $font-family-secondary;
+        color: $secondary-color;
         white-space: nowrap;
-        overflow: hidden;
-        opacity: 1;
-        transition: opacity 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          width 0.3s ease;
       }
     }
 
-    .burger-icon {
-      font-size: 1.7rem;
-      flex-shrink: 0;
+    //Botão para fechar a sidebar em dispositivos móveis
+    .close-button {
+      display: none;
+      color: $secondary-color;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
   }
 
+  // Navigation
   .sidebar-nav {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 1rem 0.25rem;
+    padding: 1rem 0;
 
     .nav-item {
       display: flex;
-      align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem;
       color: $secondary-color;
       text-decoration: none;
-      transition: background-color 0.2s;
-
-      svg {
-        width: 20px;
-        flex-shrink: 0;
-      }
+      transition:
+        background-color 0.2s,
+        opacity 0.3s ease;
 
       span {
         white-space: nowrap;
         overflow: hidden;
-        transition: opacity 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          width 0.3s ease;
       }
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: $hover-opacity;
       }
 
       &.router-link-active {
         background-color: $tertiary-color;
-        margin: 0rem 0;
+        margin-inline: 0.25rem;
         border-radius: 4px;
       }
     }
   }
 
+  // Footer
   .sidebar-footer {
     display: flex;
-    padding: 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.25rem;
+    border-top: 1px solid $border-opacity;
 
+    // Botão de sair do footer da sidebar
     .logout-button {
       width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      @include flex-center;
+      justify-content: end;
       padding: 0.75rem;
-      background: none;
-      border: none;
       color: $secondary-color;
       cursor: pointer;
       transition: all 0.2s;
 
-      svg {
-        flex-shrink: 0;
-      }
-
-      span {
-        white-space: nowrap;
-        overflow: hidden;
-        transition: opacity 0.3s ease;
-      }
-
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: $hover-opacity;
       }
     }
   }
 
-  @include respond-to("xs") {
+  // Estados da sidebar (aberta e fechada)
+  &.sidebar-collapsed {
     width: 50px;
 
-    .toggle-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .logo h2 {
+      opacity: 0;
+      width: 0;
     }
+  }
+
+  // Responsividade telas mobile
+  @include respond-to("xs") {
+    width: 50px;
+    z-index: 1200;
 
     .sidebar-container {
-      justify-content: center;
+      gap: 10rem;
 
       .logo h2 {
         display: none;
+      }
+
+      .close-button {
+        display: block;
       }
     }
 
@@ -155,26 +143,18 @@
 
     &.sidebar-collapsed {
       width: 50px;
-
-      .nav-item,
-      .logout-button {
-        justify-content: center;
-        padding: 0.75rem;
-      }
     }
 
+    // Estilização da sidebar quando aberta
     &:not(.sidebar-collapsed) {
       width: 250px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+      z-index: 1300;
 
-      .sidebar-container .logo {
-        margin-left: 0.5rem;
-      }
-
-      .logo h2,
+      // Mostra o texto dos itens de navegação quando a sidebar está aberta
       .nav-item span,
       .logout-button span {
-        display: block;
+        display: inline;
       }
     }
   }
