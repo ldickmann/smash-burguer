@@ -18,6 +18,11 @@ export function useButtonHandlers() {
     router.push("/confirmation");
   };
 
+  // Handler para navegar para a página de login
+  const handleLoginPage = () => {
+    router.push("/login");
+  };
+
   // Handlers do componente ProductManagement.vue para editar produtos
   const handleEditProduct = (product) => {
     console.log("Editar produto", product);
@@ -53,6 +58,7 @@ export function useButtonHandlers() {
   return {
     handleButtonClick,
     handleConfirmPayment,
+    handleLoginPage,
     handleEditProduct,
     handleDeleteProduct,
     handleCloseModal,
