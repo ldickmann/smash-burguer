@@ -21,6 +21,7 @@
         color="#ffffff"
         :thickness="1"
         class="separator-copy"
+        marginTop="1rem"
       />
       <div class="container-copy">
         <p>Copyright © 2025 Smash Burgers</p>

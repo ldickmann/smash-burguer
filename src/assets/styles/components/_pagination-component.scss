@@ -1,0 +1,38 @@
+@use "../base/variables" as *;
+@use "../base/mixins" as *;
+
+.pagination-container {
+  @include flex-center();
+  margin: 2rem 0;
+
+  :deep(.container-buttons) {
+    @include flex-center();
+    flex-wrap: wrap;
+  }
+
+  :deep(.button) {
+    min-width: 32px;
+    height: 32px;
+    @include flex-center();
+    box-shadow: 0 2px 4px $shadow-color;
+    margin: 0 2px;
+
+    &.active {
+      background-color: $quaternary-color !important;
+      color: $senary-color !important;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  @include respond-to("xs") {
+    :deep(.button) {
+      min-width: 28px;
+      height: 28px;
+      font-size: 12px !important;
+    }
+  }
+}

@@ -21,6 +21,8 @@ import {
   faMagnifyingGlass,
   faCirclePlus,
   faCircleMinus,
+  faSquareXmark,
+  faTentArrowTurnLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faTwitter, faXTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
@@ -51,6 +53,8 @@ library.add(
   faLinkedin,
   faCirclePlus,
   faCircleMinus,
+  faSquareXmark,
+  faTentArrowTurnLeft
 );
 
 export { FontAwesomeIcon };

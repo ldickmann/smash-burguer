@@ -41,9 +41,8 @@
 
   &__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    justify-content: center;
     gap: 1rem;
 
     @include respond-to("md") {
@@ -55,26 +54,27 @@
     }
   }
 
+  //Estilizações dos titulos das páginas do painel de administração
   &__title {
-    color: $primary-color;
     font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0;
     line-height: 1.4;
   }
 
+  // Estilização dos cards da página "Relatório de Vendas"
   &__content {
     margin: 1rem 0;
     min-height: 50px;
+    &:not(.metric-card__content) {
+      // Não aplica em metric-cards
+      color: $color-text-primary;
+    }
   }
 
+  // Atualmente estilizando os cards da página "Gestão de Pedidos"
   &__footer {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba($shadow-color, 0.2);
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background-color: $color-white-background-secondary;
+    border-radius: 0 0 2rem 2rem;
   }
 }
 

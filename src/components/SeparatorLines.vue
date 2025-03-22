@@ -1,10 +1,11 @@
 <template>
   <!-- Component Separator -->
   <section
-    role="separator"
+    ref="separator"
     :aria-orientation="orientation"
     class="separator"
     :class="separatorClass"
+    :style="containerStyle"
   >
     <hr class="separator__line" :style="lineStyle" />
     <slot />
@@ -12,7 +13,9 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
+
+const separator = ref(null);
 
 const props = defineProps({
   color: {
@@ -29,6 +32,14 @@ const props = defineProps({
     default: 2,
     validator: (value) => !isNaN(Number(value)) && Number(value) > 0,
   },
+  marginTop: {
+    type: [Number, String],
+    default: 0,
+  },
+  marginBottom: {
+    type: [Number, String],
+    default: 0,
+  },
 });
 
 // Propriedade computada para as classes memoizadas
@@ -41,6 +52,16 @@ const separatorClass = computed(() => ({
 const lineStyle = computed(() => ({
   backgroundColor: props.color,
   [props.orientation === "vertical" ? "width" : "height"]: `${props.thickness}px`,
+}));
+
+// Propriedade computada para estilizar o container
+const containerStyle = computed(() => ({
+  marginTop:
+    typeof props.marginTop === "number" ? `${props.marginTop}px` : props.marginTop,
+  marginBottom:
+    typeof props.marginBottom === "number"
+      ? `${props.marginBottom}px`
+      : props.marginBottom,
 }));
 </script>
 

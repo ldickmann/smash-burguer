@@ -3,7 +3,7 @@
 
 .navbar-search {
   display: flex;
-  margin-left: 2rem;
+  margin-left: 1rem;
   align-items: center;
 
   @include respond-to("xs") {
