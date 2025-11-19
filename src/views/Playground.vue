@@ -7,24 +7,17 @@
       color="#fff"
       @click="handleOpenModal"
     />
-
-    <ModalAddProducts v-if="isModalOpen" @close="handleCloseModal" />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import ModalAddProducts from "@/components/admin/ModalAddProducts.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const isModalOpen = ref(false);
 
 const handleOpenModal = () => {
   isModalOpen.value = true;
-};
-
-const handleCloseModal = () => {
-  isModalOpen.value = false;
 };
 </script>
 
