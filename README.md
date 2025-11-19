@@ -41,19 +41,19 @@ git clone https://github.com/ldickmann/smash-burger.git
 cd smash-burger
 ```
 
-2. Instale as dependências:
+1. Instale as dependências:
 
 ```bash
 yarn install
 ```
 
-3. Inicie o servidor de desenvolvimento:
+1. Inicie o servidor de desenvolvimento:
 
 ```bash
 yarn dev
 ```
 
-4. Acesse no navegador:
+1. Acesse no navegador:
 
 ```bash
 http://localhost:5173
@@ -67,7 +67,7 @@ http://localhost:5173
 
 ## 🌐 Estrutura do Projeto
 
-```
+```plaintext
 src/
 ├── assets/         # Recursos estáticos e estilos globais
 │   ├── icons/       # Ícones da aplicação
