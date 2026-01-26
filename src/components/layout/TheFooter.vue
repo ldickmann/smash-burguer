@@ -24,7 +24,7 @@
         marginTop="1rem"
       />
       <div class="container-copy">
-        <p>Copyright © 2025 Smash Burgers</p>
+        <p>2026 Smash Burgers | Sabiá Operações</p>
         <p>Desenvolvido por Lucas Elias Dickmann</p>
       </div>
     </div>
