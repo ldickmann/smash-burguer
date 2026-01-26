@@ -1,7 +1,6 @@
-// filepath: /c:/Users/ldick/repositorios_github/smash-burguer/src/main.js
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { FontAwesomeIcon } from '@/plugins/fontAwesome';
+import { FontAwesomeIcon } from '@/plugins/fontawesome';
 import piniaPersist from 'pinia-plugin-persistedstate';
 import App from './App.vue';
 import router from './router';
