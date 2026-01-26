@@ -2,7 +2,7 @@
   <BannerComponent
     title="Cardápio"
     paragraph="Cardápio com os melhores Hambúrgueres"
-    image="/images/fundos/banner-burger-black.jpg"
+    :image="getImagePath('images/fundos/banner-burger-black.jpg')"
     alt="Background de hambúrgueres e batatas fritas"
     :overlay="true"
   />
@@ -60,6 +60,7 @@ import { ref, onMounted, computed } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useProductsStore } from "@/stores/products";
 import { useButtonHandlers } from "@/utils/buttonHandlers";
+import { useImagePath } from "@/composables/useImagePath";
 import BurguerCard from "@/components/BurguerCard.vue";
 import BannerComponent from "@/components/BannerComponent.vue";
 import ButtonsComponents from "@/components/ButtonComponent.vue";
@@ -70,6 +71,7 @@ const cartStore = useCartStore();
 const productsStore = useProductsStore();
 const showAlert = ref(false);
 const alertMessage = ref("");
+const { getImagePath } = useImagePath();
 const { handleButtonClick } = useButtonHandlers();
 
 // Estado para controlar a categoria atual
