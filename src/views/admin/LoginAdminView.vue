@@ -1,5 +1,10 @@
 <template>
-  <section class="admin-section">
+  <section
+    class="admin-section"
+    :style="{
+      backgroundImage: `url(${getImagePath('images/fundos/background-admin-login.jpg')})`,
+    }"
+  >
     <div class="admin-login">
       <form novalidate @submit.prevent="handleLogin" class="login-form">
         <h2>Login Administrativo</h2>
@@ -38,11 +43,13 @@ import { ref } from "vue";
 import { useAdminStore } from "@/stores/adminStore";
 import { useRouter } from "vue-router";
 import { validateEmail, validatePassword } from "@/utils/validators";
+import { useImagePath } from "@/composables/useImagePath";
 import FormGroup from "@/components/FormGroup.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 
 const router = useRouter();
 const adminStore = useAdminStore();
+const { getImagePath } = useImagePath();
 
 const credentials = ref({
   email: "",
