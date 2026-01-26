@@ -1,6 +1,6 @@
 import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Layouts imports
 import MainLayout from '@/layouts/MainLayout.vue';
@@ -8,7 +8,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 
 // Rotas do app
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
