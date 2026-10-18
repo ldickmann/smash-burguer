@@ -5,6 +5,7 @@
     :aria-labelledby="titleId"
     :style="{ '--dialog-max': maxWidth }"
     @cancel.prevent="requestClose"
+    @keydown.tab="trapFocus"
     @close="handleNativeClose"
     @pointerdown="handlePointerDown"
     @click="handleBackdropClick"
@@ -81,6 +82,24 @@ const focusInitial = () => {
     dialog.querySelector(`#${props.titleId}`) ||
     titleRef.value;
   target?.focus({ preventScroll: false });
+};
+
+// O Tab circula entre o primeiro e o último controle, sem sair para o navegador
+const trapFocus = (event) => {
+  const focusables = [...dialogRef.value.querySelectorAll(FOCUSABLE)].filter(
+    (el) => el.getClientRects().length > 0
+  );
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || !dialogRef.value.contains(active))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  }
 };
 
 const openDialog = async () => {
