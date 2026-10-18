@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -- nome mantido: a rota de testes fica como está (FLX-10, fora do escopo) -->
 <template>
   <div class="demo-container">
     <h1>Playground</h1>

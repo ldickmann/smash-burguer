@@ -1,10 +1,5 @@
 // Tipografia (SPEC §2.3). As fontes são importadas uma única vez, em src/main.js.
 
-// Apelidos temporários para as folhas antigas que ainda leem estas variáveis.
-// Saem na fase 8, junto com o _variables.scss.
-$font-family-primary: var(--font-text);
-$font-family-secondary: var(--font-display);
-
 // Bebas Neue: só títulos de 28px ou mais, sempre 400 e sem negrito sintético
 .display,
 h1 {

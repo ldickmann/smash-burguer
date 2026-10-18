@@ -3,6 +3,7 @@
 import { onBeforeUnmount, onMounted, toValue } from "vue";
 
 const clamp = (value) => Math.min(0.5, Math.max(-0.5, value));
+const round = (value) => Math.round(value * 100) / 100;
 
 export function useTilt(target, { max = 4 } = {}) {
   let frame = 0;
@@ -17,10 +18,10 @@ export function useTilt(target, { max = 4 } = {}) {
     if (!canHover || reduced) return;
 
     const setAngles = (x, y) => {
-      el.style.setProperty("--rx", `${(-y * 2 * max).toFixed(2)}deg`);
-      el.style.setProperty("--ry", `${(x * 2 * max).toFixed(2)}deg`);
-      el.style.setProperty("--mx", `${((x + 0.5) * 100).toFixed(1)}%`);
-      el.style.setProperty("--my", `${((y + 0.5) * 100).toFixed(1)}%`);
+      el.style.setProperty("--rx", `${round(-y * 2 * max)}deg`);
+      el.style.setProperty("--ry", `${round(x * 2 * max)}deg`);
+      el.style.setProperty("--mx", `${round((x + 0.5) * 100)}%`);
+      el.style.setProperty("--my", `${round((y + 0.5) * 100)}%`);
     };
 
     const handleMove = (event) => {
