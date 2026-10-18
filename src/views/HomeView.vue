@@ -3,7 +3,7 @@
     variant="hero"
     title="Smash na chapa, entregue quente"
     text="Hambúrgueres artesanais prensados na hora. De terça a sexta, das 13h à 01h."
-    image="/images/fundos/banner-burger-bg.png"
+    image="/images/fundos/banner-burger-bg"
     alt="Hambúrguer artesanal com queijo, carne prensada e alface"
     :image-width="960"
     :image-height="906"

@@ -3,7 +3,7 @@
     variant="page"
     title="Cardápio"
     text="Escolha, personalize e peça."
-    image="/images/fundos/banner-burger-black.jpg"
+    image="/images/fundos/banner-burger-black"
     alt=""
     :image-width="1920"
     :image-height="1280"
