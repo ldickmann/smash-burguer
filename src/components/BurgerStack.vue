@@ -2,7 +2,12 @@
   <figure class="burger-stack">
     <!-- A pilha é ilustração: os controles acessíveis são os checkboxes e os steppers -->
     <div class="burger-stack__stage" aria-hidden="true">
-      <TransitionGroup tag="div" name="layer" class="burger-stack__scene">
+      <TransitionGroup
+        tag="div"
+        name="layer"
+        class="burger-stack__scene"
+        :style="{ '--count': Math.max(layers.length, 1) }"
+      >
         <div
           v-for="(layer, index) in layers"
           :key="layer.key"
@@ -163,6 +168,11 @@ const legend = computed(() => {
   aspect-ratio: 1;
   perspective: 900px;
 
+  // Na vista 3D a pilha sobe além da caixa: espaço livre em cima
+  @include motion-ok {
+    margin-top: var(--space-6);
+  }
+
   @include up(md) {
     width: 220px;
   }
@@ -184,7 +194,8 @@ const legend = computed(() => {
 }
 
 .burger-stack__layer {
-  --gap: 9px;
+  // A pilha inteira cabe na área visual: com muitas camadas o espaço entre elas diminui
+  --gap: min(9px, calc(96px / var(--count)));
   --edge: color-mix(in srgb, var(--layer-color) 70%, black);
 
   position: absolute;
@@ -201,7 +212,7 @@ const legend = computed(() => {
 
 @include up(md) {
   .burger-stack__layer {
-    --gap: 12px;
+    --gap: min(12px, calc(128px / var(--count)));
   }
 }
 
@@ -359,7 +370,7 @@ const legend = computed(() => {
     position: relative;
     inset: auto;
     width: 100%;
-    height: 9%;
+    height: min(9%, calc(72% / var(--count)));
     transform: none;
   }
 
