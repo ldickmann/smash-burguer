@@ -6,8 +6,6 @@ import {
   faLocationDot,
   faPhone,
   faBurger,
-  faClipboardList,
-  faChartBar,
   faTachometerAlt,
   faUtensils,
   faShoppingCart,
@@ -22,22 +20,32 @@ import {
   faCirclePlus,
   faCircleMinus,
   faSquareXmark,
-  faTentArrowTurnLeft
+  faTentArrowTurnLeft,
+  faCheck,
+  faXmark,
+  faMinus,
+  faPlus,
+  faTrashCan,
+  faRotateLeft,
+  faCircleCheck,
+  faCircleExclamation,
+  faCircleInfo,
+  faCreditCard,
+  faQrcode,
+  faMoneyBill,
+  faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faFacebookF, faInstagram, faTwitter, faXTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
 library.add(
   faFacebookF,
   faInstagram,
-  faTwitter,
   faLocationDot,
   faPhone,
   faEnvelope,
   faXTwitter,
   faBurger,
-  faClipboardList,
-  faChartBar,
   faTachometerAlt,
   faUtensils,
   faShoppingCart,
@@ -49,12 +57,23 @@ library.add(
   faUser,
   faCog,
   faMagnifyingGlass,
-  faGithub,
-  faLinkedin,
   faCirclePlus,
   faCircleMinus,
   faSquareXmark,
-  faTentArrowTurnLeft
+  faTentArrowTurnLeft,
+  faCheck,
+  faXmark,
+  faMinus,
+  faPlus,
+  faTrashCan,
+  faRotateLeft,
+  faCircleCheck,
+  faCircleExclamation,
+  faCircleInfo,
+  faCreditCard,
+  faQrcode,
+  faMoneyBill,
+  faArrowRight
 );
 
 export { FontAwesomeIcon };
