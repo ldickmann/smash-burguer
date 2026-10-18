@@ -1,0 +1,29 @@
+// Regra global de movimento reduzido (SPEC §2.8 e §7).
+// Os componentes só declaram transform dentro de `prefers-reduced-motion: no-preference`
+// (mixin `motion-ok`); este bloco é a rede de segurança global.
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  // Transições limitadas a opacidade e cor, com no máximo --dur-fast
+  *,
+  *::before,
+  *::after {
+    transition-property: opacity, color, background-color;
+    transition-duration: var(--dur-fast);
+    animation-duration: var(--dur-fast);
+    animation-iteration-count: 1;
+  }
+
+  // Micro-interações 3D (§7.1–7.4): nenhum transform
+  .add-btn__inner,
+  .add-btn__face,
+  .odo__digit,
+  .product-card,
+  .burger-stack__scene,
+  .burger-stack__layer {
+    transform: none;
+  }
+}

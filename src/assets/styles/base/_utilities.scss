@@ -1,5 +1,29 @@
+// Utilitários globais (SPEC §2.4).
+
+// Única classe de largura de conteúdo do projeto
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+// Algarismos tabulares: preço, total, quantidade, contador e KPI
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+// Quebra temática real (rodapé)
+.divider {
+  height: 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+// Temporário: telas ainda não migradas usam a classe antiga.
+// Sai na fase 8.
 .container-utilities {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: var(--container-max);
+  margin-inline: auto;
 }

@@ -1,57 +1,9 @@
-// Base
-@use "./styles/base/variables";
-@use "./styles/base/typography";
+// Só a base. Cada componente importa a própria folha no <style scoped>.
+// As fontes são importadas em src/main.js; os breakpoints são só mixins (não geram CSS).
+@use "./styles/base/tokens";
+@use "./styles/base/breakpoints";
 @use "./styles/base/reset";
+@use "./styles/base/typography";
 @use "./styles/base/utilities";
-@use "./styles/base/mixins";
-
-// Components
-@use "./styles/components/alert";
-@use "./styles/components/banner";
-@use "./styles/components/burger-card";
-@use "./styles/components/buttons";
-@use "./styles/components/carousel";
-@use "./styles/components/footer";
-@use "./styles/components/form-group";
-@use "./styles/components/modal";
-@use "./styles/components/navbar";
-@use "./styles/components/pagination-component";
-@use "./styles/components/separator";
-
-// Conferir estes styles abaixo
-@use "./styles/components/additionals-list";
-@use "./styles/components/cart-item";
-@use "./styles/components/quantity-control";
-
-// Admin Components
-@use "./styles/components/admin/admin-card";
-@use "./styles/components/admin/modal-products";
-@use "./styles/components/admin/navbar-admin";
-@use "./styles/components/admin/sidebar-admin";
-
-// Navbar Admin Components
-@use "./styles/components/admin/navbar/notification-bar";
-@use "./styles/components/admin/navbar/search-bar";
-@use "./styles/components/admin/navbar/user-profile-bar";
-
-// Layouts
-@use "./styles/layouts/admin-layout";
-
-// Pages
-@use "./styles/pages/cart-page";
-@use "./styles/pages/home";
-@use "./styles/pages/menu-page";
-@use "./styles/pages/not-found";
-@use "./styles/pages/payment";
-
-// Admin Pages
-@use "./styles/pages/admin/admin-dashboard";
-@use "./styles/pages/admin/login-admin";
-@use "./styles/pages/admin/order-management";
-@use "./styles/pages/admin/product-management";
-@use "./styles/pages/admin/sales-reports";
-
-// Auth Pages
-@use "./styles/pages/auth/login";
-@use "./styles/pages/auth/profile";
-@use "./styles/pages/auth/register";
+@use "./styles/base/a11y";
+@use "./styles/base/motion";
