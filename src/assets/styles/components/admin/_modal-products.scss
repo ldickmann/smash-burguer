@@ -1,111 +1,67 @@
-@use "../../base/variables" as *;
-@use "../../base/mixins" as *;
+// Modal de produto (SPEC §5.11): BaseDialog, "Salvar" primário e "Cancelar" secundário.
+@use "../../base/breakpoints" as *;
 
 .modal-product {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  @include flex-center();
-  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
-  &__container {
-    background-color: $secondary-color;
-    padding: 2rem;
-    margin-top: 3rem;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 92%;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    border-left: 6px solid $tertiary-color;
-  }
+.modal-product__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+// Seletor de arquivo: <label> com a cara do botão secundário
+.file-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
 
-    h3 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
+.file-picker__label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
 
-    // Botão de fechar o modal
-    .close-modal-admin {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #333;
-    }
-  }
+.file-picker__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
 
-  &__select {
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
+.file-picker__button {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding-inline: var(--space-5);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-weight: 600;
+  cursor: pointer;
 
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid $border-color;
-      border-radius: 4px;
-      color: $color-text-primary;
-      &:focus {
-        outline: none;
-        border-color: $tertiary-color;
-      }
+  @include hover-capable {
+    &:hover {
+      background: var(--color-surface-3);
     }
   }
 
-  .form-group {
-    label {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-weight: bold;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid $border-color;
-      border-radius: 4px;
-      font-size: 1rem;
-      &:focus {
-        outline: none;
-        border-color: $tertiary-color;
-      }
-    }
+  &:active {
+    background: var(--color-surface-4);
   }
 
-  &__buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-
-    .btn-confirm,
-    .btn-cancel {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      color: #fff;
-    }
-
-    .btn-confirm {
-      background-color: #3498db;
-    }
-
-    .btn-cancel {
-      background-color: #e74c3c;
-    }
+  &:has(:focus-visible) {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: var(--focus-offset);
   }
+}
+
+.file-picker__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
 }

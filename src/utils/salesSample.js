@@ -1,0 +1,15 @@
+// Dados de exemplo do painel: os mesmos valores no Dashboard e nos Relatórios.
+
+export const SALES_KPIS = [
+  { id: "sales", label: "Vendas totais", value: "R$ 12.450,00", note: "Últimos 30 dias" },
+  { id: "orders", label: "Total de pedidos", value: "324", note: "Pedidos realizados" },
+  { id: "ticket", label: "Ticket médio", value: "R$ 38,42", note: "Por pedido" },
+  { id: "top", label: "Mais vendido", value: "234 un.", note: "Coca-Cola" },
+];
+
+export const TOP_PRODUCTS = [
+  { id: 4, name: "Coca-Cola", quantity: 234 },
+  { id: 1, name: "Smash Burger", quantity: 156 },
+  { id: 2, name: "Double Smash", quantity: 98 },
+  { id: 3, name: "Chicken Burger", quantity: 87 },
+];

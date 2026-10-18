@@ -1,41 +1,29 @@
 <template>
-  <aside
-    class="admin-sidebar"
-    :class="{ 'sidebar-collapsed': isCollapsed }"
-    ref="sidebarRef"
-  >
-    <!-- Header Section da Sidebar -->
-    <div class="sidebar-container">
-      <div class="logo">
-        <div v-if="isCollapsed" class="logo-icon">
-          <font-awesome-icon :icon="['fas', 'burger']" class="burger-icon" />
-        </div>
-        <h2>Smash Burger</h2>
-      </div>
-
-      <button v-if="!isCollapsed" class="close-button" @click="handleCloseSidebar">
-        <font-awesome-icon :icon="['fas', 'square-xmark']" />
-      </button>
+  <aside id="admin-sidebar" class="admin-sidebar" :class="{ 'is-drawer': closable }" aria-label="Menu do painel">
+    <div class="admin-sidebar__head">
+      <p class="admin-sidebar__brand">Smash Burger</p>
+      <BaseButton
+        v-if="closable"
+        variant="ghost"
+        icon-only
+        icon-start="xmark"
+        label="Fechar"
+        @click="$emit('close')"
+      />
     </div>
 
-    <!-- Navegação Section da Sidebar -->
-    <nav class="sidebar-nav">
-      <router-link
-        v-for="item in menuItems"
-        :key="item.path"
-        :to="item.path"
-        class="nav-item"
-        :title="isCollapsed ? item.title : ''"
-      >
-        <font-awesome-icon :icon="item.icon" />
+    <nav ref="navRef" class="admin-sidebar__nav" aria-label="Seções do painel">
+      <!-- Correspondência exata: o RouterLink só marca aria-current na rota exata -->
+      <RouterLink v-for="item in menuItems" :key="item.path" :to="item.path" class="admin-sidebar__item">
+        <font-awesome-icon :icon="item.icon" class="admin-sidebar__icon" aria-hidden="true" />
         <span>{{ item.title }}</span>
-      </router-link>
+      </RouterLink>
     </nav>
 
-    <!-- Footer Section da Sidebar -->
-    <div class="sidebar-footer">
-      <button class="logout-button" @click="handleLogout">
-        <font-awesome-icon :icon="['fas', 'tent-arrow-turn-left']" />
+    <div class="admin-sidebar__footer">
+      <button type="button" class="admin-sidebar__item admin-sidebar__logout" aria-label="Sair" @click="handleLogout">
+        <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="admin-sidebar__icon" aria-hidden="true" />
+        <span>Sair</span>
       </button>
     </div>
   </aside>
@@ -45,17 +33,19 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
+import BaseButton from "@/components/ui/BaseButton.vue";
 
-const props = defineProps({
-  isCollapsed: {
+defineProps({
+  // Abaixo de lg a sidebar é uma gaveta com botão de fechar
+  closable: {
     type: Boolean,
-    required: true,
+    default: false,
   },
 });
 
-const emit = defineEmits(["update:isCollapsed"]);
+defineEmits(["close"]);
 
-const sidebarRef = ref(null);
+const navRef = ref(null);
 
 const menuItems = [
   {
@@ -84,14 +74,14 @@ const menuItems = [
 const router = useRouter();
 const adminStore = useAdminStore();
 
-const handleCloseSidebar = () => {
-  emit("update:isCollapsed", true);
-};
-
 const handleLogout = () => {
   adminStore.logout();
   router.push("/admin/login");
 };
+
+defineExpose({
+  focusFirst: () => navRef.value?.querySelector("a")?.focus(),
+});
 </script>
 
 <style scoped lang="scss">
