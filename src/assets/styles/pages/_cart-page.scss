@@ -1,194 +1,47 @@
-@use "../base/variables" as *;
-@use "../base/mixins" as *;
+// Carrinho (SPEC §5.5): lista e resumo em cards; 8/12 + 4/12 a partir de lg.
+@use "../base/breakpoints" as *;
 
-.cart-page-section {
-  padding: 12rem 0;
-  background-color: $color-orange-background;
+.cart-page {
+  padding-block: var(--space-6) var(--space-8);
+}
 
-  .cart-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    border-radius: 8px;
-    background-color: $color-brown-background;
+.cart-page__title {
+  margin-bottom: var(--space-5);
+  font-size: var(--text-page);
+}
 
-    &__auth-notice {
-      background-color: $color-white-background-secondary;
-      box-shadow: 0 2px 8px rgba($color-brown-background, 0.1);
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-      margin-top: 2rem;
+.cart-page__layout {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
 
-      p {
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
-        color: $color-text-quinary;
-      }
-    }
-
-    &__auth-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-      justify-content: center;
-    }
-
-    &__title {
-      @include flex-center;
-      font-size: 2rem;
-      color: $color-text-secondary;
-      margin-bottom: 2rem;
-    }
-
-    &__empty {
-      @include flex-center(column);
-      padding: 3rem 1rem;
-      background-color: $color-white-background-secondary;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba($color-brown-background, 0.1);
-
-      p {
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-        color: $color-text-secondary;
-      }
-    }
-
-    &__content {
-      background-color: $color-white-background;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px $shadow-color;
-    }
-
-    &__list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    &__summary {
-      padding: 1.5rem;
-      background-color: $color-white-background;
-      border-top: 2px solid $border-color;
-      border-radius: 0 0 8px 8px;
-      @include flex-center(column);
-      gap: 1rem;
-
-      .cart-page__total {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.2rem;
-        background-color: $color-white-background-secondary;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        box-shadow: 0 2px 4px rgba($color-brown-background, 0.15);
-
-        span {
-          font-weight: 600;
-          color: $color-text-primary;
-        }
-
-        strong {
-          font-size: 1.6rem;
-          color: $color-text-tertiary;
-          font-weight: 700;
-        }
-      }
-    }
-
-    &__total {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.2rem;
-
-      strong {
-        font-size: 1.4rem;
-        color: $color-text-tertiary;
-      }
-    }
-
-    &__button {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      text-align: center;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      background-color: $tertiary-color;
-      color: $secondary-color;
-
-      &:hover {
-        background-color: $quaternary-color;
-      }
-
-      &--primary {
-        @extend .cart-page__button;
-        background-color: $quinary-color;
-
-        &:hover {
-          background-color: $senary-color;
-        }
-
-        &[disabled] {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      }
-
-      &--danger {
-        @extend .cart-page__button;
-        background-color: $color-text-tertiary;
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-    }
-
-    @include respond-to("sm") {
-      padding: 1rem;
-
-      &__title {
-        font-size: 1.5rem;
-      }
-
-      &__summary {
-        padding: 1rem;
-      }
-
-      &__button {
-        width: 100%;
-        margin-bottom: 0.5rem;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    @include respond-to("xs") {
-      &__title {
-        font-size: 1.25rem;
-      }
-    }
+  @include up(lg) {
+    grid-template-columns: 8fr 4fr;
   }
+}
 
-  @include respond-to("md") {
-    padding: 8rem 1rem 4rem;
-  }
+.cart-page__card {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  box-shadow: var(--elev-1);
 
-  @include respond-to("xs") {
-    .cart-page {
-      margin: 0rem 0.5rem;
-    }
+  @include up(lg) {
+    padding: var(--space-5);
   }
+}
+
+.cart-page__list-card {
+  padding-block: 0;
+}
+
+.cart-page__summary {
+  @include up(lg) {
+    position: sticky;
+    top: calc(var(--navbar-h) + var(--space-5));
+  }
+}
+
+.cart-page__notice {
+  color: var(--color-ink-muted);
 }

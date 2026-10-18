@@ -1,18 +1,13 @@
 <template>
   <div class="demo-container">
     <h1>Playground</h1>
-    <ButtonComponent
-      :buttons="[{ label: 'Abrir Modal', id: 'open' }]"
-      backgroundColor="#f00"
-      color="#fff"
-      @click="handleOpenModal"
-    />
+    <BaseButton @click="handleOpenModal">Abrir Modal</BaseButton>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
 
 const isModalOpen = ref(false);
 

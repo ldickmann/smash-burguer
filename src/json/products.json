@@ -20,7 +20,7 @@
     },
     {
       "id": 4,
-      "name": "Queijo Cheedar",
+      "name": "Queijo Cheddar",
       "price": 3.0,
       "quantity": 0
     },
@@ -114,7 +114,7 @@
       {
         "id": 3,
         "name": "Veggie Burger",
-        "description": "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
+        "description": "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hambúrguer de soja e maionese",
         "ingredients": [
           "Pão de hambúrguer",
           "Hambúrguer de soja",
