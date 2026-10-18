@@ -898,8 +898,7 @@ Resolve [HIE-02].
   - Os que abrem em nova aba levam o texto visualmente escondido "(abre em nova aba)".
   - O telefone mantém `wa.me`, com o rótulo visível "WhatsApp".
 - **Redes sociais** [A11Y-05, CON-11]:
-  - Facebook, Instagram e X; sai o Twitter duplicado;
-  - o X aponta para `https://x.com`;
+  - Facebook e Instagram; não há link nem ícone do X/Twitter;
   - cada link tem 44×44 px e `aria-label="Smash Burger no Instagram (abre em nova aba)"`.
 - **Rodapé:** um `<hr class="divider">` e a linha "© 2026 Smash Burger · Sabiá Operações — Desenvolvido por Lucas Elias Dickmann".
 
