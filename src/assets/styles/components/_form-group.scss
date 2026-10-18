@@ -59,6 +59,11 @@
   }
 }
 
+.form-group__field--select {
+  padding-right: var(--space-6);
+  cursor: pointer;
+}
+
 .form-group__field--textarea {
   padding-block: var(--space-3);
   resize: vertical;

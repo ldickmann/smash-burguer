@@ -1,24 +1,25 @@
 <template>
-  <div class="navbar-search">
-    <div class="search-wrapper">
-      <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-      <input
-        type="text"
-        :placeholder="placeholder"
-        v-model="searchQuery"
-        @input="handleSearch"
-      />
-    </div>
+  <div class="navbar-search" role="search">
+    <label for="busca-admin" class="visually-hidden">Buscar</label>
+    <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="navbar-search__icon" aria-hidden="true" />
+    <input
+      id="busca-admin"
+      v-model="searchQuery"
+      class="navbar-search__input"
+      type="search"
+      :placeholder="placeholder"
+      @input="handleSearch"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 
-const props = defineProps({
+defineProps({
   placeholder: {
     type: String,
-    default: "Search...",
+    default: "Buscar…",
   },
 });
 

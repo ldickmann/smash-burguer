@@ -17,9 +17,11 @@ describe('authService e sessão', () => {
   it('login rejeita a promise com credenciais inválidas', async () => {
     localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
     const attempt = authService.login({ email: account.email, password: 'errada123' });
-    const assertion = expect(attempt).rejects.toThrow('Credenciais inválidas');
+    // Evita "unhandled rejection" enquanto o relógio falso avança
+    const settled = attempt.catch((error) => error);
     await vi.advanceTimersByTimeAsync(1000);
-    await assertion;
+    await expect(attempt).rejects.toThrow('Credenciais inválidas');
+    await settled;
   });
 
   it('login resolve com o cadastro quando as credenciais batem', async () => {

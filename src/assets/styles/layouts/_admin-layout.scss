@@ -1,93 +1,52 @@
-@use "../base/variables" as *;
-@use "../base/mixins" as *;
-
-/* 
-  Layout Administrativo
-  - Define a estrutura base do layout administrativo
-  - Gerencia o comportamento responsivo
-  - Controla estados do sidebar
-*/
+// AdminLayout (SPEC §5.11): mesmos tokens da loja, densidade maior.
+@use "../base/breakpoints" as *;
 
 .admin-layout {
-  display: flex;
-  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-surface-sunken);
+}
 
-  // Conteúdo principal
-  .admin-content {
-    $sidebar-width: 250px;
-    $sidebar-collapsed-width: 50px;
+.admin-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: var(--z-navbar);
+  height: var(--navbar-h);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-1);
+}
 
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-left: $sidebar-width;
-    width: calc(100% - #{$sidebar-width});
-    min-height: 100vh;
-    background-color: $color-white-background;
-    position: relative;
-    transition:
-      margin-left 0.3s ease,
-      width 0.3s ease;
+.admin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--color-overlay);
+  animation: admin-fade var(--dur-base) var(--ease-out);
+}
 
-    // Responsividade para dispositivos pequenos
-    @include respond-to("xs") {
-      margin-left: $sidebar-collapsed-width;
-      width: calc(100% - #{$sidebar-collapsed-width});
-    }
-  }
+.admin-main {
+  min-width: 0;
+  padding: calc(var(--navbar-h) + var(--space-5)) var(--gutter) var(--space-7);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
 
-  // Cabeçalho administrativo
-  .admin-header {
-    $header-height: 55px;
-    $sidebar-width: 250px;
-    $sidebar-collapsed-width: 50px;
-
-    position: fixed;
-    top: 0;
-    right: 0;
-    min-height: $header-height;
-    width: calc(100% - #{$sidebar-width});
-    background-color: $color-text-quinary;
-    z-index: 1200;
-    transition: width 0.3s ease;
-    padding: 0.25rem 0;
-
-    @include flex-center();
-    justify-content: space-between;
-    align-items: stretch;
-
-    // Responsividade para dispositivos pequenos
-    @include respond-to("xs") {
-      width: calc(100% - #{$sidebar-collapsed-width});
-    }
-  }
-
-  // Área principal de conteúdo
-  .admin-main {
-    margin-top: 60px;
-    flex: 1;
-    padding: 2rem;
-    background-color: $color-white-background;
-
-    // Ajustes responsivos
-    @include respond-to("sm") {
-      padding: 1rem;
-    }
-
-    @include respond-to("xs") {
-      padding: 0.5rem;
-      margin-top: 130px;
-    }
-  }
-
-  // Estado do sidebar colapsado
-  &.sidebar-collapsed {
-    $sidebar-collapsed-width: 50px;
-
-    .admin-content,
+// A partir de lg: sidebar fixa à esquerda e conteúdo com margin-left
+@include up(lg) {
+  .admin-layout.is-sidebar-open {
     .admin-header {
-      margin-left: $sidebar-collapsed-width;
-      width: calc(100% - #{$sidebar-collapsed-width});
+      left: 240px;
     }
+
+    .admin-main {
+      margin-left: 240px;
+    }
+  }
+}
+
+@keyframes admin-fade {
+  from {
+    opacity: 0;
   }
 }

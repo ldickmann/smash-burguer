@@ -1,23 +1,5 @@
-@use "../../../base/variables" as *;
-@use "../../../base/mixins" as *;
-
+// Atalhos do header do admin (SPEC §5.11): botões iconOnly de 44px.
 .navbar-notifications {
   display: flex;
-  gap: 1.5rem;
-
-  @include respond-to("sm") {
-    gap: 1rem;
-  }
-
-  @include respond-to("xs") {
-    gap: 1rem;
-  }
-
-  .notification-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    color: $secondary-color;
-  }
+  gap: var(--space-1);
 }

@@ -1,70 +1,34 @@
 <template>
-  <main class="sales-reports">
-    <div class="reports-container">
-      <div class="page-header">
-        <h1>
-          <font-awesome-icon :icon="['fas', 'chart-line']" />
-          Relatórios de Vendas
-        </h1>
-      </div>
+  <div class="sales-reports">
+    <h1 class="admin-page__title">Relatórios</h1>
 
-      <div class="container-cards">
-        <!-- Card de Vendas Totais -->
-        <AdminCard title="Vendas Totais">
-          <template #content>
-            <div class="metric-card">
-              <h3>R$ 12.450,00</h3>
-              <p>Últimos 30 dias</p>
-            </div>
-          </template>
-        </AdminCard>
+    <div class="sales-reports__grid">
+      <AdminCard v-for="kpi in metrics" :key="kpi.id" :title="kpi.label" variant="kpi">
+        <p class="kpi__value tabular">{{ kpi.value }}</p>
+        <p class="kpi__note">{{ kpi.note }}</p>
+      </AdminCard>
 
-        <!-- Card de Pedidos -->
-        <AdminCard title="Total de Pedidos">
-          <template #content>
-            <div class="metric-card">
-              <h3>324</h3>
-              <p>Pedidos realizados</p>
-            </div>
-          </template>
-        </AdminCard>
-
-        <!-- Card de Ticket Médio -->
-        <AdminCard title="Ticket Médio">
-          <template #content>
-            <div class="metric-card">
-              <h3>R$ 38,42</h3>
-              <p>Por pedido</p>
-            </div>
-          </template>
-        </AdminCard>
-
-        <!-- Card de Produtos Mais Vendidos -->
-        <AdminCard title="Produtos Mais Vendidos">
-          <template #content>
-            <ul class="top-products">
-              <li v-for="product in topProducts" :key="product.id">
-                <span>{{ product.name }}</span>
-                <span>{{ product.quantity }} un.</span>
-              </li>
-            </ul>
-          </template>
-        </AdminCard>
-      </div>
+      <!-- Card de Produtos Mais Vendidos -->
+      <AdminCard title="Produtos mais vendidos" class="sales-reports__top">
+        <ol class="top-products">
+          <li v-for="product in TOP_PRODUCTS" :key="product.id" class="top-products__item">
+            <span class="top-products__row">
+              <span>{{ product.name }}</span>
+              <span class="top-products__qty tabular">{{ product.quantity }} un.</span>
+            </span>
+          </li>
+        </ol>
+      </AdminCard>
     </div>
-  </main>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { SALES_KPIS, TOP_PRODUCTS } from "@/utils/salesSample";
 import AdminCard from "@/components/admin/AdminCard.vue";
 
-const topProducts = ref([
-  { id: 1, name: "Smash Burger", quantity: 156 },
-  { id: 2, name: "Double Smash", quantity: 98 },
-  { id: 3, name: "Chicken Burger", quantity: 87 },
-  { id: 4, name: "Coca-Cola", quantity: 234 },
-]);
+// O destaque "Mais vendido" fica no Dashboard; aqui a lista completa
+const metrics = SALES_KPIS.filter((kpi) => kpi.id !== "top");
 </script>
 
 <style scoped lang="scss">

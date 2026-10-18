@@ -2,8 +2,26 @@
   <div class="form-group" :class="{ 'has-error': error, 'is-readonly': readonly || disabled }">
     <label v-if="label" :for="id" class="form-group__label">{{ label }}</label>
 
+    <select
+      v-if="type === 'select'"
+      :id="id"
+      :value="modelValue"
+      :name="name || id"
+      :required="required"
+      :disabled="disabled"
+      :aria-invalid="error ? 'true' : undefined"
+      :aria-describedby="describedBy"
+      class="form-group__field form-group__field--select"
+      @change="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur', $event)"
+    >
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+
     <input
-      v-if="type !== 'textarea'"
+      v-else-if="type !== 'textarea'"
       :id="id"
       :type="type"
       :value="displayValue"
@@ -120,6 +138,11 @@ const props = defineProps({
   rows: {
     type: [Number, String],
     default: 3,
+  },
+  // Opções do type="select": { value, label }[]
+  options: {
+    type: Array,
+    default: () => [],
   },
   disabled: {
     type: Boolean,
