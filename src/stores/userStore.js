@@ -1,39 +1,32 @@
 import { defineStore } from 'pinia';
 import { authService } from '@/services/authServices';
 
+const FIRST_ORDER_ID = 1001;
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,
     isAuthenticated: false,
     orderHistory: [],
+    lastOrderId: null,
+    // Número sequencial dos pedidos; persiste na sessão
+    nextOrderId: FIRST_ORDER_ID,
   }),
 
   actions: {
     async login(credentials) {
-      try {
-        const { user } = await authService.login(credentials);
-        this.setUser(user);
-      } catch (error) {
-        throw error;
-      }
+      const { user } = await authService.login(credentials);
+      this.setUser(user);
     },
 
     async register(userData) {
-      try {
-        await authService.register(userData);
-        return true;
-      } catch (error) {
-        throw error;
-      }
+      await authService.register(userData);
+      return true;
     },
 
     async updateProfile(userData) {
-      try {
-        const { user } = await authService.updateProfile(userData);
-        this.setUser(user);
-      } catch (error) {
-        throw error;
-      }
+      const { user } = await authService.updateProfile(userData);
+      this.setUser(user);
     },
 
     setUser(userData) {
@@ -41,13 +34,34 @@ export const useUserStore = defineStore('user', {
       this.isAuthenticated = true;
     },
 
+    /**
+     * Registra o pedido no histórico (mais recente primeiro) e guarda o último id.
+     * @returns {object} o pedido criado
+     */
+    placeOrder({ items, total, paymentMethod, address }) {
+      const order = {
+        id: this.nextOrderId,
+        date: new Date().toISOString(),
+        status: 'Recebido',
+        items,
+        total,
+        paymentMethod,
+        address,
+      };
+      this.nextOrderId += 1;
+      this.orderHistory.unshift(order);
+      this.lastOrderId = order.id;
+      return order;
+    },
+
     logout() {
       authService.logout();
       this.user = null;
       this.isAuthenticated = false;
       this.orderHistory = [];
+      this.lastOrderId = null;
     },
   },
 
-  persist: true,
+  persist: { key: 'smash-burger:session' },
 });
