@@ -42,4 +42,6 @@ export const useCartStore = defineStore('cart', {
       this.items = [];
     },
   },
+  // Versão na chave: uma mudança futura no modelo do item não tenta ler dados antigos
+  persist: { key: 'smash-burger:cart:v1' },
 });

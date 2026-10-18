@@ -1,6 +1,8 @@
 import { nextTick } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
+import { useCartStore } from '@/stores/cart';
+import { useToastStore } from '@/stores/toast';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Layouts imports
@@ -149,9 +151,31 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // Verifica rotar de usuários normais
+  // Pagamento: exige sessão e carrinho com itens (§5.6)
+  if (to.name === 'payment') {
+    if (!userStore.isAuthenticated) {
+      next({ path: '/login', query: { redirect: '/payment' } });
+      return;
+    }
+    if (useCartStore().itemCount === 0) {
+      useToastStore().show({ message: 'Seu carrinho está vazio.', variant: 'info' });
+      next('/cart');
+      return;
+    }
+  }
+
+  // Confirmação: exige um pedido feito (§5.7)
+  if (to.name === 'confirmation') {
+    const hasOrder = userStore.orderHistory.some((order) => order.id === userStore.lastOrderId);
+    if (!hasOrder) {
+      next('/menu');
+      return;
+    }
+  }
+
+  // Verifica rotas de usuários normais; o login volta para cá depois
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next('/login');
+    next({ path: '/login', query: { redirect: to.fullPath } });
     return;
   }
 
