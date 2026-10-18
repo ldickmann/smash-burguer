@@ -66,7 +66,7 @@ import BaseButton from "@/components/ui/BaseButton.vue";
 const router = useRouter();
 const adminStore = useAdminStore();
 
-const background = responsiveImage("/images/fundos/background-admin-login.jpg", {
+const background = responsiveImage("/images/fundos/background-admin-login", {
   widths: [1440, 1920],
   fallbackWidth: 1440,
   sizes: "100vw",
