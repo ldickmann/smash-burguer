@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@/plugins/fontawesome';
 import piniaPersist from 'pinia-plugin-persistedstate';
 import App from './App.vue';
 import router from './router';
+
+// Fontes self-hosted, importadas uma única vez (SPEC §2.3)
+import '@fontsource/bebas-neue/400.css';
+import '@fontsource-variable/archivo';
 import '@/assets/main.scss';
 
 const app = createApp(App);

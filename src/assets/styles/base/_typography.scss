@@ -1,4 +1,44 @@
-@use "@fontsource/bebas-neue";
+// Tipografia (SPEC §2.3). As fontes são importadas uma única vez, em src/main.js.
 
-$font-family-primary: "Roboto", sans-serif;
-$font-family-secondary: "Bebas Neue", sans-serif;
+// Apelidos temporários para as folhas antigas que ainda leem estas variáveis.
+// Saem na fase 8, junto com o _variables.scss.
+$font-family-primary: var(--font-text);
+$font-family-secondary: var(--font-display);
+
+// Bebas Neue: só títulos de 28px ou mais, sempre 400 e sem negrito sintético
+.display,
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: var(--leading-display);
+}
+
+h1 {
+  font-size: var(--text-page);
+}
+
+h2,
+h3 {
+  font-family: var(--font-text);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+h2 {
+  font-size: var(--text-lg);
+}
+
+h3 {
+  font-size: var(--text-md);
+}
+
+// Links dentro de texto corrido
+.prose a,
+.link-inline {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
