@@ -1,0 +1,53 @@
+// Breakpoints mobile-first (SPEC §2.9).
+// Custom properties não funcionam dentro de @media, então ficam como mapa SCSS.
+// Este módulo não gera CSS: pode ser importado por qualquer folha com `@use … as *`.
+@use "sass:map";
+
+$breakpoints: (
+  "sm": 480px,
+  "md": 768px,
+  "lg": 1024px,
+  "xl": 1280px,
+);
+
+// @include up(md) { … } → @media (min-width: 768px)
+@mixin up($bp) {
+  @if not map.has-key($breakpoints, $bp) {
+    @error "Breakpoint `#{$bp}` não existe em $breakpoints.";
+  }
+
+  @media (min-width: map.get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+// Abaixo de um breakpoint (uso pontual, ex.: sheet do diálogo no mobile)
+@mixin below($bp) {
+  @if not map.has-key($breakpoints, $bp) {
+    @error "Breakpoint `#{$bp}` não existe em $breakpoints.";
+  }
+
+  @media (max-width: map.get($breakpoints, $bp) - 0.02px) {
+    @content;
+  }
+}
+
+// Só em dispositivos com mouse ou trackpad
+@mixin hover-capable {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+// Movimento: transform só entra quando o usuário não pediu movimento reduzido
+@mixin motion-ok {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+@mixin motion-reduced {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

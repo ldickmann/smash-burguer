@@ -1,45 +1,71 @@
 <template>
-  <li class="cart-page__item">
-    <div class="cart-page__item-info">
-      <span class="cart-page__item-name">{{ item.name }}</span>
-      <span v-if="item.removedIngredients?.length" class="cart-page__item-customization">
-        <strong>Adicionais: </strong>
-        <span v-for="(add, index) in item.additionals" :key="index">
-          {{ add.quantity }}x {{ add.name
-          }}{{ index < item.additionals.length - 1 ? ", " : "" }}
-        </span>
-      </span>
-      <span v-if="item.observation" class="cart-page__item-customization">
-        <strong>Obs.: </strong> {{ item.observation }}
-      </span>
-      <span class="cart-page__item-price">{{ formatPrice(item.finalPrice) }}</span>
+  <li class="cart-item">
+    <div class="cart-item__top">
+      <picture class="cart-item__thumb">
+        <source v-if="thumb.srcset" type="image/webp" :srcset="thumb.srcset" :sizes="thumb.sizes" />
+        <img
+          class="cart-item__img"
+          :src="thumb.src"
+          alt=""
+          width="64"
+          height="64"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+
+      <div class="cart-item__info">
+        <p class="cart-item__name">{{ item.name }}</p>
+        <p v-for="detail in details" :key="detail" class="cart-item__detail">{{ detail }}</p>
+      </div>
+
+      <p class="cart-item__total tabular">{{ formatPrice(item.unitPrice * item.quantity) }}</p>
     </div>
-    <button @click="removeItem" class="cart-page__button cart-page__button--danger">
-      {{ removeButtonText }}
-    </button>
+
+    <div class="cart-item__bottom">
+      <QuantityStepper
+        :model-value="item.quantity"
+        :min="1"
+        :max="10"
+        :label="item.name"
+        @update:model-value="$emit('update-quantity', index, $event)"
+      />
+      <BaseButton
+        variant="danger"
+        icon-start="trash-can"
+        :aria-label="`Remover ${item.name}`"
+        data-remove
+        @click="$emit('remove', index)"
+      >
+        Remover
+      </BaseButton>
+    </div>
   </li>
 </template>
 
 <script setup>
-import { formatPrice } from "@/utils/formatters";
+import { computed } from "vue";
+import { describeItem, formatPrice } from "@/utils/formatters";
+import { responsiveImage } from "@/composables/useResponsiveImage";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import QuantityStepper from "@/components/ui/QuantityStepper.vue";
 
 const props = defineProps({
   item: {
     type: Object,
+    required: true,
   },
   index: {
     type: Number,
-  },
-  removeButtonText: {
-    type: String,
+    required: true,
   },
 });
 
-const emit = defineEmits(["remove"]);
+defineEmits(["remove", "update-quantity"]);
 
-const removeItem = () => {
-  emit("remove", props.index);
-};
+// "Sem tomate, sem cebola", "+2 bacon", "Obs.: bem passado"
+const details = computed(() => describeItem(props.item));
+const thumb = computed(() => responsiveImage(props.item.image, { widths: [480], sizes: "64px" }));
 </script>
 
 <style scoped lang="scss">

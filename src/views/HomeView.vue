@@ -1,58 +1,41 @@
 <template>
-  <section class="banner-section">
-    <div class="container-utilities">
-      <BannerComponent
-        title="Bem-vindo ao Smash Burger"
-        paragraph="Descubra o verdadeiro sabor dos Hambúrgueres artesanais"
-        :image="getImagePath('images/fundos/banner-burger-bg.png')"
-        alt="Hambúrgueres"
-      />
-    </div>
-  </section>
-  <section
-    class="section-carousel"
-    :style="{
-      backgroundImage: `url(${getImagePath('images/fundos/background-section-dark.jpg')})`,
-    }"
+  <BannerComponent
+    variant="hero"
+    title="Smash na chapa, entregue quente"
+    text="Hambúrgueres artesanais prensados na hora. De terça a sexta, das 13h à 01h."
+    image="/images/fundos/banner-burger-bg"
+    alt="Hambúrguer artesanal com queijo, carne prensada e alface"
+    :image-width="960"
+    :image-height="906"
   >
-    <div class="container-utilities">
-      <h1>🍔 Nossos Hambúrgueres 🍔</h1>
-      <div class="container-carousel">
-        <CarouselBurguer :burgers="burgers" @add-to-cart="addToCart" />
-      </div>
+    <template #actions>
+      <BaseButton size="lg" to="/menu" icon-end="arrow-right">Ver cardápio</BaseButton>
+    </template>
+  </BannerComponent>
+
+  <section class="home-popular" aria-labelledby="mais-pedidos">
+    <div class="container">
+      <CarouselBurguer :products="productsStore.foods" @add="openModal">
+        <template #title>
+          <h2 id="mais-pedidos" class="home-popular__title">Mais pedidos</h2>
+        </template>
+      </CarouselBurguer>
     </div>
   </section>
-  <AlertComponent v-if="showAlert" :message="alertMessage" />
+
+  <ModalAdditional :open="isOpen" :product="product" @close="closeModal" @confirm="confirm" />
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useCartStore } from "@/stores/cart";
-import { useImagePath } from "@/composables/useImagePath";
-import productsData from "../json/products.json";
-import CarouselBurguer from "@/components/CarouselBurguer.vue";
+import { useProductsStore } from "@/stores/products";
+import { useProductModal } from "@/composables/useProductModal";
 import BannerComponent from "@/components/BannerComponent.vue";
-import AlertComponent from "@/components/AlertComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import CarouselBurguer from "@/components/CarouselBurguer.vue";
+import ModalAdditional from "@/components/ModalAdditional.vue";
 
-const cartStore = useCartStore();
-const showAlert = ref(false);
-const alertMessage = ref("");
-const { getImagePath } = useImagePath();
-
-// Processa os hambúrgueres para adicionar o baseUrl nas imagens
-const burgers = computed(() => {
-  return productsData.menuItems.foods.map(burger => ({
-    ...burger,
-    image: getImagePath(burger.image)
-  }));
-});
-
-// Função para adicionar um item ao carrinho
-const addToCart = (burger) => {
-  cartStore.addItem(burger);
-  alertMessage.value = `${burger.name} adicionado ao carrinho!`;
-  showAlert.value = true;
-};
+const productsStore = useProductsStore();
+const { isOpen, product, openModal, closeModal, confirm } = useProductModal();
 </script>
 
 <style scoped lang="scss">

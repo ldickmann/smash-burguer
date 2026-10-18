@@ -177,7 +177,7 @@ export const validateCEP = async (cep) => {
     if (data.erro) {
       return {
         isValid: false,
-        message: "CEP não encontrado",
+        message: "CEP não encontrado.",
         address: null,
       };
     }
@@ -196,7 +196,7 @@ export const validateCEP = async (cep) => {
     console.error('Erro de requisição:', error);
     return {
       isValid: false,
-      message: "Erro ao buscar CEP",
+      message: "Não foi possível consultar o CEP agora. Tente de novo.",
       address: null,
     };
   }

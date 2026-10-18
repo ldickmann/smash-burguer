@@ -1,0 +1,34 @@
+// Peças comuns às telas do admin.
+@use "../../base/breakpoints" as *;
+
+.admin-page__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.admin-page__title {
+  font-size: var(--text-page);
+}
+
+.admin-page__filter {
+  width: 100%;
+  max-width: 16rem;
+  margin-bottom: var(--space-5);
+}
+
+// KPI: rótulo ink-muted text-sm; valor Archivo 700 text-2xl
+.kpi__value {
+  color: var(--color-ink);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.kpi__note {
+  margin-top: var(--space-1);
+  color: var(--color-ink-muted);
+}

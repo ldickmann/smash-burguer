@@ -1,53 +1,65 @@
 <template>
-  <section class="login-section">
-    <div class="login-container">
-      <h1>Login</h1>
-      <form @submit.prevent="handleLogin" class="login-form">
+  <div class="auth-page container">
+    <section class="auth-panel" aria-labelledby="entrar-titulo">
+      <h1 id="entrar-titulo" class="auth-panel__title">Entrar</h1>
+
+      <div v-if="authError" class="auth-alert" role="alert">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="auth-alert__icon"
+          aria-hidden="true"
+        />
+        <p>E-mail ou senha incorretos.</p>
+      </div>
+
+      <form ref="formRef" class="auth-form" novalidate @submit.prevent="handleLogin">
         <FormGroup
           id="email"
-          label="E-mail"
           v-model="form.email"
+          label="E-mail"
           type="email"
-          :error="error.email"
+          autocomplete="email"
+          :error="errors.email"
           required
+          @blur="touch('email')"
         />
 
         <FormGroup
           id="password"
-          label="Senha"
           v-model="form.password"
+          label="Senha"
           type="password"
-          :error="error.password"
+          autocomplete="current-password"
+          :error="errors.password"
           required
+          @blur="touch('password')"
         />
 
-        <ButtonComponent
-          :buttons="[{ label: 'Entrar' }]"
-          backgroundColor="#42b983"
-          fontColor="#ffffff"
-          fontSize="16px"
-          buttonSize="1rem 9rem"
-          borderRadius="4px"
-          :gap="16"
-          @click="handleLogin"
-        />
-
-        <p class="register-link">
-          Não tem uma conta?
-          <router-link to="/register">Criar conta</router-link>
-        </p>
+        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+          {{ loading ? "Entrando…" : "Entrar" }}
+        </BaseButton>
       </form>
-    </div>
-  </section>
+
+      <p class="auth-panel__footer">
+        Não tem conta?
+        <RouterLink :to="{ path: '/register', query: redirectQuery }" class="link-inline">
+          Criar conta
+        </RouterLink>
+      </p>
+    </section>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, nextTick, ref } from "vue";
+import { useRoute } from "vue-router";
 import { useAuthHandlers } from "@/handlers/authHandlers";
+import { useFormValidation } from "@/composables/useFormValidation";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
 
+const route = useRoute();
 const { handleLogin: authLogin } = useAuthHandlers();
 
 const form = ref({
@@ -55,49 +67,38 @@ const form = ref({
   password: "",
 });
 
-const error = ref({
-  email: "",
-  password: "",
+const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
+  email: validateEmail,
+  password: validatePassword,
 });
 
-/**
- * Valida o formulário de login verificando os campos de e-mail e senha.
- *
- * @returns {boolean} - Retorna true se e-mail e senha forem válidos, caso contrário, false.
- */
-const validateForm = () => {
-  const emailValidation = validateEmail(form.value.email);
-  const passwordValidation = validatePassword(form.value.password);
+const formRef = ref(null);
+const loading = ref(false);
+const authError = ref(false);
 
-  error.value.email = emailValidation.message;
-  error.value.password = passwordValidation.message;
-
-  return emailValidation.isValid && passwordValidation.isValid;
-};
+// Mantém o destino ao trocar para o cadastro
+const redirectQuery = computed(() =>
+  route.query.redirect ? { redirect: route.query.redirect } : {}
+);
 
 /**
- * Lida com o processo de login.
- *
- * Esta função primeiro valida o formulário. Se o formulário não for válido, ele retorna antes.
- * Se o formulário for válido, ele tenta fazer login usando a função `authLogin` com os dados do formulário.
- * Se a tentativa de login retornar um erro, ele alerta o usuário com a mensagem de erro.
- * Se ocorrer uma exceção durante a tentativa de login, ele alerta o usuário com uma mensagem de erro genérica.
- *
- * @async
- * @function handleLogin
- * @returns {Promise<void>}
+ * Um único handler, no submit do formulário: valida, entra e vai para o `redirect`.
+ * Credenciais erradas mostram o banner em vez de um alert().
  */
 const handleLogin = async () => {
-  if (!validateForm()) return;
+  authError.value = false;
 
-  try {
-    const result = await authLogin(form.value);
-    if (result?.error) {
-      alert(result.error);
-    }
-  } catch (error) {
-    alert("Erro ao fazer login", error);
+  if (!validateAll()) {
+    await nextTick();
+    formRef.value?.querySelector(`#${firstInvalid()}`)?.focus();
+    return;
   }
+
+  loading.value = true;
+  const result = await authLogin(form.value, route.query.redirect);
+  loading.value = false;
+
+  if (result?.error) authError.value = true;
 };
 </script>
 

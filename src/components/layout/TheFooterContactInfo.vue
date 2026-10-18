@@ -1,29 +1,40 @@
 <template>
-  <div class="container-contact">
-    <h2>Address</h2>
-    <div class="container-address-icon">
-      <font-awesome-icon :icon="['fas', 'location-dot']" />
-      <a :href="getGoogleMapsUrl(address)" target="_blank" rel="noopener noreferrer">
-        {{ address }}
+  <ul class="footer-contact" role="list">
+    <li>
+      <a
+        class="footer-contact__link"
+        :href="getGoogleMapsUrl(address)"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon :icon="['fas', 'location-dot']" class="footer-contact__icon" aria-hidden="true" />
+        <span>{{ address }}<span class="visually-hidden"> (abre em nova aba)</span></span>
       </a>
-    </div>
-    <div class="container-phone-icon">
-      <font-awesome-icon :icon="['fas', 'phone']" />
-      <a :href="getWhatsAppUrl(phone)" target="_blank" rel="noopener noreferrer">
-        {{ phone }}
+    </li>
+    <li>
+      <a
+        class="footer-contact__link"
+        :href="getWhatsAppUrl(phone)"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <font-awesome-icon :icon="['fas', 'phone']" class="footer-contact__icon" aria-hidden="true" />
+        <span>
+          WhatsApp · {{ phone }}<span class="visually-hidden"> (abre em nova aba)</span>
+        </span>
       </a>
-    </div>
-    <div class="container-email-icon">
-      <font-awesome-icon :icon="['far', 'envelope']" />
-      <a :href="`mailto:${email}`">
-        {{ email }}
+    </li>
+    <li>
+      <a class="footer-contact__link" :href="`mailto:${email}`">
+        <font-awesome-icon :icon="['far', 'envelope']" class="footer-contact__icon" aria-hidden="true" />
+        <span>{{ email }}</span>
       </a>
-    </div>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   address: {
     type: String,
   },
@@ -58,5 +69,5 @@ const getWhatsAppUrl = (phone) => {
 </script>
 
 <style scoped lang="scss">
-@use '@/assets/styles/components/footer';
+@use '@/assets/styles/components/footer-contact';
 </style>

@@ -1,0 +1,52 @@
+// CategoryTabs (SPEC §4.1): controle segmentado fixo abaixo da navbar.
+@use "../../base/breakpoints" as *;
+
+.category-tabs__sentinel {
+  height: 0;
+}
+
+.category-tabs {
+  position: sticky;
+  top: var(--navbar-h);
+  z-index: var(--z-sticky);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid transparent;
+  background: var(--color-bg);
+
+  &.is-stuck {
+    border-bottom-color: var(--color-border);
+  }
+}
+
+.category-tabs__group {
+  display: flex;
+  gap: var(--space-2);
+  // Mobile: uma linha só, com rolagem horizontal; nunca empilha
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  // O anel de foco não pode ser cortado pela rolagem horizontal
+  padding: calc(var(--focus-width) + var(--focus-offset));
+  margin: calc(-1 * (var(--focus-width) + var(--focus-offset)));
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.category-tabs__group .category-tabs__tab {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+
+  &[aria-pressed="false"] {
+    background-color: var(--color-surface-2);
+    color: var(--color-ink-muted);
+
+    @include hover-capable {
+      &:hover {
+        background-color: var(--color-surface-2);
+        color: var(--color-ink);
+      }
+    }
+  }
+}

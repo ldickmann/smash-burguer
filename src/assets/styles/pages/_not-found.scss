@@ -1,48 +1,28 @@
-@use "../base/variables" as *;
-
+// 404 (SPEC §4.2): dentro do MainLayout, com os tokens.
 .not-found {
-  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-3);
+  padding-block: var(--space-8);
   text-align: center;
-  padding: 2rem;
-  background-color: $color-white-background-secondary;
+}
 
-  &__container {
-    max-width: 500px;
-    padding: 2rem;
+.not-found__code {
+  color: var(--color-ink-subtle);
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: var(--leading-display);
+}
 
-    h1 {
-      font-size: 6rem;
-      color: $tertiary-color;
-      margin: 0;
-      line-height: 1;
-    }
+.not-found__title {
+  font-size: var(--text-page);
+}
 
-    h2 {
-      font-size: 2rem;
-      color: $color-text-quinary;
-      margin: 1rem 0;
-    }
-
-    p {
-      color: #6c757d;
-      margin-bottom: 2rem;
-    }
-  }
-
-  &__button {
-    display: inline-block;
-    padding: 0.8rem 1.6rem;
-    background-color: $tertiary-color;
-    color: $secondary-color;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: $quaternary-color;
-    }
-  }
+.not-found__text {
+  max-width: 32rem;
+  margin-bottom: var(--space-3);
+  color: var(--color-ink-muted);
 }

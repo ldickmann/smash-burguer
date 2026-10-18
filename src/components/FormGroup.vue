@@ -1,37 +1,76 @@
 <template>
-  <!-- FormGroup component -->
-  <div class="form-group">
-    <!-- Exibe p rótulo apenas se a prop label for passada -->
-    <label :for="id" v-if="label">{{ label }}</label>
-    <!-- Exibe input ou textarea de acordo com a prop type -->
-    <!-- Se o type for diferente de textarea, exibe um input padrão -->
+  <div class="form-group" :class="{ 'has-error': error, 'is-readonly': readonly || disabled }">
+    <label v-if="label" :for="id" class="form-group__label">{{ label }}</label>
+
+    <select
+      v-if="type === 'select'"
+      :id="id"
+      :value="modelValue"
+      :name="name || id"
+      :required="required"
+      :disabled="disabled"
+      :aria-invalid="error ? 'true' : undefined"
+      :aria-describedby="describedBy"
+      class="form-group__field form-group__field--select"
+      @change="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur', $event)"
+    >
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+
     <input
-      v-if="type !== 'textarea'"
+      v-else-if="type !== 'textarea'"
       :id="id"
       :type="type"
       :value="displayValue"
-      @input="handleInput"
+      :name="name || id"
       :required="required"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
-      :class="['form-input', { 'has-error': error }]"
+      :inputmode="inputmode"
+      :maxlength="maxlength"
+      :disabled="disabled"
+      :readonly="readonly"
+      :aria-invalid="error ? 'true' : undefined"
+      :aria-describedby="describedBy"
+      class="form-group__field"
+      @input="handleInput"
+      @blur="$emit('blur', $event)"
       @keypress="handleKeyPress"
     />
 
-    <!-- Se o type for textarea, exibe o input textarea -->
     <textarea
       v-else
       :id="id"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+      :name="name || id"
+      :rows="rows"
       :required="required"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
-      :class="['form-textarea', { 'has-error': error }]"
+      :maxlength="maxlength"
+      :disabled="disabled"
+      :readonly="readonly"
+      :aria-invalid="error ? 'true' : undefined"
+      :aria-describedby="describedBy"
+      class="form-group__field form-group__field--textarea"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur', $event)"
     ></textarea>
 
-    <!-- Exibe a mensagem de erro caso a prop error seja passada -->
-    <span v-if="error" class="form-error">{{ error }}</span>
+    <p v-if="helper || loading" :id="helperId" class="form-group__help">
+      <svg v-if="loading" class="form-group__spinner" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="28 10" />
+      </svg>
+      {{ helper }}
+    </p>
+
+    <p v-if="error" :id="errorId" class="form-group__error">
+      <font-awesome-icon :icon="['fas', 'circle-exclamation']" aria-hidden="true" />
+      {{ error }}
+    </p>
   </div>
 </template>
 
@@ -56,6 +95,10 @@ const props = defineProps({
     type: String,
     default: "text",
   },
+  name: {
+    type: String,
+    default: "",
+  },
   mask: {
     type: String,
     default: "",
@@ -72,14 +115,59 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  // Texto de ajuda, ligado ao campo por aria-describedby
+  helper: {
+    type: String,
+    default: "",
+  },
+  // Mostra um spinner na ajuda (ex.: consulta do CEP)
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   autocomplete: {
     type: String,
-    default: "off",
+    default: undefined,
+  },
+  inputmode: {
+    type: String,
+    default: undefined,
+  },
+  maxlength: {
+    type: [Number, String],
+    default: undefined,
+  },
+  rows: {
+    type: [Number, String],
+    default: 3,
+  },
+  // Opções do type="select": { value, label }[]
+  options: {
+    type: Array,
+    default: () => [],
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 });
 
 // Define o evento que será emitido para atualizar o valor do input
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "blur"]);
+
+const errorId = computed(() => `${props.id}-erro`);
+const helperId = computed(() => `${props.id}-ajuda`);
+
+const describedBy = computed(() => {
+  const ids = [];
+  if (props.error) ids.push(errorId.value);
+  if (props.helper || props.loading) ids.push(helperId.value);
+  return ids.length ? ids.join(" ") : undefined;
+});
 
 const hasMask = computed(() => ["phone", "cep"].includes(props.mask?.toLowerCase()));
 

@@ -1,60 +1,104 @@
-@use "../base/variables" as *;
+// FormGroup (SPEC §5.8): rótulo, campo, ajuda e erro.
+@use "../base/breakpoints" as *;
 
-// Estilização do container principal do formulário
 .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group__label {
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-compact);
+}
+
+.form-group__field {
   width: 100%;
-  margin-bottom: 1.5rem;
+  min-height: 3rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-input);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
 
-  // Estilização do rótulo (label) do formulário
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: $color-text-primary;
+  &::placeholder {
+    color: var(--color-ink-subtle);
+    opacity: 1;
   }
 
-  // Estilização dos campos input e textarea
-  .form-input,
-  .form-textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid $border-color;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: $secondary-color;
-    transition:
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
-
-    // Estilização, só aplica se o campo tiver erro (classe 'has-error')
-    &.has-error {
-      border-color: $color-border-error;
-
-      // Estilização quando o campo está em foco
-      &:focus {
-        border-color: $tertiary-color;
-        box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
-      }
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $tertiary-color;
-      box-shadow: 0 0 0 2px rgba($tertiary-color, 0.1);
+  @include hover-capable {
+    &:hover:not(:focus, :disabled, [readonly]) {
+      border-color: var(--color-ink-muted);
     }
   }
 
-  // Estilização do campo de texto (textarea)
-  .form-textarea {
-    min-height: 100px;
-    resize: vertical;
+  &:focus-visible {
+    border-color: var(--color-accent);
   }
 
-  // Estilização da mensagem de erro
-  .form-error {
-    display: block;
-    color: $color-border-error;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+  &[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  &:disabled,
+  &[readonly] {
+    border-style: dashed;
+    border-color: var(--color-border);
+    background-color: var(--color-surface-2);
+    color: var(--color-ink-muted);
+    cursor: default;
+  }
+
+  // Ícone do seletor de data visível no tema escuro
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+}
+
+.form-group__field--select {
+  padding-right: var(--space-6);
+  cursor: pointer;
+}
+
+.form-group__field--textarea {
+  padding-block: var(--space-3);
+  resize: vertical;
+}
+
+.form-group__help,
+.form-group__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
+
+.form-group__help {
+  color: var(--color-ink-muted);
+}
+
+.form-group__error {
+  color: var(--color-danger);
+}
+
+// Arco em SVG (três quartos de círculo), sem raio de borda
+.form-group__spinner {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+
+  @include motion-ok {
+    animation: form-group-spin var(--dur-spin) linear infinite;
+  }
+}
+
+@keyframes form-group-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

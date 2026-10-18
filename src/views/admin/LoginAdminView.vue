@@ -1,41 +1,56 @@
 <template>
-  <section
-    class="admin-section"
-    :style="{
-      backgroundImage: `url(${getImagePath('images/fundos/background-admin-login.jpg')})`,
-    }"
-  >
-    <div class="admin-login">
-      <form novalidate @submit.prevent="handleLogin" class="login-form">
-        <h2>Login Administrativo</h2>
+  <main id="conteudo" class="admin-login" tabindex="-1">
+    <!-- Ilustração em giz com uma camada escura por cima -->
+    <picture class="admin-login__bg">
+      <source v-if="background.srcset" type="image/webp" :srcset="background.srcset" :sizes="background.sizes" />
+      <img class="admin-login__img" :src="background.src" alt="" width="1920" height="1280" decoding="async" />
+    </picture>
 
+    <section class="auth-panel admin-login__panel" aria-labelledby="admin-login-titulo">
+      <h1 id="admin-login-titulo" class="auth-panel__title">Painel administrativo</h1>
+
+      <div v-if="authError" class="auth-alert" role="alert">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="auth-alert__icon"
+          aria-hidden="true"
+        />
+        <p>E-mail ou senha incorretos.</p>
+      </div>
+
+      <form novalidate class="auth-form" @submit.prevent="handleLogin">
         <FormGroup
           id="email"
-          label="Email"
           v-model="credentials.email"
+          label="E-mail"
           type="email"
-          :error="error.email"
+          autocomplete="email"
+          :error="errors.email"
           required
+          @blur="touch('email')"
         />
 
         <FormGroup
           id="password"
-          label="Senha"
           v-model="credentials.password"
+          label="Senha"
           type="password"
-          :error="error.password"
+          autocomplete="current-password"
+          :error="errors.password"
           required
+          @blur="touch('password')"
         />
 
-        <ButtonComponent
-          :buttons="[{ label: 'Entrar', id: 'login' }]"
-          type="submit"
-          backgroundColor="#42b983"
-          @click="handleLogin"
-        />
+        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+          {{ loading ? "Entrando…" : "Entrar" }}
+        </BaseButton>
       </form>
-    </div>
-  </section>
+
+      <p class="auth-panel__footer">
+        <RouterLink to="/" class="link-inline">Voltar à loja</RouterLink>
+      </p>
+    </section>
+  </main>
 </template>
 
 <script setup>
@@ -43,46 +58,46 @@ import { ref } from "vue";
 import { useAdminStore } from "@/stores/adminStore";
 import { useRouter } from "vue-router";
 import { validateEmail, validatePassword } from "@/utils/validators";
-import { useImagePath } from "@/composables/useImagePath";
+import { useFormValidation } from "@/composables/useFormValidation";
+import { responsiveImage } from "@/composables/useResponsiveImage";
 import FormGroup from "@/components/FormGroup.vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
 
 const router = useRouter();
 const adminStore = useAdminStore();
-const { getImagePath } = useImagePath();
+
+const background = responsiveImage("/images/fundos/background-admin-login", {
+  widths: [1440, 1920],
+  fallbackWidth: 1440,
+  sizes: "100vw",
+});
 
 const credentials = ref({
   email: "",
   password: "",
 });
 
-const error = ref({
-  email: "",
-  password: "",
+const { errors, touch, validateAll } = useFormValidation(credentials, {
+  email: validateEmail,
+  password: validatePassword,
 });
 
-const validateForm = () => {
-  const emailValidation = validateEmail(credentials.value.email);
-  const passwordValidation = validatePassword(credentials.value.password);
+const loading = ref(false);
+const authError = ref(false);
 
-  error.value.email = emailValidation.message;
-  error.value.password = passwordValidation.message;
-
-  return emailValidation.isValid && passwordValidation.isValid;
-};
-
+// Um único handler, no submit
 const handleLogin = async () => {
-  if (!validateForm()) return;
+  authError.value = false;
+  if (!validateAll()) return;
 
+  loading.value = true;
   try {
-    const result = await adminStore.login(credentials.value);
-    if (result?.error) {
-      alert(result.error);
-    } else {
-      router.push("/admin");
-    }
-  } catch (error) {
-    alert("Erro ao realizar login");
+    await adminStore.login(credentials.value);
+    router.push("/admin");
+  } catch {
+    authError.value = true;
+  } finally {
+    loading.value = false;
   }
 };
 </script>
