@@ -76,14 +76,14 @@ Os números e os pedidos são dados de exemplo; veja as [limitações conhecidas
 |---|---|
 | [Vue 3](https://vuejs.org/) | Interface, com Composition API e `<script setup>` |
 | [Vue Router 4](https://router.vuejs.org/) | Rotas com hash (`#/menu`), que funcionam no GitHub Pages |
-| [Pinia](https://pinia.vuejs.org/) + [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) | Estado do carrinho, da sessão e do painel, salvo no `localStorage` |
+| [Pinia 3](https://pinia.vuejs.org/) + [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) | Estado do carrinho, da sessão e do painel, salvo no `localStorage` |
 | [Vite 6](https://vite.dev/) | Servidor de desenvolvimento e build |
 | [Sass](https://sass-lang.com/) | Estilos, tokens de design e mixins |
 | [vue3-carousel](https://github.com/ismail9k/vue3-carousel) | Carrossel da Home |
 | [Font Awesome 6](https://fontawesome.com/) | Ícones |
 | [Fontsource](https://fontsource.org/) | Fontes Archivo e Bebas Neue servidas pelo próprio site |
 | [ViaCEP](https://viacep.com.br/) | Endereço a partir do CEP |
-| [Vitest](https://vitest.dev/) + [Vue Test Utils](https://test-utils.vuejs.org/) + [jsdom](https://github.com/jsdom/jsdom) | Testes unitários |
+| [Vitest 4](https://vitest.dev/) + [Vue Test Utils](https://test-utils.vuejs.org/) + [jsdom](https://github.com/jsdom/jsdom) | Testes unitários |
 | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) | Lint e formatação |
 | [GitHub Actions](https://docs.github.com/actions) + [GitHub Pages](https://pages.github.com/) | Deploy |
 
@@ -131,7 +131,9 @@ O `createAdmin.html` não vai para o site publicado. Na demonstração online, o
 
 ```text
 .
-├── .claude/e2e/          # verificação no navegador (Playwright + axe-core)
+├── .claude/
+│   ├── e2e/              # verificação no navegador (Playwright + axe-core)
+│   └── lockfile-audit.py # confere as versões do yarn.lock na base de advisories do npm
 ├── .github/workflows/    # deploy no GitHub Pages
 ├── docs/screenshots/     # imagens deste README
 ├── public/images/        # fotos do cardápio, fundos, ícones e manifest
