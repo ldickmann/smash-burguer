@@ -38,7 +38,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 library.add(
   faFacebookF,
@@ -46,7 +46,6 @@ library.add(
   faLocationDot,
   faPhone,
   faEnvelope,
-  faXTwitter,
   faBurger,
   faTachometerAlt,
   faUtensils,
