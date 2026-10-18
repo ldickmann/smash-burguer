@@ -19,10 +19,10 @@
   z-index: var(--z-sidebar);
   max-width: 85vw;
   box-shadow: var(--elev-3);
-  animation: admin-sidebar-fade var(--dur-base) var(--ease-out);
+  animation: admin-sidebar-fade var(--dur-fast) var(--ease-out);
 
   @include motion-ok {
-    animation-name: admin-sidebar-in;
+    animation: admin-sidebar-in var(--dur-base) var(--ease-out);
   }
 }
 

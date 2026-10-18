@@ -1,9 +1,10 @@
-// Dados de exemplo do painel: os mesmos valores no Dashboard e nos Relatórios.
+// Dados de exemplo do painel: os mesmos valores no Painel e nos Relatórios.
+import { formatPrice } from "@/utils/formatters";
 
 export const SALES_KPIS = [
-  { id: "sales", label: "Vendas totais", value: "R$ 12.450,00", note: "Últimos 30 dias" },
+  { id: "sales", label: "Vendas totais", value: formatPrice(12450), note: "Últimos 30 dias" },
   { id: "orders", label: "Total de pedidos", value: "324", note: "Pedidos realizados" },
-  { id: "ticket", label: "Ticket médio", value: "R$ 38,42", note: "Por pedido" },
+  { id: "ticket", label: "Ticket médio", value: formatPrice(38.42), note: "Por pedido" },
   { id: "top", label: "Mais vendido", value: "234 un.", note: "Coca-Cola" },
 ];
 

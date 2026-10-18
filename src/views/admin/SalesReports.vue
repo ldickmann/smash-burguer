@@ -27,7 +27,7 @@
 import { SALES_KPIS, TOP_PRODUCTS } from "@/utils/salesSample";
 import AdminCard from "@/components/admin/AdminCard.vue";
 
-// O destaque "Mais vendido" fica no Dashboard; aqui a lista completa
+// O destaque "Mais vendido" fica no Painel; aqui a lista completa
 const metrics = SALES_KPIS.filter((kpi) => kpi.id !== "top");
 </script>
 

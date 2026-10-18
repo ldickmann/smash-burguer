@@ -173,9 +173,9 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Verifica rotas de usuários normais; o login volta para cá depois
+  // Verifica rotas de usuários normais
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next({ path: '/login', query: { redirect: to.fullPath } });
+    next('/login');
     return;
   }
 

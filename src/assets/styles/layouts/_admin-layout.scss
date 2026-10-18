@@ -22,7 +22,11 @@
   inset: 0;
   z-index: var(--z-overlay);
   background: var(--color-overlay);
-  animation: admin-fade var(--dur-base) var(--ease-out);
+  animation: admin-fade var(--dur-fast) var(--ease-out);
+
+  @include motion-ok {
+    animation-duration: var(--dur-base);
+  }
 }
 
 .admin-main {
