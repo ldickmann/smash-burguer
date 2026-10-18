@@ -58,8 +58,10 @@ const closeSidebar = ({ returnFocus = false } = {}) => {
   if (returnFocus) toggleButton?.focus();
 };
 
+// A partir de lg a sidebar é fixa: o botão só abre e fecha a gaveta
 const toggleSidebar = (button) => {
   toggleButton = button ?? toggleButton;
+  if (isDesktop.value) return;
   if (isSidebarOpen.value) closeSidebar();
   else openSidebar();
 };

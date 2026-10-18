@@ -20,10 +20,10 @@
 
   &[open] {
     display: flex;
-    animation: dialog-fade var(--dur-slow) var(--ease-out);
+    animation: dialog-fade var(--dur-fast) var(--ease-out);
 
     @include motion-ok {
-      animation-name: dialog-sheet-in;
+      animation: dialog-sheet-in var(--dur-slow) var(--ease-out);
     }
   }
 
@@ -32,7 +32,11 @@
   }
 
   &[open]::backdrop {
-    animation: dialog-fade var(--dur-base) var(--ease-out);
+    animation: dialog-fade var(--dur-fast) var(--ease-out);
+
+    @include motion-ok {
+      animation-duration: var(--dur-base);
+    }
   }
 
   @include up(md) {
@@ -44,10 +48,8 @@
     border-radius: var(--radius-lg);
 
     &[open] {
-      animation-duration: var(--dur-base);
-
       @include motion-ok {
-        animation-name: dialog-in;
+        animation: dialog-in var(--dur-base) var(--ease-out);
       }
     }
   }

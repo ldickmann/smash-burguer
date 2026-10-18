@@ -51,7 +51,7 @@ const menuItems = [
   {
     path: "/admin",
     icon: ["fas", "tachometer-alt"],
-    title: "Dashboard",
+    title: "Painel",
   },
   {
     path: "/admin/products",

@@ -24,3 +24,10 @@
   align-items: center;
   gap: var(--space-1);
 }
+
+// A partir de lg a sidebar fica fixa: o botão só existe para a gaveta
+@include up(lg) {
+  .navbar-admin .navbar-admin__toggle {
+    display: none;
+  }
+}

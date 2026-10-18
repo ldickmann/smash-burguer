@@ -109,8 +109,12 @@ const observation = ref("");
 
 const isDrink = computed(() => props.product?.category === "drinks");
 const showStack = computed(() => isBurger(props.product));
-const showIngredients = computed(() => !isDrink.value && ingredients.value.length > 0);
-const showAdditionals = computed(() => ["foods", "desserts"].includes(props.product?.category));
+// Ingredientes e adicionais só para hambúrgueres e sobremesas (§5.4)
+const isCustomizable = computed(
+  () => showStack.value || props.product?.category === "desserts"
+);
+const showIngredients = computed(() => isCustomizable.value && ingredients.value.length > 0);
+const showAdditionals = computed(() => isCustomizable.value);
 
 const photo = computed(() =>
   responsiveImage(props.product?.image, { sizes: "(min-width: 768px) 340px, 92vw" })
@@ -131,7 +135,7 @@ const reset = () => {
     included: true,
   }));
   // Cópias locais com quantidade zero: a store de produtos não é alterada
-  additionals.value = catalogAdditionals(product.category).map(({ id, name, price }) => ({
+  additionals.value = (isCustomizable.value ? catalogAdditionals(product.category) : []).map(({ id, name, price }) => ({
     id,
     name,
     price,

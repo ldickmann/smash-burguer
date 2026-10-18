@@ -7,7 +7,9 @@
     :style="lockedWidth ? { minWidth: lockedWidth } : undefined"
     @click="handleClick"
   >
-    <span v-if="loading" class="btn__spinner" aria-hidden="true"></span>
+    <svg v-if="loading" class="btn__spinner" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="28 10" />
+    </svg>
     <font-awesome-icon
       v-else-if="iconStart"
       :icon="iconStart"

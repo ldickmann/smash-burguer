@@ -158,13 +158,11 @@
   cursor: progress;
 }
 
+// Arco em SVG (três quartos de círculo), sem raio de borda
 .btn__spinner {
   flex-shrink: 0;
   width: 1em;
   height: 1em;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: var(--radius-round);
 
   @include motion-ok {
     animation: btn-spin var(--dur-spin) linear infinite;

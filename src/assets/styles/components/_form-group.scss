@@ -86,13 +86,11 @@
   color: var(--color-danger);
 }
 
+// Arco em SVG (três quartos de círculo), sem raio de borda
 .form-group__spinner {
   flex-shrink: 0;
   width: 1em;
   height: 1em;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: var(--radius-round);
 
   @include motion-ok {
     animation: form-group-spin var(--dur-spin) linear infinite;

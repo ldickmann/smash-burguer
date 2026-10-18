@@ -47,7 +47,11 @@
 // Entrada e saída do badge: só opacidade
 .cart-badge-enter-active,
 .cart-badge-leave-active {
-  transition: opacity var(--dur-base) var(--ease-out);
+  transition: opacity var(--dur-fast) var(--ease-out);
+
+  @include motion-ok {
+    transition-duration: var(--dur-base);
+  }
 }
 
 .cart-badge-enter-from,

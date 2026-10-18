@@ -52,9 +52,13 @@ defineProps({
   },
 });
 
+// Mesmo valor do breakpoint md do SCSS (§2.9): a partir dele o menu fica inline
+const INLINE_MENU_QUERY = "(min-width: 768px)";
+
 const route = useRoute();
 const userStore = useUserStore();
 const { lock, unlock } = useScrollLock();
+const inlineMenuMedia = window.matchMedia?.(INLINE_MENU_QUERY);
 
 const headerRef = ref(null);
 const menuRef = ref(null);
@@ -94,17 +98,24 @@ const handlePointerDown = (event) => {
   if (isMenuOpen.value && !headerRef.value?.contains(event.target)) closeMenu();
 };
 
+// Se a tela passa a ter o menu inline (ex.: tablet girado), o menu aberto fecha e a rolagem volta
+const handleMediaChange = (event) => {
+  if (event.matches) closeMenu();
+};
+
 // Fecha ao trocar de rota
 watch(() => route.fullPath, () => closeMenu());
 
 onMounted(() => {
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("pointerdown", handlePointerDown);
+  inlineMenuMedia?.addEventListener("change", handleMediaChange);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", handleKeydown);
   document.removeEventListener("pointerdown", handlePointerDown);
+  inlineMenuMedia?.removeEventListener("change", handleMediaChange);
   unlock();
 });
 </script>
