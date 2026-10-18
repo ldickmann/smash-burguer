@@ -14,6 +14,8 @@ export default mergeConfig(
         provider: 'v8',
         reporter: ['text', 'html', 'json'],
         reportsDirectory: './coverage',
+        // Desde o Vitest 4, sem include o relatório só lista os arquivos que os testes importam
+        include: ['src/**/*.{js,vue}'],
         exclude: [
           ...configDefaults.exclude,
           'e2e/**',
