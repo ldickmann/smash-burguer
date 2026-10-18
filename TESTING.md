@@ -1,140 +1,75 @@
-# Documentação de Testes 🧪
+# Testes
 
-> 📝 **Nota:** Este projeto representa meus primeiros passos com testes automatizados utilizando Vitest no Vue.js. Como iniciante em testes, estou focando em aprender e implementar boas práticas gradualmente.
+O projeto tem duas camadas de verificação:
 
-## Testes Unitários
+- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 35 testes em 5 arquivos.
+- **Verificação no navegador**, com os scripts Playwright + axe-core de `.claude/e2e/`: acessibilidade, fluxo de pedido, teclado e micro-interações. Eles rodam à mão contra o build e ainda não fazem parte do CI.
 
-Implementei testes unitários para validar o funcionamento isolado de componentes e funções:
-
-### Componentes Testados
-
-- ✓ Buttons (ButtonComponent) - 100% cobertura
-  - Verificação de cliques e eventos
-    - Emissão de evento click
-    - Emissão de evento category-selected
-  - Renderização de múltiplos botões
-  - Aplicação de estilos personalizados
-    - Cores (background e fonte)
-    - Tamanho da fonte
-    - Padding e border-radius
-- ✓ AlertComponent - 100% cobertura
-  - Renderização inicial com mensagem
-  - Visibilidade inicial do alerta
-  - Ocultação automática após 3 segundos
-  - Reset do timer ao mudar a mensagem
-- ✓ BannerComponent - 100% cobertura
-  - Renderização com props padrão
-  - Altura da imagem com overlay
-  - Altura personalizada sem overlay
-  - Aplicação da classe overlay
-
-### Funções Testadas
-
-- ✓ Validações
-  - Nome e Sobrenome
-  - Email
-  - Senha
-  - CEP
-- ✓ Formatadores
-  - Valores monetários (R$)
-  - CEP
-  - Número de Celular
-
-## Testes de Integração
-
-Implementamos testes para verificar a interação entre componentes:
-
-- ✓ Fluxo de login/registro
-- ✓ Integração com API ViaCEP
-- ✓ Fluxo do carrinho de compras
-- ✓ Processo de checkout
-
-## Resultados de Cobertura
-
-### ButtonComponent
+## Como rodar os testes unitários
 
 ```bash
-✓ deve renderizar botões corretamente
-✓ deve emitir evento click com o botão clicado
-✓ deve emitir category-selected quando botão tem categoria
-✓ deve aplicar estilos personalizados
-
-Cobertura:
-- Statements: 100%
-- Branches: 75%
-- Functions: 100%
-- Lines: 100%
+yarn test:unit          # modo observação: roda de novo a cada alteração
+yarn test:unit --run    # roda uma vez, como antes de abrir um pull request
+yarn test:coverage      # roda uma vez e gera a cobertura em coverage/
 ```
 
-### AlertComponent
+O relatório HTML de cobertura fica em `coverage/index.html`, pasta ignorada pelo Git.
 
-```bash
-✓ deve renderizar componente com mensagem
-✓ deve mostrar alerta inicialmente
-✓ deve ocultar alerta após 3 segundos
-✓ deve resetar timer quando mensagem muda
+O `@vitest/coverage-v8` (3.0.5) está numa versão diferente do `vitest` (3.2.6). Por isso o comando de cobertura avisa "Running mixed versions is not supported", mas gera o relatório normalmente.
 
-Cobertura:
-- Statements: 100%
-- Branches: 100%
-- Functions: 100%
-- Lines: 100%
-```
+## O que está coberto
 
-### BannerComponent
+| Arquivo | Testes | O que verifica |
+|---|---|---|
+| `BaseButton.test.js` | 13 | Variantes; `type="submit"`; `loading` com `aria-busy`, spinner e clique bloqueado; `disabled` real; `aria-pressed`; botão só de ícone com `aria-label`; versão link (`to`); repasse de `class` e `data-*` |
+| `AppToast.test.js` | 7 | `role="status"` ou `role="alert"` conforme a variante; fecha sozinho depois do tempo; pausa no hover e no foco; ação "Desfazer"; botão "Fechar aviso"; no máximo 3 avisos |
+| `BannerComponent.test.js` | 5 | Título como único `h1`; variante `hero` com `<picture>`, carregamento imediato e `fetchpriority="high"`; variante `page` com imagem `lazy`; slot de ações; nenhum estilo inline na imagem |
+| `cart.test.js` | 4 | Store do carrinho: total de itens e subtotal; campos padrão do item; quantidade nunca abaixo de 1; remover e "Desfazer" devolvendo o item à mesma posição |
+| `auth.test.js` | 6 | Login com credenciais válidas e inválidas; sair e entrar de novo; migração do cadastro antigo para a chave nova; numeração dos pedidos a partir de 1001 |
 
-```bash
-✓ deve renderizar propriamente com props padrão
-✓ deve computar altura correta da imagem com overlay
-✓ deve aplicar altura personalizada quando overlay é false
-✓ deve adicionar classe overlay quando prop overlay é true
+### Cobertura (outubro de 2026)
 
-Cobertura:
-- Statements: 100%
-- Branches: 100%
-- Functions: 100%
-- Lines: 100%
-```
+No total, a cobertura é de 8% das linhas. Os testes se concentram nos arquivos abaixo:
 
-## Como Executar os Testes
+| Arquivo | Linhas cobertas |
+|---|---|
+| `components/BannerComponent.vue` | 98% |
+| `stores/toast.js` | 98% |
+| `components/ui/AppToast.vue` | 98% |
+| `composables/useResponsiveImage.js` | 97% |
+| `stores/cart.js` | 93% |
+| `stores/userStore.js` | 88% |
+| `components/ui/BaseButton.vue` | 86% |
+| `services/authServices.js` | 66% |
 
-```bash
-# Instalar dependência de cobertura
-yarn add -D @vitest/coverage-v8
+As telas, o roteador, os utilitários (`formatters`, `validators`, `masks`) e o modal de personalização ainda não têm testes.
 
-# Executar testes com cobertura
-yarn test:coverage ButtonComponent
+## Verificação no navegador
 
-# Executar todos os testes
-yarn test:unit
-```
+Os scripts de [`.claude/e2e/`](./.claude/e2e/README.md) abrem o build num Chromium real. O README da pasta explica como preparar e rodar.
 
-## Localização dos Testes
+| Script | Verifica |
+|---|---|
+| `axe-scan.mjs` | Regras WCAG 2.2 AA (axe-core), rolagem horizontal, alvos de toque, fontes e título em 20 telas e estados, em 1440 e 390 px, com e sem movimento reduzido |
+| `flow.mjs` | Pedido completo: cadastro com CEP, personalização, carrinho, login (com senha errada e certa), pagamento e confirmação. Também sair e entrar de novo, "Desfazer" no carrinho, guards das rotas e volta ao topo ao trocar de página |
+| `keyboard.mjs` | Navegação só por teclado: skip link, anel de foco, foco preso no modal, setas no pagamento e menus |
+| `micro-final.mjs` | Flip do botão, contador do carrinho, inclinação do card e montador do burger, com e sem movimento reduzido |
+| `check-admin.mjs` | Login do painel, sidebar e gaveta, menu de perfil e telas do admin |
 
-Os testes estão organizados na seguinte estrutura:
+Na entrega do redesign (outubro de 2026), todos passaram, e o axe não encontrou violações.
 
-```
-src/
-├── __tests__/
-│   └── ButtonComponent.test.js
-└── components/
-    └── ButtonComponent.vue
-```
+## Escrevendo novos testes
 
-## Próximos Passos
+- **Onde ficam:** em `src/__tests__/` com o sufixo `.test.js`. É nessa pasta que o ESLint aplica as regras do plugin do Vitest.
+- **Componentes:** monte com o `mount` do Vue Test Utils.
+- **Stores:**
+  - crie uma Pinia nova a cada teste, com `setActivePinia(createPinia())` no `beforeEach`;
+  - limpe o `localStorage` antes, porque as stores persistidas leem dali.
+- **Tempo:** use `vi.useFakeTimers()` e avance com `vi.advanceTimersByTime()`, como em `AppToast.test.js` e `auth.test.js`.
+- **Antes de abrir um pull request:** rode `yarn lint`, `yarn test:unit --run` e `yarn build`.
 
-Com base no relatório de cobertura, planejo:
+## Próximos passos
 
-1. Expandir testes para outros componentes:
-
-   - FormGroup
-   - BurguerCard
-   - CarouselBurguer
-
-2. Implementar testes para:
-
-   - Stores (userStore, cart)
-   - Services (authServices)
-   - Utils (formatters, masks, validators)
-
-3. Melhorar a cobertura de branches no ButtonComponent (atual: 75%)
+- Testar os utilitários (`formatters`, `validators`, `masks`), as guards do roteador e o modal de personalização.
+- Rodar lint, testes e build também nos pull requests; hoje só existe o workflow de deploy.
+- Levar a verificação no navegador para o CI.
