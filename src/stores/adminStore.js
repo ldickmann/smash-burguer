@@ -9,12 +9,8 @@ export const useAdminStore = defineStore('admin', {
 
   actions: {
     async login(credentials) {
-      try {
-        const { user } = await adminAuthService.login(credentials);
-        this.setAdmin(user);
-      } catch (error) {
-        throw error;
-      }
+      const { user } = await adminAuthService.login(credentials);
+      this.setAdmin(user);
     },
 
     setAdmin(adminData) {

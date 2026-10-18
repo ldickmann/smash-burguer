@@ -1,248 +1,62 @@
-@use "../base/variables" as *;
-@use "../base/typography" as *;
-@use "../base/mixins" as *;
+// Rodapé (SPEC §5.10). Nenhuma regra mira o elemento <footer>.
+@use "../base/breakpoints" as *;
 
-// FAZER TRATAMENTO DA RESPONSIVIDADE DE DISPOSITIVOS MAIS DIFERENTES (TABLET, CELULAR)
+.site-footer {
+  padding-block: var(--space-8);
+  background: var(--color-surface-sunken);
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
 
-footer {
-  background-color: $primary-color;
-  color: $secondary-color;
-  padding: 4rem 0rem 2rem 0rem;
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
 
-  @include respond-to("xs") {
-    padding: 2rem 0rem 1rem 0rem;
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .container-general {
-    display: flex;
-    gap: 3.5rem;
-    width: 100%;
-
-    @include respond-to("md") {
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      padding: 0 2rem;
-
-      .container-title {
-        flex: 1;
-        width: 100%;
-        min-width: 100%;
-        margin-right: 0;
-      }
-
-      .container-contact {
-        flex: 1;
-        min-width: 30%;
-        margin-top: 0rem;
-      }
-
-      .container-contact,
-      .container-working-hours,
-      .container-social-media {
-        flex: 1;
-        min-width: 30%;
-        margin-top: 1rem;
-
-        h1,
-        h2 {
-          margin-bottom: 1.5rem;
-        }
-      }
-    }
-
-    @include respond-to("sm") {
-      flex-direction: column;
-      gap: 2rem;
-      padding: 0 2rem;
-    }
-
-    @include respond-to("xs") {
-      flex-direction: column;
-      gap: 1rem;
-      padding: 0 1rem;
-    }
+  @include up(lg) {
+    grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
   }
+}
 
-  .container-title {
-    flex: 3;
-    margin-right: 3rem;
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 22rem;
+}
 
-    h1 {
-      font-family: $font-family-secondary;
-      font-size: 4rem;
-      margin-bottom: 2rem;
+.site-footer__wordmark {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.02em;
+  line-height: var(--leading-display);
+  text-transform: uppercase;
+}
 
-      @include respond-to("xs") {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
-    }
+.site-footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
 
-    @include respond-to("xxs") {
-      margin-right: 0;
+.site-footer__heading {
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  font-weight: 700;
+}
 
-      p {
-        font-size: 0.9rem;
-      }
-    }
-  }
+.site-footer__divider {
+  margin-block: var(--space-6) var(--space-4);
+}
 
-  .container-working-hours {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    margin-top: 2rem;
-
-    h2 {
-      margin-bottom: 3rem;
-
-      @include respond-to("xs") {
-        margin-bottom: 1rem;
-      }
-    }
-
-    @include respond-to("xxs") {
-      p {
-        font-size: 0.9rem;
-      }
-    }
-  }
-
-  .container-social-media {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: self-start;
-    margin-top: 2rem;
-
-    h2 {
-      margin-bottom: 3rem;
-
-      @include respond-to("xs") {
-        margin-bottom: 1rem;
-      }
-    }
-  }
-
-  .container-contact {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-top: 2rem;
-
-    h2 {
-      margin-bottom: 3rem;
-
-      @include respond-to("xs") {
-        margin-bottom: 1rem;
-      }
-    }
-
-    a {
-      font-size: 0.9rem;
-    }
-  }
-
-  .container-address-icon {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0;
-    font-size: 1.5rem;
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-
-  .container-phone-icon {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    font-size: 1.5rem;
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-
-  .container-email-icon {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    font-size: 1.5rem;
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-
-  // Icons Social Media
-  .container-icons {
-    display: flex;
-    justify-content: end;
-    gap: 1rem;
-    margin-top: 0;
-    font-size: 2rem;
-  }
-
-  // Component Separator
-  .separator-copy {
-    margin-top: 5rem;
-
-    @include respond-to("md") {
-      margin-top: 3rem;
-      padding-inline: 2rem;
-    }
-
-    @include respond-to("sm") {
-      padding: 1rem 2rem;
-    }
-
-    @include respond-to("xs") {
-      margin-top: 1rem;
-      padding: 0rem 1rem;
-    }
-
-    @include respond-to("xxs") {
-      padding: 1rem 1rem;
-    }
-  }
-
-  // Container Copyrigth e Developer
-  .container-copy {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1.5rem;
-
-    p {
-      font-size: 0.9rem;
-    }
-
-    @include respond-to("md") {
-      padding: 0rem 2rem;
-      margin-top: 2rem;
-    }
-
-    @include respond-to("sm") {
-      padding: 0rem 2rem;
-      margin-top: 1rem;
-    }
-
-    @include respond-to("xs") {
-      flex-direction: column;
-      padding-top: 0rem;
-      margin-top: 1rem;
-      gap: 1rem;
-    }
-
-    @include respond-to("xxs") {
-      p {
-        font-size: 0.8rem;
-      }
-    }
-  }
+.site-footer__copy {
+  font-size: var(--text-xs);
 }

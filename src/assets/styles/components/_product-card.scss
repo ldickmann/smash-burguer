@@ -1,0 +1,238 @@
+// ProductCard (SPEC §4.1), flip "Adicionado ✓" (§7.1) e tilt (§7.3).
+@use "../base/breakpoints" as *;
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  box-shadow: var(--elev-1);
+}
+
+// Card clicável inteiro (menu e compact): hover e foco
+.product-card--menu,
+.product-card--compact {
+  @include hover-capable {
+    &:hover {
+      box-shadow: var(--elev-2);
+    }
+  }
+
+  &:has(.add-btn:focus-visible) {
+    box-shadow: var(--elev-2);
+  }
+}
+
+.product-card__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-3);
+}
+
+.product-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Imagem com erro: fundo surface-3 com o ícone do burger
+.product-card__fallback {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--color-ink-subtle);
+  font-size: 2.5rem;
+}
+
+.product-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+
+  @include up(lg) {
+    padding: var(--space-5);
+  }
+}
+
+.product-card__name {
+  font-family: var(--font-text);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.product-card__desc {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
+
+.product-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.product-card__price {
+  color: var(--color-ink);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.product-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// Botão "Adicionar" com flip
+.add-btn {
+  flex-shrink: 0;
+  min-height: var(--target-min);
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-accent-ink);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+
+  // Stretched button: o card inteiro é um alvo só
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+}
+
+.add-btn__inner {
+  display: grid;
+  transform-style: preserve-3d;
+}
+
+.add-btn__face {
+  display: flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-sm);
+  backface-visibility: hidden;
+}
+
+.add-btn__face--front {
+  background: var(--color-accent);
+}
+
+.add-btn__face--back {
+  background: var(--color-success);
+  color: var(--color-accent-ink);
+}
+
+@include hover-capable {
+  .add-btn:hover .add-btn__face--front {
+    background: var(--color-accent-hover);
+    box-shadow: var(--glow-accent);
+  }
+}
+
+.add-btn:active .add-btn__face--front {
+  background: var(--color-accent-pressed);
+  box-shadow: none;
+}
+
+// Com movimento: gira no eixo X
+@include motion-ok {
+  .add-btn__inner {
+    transition: transform var(--dur-base) var(--ease-in-out);
+  }
+
+  .add-btn__face--back {
+    transform: rotateX(180deg);
+  }
+
+  .add-btn.is-added .add-btn__inner {
+    transform: perspective(600px) rotateX(180deg);
+  }
+}
+
+// Movimento reduzido: as faces trocam por opacidade
+@include motion-reduced {
+  .add-btn__face {
+    transition: opacity var(--dur-fast);
+  }
+
+  .add-btn__face--back {
+    opacity: 0;
+  }
+
+  .add-btn.is-added {
+    .add-btn__face--front {
+      opacity: 0;
+    }
+
+    .add-btn__face--back {
+      opacity: 1;
+    }
+  }
+}
+
+// Tilt do cardápio: só com mouse e sem movimento reduzido
+@include hover-capable {
+  @include motion-ok {
+    .product-card--menu {
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition: transform var(--dur-fast) linear;
+
+      &.is-tilt-resetting {
+        transition: transform var(--dur-slow) var(--ease-out);
+      }
+
+      // Reflexo
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: var(--z-raised);
+        background: radial-gradient(
+          circle at var(--mx, 50%) var(--my, 50%),
+          var(--color-sheen),
+          transparent 45%
+        );
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--dur-fast);
+      }
+
+      &:hover::before {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Teclado: o card não inclina, só sobe 2px
+@include motion-ok {
+  .product-card--menu:has(.add-btn:focus-visible),
+  .product-card--compact:has(.add-btn:focus-visible) {
+    transform: translateY(-2px);
+  }
+}

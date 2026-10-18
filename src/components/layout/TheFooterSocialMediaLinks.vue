@@ -1,45 +1,46 @@
 <template>
-  <div class="container-social-media">
-    <h2>Follow Us</h2>
-    <div class="container-icons">
+  <ul class="footer-social" role="list">
+    <li v-for="link in socialMediaLinks" :key="link.name">
       <a
-        v-for="link in socialMediaLinks"
-        :key="link.name"
+        class="footer-social__link"
         :href="link.url"
         target="_blank"
         rel="noopener noreferrer"
+        :aria-label="`${brand} no ${link.name} (abre em nova aba)`"
       >
-        <font-awesome-icon v-if="link.icon" :icon="link.icon" />
+        <font-awesome-icon :icon="link.icon" aria-hidden="true" />
       </a>
-    </div>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script setup>
+defineProps({
+  brand: {
+    type: String,
+    default: "Smash Burger",
+  },
+});
+
 const socialMediaLinks = [
   {
-    name: "facebook",
+    name: "Facebook",
     icon: ["fab", "facebook-f"],
     url: "https://facebook.com",
   },
   {
-    name: "instagram",
+    name: "Instagram",
     icon: ["fab", "instagram"],
     url: "https://instagram.com",
   },
   {
-    name: "twitter",
-    icon: ["fab", "twitter"],
-    url: "https://twitter.com",
-  },
-  {
     name: "X",
     icon: ["fab", "x-twitter"],
-    url: "https://x-twitter.com",
+    url: "https://x.com",
   },
 ];
 </script>
 
 <style scoped lang="scss">
-@use '@/assets/styles/components/footer';
+@use '@/assets/styles/components/footer-social';
 </style>

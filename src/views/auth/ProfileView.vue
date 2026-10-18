@@ -1,280 +1,155 @@
 <template>
-  <section class="profile-section">
-    <div class="profile-container">
-      <div class="profile-content">
-        <h1 class="profile-title">Meu Perfil</h1>
+  <div class="profile-page container">
+    <header class="profile-page__header">
+      <h1 class="profile-page__title">Sua conta</h1>
+      <BaseButton variant="ghost" icon-start="sign-out-alt" @click="handleLogout">Sair</BaseButton>
+    </header>
 
-        <!-- Container com forms de informações pessoais e histórico de pedidos -->
-        <div class="profile-info">
-          <div class="profile-personal">
-            <h2>Informações Pessoais</h2>
-            <form @submit.prevent="handleUpdateProfile">
-              <FormGroup
-                id="firstName"
-                label="Primeiro Nome"
-                v-model="userInfo.firstName"
-                type="text"
-                required
-                :error="formErrors.fullName"
-              />
-              <FormGroup
-                id="lastName"
-                label="Sobrenome"
-                v-model="userInfo.lastName"
-                type="text"
-                required
-                :error="formErrors.fullName"
-              />
-              <FormGroup
-                id="email"
-                label="E-mail"
-                v-model="userInfo.email"
-                type="email"
-                required
-                :error="formErrors.email"
-              />
-              <FormGroup
-                id="phone"
-                label="Celular"
-                v-model="userInfo.phone"
-                type="tel"
-                mask="phone"
-                required
-                :error="formErrors.phone"
-              />
-              <FormGroup
-                id="CEP"
-                label="CEP"
-                v-model="userInfo.CEP"
-                type="text"
-                mask="cep"
-                required
-                :error="formErrors.CEP"
-                @input="handleCEPInput"
-              />
-              <FormGroup
-                id="street"
-                label="Rua"
-                v-model="userInfo.address.street"
-                type="text"
-                required
-                :error="formErrors.street"
-                :disabled="true"
-              />
-              <FormGroup
-                id="neighborhood"
-                label="Bairro"
-                v-model="userInfo.address.neighborhood"
-                type="text"
-                required
-                :error="formErrors.neighborhood"
-                :disabled="true"
-              />
-              <FormGroup
-                id="city"
-                label="Cidade"
-                v-model="userInfo.address.city"
-                type="text"
-                required
-                :error="formErrors.city"
-                :disabled="true"
-              />
-              <FormGroup
-                id="state"
-                label="Estado"
-                v-model="userInfo.address.state"
-                type="text"
-                required
-                :error="formErrors.state"
-                :disabled="true"
-              />
-            </form>
-            <ButtonComponent
-              class="button-save-profile"
-              :buttons="[{ label: 'Salvar Alterações', id: 'save' }]"
-              backgroundColor="#42b983"
-              fontColor="#ffffff"
-              fontSize="16px"
-              buttonSize="0.75rem 1.5rem"
-              borderRadius="6px"
-              :gap="0"
-              @click="handleUpdateProfile"
-            />
-          </div>
+    <div class="profile-page__layout">
+      <section class="profile-page__card" aria-labelledby="seus-dados">
+        <h2 id="seus-dados" class="profile-page__section-title">Seus dados</h2>
 
-          <!-- Histórico de Pedidos -->
-          <div class="profile-orders">
-            <h2>Histórico de Pedidos</h2>
-            <div v-if="orderHistory.length > 0" class="orders-list">
-              <div v-for="order in orderHistory" :key="order.id" class="order-item">
-                <div class="order-header">
-                  <span class="order-date">{{ formatDate(order.date) }}</span>
-                  <span class="order-status">{{ order.status }}</span>
-                </div>
-                <div class="order-details">
-                  <div v-for="item in order.items" :key="item.id" class="order-product">
-                    <span>{{ item.name }}</span>
-                    <span>{{ formatPrice(item.price) }}</span>
-                  </div>
-                </div>
-                <div class="order-total">
-                  <span>Total:</span>
-                  <strong>{{ formatPrice(order.total) }}</strong>
-                </div>
-              </div>
-            </div>
-            <div v-else class="no-orders">
-              <p>Você ainda não realizou nenhum pedido</p>
-              <router-link to="/menu" class="menu-link">Ver Cardápio</router-link>
-            </div>
-          </div>
-
-          <!-- Botão de Logout -->
-          <ButtonComponent
-            :buttons="[{ label: 'Sair', id: 'logout' }]"
-            backgroundColor="#ff0000"
-            fontColor="#ffffff"
-            fontSize="16px"
-            buttonSize="0.75rem 1.5rem"
-            borderRadius="6px"
-            :gap="0"
-            @click="handleLogout"
+        <form class="profile-page__form" novalidate @submit.prevent="handleUpdateProfile">
+          <FormGroup id="firstName" v-model="userInfo.firstName" label="Nome" autocomplete="given-name" />
+          <FormGroup id="lastName" v-model="userInfo.lastName" label="Sobrenome" autocomplete="family-name" />
+          <FormGroup id="email" v-model="userInfo.email" label="E-mail" type="email" autocomplete="email" />
+          <FormGroup
+            id="phone"
+            v-model="userInfo.phone"
+            label="Celular"
+            type="tel"
+            mask="phone"
+            inputmode="tel"
+            autocomplete="tel-national"
           />
-        </div>
-      </div>
+          <FormGroup
+            id="CEP"
+            v-model="userInfo.CEP"
+            label="CEP"
+            mask="cep"
+            inputmode="numeric"
+            autocomplete="postal-code"
+            :error="cep.error.value"
+            :helper="cep.loading.value ? 'Buscando endereço…' : 'Rua, bairro, cidade e UF vêm do CEP.'"
+            :loading="cep.loading.value"
+          />
+          <!-- Preenchidos pelo CEP -->
+          <FormGroup id="street" v-model="userInfo.address.street" label="Rua" readonly />
+          <FormGroup id="neighborhood" v-model="userInfo.address.neighborhood" label="Bairro" readonly />
+          <div class="profile-page__row">
+            <FormGroup id="city" v-model="userInfo.address.city" label="Cidade" readonly />
+            <FormGroup id="state" v-model="userInfo.address.state" label="UF" readonly />
+          </div>
+
+          <BaseButton type="submit" variant="secondary" :loading="saving">
+            {{ saving ? "Salvando…" : "Salvar alterações" }}
+          </BaseButton>
+        </form>
+      </section>
+
+      <section class="profile-page__card" aria-labelledby="seus-pedidos">
+        <h2 id="seus-pedidos" class="profile-page__section-title">Seus pedidos</h2>
+
+        <ul v-if="orders.length" class="profile-orders" role="list">
+          <li v-for="order in orders" :key="order.id" class="profile-order">
+            <div class="profile-order__head">
+              <p class="profile-order__number">Pedido <span class="tabular">#{{ order.id }}</span></p>
+              <span class="profile-order__status">{{ order.status }}</span>
+            </div>
+            <p class="profile-order__meta">
+              <time :datetime="order.date" class="tabular">{{ formatDate(order.date) }}</time>
+              · {{ formatItemCount(countItems(order)) }} ·
+              <span class="tabular">{{ formatPrice(order.total) }}</span>
+            </p>
+            <details class="profile-order__details">
+              <summary class="profile-order__summary">Ver itens</summary>
+              <OrderSummary :items="order.items" variant="readonly" :show-title="false" />
+            </details>
+          </li>
+        </ul>
+
+        <EmptyState v-else icon="burger" title="Você ainda não fez pedidos">
+          <template #action>
+            <BaseButton to="/menu">Ver cardápio</BaseButton>
+          </template>
+        </EmptyState>
+      </section>
     </div>
-    <AlertComponent v-if="showAlert" :message="alertMessage" />
-  </section>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
 import { useUserStore } from "@/stores/userStore";
-import { formatPrice } from "@/utils/formatters";
-import { validateCEP } from "@/utils/validators";
+import { useToastStore } from "@/stores/toast";
 import { useAuthHandlers } from "@/handlers/authHandlers";
+import { useCepLookup } from "@/composables/useCepLookup";
+import { formatItemCount, formatPrice } from "@/utils/formatters";
 import FormGroup from "@/components/FormGroup.vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
-import AlertComponent from "@/components/AlertComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
+import OrderSummary from "@/components/OrderSummary.vue";
 
-const router = useRouter();
 const userStore = useUserStore();
+const toastStore = useToastStore();
 const { handleLogout } = useAuthHandlers();
+const cep = useCepLookup();
 
+// Carrega os dados do usuário (a rota exige sessão)
+const userData = userStore.user ?? {};
 const userInfo = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  CEP: "",
+  firstName: userData.firstName || "",
+  lastName: userData.lastName || "",
+  email: userData.email || "",
+  phone: userData.phone || "",
+  CEP: userData.CEP || "",
   address: {
     street: "",
     neighborhood: "",
     city: "",
     state: "",
+    ...(userData.address || {}),
   },
 });
 
-const formErrors = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  CEP: "",
-  street: "",
-  neighborhood: "",
-  city: "",
-  state: "",
-});
+const saving = ref(false);
 
-const orderHistory = ref([]);
-const showAlert = ref(false);
-const alertMessage = ref("");
+// O pedido mais recente primeiro
+const orders = computed(() =>
+  [...(userStore.orderHistory ?? [])].sort((a, b) => new Date(b.date) - new Date(a.date))
+);
 
-onMounted(() => {
-  if (!userStore.isAuthenticated) {
-    router.push("/login");
-    return;
-  }
+const countItems = (order) => order.items.reduce((total, item) => total + item.quantity, 0);
 
-  // Carregar dados do usuário
-  const userData = userStore.user;
-  if (userData) {
-    userInfo.value = {
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      email: userData.email || "",
-      phone: userData.phone || "",
-      CEP: userData.CEP || "",
-      address: userData.address || {
-        street: "",
-        neighborhood: "",
-        city: "",
-        state: "",
-      },
-    };
-  }
+// dd/mm/aaaa, hh:mm
+const formatDate = (date) =>
+  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(
+    new Date(date)
+  );
 
-  orderHistory.value = userStore.orderHistory || [];
-});
-
-const handleCEPInput = async () => {
-  formErrors.value.CEP = "";
-
-  const cleanCEP = userInfo.value.CEP.replace(/\D/g, ""); // Remove caracteres não numéricos
-
-  if (cleanCEP.length === 8) {
-    try {
-      const result = await validateCEP(cleanCEP);
-      console.log("Resultado da validação:", result); // Debug
-
-      if (result.isValid && result.address) {
-        // Atualiza os campos de endereço de forma reativa
-        Object.assign(userInfo.value.address, {
-          street: result.address.street || "",
-          neighborhood: result.address.neighborhood || "",
-          city: result.address.city || "",
-          state: result.address.state || "",
-        });
-
-        formErrors.value.CEP = ""; // Limpa erro se existir
-      } else {
-        formErrors.value.CEP = "CEP não encontrado";
-        resetAddressFields();
-      }
-    } catch (error) {
-      console.error("Erro ao buscar CEP:", error);
-      formErrors.value.CEP = "Erro ao buscar CEP";
-      resetAddressFields();
+// Novo CEP: o endereço vem da consulta e os campos de endereço são só leitura
+watch(
+  () => userInfo.value.CEP,
+  async (value, previous) => {
+    if (value === previous) return;
+    const address = await cep.lookup(value);
+    if (address) {
+      Object.assign(userInfo.value.address, address);
+    } else if (cep.error.value) {
+      Object.assign(userInfo.value.address, { street: "", neighborhood: "", city: "", state: "" });
     }
   }
-};
+);
 
-// Limpa os campos de endereço quando o CEP é alterado pelo usuário
-const resetAddressFields = () => {
-  Object.assign(userInfo.value.address, {
-    street: "",
-    neighborhood: "",
-    city: "",
-    state: "",
-  });
-};
-
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString("pt-BR");
-};
-
-// Atualiza o perfil do usuário - Verificar pois tem que ser feito na API
 const handleUpdateProfile = async () => {
+  saving.value = true;
   try {
     await userStore.updateProfile(userInfo.value);
-    alertMessage.value = "Perfil atualizado com sucesso!";
-    showAlert.value = true;
-  } catch (error) {
-    console.error("Erro ao atualizar perfil:", error);
-    alertMessage.value = "Erro ao atualizar perfil";
-    showAlert.value = true;
+    toastStore.show({ message: "Dados salvos.", variant: "success" });
+  } catch {
+    toastStore.show({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
+  } finally {
+    saving.value = false;
   }
 };
 </script>

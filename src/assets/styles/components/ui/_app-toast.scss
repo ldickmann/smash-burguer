@@ -1,0 +1,107 @@
+// AppToast (SPEC §4.1): acima da navbar; topo à direita no desktop, base no mobile.
+@use "../../base/breakpoints" as *;
+
+.toast-region {
+  position: fixed;
+  z-index: var(--z-toast);
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  pointer-events: none;
+
+  @include up(md) {
+    left: auto;
+    bottom: auto;
+    top: calc(var(--navbar-h) + var(--space-3));
+    // Alinhado à direita do container
+    right: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)));
+    width: min(26rem, calc(100vw - 2 * var(--gutter)));
+  }
+}
+
+.toast-region__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+
+  @include up(md) {
+    align-items: stretch;
+  }
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 30rem;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-left: 3px solid var(--color-info);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-3);
+  box-shadow: var(--elev-2);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+  pointer-events: auto;
+}
+
+.toast--success {
+  border-left-color: var(--color-success);
+
+  .toast__icon {
+    color: var(--color-success);
+  }
+}
+
+.toast--error {
+  border-left-color: var(--color-danger);
+
+  .toast__icon {
+    color: var(--color-danger);
+  }
+}
+
+.toast--info .toast__icon {
+  color: var(--color-info);
+}
+
+.toast__icon {
+  flex-shrink: 0;
+  font-size: 1.125rem;
+}
+
+.toast__message {
+  flex: 1;
+  padding-block: var(--space-2);
+}
+
+.toast__action,
+.toast__close {
+  flex-shrink: 0;
+}
+
+// Entrada: opacidade + leve descida; com movimento reduzido, só opacidade
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .toast-enter-active,
+  .toast-leave-active {
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .toast-enter-from {
+    transform: translateY(-8px);
+  }
+}

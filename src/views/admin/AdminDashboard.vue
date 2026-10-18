@@ -1,41 +1,31 @@
 <template>
-  <main class="dashboard-main">
-    <div class="dashboard-container">
-      <h1 class="dashboard-title">
-        <font-awesome-icon :icon="['fas', 'tachometer-alt']" />
-        Painel Administrativo
-      </h1>
+  <div class="dashboard">
+    <h1 class="admin-page__title">Painel</h1>
 
-      <!-- Gráfico de vendas -->
-      <ChartDashboard :data="salesData" :options="salesOptions" />
-    </div>
-  </main>
+    <ul class="dashboard__kpis" role="list">
+      <li v-for="kpi in SALES_KPIS" :key="kpi.id">
+        <AdminCard :title="kpi.label" variant="kpi">
+          <p class="kpi__value tabular">{{ kpi.value }}</p>
+          <p class="kpi__note">{{ kpi.note }}</p>
+        </AdminCard>
+      </li>
+    </ul>
+
+    <!-- O gráfico depende de uma biblioteca incompatível com o Chart.js 4 -->
+    <section class="dashboard__chart" aria-label="Gráfico de vendas">
+      <EmptyState
+        icon="chart-line"
+        title="Gráfico de vendas indisponível nesta versão"
+        text="Os números acima trazem o resumo dos últimos 30 dias."
+      />
+    </section>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import ChartDashboard from "@/components/admin/ChartDashboard.vue";
-
-const salesData = ref({
-  labels: ["Jan", "Fev", "Mar", "Abr", "Mai"],
-  datasets: [
-    {
-      label: "Vendas",
-      backgroundColor: "#42b983",
-      data: [150, 200, 170, 220, 190],
-    },
-  ],
-});
-
-const salesOptions = ref({
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    y: {
-      beginAtZero: true,
-    },
-  },
-});
+import { SALES_KPIS } from "@/utils/salesSample";
+import AdminCard from "@/components/admin/AdminCard.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
 </script>
 
 <style scoped lang="scss">

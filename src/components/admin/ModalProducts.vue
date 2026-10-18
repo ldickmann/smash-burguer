@@ -1,106 +1,97 @@
 <template>
-  <section class="modal-product">
-    <div class="modal-product__container">
-      <div class="modal-product__header">
-        <h3>{{ mode === "edit" ? "Editar Produto" : "Adicionar Produto" }}</h3>
-        <button
-          type="button"
-          class="close-modal-admin"
-          @click="closeModal"
-          aria-label="Fechar modal"
-        >
-          &times;
-        </button>
+  <BaseDialog
+    :open="open"
+    :title="mode === 'edit' ? 'Editar produto' : 'Novo produto'"
+    title-id="produto-titulo"
+    max-width="560px"
+    @close="closeModal"
+  >
+    <form id="produto-form" class="modal-product" novalidate @submit.prevent="handleSubmit">
+      <FormGroup
+        id="productType"
+        v-model="localProduct.category"
+        label="Categoria"
+        type="select"
+        :options="CATEGORY_OPTIONS"
+      />
+      <FormGroup
+        id="name"
+        v-model="localProduct.name"
+        label="Nome do produto"
+        placeholder="Informe o nome"
+        required
+      />
+      <FormGroup
+        id="price"
+        v-model="localProduct.price"
+        label="Preço"
+        inputmode="decimal"
+        placeholder="Ex.: 25,90"
+        required
+      />
+      <FormGroup
+        id="quantity"
+        v-model="localProduct.quantity"
+        label="Quantidade"
+        type="number"
+        inputmode="numeric"
+        placeholder="Informe a quantidade"
+        required
+      />
+      <FormGroup
+        id="description"
+        v-model="localProduct.description"
+        label="Descrição"
+        placeholder="Descrição do produto"
+      />
+
+      <!-- Seletor de arquivo com a cara de um botão secundário -->
+      <div class="file-picker">
+        <span class="file-picker__label">Imagem</span>
+        <div class="file-picker__row">
+          <label for="image" class="file-picker__button">
+            <input
+              id="image"
+              type="file"
+              accept="image/*"
+              class="visually-hidden"
+              :required="mode === 'add'"
+              @change="uploadImage"
+            />
+            Escolher imagem
+          </label>
+          <span class="file-picker__name">{{ fileName || "Nenhuma imagem escolhida" }}</span>
+        </div>
       </div>
+    </form>
 
-      <div class="modal-product__select">
-        <label for="productType">Selecione o tipo de produto:</label>
-        <select id="productType" v-model="localProduct.category">
-          <option value="foods">Hambúrguer</option>
-          <option value="desserts">Sobremesa</option>
-          <option value="drinks">Bebida</option>
-        </select>
+    <template #footer>
+      <div class="modal-product__actions">
+        <BaseButton variant="secondary" @click="cancelAction">Cancelar</BaseButton>
+        <BaseButton type="submit" form="produto-form">Salvar</BaseButton>
       </div>
-
-      <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="name">Nome do Produto:</label>
-          <input
-            type="text"
-            id="name"
-            v-model="localProduct.name"
-            placeholder="Informe o nome"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="price">Preço:</label>
-          <input
-            type="text"
-            id="price"
-            v-model="localProduct.price"
-            placeholder="Informe o preço"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="quantity">Quantidade:</label>
-          <input
-            type="number"
-            id="quantity"
-            v-model="localProduct.quantity"
-            placeholder="Informe a quantidade"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="description">Descrição:</label>
-          <input
-            type="text"
-            id="description"
-            v-model="localProduct.description"
-            placeholder="Descrição do produto"
-          />
-        </div>
-        <div class="form-group">
-          <label for="image">Imagem:</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            @change="uploadImage"
-            :required="mode === 'add'"
-          />
-        </div>
-
-        <div class="modal-product__buttons">
-          <ButtonComponent
-            :buttons="[
-              {
-                label: mode === 'edit' ? 'Salvar Alterações' : 'Confirmar',
-                id: 'confirm',
-              },
-            ]"
-            backgroundColor="#3498db"
-            @click="handleSubmit"
-          />
-          <ButtonComponent
-            :buttons="[{ label: 'Cancelar', id: 'cancel' }]"
-            backgroundColor="#e74c3c"
-            @click="cancelAction"
-          />
-        </div>
-      </form>
-    </div>
-  </section>
+    </template>
+  </BaseDialog>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import { useButtonHandlers } from "@/utils/buttonHandlers";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseDialog from "@/components/ui/BaseDialog.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import FormGroup from "@/components/FormGroup.vue";
+
+const CATEGORY_OPTIONS = [
+  { value: "foods", label: "Hambúrguer" },
+  { value: "desserts", label: "Sobremesa" },
+  { value: "drinks", label: "Bebida" },
+];
 
 const props = defineProps({
+  open: {
+    type: Boolean,
+    default: true,
+  },
   mode: {
     type: String,
     default: "add",
@@ -120,20 +111,22 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "submit", "cancel"]);
 
-const { handleImageUpload, handleCloseModal } = useButtonHandlers();
+const { handleImageUpload } = useButtonHandlers();
 
 // Cria uma cópia local do produto para edição
 const localProduct = ref({ ...props.product });
+const fileName = ref("");
 
 // Atualiza o localProduct caso a prop "product" seja alterada
 watch(
   () => props.product,
   (newProduct) => {
     localProduct.value = { ...newProduct };
+    fileName.value = "";
   }
 );
 
-const closeModal = () => handleCloseModal(emit);
+const closeModal = () => emit("close");
 
 const cancelAction = () => {
   emit("cancel");
@@ -147,11 +140,11 @@ const handleSubmit = () => {
 };
 
 const uploadImage = (event) => {
+  fileName.value = event.target.files[0]?.name ?? "";
   handleImageUpload(event, localProduct);
 };
 </script>
 
 <style scoped lang="scss">
 @use "@/assets/styles/components/admin/_modal-products";
-// Adapte os estilos conforme sua necessidade
 </style>

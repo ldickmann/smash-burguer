@@ -1,0 +1,176 @@
+// BaseButton (SPEC §4.1). Variantes e estados da matriz da §6.
+@use "../../base/breakpoints" as *;
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: 0 var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-text);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  @include motion-ok {
+    transition: transform var(--dur-instant) var(--ease-out);
+
+    &:active:not(:disabled, [aria-disabled="true"], .is-loading) {
+      transform: translateY(1px) scale(0.98);
+    }
+  }
+}
+
+// Tamanhos
+.btn--sm {
+  min-height: 2.5rem;
+  padding-inline: var(--space-4);
+  font-size: var(--text-sm);
+
+  // Alvo de toque estendido a 44px
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -2px 0;
+  }
+}
+
+.btn--lg {
+  min-height: 3.25rem;
+  padding-inline: var(--space-6);
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+.btn--icon-only {
+  width: var(--target-min);
+  padding: 0;
+
+  &.btn--sm {
+    width: 2.5rem;
+  }
+
+  &.btn--lg {
+    width: 3.25rem;
+  }
+}
+
+.btn__icon {
+  flex-shrink: 0;
+}
+
+.btn--icon-only .btn__icon {
+  font-size: 1.125rem;
+}
+
+// Variantes
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+
+  @include hover-capable {
+    &:hover {
+      background-color: var(--color-accent-hover);
+      box-shadow: var(--glow-accent);
+    }
+  }
+
+  &:active,
+  &[aria-pressed="true"]:active {
+    background-color: var(--color-accent-pressed);
+    box-shadow: none;
+  }
+}
+
+.btn--secondary {
+  border-color: var(--color-border-strong);
+  background-color: transparent;
+  color: var(--color-ink);
+
+  @include hover-capable {
+    &:hover {
+      background-color: var(--color-surface-3);
+    }
+  }
+
+  &:active {
+    background-color: var(--color-surface-4);
+  }
+}
+
+.btn--ghost {
+  background-color: transparent;
+  color: var(--color-ink-muted);
+
+  @include hover-capable {
+    &:hover {
+      background-color: var(--color-hover-ghost);
+      color: var(--color-ink);
+    }
+  }
+
+  &:active {
+    background-color: var(--color-surface-3);
+    color: var(--color-ink);
+  }
+}
+
+.btn--danger {
+  background-color: transparent;
+  color: var(--color-danger);
+
+  @include hover-capable {
+    &:hover {
+      background-color: var(--color-danger-soft);
+    }
+  }
+
+  &:active {
+    background-color: var(--color-danger-soft);
+  }
+}
+
+// Desabilitado: igual em todas as variantes
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  border-color: transparent;
+  background-color: var(--color-surface-4);
+  color: var(--color-ink-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+// Carregando: o clique fica bloqueado
+.btn.is-loading {
+  cursor: progress;
+}
+
+// Arco em SVG (três quartos de círculo), sem raio de borda
+.btn__spinner {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+
+  @include motion-ok {
+    animation: btn-spin var(--dur-spin) linear infinite;
+  }
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

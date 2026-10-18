@@ -1,109 +1,97 @@
 <template>
-  <section class="cart-page-section">
-    <div class="cart-page">
-      <header>
-        <h1 class="cart-page__title">{{ title }}</h1>
-      </header>
+  <div class="cart-page container">
+    <h1 ref="titleRef" class="cart-page__title" tabindex="-1">Seu carrinho</h1>
 
-      <!-- Se o carrinho estiver vazio, exibe mensagem e botão para voltar ao menu -->
-      <div v-if="isCartEmpty" class="cart-page__empty">
-        <p>{{ emptyCartMessage }}</p>
-        <router-link to="/menu" class="cart-page__button">
-          {{ returnToMenuText }}
-        </router-link>
-      </div>
+    <EmptyState
+      v-if="!cartStore.items.length"
+      icon="shopping-cart"
+      title="Seu carrinho está vazio"
+      text="Escolha um burger no cardápio para começar."
+    >
+      <template #action>
+        <BaseButton to="/menu">Ver cardápio</BaseButton>
+      </template>
+    </EmptyState>
 
-      <div v-else class="cart-page__content">
-        <ul class="cart-page__list">
+    <div v-else class="cart-page__layout">
+      <section class="cart-page__card cart-page__list-card" aria-label="Itens do carrinho">
+        <ul ref="listRef" class="cart-page__list" role="list">
           <CartItem
-            v-for="(item, index) in cartItems"
-            :key="item.id || index"
+            v-for="(item, index) in cartStore.items"
+            :key="`${item.productId}-${item.category}-${index}`"
             :item="item"
             :index="index"
-            :removeButtonText="removeButtonText"
+            @update-quantity="cartStore.updateQuantity"
             @remove="removeItem"
           />
         </ul>
+      </section>
 
-        <footer class="cart-page__summary">
-          <p class="cart-page__total">
-            <span>{{ totalLabel }}</span>
-            <strong>{{ formattedTotal }}</strong>
-          </p>
-          <router-link to="/menu" class="cart-page__button">
-            {{ continueBuyingText }}
-          </router-link>
+      <OrderSummary :items="cartStore.items" variant="cart" class="cart-page__card cart-page__summary">
+        <template #cta>
+          <template v-if="userStore.isAuthenticated">
+            <BaseButton size="lg" block to="/payment">Finalizar pedido</BaseButton>
+            <BaseButton variant="ghost" block to="/menu">Continuar comprando</BaseButton>
+          </template>
 
-          <!-- Para continuar para a página de pagamento, verifica se está logado ou
-          direciona para a página de login -->
-          <div v-if="!userStore.isAuthenticated" class="cart-page__auth-notice">
-            <p>Para finalizar seu pedido, faça login ou crie uma conta</p>
-            <div class="cart-page__auth-buttons">
-              <ButtonComponent
-                :buttons="[{ label: loginText, id: 'login-button' }]"
-                backgroundColor="#42b983"
-                fontColor="#ffffff"
-                fontSize="16px"
-                buttonSize="0.75rem 1.5rem"
-                borderRadius="6px"
-                @click="handleLogin"
-              />
-              <ButtonComponent
-                :buttons="[{ label: registerText, id: 'register-button' }]"
-                backgroundColor="#42b983"
-                fontColor="#ffffff"
-                fontSize="16px"
-                buttonSize="0.75rem 1.5rem"
-                borderRadius="6px"
-                @click="handleRegister"
-              />
-            </div>
-          </div>
-          <router-link v-else to="/payment" class="cart-page__button--primary">
-            {{ checkoutText }}
-          </router-link>
-        </footer>
-      </div>
+          <!-- Visitante: links para entrar ou criar conta, voltando ao pagamento -->
+          <template v-else>
+            <p class="cart-page__notice">Entre para finalizar seu pedido.</p>
+            <BaseButton size="lg" block :to="{ path: '/login', query: { redirect: '/payment' } }">
+              Entrar e finalizar
+            </BaseButton>
+            <BaseButton
+              variant="secondary"
+              block
+              :to="{ path: '/register', query: { redirect: '/payment' } }"
+            >
+              Criar conta
+            </BaseButton>
+          </template>
+        </template>
+      </OrderSummary>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { nextTick, ref } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
-import { formatPrice } from "@/utils/formatters";
-import { useAuthHandlers } from "@/handlers/authHandlers";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import { useToastStore } from "@/stores/toast";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
 import CartItem from "@/components/CartItem.vue";
+import OrderSummary from "@/components/OrderSummary.vue";
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const toastStore = useToastStore();
 
-// Define propriedades computadas para exibir informações do carrinho
-const cartItems = computed(() => cartStore.items);
-const isCartEmpty = computed(() => cartItems.value.length === 0);
-const total = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.finalPrice, 0)
-);
-const formattedTotal = computed(() => formatPrice(total.value));
+const titleRef = ref(null);
+const listRef = ref(null);
 
-const { handleLogin, handleRegister } = useAuthHandlers();
+// Tira o item na hora e oferece "Desfazer" por 5 s, devolvendo-o à mesma posição
+const removeItem = async (index) => {
+  const removed = cartStore.removeItem(index);
+  if (!removed) return;
 
-// Define constantes que armazenam textos exibidos na página
-const title = "Seu Carrinho 🛒";
-const emptyCartMessage = "Seu carrinho está vazio.";
-const returnToMenuText = "Voltar ao Menu";
-const removeButtonText = "Remover";
-const totalLabel = "Total:";
-const continueBuyingText = "Continuar Comprando";
-const checkoutText = "Finalizar Pedido";
-const loginText = "Fazer Login";
-const registerText = "Criar Conta";
+  toastStore.show({
+    message: `${removed.name} removido.`,
+    variant: "info",
+    duration: 5000,
+    action: {
+      label: "Desfazer",
+      icon: "rotate-left",
+      onClick: () => cartStore.restoreItem(removed, index),
+    },
+  });
 
-// Função para remover item do carrinho
-const removeItem = (index) => {
-  cartStore.removeItem(index);
+  // O botão que tinha o foco sumiu: o foco vai para o "Remover" vizinho ou para o título
+  await nextTick();
+  const buttons = listRef.value?.querySelectorAll("[data-remove]") ?? [];
+  const next = buttons[Math.min(index, buttons.length - 1)];
+  (next ?? titleRef.value)?.focus();
 };
 </script>
 
