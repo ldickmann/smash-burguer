@@ -1,61 +1,45 @@
 <template>
-  <ul class="additionals-list">
-    <li v-for="additional in additionals" :key="additional.id" class="additional-item">
-      <div class="additional-info">
-        <span class="additional-name">{{ additional.name }}</span>
-        <span class="additional-price">{{ formatPrice(additional.price) }}</span>
+  <ul class="additionals-list" role="list">
+    <li v-for="(additional, index) in model" :key="additional.id" class="additionals-list__item">
+      <div class="additionals-list__info">
+        <span class="additionals-list__name">{{ additional.name }}</span>
+        <span class="additionals-list__price tabular">+ {{ formatPrice(additional.price) }}</span>
       </div>
 
-      <div class="quantity-controls">
-        <button
-          type="button"
-          @click="updateQuantity(additional, additional.quantity - 1)"
-          :disabled="additional.quantity <= 0"
-          aria-label="Remover adicional"
-        >
-          <font-awesome-icon :icon="['fas', 'circle-minus']" class="minus-icon" />
-        </button>
-
-        <span class="quantity">{{ additional.quantity }}</span>
-
-        <button
-          type="button"
-          @click="updateQuantity(additional, additional.quantity + 1)"
-          :disabled="additional.quantity >= 5"
-          aria-label="Adicionar adicional"
-        >
-          <font-awesome-icon :icon="['fas', 'circle-plus']" class="plus-icon" />
-        </button>
-      </div>
+      <QuantityStepper
+        :model-value="additional.quantity"
+        :min="0"
+        :max="5"
+        :label="additional.name"
+        @update:model-value="setQuantity(index, $event)"
+      />
     </li>
   </ul>
 </template>
 
 <script setup>
 import { formatPrice } from "@/utils/formatters";
+import QuantityStepper from "@/components/ui/QuantityStepper.vue";
 
-const props = defineProps({
-  additionals: {
-    type: Array,
-    required: true,
-    validator(value) {
-      return value.every(
-        (additional) =>
-          "id" in additional &&
-          "name" in additional &&
-          "price" in additional &&
-          "quantity" in additional
-      );
-    },
+// Lista de { id, name, price, quantity } controlada pelo pai com v-model
+const model = defineModel({
+  type: Array,
+  required: true,
+  validator(value) {
+    return value.every(
+      (additional) =>
+        "id" in additional &&
+        "name" in additional &&
+        "price" in additional &&
+        "quantity" in additional
+    );
   },
 });
 
-const emit = defineEmits(["update:quantity"]);
-
-const updateQuantity = (additional, newQuantity) => {
-  if (newQuantity >= 0 && newQuantity <= 5) {
-    emit("update:quantity", additional, newQuantity);
-  }
+const setQuantity = (index, quantity) => {
+  model.value = model.value.map((additional, i) =>
+    i === index ? { ...additional, quantity } : additional
+  );
 };
 </script>
 

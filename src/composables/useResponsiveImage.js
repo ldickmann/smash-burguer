@@ -8,7 +8,7 @@ const BASE_URL = import.meta.env.BASE_URL;
 // Prefixa o BASE_URL do Vite em caminhos internos
 export const withBase = (path) => {
   if (!path) return "";
-  if (/^(data:|blob:|https?:)/.test(path)) return path;
+  if (/^(data:|blob:|https?:)/.test(path) || path.startsWith(BASE_URL)) return path;
   return `${BASE_URL}${path.replace(/^\//, "")}`;
 };
 

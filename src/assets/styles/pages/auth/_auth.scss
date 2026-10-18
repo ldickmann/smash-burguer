@@ -1,0 +1,65 @@
+// Painel de autenticação compartilhado por Entrar, Criar conta e o login admin (SPEC §5.8).
+@use "../../base/breakpoints" as *;
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding-block: var(--space-7) var(--space-8);
+}
+
+.auth-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  box-shadow: var(--elev-1);
+
+  @include up(md) {
+    padding: var(--space-6);
+  }
+}
+
+.auth-panel__title {
+  font-size: var(--text-page);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.auth-form__submit {
+  margin-top: var(--space-2);
+}
+
+// Banner de erro de autenticação
+.auth-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
+  color: var(--color-ink);
+}
+
+.auth-alert__icon {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+  color: var(--color-danger);
+}
+
+.auth-panel__footer {
+  color: var(--color-ink-muted);
+  text-align: center;
+}
+
+.auth-panel__footer .link-inline {
+  font-weight: 700;
+}

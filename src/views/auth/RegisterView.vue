@@ -1,104 +1,130 @@
 <template>
-  <section class="register-section">
-    <div class="register-container">
-      <h1>Criar Conta</h1>
-      <form novalidate @submit.prevent="handleRegister" class="register-form">
-        <div class="form-name-container">
+  <div class="auth-page container">
+    <section class="auth-panel auth-panel--wide" aria-labelledby="cadastro-titulo">
+      <h1 id="cadastro-titulo" class="auth-panel__title">Criar conta</h1>
+
+      <div v-if="submitError" class="auth-alert" role="alert">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="auth-alert__icon"
+          aria-hidden="true"
+        />
+        <p>{{ submitError }}</p>
+      </div>
+
+      <form ref="formRef" novalidate class="auth-form" @submit.prevent="handleRegister">
+        <div class="auth-form__names">
           <FormGroup
             id="firstName"
-            label="Primeiro Nome"
             v-model="form.firstName"
+            label="Nome"
             type="text"
-            :error="error.firstName"
-            placeholder="First Name"
+            autocomplete="given-name"
+            placeholder="Seu nome"
+            :error="errors.firstName"
             required
+            @blur="touch('firstName')"
           />
 
           <FormGroup
             id="lastName"
-            label="Sobrenome"
             v-model="form.lastName"
+            label="Sobrenome"
             type="text"
-            :error="error.lastName"
-            placeholder="Last Name"
+            autocomplete="family-name"
+            placeholder="Sobrenome"
+            :error="errors.lastName"
             required
+            @blur="touch('lastName')"
           />
         </div>
 
         <FormGroup
           id="email"
-          label="E-mail"
           v-model="form.email"
+          label="E-mail"
           type="email"
-          :error="error.email"
-          placeholder="ldickmann12@gmail.com"
+          autocomplete="email"
+          placeholder="voce@exemplo.com"
+          :error="errors.email"
           required
+          @blur="touch('email')"
         />
 
         <FormGroup
           id="password"
-          label="Senha"
           v-model="form.password"
+          label="Senha"
           type="password"
-          :error="error.password"
-          placeholder="Password"
+          autocomplete="new-password"
+          placeholder="Mínimo de 6 caracteres, com letra e número"
+          :error="errors.password"
           required
+          @blur="touch('password')"
         />
 
         <FormGroup
           id="dateOfBirth"
-          label="Data de Nascimento"
           v-model="form.dateOfBirth"
+          label="Data de nascimento"
           type="date"
-          :error="error.dateOfBirth"
+          autocomplete="bday"
+          :error="errors.dateOfBirth"
           required
+          @blur="touch('dateOfBirth')"
         />
 
         <FormGroup
           id="phone"
-          label="Celular"
           v-model="form.phone"
+          label="Celular"
           type="tel"
           mask="phone"
-          :error="error.phone"
-          placeholder="11 99999 9999"
+          inputmode="tel"
+          autocomplete="tel-national"
+          placeholder="(47) 99999-9999"
+          :error="errors.phone"
           required
+          @blur="touch('phone')"
         />
 
         <FormGroup
           id="CEP"
-          label="CEP"
           v-model="form.CEP"
+          label="CEP"
           type="text"
           mask="cep"
-          :error="error.CEP"
+          inputmode="numeric"
+          autocomplete="postal-code"
           placeholder="00000-000"
+          :error="cepError"
+          :helper="cepHelper"
+          :loading="cep.loading.value"
           required
+          @blur="touch('CEP')"
         />
 
-        <ButtonComponent
-          :buttons="[{ label: 'Criar Conta', id: 'register' }]"
-          backgroundColor="#063520"
-          fontColor="#ffffff"
-          fontSize="16px"
-          buttonSize="0.75rem 1.5rem"
-          borderRadius="6px"
-          type="submit"
-        />
-
-        <p class="login-link">
-          Já tem uma conta?
-          <router-link to="/login">Faça login</router-link>
-        </p>
+        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+          {{ loading ? "Criando conta…" : "Criar conta" }}
+        </BaseButton>
       </form>
-    </div>
-  </section>
+
+      <p class="auth-panel__footer">
+        Já tem conta?
+        <RouterLink :to="{ path: '/login', query: redirectQuery }" class="link-inline">
+          Entrar
+        </RouterLink>
+      </p>
+    </section>
+  </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, nextTick, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useAuthHandlers } from "@/handlers/authHandlers";
+import { useFormValidation } from "@/composables/useFormValidation";
+import { useCepLookup } from "@/composables/useCepLookup";
 import {
   validateFirstName,
   validateLastName,
@@ -106,13 +132,13 @@ import {
   validatePassword,
   validateBirthDate,
   validatePhone,
-  validateCEP,
 } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
 
-const router = useRouter();
+const route = useRoute();
 const { handleRegister: authRegister } = useAuthHandlers();
+const cep = useCepLookup();
 
 const form = ref({
   firstName: "",
@@ -125,72 +151,71 @@ const form = ref({
   address: null, // Armazena os dados do endereço retornados pela API viaCEP
 });
 
-const error = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  dateOfBirth: "",
-  phone: "",
-  CEP: "",
+const validateCEPFormat = (value) => {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  if (!digits) return { isValid: false, message: "O CEP é obrigatório" };
+  if (digits.length !== 8) return { isValid: false, message: "CEP inválido. Devem conter 8 dígitos" };
+  return { isValid: true, message: "" };
+};
+
+const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
+  firstName: validateFirstName,
+  lastName: validateLastName,
+  email: validateEmail,
+  password: validatePassword,
+  dateOfBirth: validateBirthDate,
+  phone: validatePhone,
+  CEP: validateCEPFormat,
 });
 
-const validateForm = async () => {
-  const firstNameValidation = validateFirstName(form.value.firstName);
-  const lastNameValidation = validateLastName(form.value.lastName);
-  const emailValidation = validateEmail(form.value.email);
-  const passwordValidation = validatePassword(form.value.password);
-  const dateOfBirthValidation = validateBirthDate(form.value.dateOfBirth);
-  const phoneValidation = validatePhone(form.value.phone);
-  const CEPValidation = await validateCEP(form.value.CEP);
+const formRef = ref(null);
+const loading = ref(false);
+const submitError = ref("");
 
-  error.value = {
-    firstName: firstNameValidation.message,
-    lastName: lastNameValidation.message,
-    email: emailValidation.message,
-    password: passwordValidation.message,
-    dateOfBirth: dateOfBirthValidation.message,
-    phone: phoneValidation.message,
-    CEP: CEPValidation.message,
-  };
+const redirectQuery = computed(() =>
+  route.query.redirect ? { redirect: route.query.redirect } : {}
+);
 
-  if (CEPValidation.isValid) {
-    form.value.address = CEPValidation.address;
+// O CEP é consultado assim que tiver 8 dígitos
+watch(
+  () => form.value.CEP,
+  async (value) => {
+    form.value.address = await cep.lookup(value);
   }
+);
 
-  return (
-    firstNameValidation.isValid &&
-    lastNameValidation.isValid &&
-    emailValidation.isValid &&
-    passwordValidation.isValid &&
-    dateOfBirthValidation.isValid &&
-    phoneValidation.isValid &&
-    CEPValidation.isValid
-  );
+const cepError = computed(() => errors.CEP || cep.error.value);
+const cepHelper = computed(() => {
+  if (cep.loading.value) return "Buscando endereço…";
+  const address = form.value.address;
+  return address ? `${address.street}, ${address.neighborhood} — ${address.city}/${address.state}` : "";
+});
+
+const focusFirstError = async () => {
+  await nextTick();
+  const field = firstInvalid() ?? (cepError.value ? "CEP" : null);
+  if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
 const handleRegister = async () => {
-  try {
-    const isValid = await validateForm();
+  submitError.value = "";
+  const isValid = validateAll();
 
-    if (!isValid) {
-      return;
-    }
-
-    const result = await authRegister(form.value);
-    if (result?.error) {
-      alert(result.error);
-    } else {
-      router.push("/login");
-    }
-  } catch (error) {
-    console.error("Erro ao criar conta", error);
-    if (error.response?.data?.message) {
-      alert(error.response.data.message);
-    } else {
-      alert("Erro ao criar conta. Por favor, tente novamente.");
-    }
+  // Garante o endereço antes de criar a conta
+  if (isValid && !form.value.address) {
+    form.value.address = await cep.lookup(form.value.CEP);
   }
+
+  if (!isValid || !form.value.address) {
+    await focusFirstError();
+    return;
+  }
+
+  loading.value = true;
+  const result = await authRegister(form.value, route.query.redirect);
+  loading.value = false;
+
+  if (result?.error) submitError.value = result.error;
 };
 </script>
 

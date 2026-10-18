@@ -34,6 +34,8 @@ import {
   faQrcode,
   faMoneyBill,
   faArrowRight,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -73,7 +75,9 @@ library.add(
   faCreditCard,
   faQrcode,
   faMoneyBill,
-  faArrowRight
+  faArrowRight,
+  faChevronLeft,
+  faChevronRight
 );
 
 export { FontAwesomeIcon };

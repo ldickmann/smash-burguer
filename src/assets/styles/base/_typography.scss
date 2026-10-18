@@ -42,3 +42,9 @@ h3 {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+// Link curto solto numa frase: alvo de pelo menos 24px de altura
+.link-inline {
+  display: inline-block;
+  padding-block: var(--space-1);
+}

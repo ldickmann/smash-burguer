@@ -1,134 +1,71 @@
-@use "../base/variables" as *;
-@use "../base/mixins" as *;
+// Modal "Personalizar" (SPEC §5.4). O <dialog>, o cabeçalho e o rodapé vêm do BaseDialog.
+@use "../base/breakpoints" as *;
 
-.modal-overlay {
-  @include flex-center();
-  position: fixed;
-  inset: 0;
+.customize {
+  display: grid;
+  gap: var(--space-5);
+
+  @include up(md) {
+    grid-template-columns: 2fr 3fr;
+    align-items: start;
+  }
+}
+
+// Coluna visual: montador do burger ou a foto
+.customize__visual {
+  display: flex;
+  justify-content: center;
+
+  @include up(md) {
+    position: sticky;
+    top: 0;
+  }
+}
+
+.customize__photo {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-3);
+  aspect-ratio: 16 / 9;
+
+  @include up(md) {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.customize__photo-img {
   width: 100%;
   height: 100%;
-  background-color: rgba($primary-color, 0.5);
-  z-index: 999;
-  margin-top: 1.5rem;
+  object-fit: cover;
 }
 
-.modal-content {
-  background-color: $secondary-color;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 6px $shadow-color;
-
-  @include respond-to("sm") {
-    width: 95%;
-    max-height: 95vh;
-  }
-
-  @include respond-to("xs") {
-    width: 95%;
-    max-height: 85vh;
-    margin-top: 3rem;
-  }
-}
-
-.modal-header {
-  @include flex-center();
-  justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid $border-color;
-
-  h2 {
-    color: $color-text-primary;
-    font-size: 1.5rem;
-    margin: 0;
-  }
-
-  .close-button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: $color-text-secondary;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: $color-text-primary;
-    }
-  }
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.product-details {
-  @include flex-center();
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-
-  @include respond-to("sm") {
-    flex-direction: column;
-  }
-
-  .product-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-
-    @include respond-to("sm") {
-      width: 100%;
-      height: 150px;
-    }
-  }
-
-  .product-info {
-    flex: 1;
-
-    h3 {
-      color: $color-text-primary;
-      margin-bottom: 0.5rem;
-    }
-
-    .description {
-      color: $color-text-secondary;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      line-height: 1.4;
-    }
-
-    .price {
-      color: $quinary-color;
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-top: 1rem;
-    }
-  }
-}
-
-.ingredients-section,
-.additionals-section,
-.observation-section {
-  margin-bottom: 2rem;
-
-  h4 {
-    color: $color-text-primary;
-    margin-bottom: 1rem;
-  }
-}
-
-.ingredients-list,
-.additionals-list {
+.customize__options {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-5);
+  min-width: 0;
 }
 
-.modal-footer {
-  @include flex-center();
-  justify-content: flex-end;
-  padding: 1.5rem;
-  border-top: 1px solid $border-color;
+.customize__description {
+  color: var(--color-ink-muted);
+}
+
+.customize__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.customize__title {
+  padding: 0;
+  font-size: var(--text-md);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.customize__help {
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
 }
