@@ -15,7 +15,9 @@ yarn test:coverage      # roda uma vez e gera a cobertura em coverage/
 
 O relatório HTML de cobertura fica em `coverage/index.html`, pasta ignorada pelo Git.
 
-O `@vitest/coverage-v8` (3.0.5) está numa versão diferente do `vitest` (3.2.6). Por isso o comando de cobertura avisa "Running mixed versions is not supported", mas gera o relatório normalmente.
+O `vitest` e o `@vitest/coverage-v8` estão na mesma versão (4.1.12) e devem ser atualizados juntos, porque o pacote de cobertura exige exatamente a versão do `vitest`.
+
+Desde o Vitest 4, o relatório só lista os arquivos que os testes importam, a menos que a config defina `coverage.include`. O `vitest.config.js` inclui `src/**/*.{js,vue}`, então os arquivos sem teste aparecem com 0%.
 
 ## O que está coberto
 
@@ -29,18 +31,20 @@ O `@vitest/coverage-v8` (3.0.5) está numa versão diferente do `vitest` (3.2.6)
 
 ### Cobertura (outubro de 2026)
 
-No total, a cobertura é de 8% das linhas. Os testes se concentram nos arquivos abaixo:
+No total, a cobertura é de 10% das linhas. Os testes se concentram nos arquivos abaixo:
 
 | Arquivo | Linhas cobertas |
 |---|---|
-| `components/BannerComponent.vue` | 98% |
-| `stores/toast.js` | 98% |
-| `components/ui/AppToast.vue` | 98% |
-| `composables/useResponsiveImage.js` | 97% |
-| `stores/cart.js` | 93% |
-| `stores/userStore.js` | 88% |
-| `components/ui/BaseButton.vue` | 86% |
-| `services/authServices.js` | 66% |
+| `components/BannerComponent.vue` | 100% |
+| `stores/toast.js` | 100% |
+| `stores/cart.js` | 91% |
+| `components/ui/AppToast.vue` | 87% |
+| `stores/userStore.js` | 81% |
+| `components/ui/BaseButton.vue` | 80% |
+| `composables/useResponsiveImage.js` | 77% |
+| `services/authServices.js` | 63% |
+
+Os números mudaram com o Vitest 4, e não com os testes, que continuam os mesmos. O provider V8 agora remapeia a cobertura pela AST do código, um cálculo mais preciso, e deixa de contar linhas sem código executável.
 
 As telas, o roteador, os utilitários (`formatters`, `validators`, `masks`) e o modal de personalização ainda não têm testes.
 
@@ -56,7 +60,7 @@ Os scripts de [`.claude/e2e/`](./.claude/e2e/README.md) abrem o build num Chromi
 | `micro-final.mjs` | Flip do botão, contador do carrinho, inclinação do card e montador do burger, com e sem movimento reduzido |
 | `check-admin.mjs` | Login do painel, sidebar e gaveta, menu de perfil e telas do admin |
 
-Na entrega do redesign (outubro de 2026), todos passaram, e o axe não encontrou violações.
+Na entrega do redesign e de novo na atualização de dependências (ambas em outubro de 2026), todos passaram, e o axe não encontrou violações.
 
 ## Escrevendo novos testes
 
