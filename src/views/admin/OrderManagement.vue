@@ -1,72 +1,89 @@
 <template>
   <section class="order-management">
-    <div class="management-container">
-      <header class="page-header">
-        <h1>Gestão de Pedidos</h1>
-        <div class="filters">
-          <select v-model="statusFilter">
-            <option value="">Todos os Status</option>
-            <option value="pending">Pendente</option>
-            <option value="preparing">Preparando</option>
-            <option value="delivery">Em Entrega</option>
-            <option value="completed">Concluído</option>
-          </select>
-        </div>
-      </header>
+    <h1 class="admin-page__title order-management__title">Pedidos</h1>
 
-      <div class="orders-list">
-        <AdminCard
-          v-for="order in filteredOrders"
-          :key="order.id"
-          :title="`Pedido #${order.id}`"
-        >
+    <FormGroup
+      id="statusFilter"
+      v-model="statusFilter"
+      class="admin-page__filter"
+      label="Status"
+      type="select"
+      :options="STATUS_FILTERS"
+    />
+
+    <ul v-if="filteredOrders.length" class="orders-list" role="list">
+      <li v-for="order in filteredOrders" :key="order.id">
+        <AdminCard :title="`Pedido #${order.id}`">
+          <template #header-actions>
+            <span class="status-chip" :class="`status-chip--${order.status}`">
+              {{ STATUS_LABELS[order.status] ?? order.status }}
+            </span>
+          </template>
+
           <div class="order-info">
-            <div class="customer-details">
-              <h3>Cliente</h3>
+            <div class="order-info__block">
+              <h3 class="order-info__title">Cliente</h3>
               <p>{{ order.customerName }}</p>
-              <p>{{ order.address }}</p>
-              <p>{{ order.phone }}</p>
+              <p class="order-info__muted">{{ order.address }}</p>
+              <p class="order-info__muted tabular">{{ order.phone }}</p>
             </div>
 
-            <div class="order-items">
-              <h3>Itens</h3>
-              <ul>
-                <li v-for="item in order.items" :key="item.id">
-                  {{ item.quantity }}x {{ item.name }} - R$ {{ item.price.toFixed(2) }}
+            <div class="order-info__block">
+              <h3 class="order-info__title">Itens</h3>
+              <ul class="order-info__items" role="list">
+                <li v-for="item in order.items" :key="item.id" class="order-info__item">
+                  <span><span class="tabular">{{ item.quantity }}×</span> {{ item.name }}</span>
+                  <span class="tabular">{{ formatPrice(item.price) }}</span>
                 </li>
               </ul>
             </div>
 
-            <div class="order-summary">
-              <p class="total">Total: R$ {{ order.total.toFixed(2) }}</p>
-              <p class="status" :class="order.status">Status: {{ order.status }}</p>
-            </div>
+            <p class="order-info__total">
+              <span>Total</span>
+              <span class="tabular">{{ formatPrice(order.total) }}</span>
+            </p>
           </div>
 
           <template #footer>
             <div class="order-actions">
-              <ButtonComponent
-                :buttons="[{ label: 'Atualizar Status', id: 'update' }]"
-                backgroundColor="#42b983"
-                @click="updateStatus(order)"
-              />
-              <ButtonComponent
-                :buttons="[{ label: 'Detalhes', id: 'details' }]"
-                backgroundColor="#3498db"
-                @click="viewDetails(order)"
-              />
+              <BaseButton variant="secondary" size="sm" @click="updateStatus(order)">
+                Atualizar status
+              </BaseButton>
+              <BaseButton variant="ghost" size="sm" @click="viewDetails(order)">Detalhes</BaseButton>
             </div>
           </template>
         </AdminCard>
-      </div>
-    </div>
+      </li>
+    </ul>
+
+    <EmptyState
+      v-else
+      icon="shopping-cart"
+      title="Nenhum pedido com esse status"
+      text="Escolha outro status no filtro."
+    />
   </section>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import { formatPrice } from "@/utils/formatters";
 import AdminCard from "@/components/admin/AdminCard.vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
+import FormGroup from "@/components/FormGroup.vue";
+
+const STATUS_LABELS = {
+  pending: "Pendente",
+  preparing: "Em preparo",
+  delivery: "A caminho",
+  completed: "Concluído",
+};
+
+const STATUS_FILTERS = [
+  { value: "", label: "Todos" },
+  ...Object.entries(STATUS_LABELS).map(([value, label]) => ({ value, label })),
+];
 
 // Variavel para filtrar o status dos pedidos
 const statusFilter = ref("");
@@ -105,7 +122,7 @@ const filteredOrders = computed(() => {
   return orders.value.filter((order) => order.status === statusFilter.value);
 });
 
-// Função para atualizar o status do pedido
+// Função para atualizar o status do pedido (comportamento mantido; FLX-09 fora do escopo)
 const updateStatus = (order) => {
   console.log("Atualizando status do pedido", order.id);
   const statusIndex = order.statuses.indexOf(order.status);

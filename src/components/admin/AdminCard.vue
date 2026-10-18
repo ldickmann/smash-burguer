@@ -1,18 +1,20 @@
 <template>
+  <!-- role="region" só com nome acessível: aria-labelledby aponta para o título -->
   <article
     class="admin-card"
-    :class="{ 'is-loading': loading }"
+    :class="[`admin-card--${variant}`, { 'is-loading': loading }]"
     role="region"
-    :aria-busy="loading"
+    :aria-labelledby="titleId"
+    :aria-busy="loading || undefined"
   >
     <header class="admin-card__header">
-      <h3 class="admin-card__title">{{ title }}</h3>
+      <component :is="`h${headingLevel}`" :id="titleId" class="admin-card__title">{{ title }}</component>
       <slot name="header-actions"></slot>
     </header>
 
-    <section class="admin-card__content">
+    <div class="admin-card__content">
       <slot></slot>
-    </section>
+    </div>
 
     <footer v-if="$slots.footer" class="admin-card__footer">
       <slot name="footer"></slot>
@@ -21,7 +23,9 @@
 </template>
 
 <script setup>
-const props = defineProps({
+import { useId } from "vue";
+
+defineProps({
   title: {
     type: String,
     required: true,
@@ -30,7 +34,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  headingLevel: {
+    type: [Number, String],
+    default: 2,
+  },
+  // "kpi": título discreto acima de um número grande
+  variant: {
+    type: String,
+    default: "default",
+    validator: (value) => ["default", "kpi"].includes(value),
+  },
 });
+
+const titleId = `admin-card-${useId()}`;
 </script>
 
 <style scoped lang="scss">

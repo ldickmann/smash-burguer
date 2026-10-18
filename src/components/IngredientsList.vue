@@ -1,34 +1,43 @@
 <template>
-  <ul class="ingredients-list">
-    <li v-for="ingredient in ingredients" :key="ingredient.id" class="ingredient-item">
-      <label :for="`ingredient-${ingredient.id}`">
+  <ul class="ingredients-list" role="list">
+    <li v-for="(ingredient, index) in model" :key="ingredient.id" class="ingredients-list__item">
+      <label
+        :for="`ingrediente-${ingredient.id}`"
+        class="ingredients-list__label"
+        :class="{ 'is-removed': !ingredient.included }"
+      >
+        <!-- Marcado = incluído. O v-model do componente é a única fonte de verdade. -->
         <input
+          :id="`ingrediente-${ingredient.id}`"
           type="checkbox"
-          :id="`ingredient-${ingredient.id}`"
-          v-model="ingredient.included"
-          @change="$emit('update:ingredient', ingredient)"
+          class="ingredients-list__checkbox"
+          :checked="ingredient.included"
+          @change="setIncluded(index, $event.target.checked)"
         />
-        {{ ingredient.name }}
+        <span class="ingredients-list__name">{{ ingredient.name }}</span>
+        <span v-if="!ingredient.included" class="visually-hidden">(removido)</span>
       </label>
     </li>
   </ul>
 </template>
 
 <script setup>
-const props = defineProps({
-  ingredients: {
-    type: Array,
-    required: true,
-    validator(value) {
-      return value.every(
-        (ingredient) =>
-          "id" in ingredient && "name" in ingredient && "included" in ingredient
-      );
-    },
+// Lista de { id, name, included } controlada pelo pai com v-model
+const model = defineModel({
+  type: Array,
+  required: true,
+  validator(value) {
+    return value.every(
+      (ingredient) => "id" in ingredient && "name" in ingredient && "included" in ingredient
+    );
   },
 });
 
-const emit = defineEmits(["update:ingredient"]);
+const setIncluded = (index, included) => {
+  model.value = model.value.map((ingredient, i) =>
+    i === index ? { ...ingredient, included } : ingredient
+  );
+};
 </script>
 
 <style scoped lang="scss">

@@ -1,25 +1,27 @@
 <template>
   <div class="navbar-notifications">
-    <div
-      v-for="(item, index) in notifications"
-      :key="index"
-      class="notification-item"
+    <BaseButton
+      v-for="item in notifications"
+      :key="item.type"
+      variant="ghost"
+      icon-only
+      :icon-start="item.icon"
+      :label="item.label"
       @click="handleClick(item.type)"
-    >
-      <font-awesome-icon :icon="item.icon" />
-      <!-- <span v-if="item.count" class="notification-badge">{{ item.count }}</span> -->
-    </div>
+    />
   </div>
 </template>
 
 <script setup>
-const props = defineProps({
+import BaseButton from "@/components/ui/BaseButton.vue";
+
+defineProps({
   notifications: {
     type: Array,
     default: () => [
-      { type: "messages", icon: ["far", "envelope"], count: 0 },
-      { type: "alerts", icon: ["fas", "bell"], count: 0 },
-      { type: "tasks", icon: ["fas", "tasks"], count: 0 },
+      { type: "messages", label: "Mensagens", icon: ["far", "envelope"], count: 0 },
+      { type: "alerts", label: "Notificações", icon: ["fas", "bell"], count: 0 },
+      { type: "tasks", label: "Tarefas", icon: ["fas", "tasks"], count: 0 },
     ],
   },
 });

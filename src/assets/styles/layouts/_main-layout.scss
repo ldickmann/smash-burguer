@@ -1,0 +1,12 @@
+// MainLayout (SPEC §4.2): rodapé sempre no fim e espaço da navbar fixa reservado.
+.main-layout {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.main-layout__main {
+  min-width: 0;
+  padding-top: var(--navbar-h);
+}

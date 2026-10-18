@@ -1,140 +1,108 @@
-@use "../../base/variables" as *;
-@use "../../base/mixins" as *;
+// Perfil (SPEC §5.9): "Seus dados" (5/12) e "Seus pedidos" (7/12) a partir de lg.
+@use "../../base/breakpoints" as *;
 
-.profile-section {
-  padding: 8rem 0;
-  min-height: 100vh;
-  background-color: $color-white-background;
+.profile-page {
+  padding-block: var(--space-6) var(--space-8);
+}
 
-  .profile-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+.profile-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
 
-    @include respond-to("sm") {
-      padding: 1rem;
-    }
+.profile-page__title {
+  font-size: var(--text-page);
+}
+
+.profile-page__layout {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: 5fr 7fr;
   }
+}
 
-  .profile-content {
-    background-color: $secondary-color;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px $shadow-color;
-    padding: 2rem;
+.profile-page__card {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  box-shadow: var(--elev-1);
 
-    @include respond-to("sm") {
-      padding: 1rem;
-    }
+  @include up(lg) {
+    padding: var(--space-5);
   }
+}
 
-  .profile-title {
-    color: $color-text-primary;
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 2rem;
+.profile-page__section-title {
+  margin-bottom: var(--space-4);
+}
 
-    @include respond-to("sm") {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-  }
+.profile-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
-  // Teste com grid layout
-  // Container de informações do perfil
-  .profile-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+.profile-page__row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
 
-    @include respond-to("md") {
-      grid-template-columns: 1fr;
-    }
-  }
+// Lista de pedidos
+.profile-orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
 
-  .profile-personal,
-  .profile-orders {
-    padding: 1.5rem;
-    background-color: $color-white-background-secondary;
-    border-radius: 8px;
+.profile-order {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
 
-    h2 {
-      color: $color-text-primary;
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
+.profile-order__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
 
-      @include respond-to("sm") {
-        font-size: 1.2rem;
-      }
-    }
+.profile-order__number {
+  font-weight: 700;
+}
 
-    .button-save-profile {
-      justify-content: center;
-    }
-  }
+// Chip "Recebido"
+.profile-order__status {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-info-soft);
+  color: var(--color-info);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
 
-  .orders-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+.profile-order__meta {
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+}
 
-  .order-item {
-    background-color: $secondary-color;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px $shadow-color;
-  }
+.profile-order__summary {
+  display: list-item;
+  padding-block: var(--space-3);
+  font-weight: 600;
+  cursor: pointer;
+}
 
-  .order-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid $border-color;
-  }
-
-  .order-status {
-    color: $tertiary-color;
-    font-weight: 500;
-  }
-
-  .order-details {
-    margin: 1rem 0;
-  }
-
-  .order-product {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    color: $color-text-secondary;
-  }
-
-  .order-total {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 1rem;
-    border-top: 1px solid $border-color;
-    font-weight: 500;
-
-    strong {
-      color: $quinary-color;
-    }
-  }
-
-  .no-orders {
-    text-align: center;
-    padding: 2rem;
-    color: $color-text-secondary;
-
-    .menu-link {
-      display: inline-block;
-      margin-top: 1rem;
-      color: $tertiary-color;
-      text-decoration: underline;
-
-      &:hover {
-        color: $quaternary-color;
-      }
-    }
-  }
+.profile-order__details[open] .profile-order__summary {
+  margin-bottom: var(--space-3);
 }
