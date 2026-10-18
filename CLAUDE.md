@@ -12,7 +12,7 @@ Converse com o usuário em português. Commits também em português, no formato
 
 ## Comandos no ambiente cloud
 
-O projeto usa Yarn 3.8.7 (`yarn.lock` no formato do Yarn 3 e `.yarn/cache` versionado). O `repo.yarnpkg.com` é bloqueado no container, então:
+O projeto usa Yarn 3.8.7, fixado em `packageManager` no `package.json`; o `yarn.lock` está no formato do Yarn 3 e o `.yarn/cache` é versionado. O `repo.yarnpkg.com` é bloqueado no container, então:
 
 ```bash
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
@@ -54,11 +54,18 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 Rode build, lint e testes. Para mudanças visuais ou de dependências, use também os scripts Playwright + axe de `.claude/e2e/`; o modo de usar está em `.claude/e2e/README.md`.
 
+## Documentação
+
+O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, limitações) e o `TESTING.md` descrevem o estado atual. Ao mudar dependências, scripts, testes, rotas ou o deploy, atualize os dois no mesmo PR.
+
 ## Problemas conhecidos (fora do escopo do redesign)
 
 - "Atualizar status" no admin lança TypeError (`[FLX-09]`).
+- No admin, "Excluir" só faz `console.log`, e produtos criados ou editados não são persistidos.
 - A sessão guarda a senha no localStorage, e o `createAdmin.html` está versionado com credenciais (AUDIT §11.3).
+- O `createAdmin.html` grava o admin na chave `admin`, a mesma que o `adminStore` persiste. Depois do primeiro login, entrar de novo exige rodar o `createAdmin.html` outra vez. O link que a página mostra (`/admin/login`) também está errado; o certo é `/smash-burguer/#/admin/login`.
 - Sair da conta apaga o histórico de pedidos.
+- O `.prettierrc.json` (sem ponto e vírgula, aspas simples) não bate com 120 dos 132 arquivos de `src/`. Não rode `yarn format` misturado com outras mudanças.
 
 ## Próxima tarefa — handoff de 18/10/2026 (apague esta seção ao concluir)
 
@@ -66,7 +73,7 @@ O usuário pediu para corrigir os avisos do workflow de deploy e os alertas do D
 
 ### 1. Avisos do deploy
 
-Referência: run 24, https://github.com/ldickmann/smash-burguer/actions/runs/39094392238.
+Referência: [run 24](https://github.com/ldickmann/smash-burguer/actions/runs/39094392238).
 
 - **Actions em versões para Node 20:** o GitHub avisa "Node.js 20 is deprecated" para estas actions:
   - `actions/checkout@v4`
@@ -105,7 +112,16 @@ Confira a lista real em GitHub → Security → Dependabot. Em 18/10, `corepack 
   - `svgo` (vite-svg-loader);
   - `baseline-browser-mapping` e `@babel/core` (vite-plugin-vue-devtools).
 
+Dependências sem uso: removê-las já fecha alguns alertas. Confirme com o usuário antes.
+
+- `chart.js` e `vue-chart-3`: o gráfico foi trocado por um `EmptyState`. Remover o `vue-chart-3` também elimina o alerta do `lodash-es`.
+- `happy-dom`: os testes usam `jsdom`. Remover elimina os alertas de `happy-dom` e `ws`.
+- `vite-svg-loader`: está no `vite.config.js`, mas nenhum arquivo importa SVG. Remover elimina o alerta do `svgo`.
+
+`@vitest/coverage-v8` está fixo em 3.0.5, e o `vitest` está na 3.2.6. O `yarn test:coverage` avisa "Running mixed versions". Alinhe os dois e atualize a nota no `TESTING.md`.
+
 Como fazer:
+
 - Atualize com `corepack yarn@3.8.7 up <pacote>`; para dependências transitivas, use `up -R <pacote>`.
 - Para majors (vitest 4, talvez pinia 3), leia o changelog antes.
 - Depois de cada lote, rode build, lint, testes e os scripts de `.claude/e2e`.
