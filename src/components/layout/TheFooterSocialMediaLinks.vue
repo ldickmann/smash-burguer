@@ -33,11 +33,6 @@ const socialMediaLinks = [
     icon: ["fab", "instagram"],
     url: "https://instagram.com",
   },
-  {
-    name: "X",
-    icon: ["fab", "x-twitter"],
-    url: "https://x.com",
-  },
 ];
 </script>
 
