@@ -19,11 +19,3 @@
   border: 0;
   border-top: 1px solid var(--color-border);
 }
-
-// Temporário: telas ainda não migradas usam a classe antiga.
-// Sai na fase 8.
-.container-utilities {
-  width: 100%;
-  max-width: var(--container-max);
-  margin-inline: auto;
-}

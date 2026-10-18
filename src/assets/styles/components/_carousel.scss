@@ -1,5 +1,5 @@
-// Carrossel "Mais pedidos" (SPEC §5.2). Sem !important: as cores da biblioteca
-// vêm das variáveis --vc-*, que apontam para os tokens.
+// Carrossel "Mais pedidos" (SPEC §5.2). As cores da biblioteca vêm das
+// variáveis --vc-*, que apontam para os tokens; nada é forçado por prioridade.
 @use "../base/breakpoints" as *;
 
 .product-carousel {

@@ -1,27 +1,5 @@
-@use "sass:map";
-
-// Definição de breakpoints
-$breakpoints: (
-  "xxs": 320px,
-  "xs": 480px,
-  "sm": 768px,
-  "md": 1024px,
-  "lg": 1280px,
-  "xl": 1440px
-);
-
-// Mixin para media queries
-@mixin respond-to($size) {
-  @if map.has-key($breakpoints, $size) {
-    @media (max-width: map.get($breakpoints, $size)) {
-      @content;
-    }
-  } @else {
-    @warn "O breakpoint #{$size} não existe. Certifique-se de definir corretamente no mapa `$breakpoints`.";
-  }
-}
-
 // Mixin para centralizar elementos
+// (breakpoints e media queries ficam em _breakpoints.scss: up(), hover-capable)
 @mixin flex-center($direction: row) {
   display: flex;
   flex-direction: $direction;

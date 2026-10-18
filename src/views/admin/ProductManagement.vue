@@ -59,7 +59,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useProductsStore } from "@/stores/products.js";
-import { useButtonHandlers } from "@/utils/buttonHandlers.js";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import ProductCard from "@/components/ProductCard.vue";
@@ -72,7 +71,6 @@ const CATEGORY_FILTERS = [
   { value: "desserts", label: "Sobremesas" },
 ];
 
-const { handleDeleteProduct } = useButtonHandlers();
 const productsStore = useProductsStore();
 
 const showAddModal = ref(false);
@@ -135,7 +133,7 @@ const onAddSubmit = (newProduct) => {
 
 // Excluir continua sem efeito real (FLX-09, fora do escopo)
 const deleteProduct = (productId) => {
-  handleDeleteProduct(productId);
+  console.log("Produto excluído", productId);
 };
 </script>
 
