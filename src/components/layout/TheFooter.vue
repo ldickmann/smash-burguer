@@ -1,42 +1,41 @@
 <template>
-  <footer>
-    <div class="container-utilities">
-      <div class="container-general">
-        <div class="container-title">
-          <h1>{{ title }}</h1>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <p class="site-footer__wordmark">{{ title }}</p>
           <p>{{ description }}</p>
         </div>
 
-        <ContactInfo :address="address" :phone="phone" :email="email" />
+        <section class="site-footer__col" aria-labelledby="rodape-endereco">
+          <h2 id="rodape-endereco" class="site-footer__heading">Endereço</h2>
+          <ContactInfo :address="address" :phone="phone" :email="email" />
+        </section>
 
-        <div class="container-working-hours">
-          <h2>Working Hours</h2>
+        <section class="site-footer__col" aria-labelledby="rodape-horario">
+          <h2 id="rodape-horario" class="site-footer__heading">Horário</h2>
           <p>{{ workingHours }}</p>
-        </div>
+        </section>
 
-        <SocialMediaLinks />
+        <section class="site-footer__col" aria-labelledby="rodape-redes">
+          <h2 id="rodape-redes" class="site-footer__heading">Redes sociais</h2>
+          <SocialMediaLinks :brand="title" />
+        </section>
       </div>
-      <SeparatorLines
-        orientation="horizontal"
-        color="#ffffff"
-        :thickness="1"
-        class="separator-copy"
-        marginTop="1rem"
-      />
-      <div class="container-copy">
-        <p>2026 Smash Burgers | Sabiá Operações</p>
-        <p>Desenvolvido por Lucas Elias Dickmann</p>
-      </div>
+
+      <hr class="divider site-footer__divider" />
+      <p class="site-footer__copy">
+        © 2026 {{ title }} · Sabiá Operações — Desenvolvido por Lucas Elias Dickmann
+      </p>
     </div>
   </footer>
 </template>
 
 <script setup>
-import SeparatorLines from "@/components/SeparatorLines.vue";
 import ContactInfo from "@/components/layout/TheFooterContactInfo.vue";
 import SocialMediaLinks from "@/components/layout/TheFooterSocialMediaLinks.vue";
 
-const props = defineProps({
+defineProps({
   title: String,
   description: String,
   address: String,

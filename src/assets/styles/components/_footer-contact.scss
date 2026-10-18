@@ -1,0 +1,29 @@
+// Contatos do rodapé (SPEC §5.10): cada link tem pelo menos 44px de altura.
+@use "../base/breakpoints" as *;
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-contact__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-min);
+  color: var(--color-ink-muted);
+
+  @include hover-capable {
+    &:hover {
+      color: var(--color-ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.footer-contact__icon {
+  flex-shrink: 0;
+  width: 1em;
+  color: var(--color-ink-subtle);
+}

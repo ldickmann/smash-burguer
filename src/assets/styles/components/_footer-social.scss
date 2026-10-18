@@ -1,0 +1,26 @@
+// Redes sociais do rodapé (SPEC §5.10): alvos de 44×44.
+@use "../base/breakpoints" as *;
+
+.footer-social {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: calc(-1 * var(--space-3));
+}
+
+.footer-social__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-muted);
+  font-size: 1.25rem;
+
+  @include hover-capable {
+    &:hover {
+      background: var(--color-hover-ghost);
+      color: var(--color-ink);
+    }
+  }
+}

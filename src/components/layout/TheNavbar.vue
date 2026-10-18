@@ -1,90 +1,111 @@
 <template>
-  <header class="navbar-main" ref="headerRef">
-    <div class="navbar-main__container">
-      <router-link to="/" class="navbar-main__brand" @click="closeMenu">
-        <h1>{{ title }}</h1>
-      </router-link>
+  <header ref="headerRef" class="navbar">
+    <div class="navbar__bar container">
+      <RouterLink to="/" class="navbar__brand">{{ title }}</RouterLink>
 
-      <button
-        class="navbar-main__toggle"
-        @click="toggleMenu"
-        :aria-expanded="isMenuOpen"
-        ref="toggleRef"
-        aria-label="Menu principal"
+      <nav
+        id="menu-principal"
+        ref="menuRef"
+        class="navbar__menu"
+        :class="{ 'is-open': isMenuOpen }"
+        aria-label="Principal"
       >
-        <span class="navbar-main__toggle-bar"></span>
-        <span class="navbar-main__toggle-bar"></span>
-        <span class="navbar-main__toggle-bar"></span>
-      </button>
-
-      <nav class="navbar-main__menu" ref="menuRef" :class="{ 'is-open': isMenuOpen }">
-        <ul class="navbar-main__list">
-          <li v-for="link in navLinks" :key="link.path" class="navbar-main__item">
-            <router-link
-              :to="link.path"
-              class="navbar-main__link"
-              :class="{ 'is-active': route.path === link.path }"
-              @click="closeMenu"
-            >
-              {{ link.label }}
-            </router-link>
+        <ul class="navbar__list" role="list">
+          <li v-for="link in navLinks" :key="link.path" class="navbar__item">
+            <RouterLink :to="link.path" class="navbar__link">
+              <span class="navbar__link-text">{{ link.label }}</span>
+            </RouterLink>
           </li>
         </ul>
       </nav>
+
+      <div class="navbar__actions">
+        <CartBadge />
+        <BaseButton
+          ref="toggleRef"
+          class="navbar__toggle"
+          variant="ghost"
+          icon-only
+          :icon-start="isMenuOpen ? 'xmark' : 'bars'"
+          label="Menu principal"
+          aria-controls="menu-principal"
+          :aria-expanded="String(isMenuOpen)"
+          @click="toggleMenu"
+        />
+      </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
+import { useScrollLock } from "@/composables/useScrollLock";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import CartBadge from "@/components/CartBadge.vue";
 
-const route = useRoute();
-const headerRef = ref(null);
-const menuRef = ref(null);
-const toggleRef = ref(null);
-const isMenuOpen = ref(false);
-
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true,
   },
 });
 
-const navLinks = [
-  { path: "/", label: "Home" },
+const route = useRoute();
+const userStore = useUserStore();
+const { lock, unlock } = useScrollLock();
+
+const headerRef = ref(null);
+const menuRef = ref(null);
+const toggleRef = ref(null);
+const isMenuOpen = ref(false);
+
+// O terceiro link depende da sessão
+const navLinks = computed(() => [
+  { path: "/", label: "Início" },
   { path: "/menu", label: "Cardápio" },
-  { path: "/cart", label: "Carrinho" },
-  { path: "/profile", label: "Perfil" },
-];
+  userStore.isAuthenticated
+    ? { path: "/profile", label: "Perfil" }
+    : { path: "/login", label: "Entrar" },
+]);
 
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
-  document.body.style.overflow = isMenuOpen.value ? "hidden" : "";
+const openMenu = async () => {
+  isMenuOpen.value = true;
+  lock();
+  await nextTick();
+  menuRef.value?.querySelector("a")?.focus();
 };
 
-const closeMenu = () => {
+const closeMenu = ({ returnFocus = false } = {}) => {
+  if (!isMenuOpen.value) return;
   isMenuOpen.value = false;
-  document.body.style.overflow = "";
+  unlock();
+  if (returnFocus) toggleRef.value?.focus();
 };
 
-const handleClickOutside = (event) => {
-  if (
-    isMenuOpen.value &&
-    !menuRef.value?.contains(event.target) &&
-    !toggleRef.value?.contains(event.target)
-  ) {
-    closeMenu();
-  }
+const toggleMenu = () => (isMenuOpen.value ? closeMenu() : openMenu());
+
+const handleKeydown = (event) => {
+  if (event.key === "Escape" && isMenuOpen.value) closeMenu({ returnFocus: true });
 };
+
+const handlePointerDown = (event) => {
+  if (isMenuOpen.value && !headerRef.value?.contains(event.target)) closeMenu();
+};
+
+// Fecha ao trocar de rota
+watch(() => route.fullPath, () => closeMenu());
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
+  document.addEventListener("keydown", handleKeydown);
+  document.addEventListener("pointerdown", handlePointerDown);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("keydown", handleKeydown);
+  document.removeEventListener("pointerdown", handlePointerDown);
+  unlock();
 });
 </script>
 
