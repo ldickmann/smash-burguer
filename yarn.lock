@@ -1062,6 +1062,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/archivo@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/archivo@npm:5.3.0"
+  checksum: 8bd82eb95d39355740d39c51095b17f7cfa31634650b2b7b66f1e55b99f85965370429cb3d4d19b9df0d9d3738babdfd8c9524c239336f74899ebff3fdebf039
+  languageName: node
+  linkType: hard
+
 "@fontsource/bebas-neue@npm:^5.1.1":
   version: 5.2.7
   resolution: "@fontsource/bebas-neue@npm:5.2.7"
@@ -5036,6 +5043,7 @@ __metadata:
   resolution: "smash-burger@workspace:."
   dependencies:
     "@eslint/js": ^9.18.0
+    "@fontsource-variable/archivo": ^5.3.0
     "@fontsource/bebas-neue": ^5.1.1
     "@fortawesome/fontawesome-svg-core": ^6.7.2
     "@fortawesome/free-brands-svg-icons": ^6.7.2

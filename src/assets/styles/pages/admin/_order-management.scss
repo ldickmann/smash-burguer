@@ -1,194 +1,90 @@
-@use "../../base/variables" as *;
-@use "../../base/mixins" as *;
+// Pedidos do admin (SPEC §5.11): filtro com rótulo e status em português.
+@use "../../base/breakpoints" as *;
+@use "admin-page";
 
-.order-management {
-  padding: 2rem;
+.order-management__title {
+  margin-bottom: var(--space-5);
+}
 
-  .management-container {
-    max-width: 1200px;
-    margin: 0 auto;
+.orders-list {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .page-header {
-    @include flex-center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-
-    h1 {
-      color: $color-text-primary;
-      font-size: 2rem;
-      font-weight: 600;
-    }
-
-    .filters {
-      select {
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        border: 1px solid $border-color;
-        background-color: $secondary-color;
-        color: $color-text-primary;
-        font-size: 1rem;
-
-        &:focus {
-          outline: none;
-          border-color: $tertiary-color;
-        }
-      }
-    }
+  @include up(xl) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
 
-  .orders-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: flex-start;
+// Chip de status: --radius-sm, --text-xs 700
+.status-chip {
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-info-soft);
+  color: var(--color-info);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
 
-    .order-card {
-      flex: 0 1 350px;
-      min-width: 300px;
-      background-color: $secondary-color;
-      border-radius: 2rem;
-      box-shadow: 0 2px 4px $shadow-color;
-    }
-  }
+.status-chip--pending {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
 
-  .order-info {
-    padding: 1rem;
+.status-chip--completed {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
 
-    h3 {
-      color: $color-text-primary;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
 
-    .customer-details {
-      margin-bottom: 1rem;
+.order-info__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
-      p {
-        color: $color-text-secondary;
-        margin: 0.25rem 0;
-      }
-    }
+.order-info__title {
+  color: var(--color-ink-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
-    .order-items {
-      margin: 1rem 0;
+.order-info__muted {
+  color: var(--color-ink-muted);
+}
 
-      ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+.order-info__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
-        li {
-          color: $color-text-quinary;
-          padding: 0.5rem 0;
-          border-bottom: 1px solid $border-color;
+.order-info__item,
+.order-info__total {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
 
-          &:last-child {
-            border-bottom: none;
-          }
-        }
-      }
-    }
+.order-info__total {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  font-weight: 700;
+}
 
-    .order-summary {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-
-      .total {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: $tertiary-color;
-      }
-
-      .status {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.9rem;
-        font-weight: 500;
-
-        &.pending {
-          background-color: $color-orange-background;
-          color: $quinary-color;
-        }
-
-        &.preparing {
-          background-color: $color-cream-background;
-          color: $nonary-color;
-        }
-
-        &.delivery {
-          background-color: $color-light-blue-background;
-          color: $color-blue-background;
-        }
-
-        &.completed {
-          background-color: $color-white-background;
-          color: $tertiary-color;
-        }
-      }
-    }
-  }
-
-  .order-actions {
-    @include flex-center;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: $color-white-background-secondary;
-    border-radius: 0 0 2rem 2rem;
-
-    button {
-      flex: 1;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px $shadow-color;
-      }
-    }
-  }
-
-  @include respond-to("md") {
-    padding: 1.5rem;
-
-    .page-header {
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
-    }
-
-    .orders-list {
-      justify-content: center;
-    }
-  }
-
-  @include respond-to("sm") {
-    .orders-list .order-card {
-      flex: 1 1 100%;
-    }
-  }
-
-  @include respond-to("xs") {
-    padding: 1rem;
-
-    .page-header h1 {
-      font-size: 1.5rem;
-    }
-
-    .order-actions {
-      width: 100%;
-      flex-direction: column;
-
-      button {
-        max-width: 100%;
-      }
-    }
-  }
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }

@@ -20,7 +20,7 @@
     },
     {
       "id": 4,
-      "name": "Queijo Cheedar",
+      "name": "Queijo Cheddar",
       "price": 3.0,
       "quantity": 0
     },
@@ -91,7 +91,7 @@
           "Maionese"
         ],
         "price": 25.99,
-        "image": "/images/foods/cheese-bacon.jpg",
+        "image": "/images/foods/cheese-bacon",
         "category": "foods"
       },
       {
@@ -108,13 +108,13 @@
           "Maionese"
         ],
         "price": 22.5,
-        "image": "/images/foods/smash-burger.jpg",
+        "image": "/images/foods/smash-burger",
         "category": "foods"
       },
       {
         "id": 3,
         "name": "Veggie Burger",
-        "description": "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hamburguer de soja e maionese",
+        "description": "Hambúrguer artesanal vegetariano com queijo, alface, tomate, hambúrguer de soja e maionese",
         "ingredients": [
           "Pão de hambúrguer",
           "Hambúrguer de soja",
@@ -124,7 +124,7 @@
           "Maionese"
         ],
         "price": 24.9,
-        "image": "/images/foods/veggie-burger.jpg",
+        "image": "/images/foods/veggie-burger",
         "category": "foods"
       },
       {
@@ -142,7 +142,7 @@
           "Ketchup"
         ],
         "price": 20.9,
-        "image": "/images/foods/x-salada.jpg",
+        "image": "/images/foods/x-salada",
         "category": "foods"
       },
       {
@@ -159,7 +159,7 @@
           "Maionese"
         ],
         "price": 23.9,
-        "image": "/images/foods/chicken-burger.jpg",
+        "image": "/images/foods/chicken-burger",
         "category": "foods"
       },
       {
@@ -177,7 +177,7 @@
           "Maionese"
         ],
         "price": 29.9,
-        "image": "/images/foods/burger-picanha.jpg",
+        "image": "/images/foods/burger-picanha",
         "category": "foods"
       },
       {
@@ -189,7 +189,7 @@
           "Sal"
         ],
         "price": 10.9,
-        "image": "/images/foods/batata-frita.jpg",
+        "image": "/images/foods/batata-frita",
         "category": "foods"
       }
     ],
@@ -199,7 +199,7 @@
         "name": "Copo de Refrigerante",
         "description": "Copo de refrigerante 500ml",
         "price": 5.99,
-        "image": "/images/drinks/copo-refrigerante.jpg",
+        "image": "/images/drinks/copo-refrigerante",
         "category": "drinks"
       },
       {
@@ -207,7 +207,7 @@
         "name": "Coca Cola Lata",
         "description": "Lata de Coca Cola 350ml",
         "price": 4.99,
-        "image": "/images/drinks/coca-cola-lata.jpg",
+        "image": "/images/drinks/coca-cola-lata",
         "category": "drinks"
       },
       {
@@ -215,7 +215,7 @@
         "name": "Suco de Abacaxi",
         "description": "Suco de abacaxi natural 500ml",
         "price": 7.99,
-        "image": "/images/drinks/suco-abacaxi.jpg",
+        "image": "/images/drinks/suco-abacaxi",
         "category": "drinks"
       }
     ],
@@ -230,7 +230,7 @@
           "Creme de leite"
         ],
         "price": 12.9,
-        "image": "/images/desserts/sorvete-pote.jpg",
+        "image": "/images/desserts/sorvete-pote",
         "category": "desserts"
       }
     ]

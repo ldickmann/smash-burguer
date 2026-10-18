@@ -1,0 +1,82 @@
+// OrderSummary (SPEC §4.1): itens, divisor, Subtotal, Total e CTA.
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-summary__title {
+  font-family: var(--font-text);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.order-summary__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.order-summary__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.order-summary__name {
+  font-weight: 600;
+}
+
+.order-summary__line-total {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.order-summary__detail {
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
+
+.order-summary--compact {
+  .order-summary__items {
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+}
+
+.order-summary__totals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.order-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--color-ink-muted);
+}
+
+.order-summary__row--total {
+  color: var(--color-ink);
+  font-weight: 700;
+
+  .order-summary__value {
+    font-size: var(--text-xl);
+    line-height: var(--leading-tight);
+  }
+}
+
+.order-summary__cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

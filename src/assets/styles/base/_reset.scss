@@ -1,5 +1,4 @@
-@use "variables" as *;
-@use "typography" as *;
+// Reset (SPEC §3, item 4).
 
 *,
 *::before,
@@ -9,22 +8,56 @@
   padding: 0;
 }
 
+html {
+  color-scheme: dark;
+  scroll-padding-top: calc(var(--navbar-h) + var(--space-4));
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  font-family: $font-family-primary;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font: 400 var(--text-md) / var(--leading-body) var(--font-text);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture {
+  display: block;
+  max-width: 100%;
 }
 
 img {
-  max-width: 100%;
   height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
 button {
   cursor: pointer;
-  border: none;
+  border: 0;
   background: none;
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+fieldset {
+  border: 0;
+  min-width: 0;
 }

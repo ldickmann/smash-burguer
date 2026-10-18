@@ -1,104 +1,94 @@
 <template>
-  <!-- Component Carousel -->
-  <Carousel v-bind="carouselConfig" class="custom-carousel">
-    <!-- Para cada item de burgers, renderiza um slide no carousel -->
-    <Slide v-for="burger in burgers" :key="burger.id" class="custom-slide">
-      <div class="carousel-item">
-        <img :src="burger.image" :alt="burger.name" class="carousel-image" />
-        <div class="carousel-content">
-          <h3>{{ burger.name }}</h3>
-          <p>{{ burger.description }}</p>
-          <p class="price">R$ {{ burger.price.toFixed(2) }}</p>
-          <ButtonComponent
-            :buttons="[{ label: 'Adicionar ao Pedido', id: 'add-to-cart' }]"
-            backgroundColor="#42b983"
-            fontSize="16px"
-            buttonSize="12px 24px"
-            borderRadius="4px"
-            @click="() => openModal(burger)"
-          />
-        </div>
+  <div class="product-carousel">
+    <div class="product-carousel__header">
+      <slot name="title" />
+      <div class="product-carousel__nav">
+        <BaseButton
+          variant="secondary"
+          icon-only
+          icon-start="chevron-left"
+          label="Anterior"
+          @click="carouselRef?.prev()"
+        />
+        <BaseButton
+          variant="secondary"
+          icon-only
+          icon-start="chevron-right"
+          label="Próximo"
+          @click="carouselRef?.next()"
+        />
       </div>
-    </Slide>
+    </div>
 
-    <!-- Adiciona os componentes de navegação e paginação -->
-    <template #addons>
-      <Navigation />
-      <Pagination />
-    </template>
-  </Carousel>
+    <Carousel ref="carouselRef" v-bind="carouselConfig" class="product-carousel__carousel">
+      <Slide v-for="product in products" :key="product.id" class="product-carousel__slide">
+        <ProductCard
+          :product="product"
+          variant="compact"
+          :heading-level="3"
+          @add="(item, context) => $emit('add', item, context)"
+        />
+      </Slide>
 
-  <!-- Modal Component que aparece ao clicar para adicionar -->
-  <ModalAdditional
-    v-if="showModal"
-    :show="showModal"
-    :item="selectedItem"
-    @close="closeModal"
-    @add-to-cart="handleAddToCart"
-  />
+      <template #addons>
+        <Pagination />
+      </template>
+    </Carousel>
+  </div>
 </template>
 
 <script setup>
 import "vue3-carousel/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { computed, ref } from "vue";
-import ButtonComponent from "@/components/ButtonComponent.vue";
-import ModalAdditional from "@/components/ModalAdditional.vue";
+import { Carousel, Slide, Pagination } from "vue3-carousel";
+import { ref } from "vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import ProductCard from "@/components/ProductCard.vue";
+import { readDurationToken } from "@/utils/tokens";
 
-const props = defineProps({
-  burgers: {
-    Array,
+defineProps({
+  products: {
+    type: Array,
     required: true,
   },
 });
 
-// Define eventos emitidos pelo componente
-const emit = defineEmits(["addToCart"]);
-const showModal = ref(false);
-const selectedItem = ref(null);
+defineEmits(["add"]);
 
-// Configurações computadas do carousel com base nos "breakpoints"
-const carouselConfig = computed(() => ({
-  snapAlign: "center",
+const carouselRef = ref(null);
+
+// Duração do deslizamento lida do token --dur-base; zero com movimento reduzido
+const slideDuration = () => {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return 0;
+  return readDurationToken("--dur-base");
+};
+
+// Mesmas larguras de breakpoint do SCSS (§2.9): 1, 2 e 3 itens a partir de base, sm e lg
+const carouselConfig = {
+  snapAlign: "start",
   wrapAround: true,
-  pauseAutoPlayOnHover: true,
+  pauseAutoplayOnHover: true,
+  // = --space-5
+  gap: 24,
+  transition: slideDuration(),
+  itemsToShow: 1,
   breakpoints: {
-    425: {
-      height: 370,
-      itemsToShow: 2,
-    },
-    768: {
-      height: 500,
-      itemsToShow: 2,
-    },
-    1024: {
-      height: 550,
-      itemsToShow: 3,
-    },
-    1440: {
-      height: 600,
-      itemsToShow: 3,
-    },
+    480: { itemsToShow: 2 },
+    768: { itemsToShow: 2 },
+    1024: { itemsToShow: 3 },
+    1280: { itemsToShow: 3 },
   },
-}));
-
-//Função para abrir o modal ao clicar no botão
-const openModal = (burger) => {
-  selectedItem.value = burger;
-  showModal.value = true;
-};
-
-// Função para fechar o modal
-const closeModal = () => {
-  showModal.value = false;
-  selectedItem.value = null;
-  document.body.style.overflow = "";
-};
-
-// Função para adicionar o item ao carrinho
-const handleAddToCart = (customizedItem) => {
-  emit("addToCart", customizedItem); // Emite o evento para adicionar ao carrinho
-  closeModal();
+  i18n: {
+    ariaNextSlide: "Próximo",
+    ariaPreviousSlide: "Anterior",
+    ariaNavigateToSlide: "Ir para o item {slideNumber}",
+    ariaNavigateToPage: "Ir para a página {slideNumber}",
+    ariaGallery: "Mais pedidos",
+    itemXofY: "Item {currentSlide} de {slidesCount}",
+    iconArrowUp: "Seta para cima",
+    iconArrowDown: "Seta para baixo",
+    iconArrowLeft: "Seta para a esquerda",
+    iconArrowRight: "Seta para a direita",
+  },
 };
 </script>
 

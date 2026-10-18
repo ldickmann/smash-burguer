@@ -1,49 +1,67 @@
 <template>
-  <div class="navbar-profile">
-    <div class="profile-avatar" @click="toggleMenu">
-      <img v-if="avatar" :src="avatar" :alt="userName" @error="handleImageError" />
-      <span v-else>{{ userInitials }}</span>
-    </div>
+  <div ref="profileRef" class="navbar-profile">
+    <button
+      ref="triggerRef"
+      type="button"
+      class="navbar-profile__avatar"
+      aria-haspopup="menu"
+      aria-controls="menu-perfil-admin"
+      :aria-expanded="String(showMenu)"
+      :aria-label="`Menu de ${userName}`"
+      @click="toggleMenu"
+    >
+      <span aria-hidden="true">{{ userInitials }}</span>
+    </button>
 
-    <div v-if="showMenu" class="profile-dropdown">
-      <div class="dropdown-section">
-        <h3>{{ userName }}</h3>
-      </div>
-
-      <div class="dropdown-section">
-        <div
+    <div v-show="showMenu" class="navbar-profile__menu">
+      <p class="navbar-profile__name">{{ userName }}</p>
+      <div
+        id="menu-perfil-admin"
+        ref="menuRef"
+        class="navbar-profile__items"
+        role="menu"
+        :aria-label="userName"
+        @keydown="handleMenuKeydown"
+      >
+        <button
           v-for="item in menuItems"
           :key="item.id"
-          class="dropdown-item"
+          type="button"
+          class="navbar-profile__item"
+          role="menuitem"
+          tabindex="-1"
           @click="handleMenuSelect(item)"
         >
-          <font-awesome-icon :icon="item.icon" />
+          <font-awesome-icon :icon="item.icon" aria-hidden="true" />
           <span>{{ item.label }}</span>
-        </div>
-      </div>
-
-      <div class="dropdown-item logout" @click="handleLogout">
-        <font-awesome-icon :icon="['fas', 'sign-out-alt']" />
-        <span>Sair</span>
+        </button>
+        <button
+          type="button"
+          class="navbar-profile__item"
+          role="menuitem"
+          tabindex="-1"
+          @click="handleLogout"
+        >
+          <font-awesome-icon :icon="['fas', 'sign-out-alt']" aria-hidden="true" />
+          <span>Sair</span>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 
-const profile = ref(null);
-const avatar = ref("https://github.com/ldickmann.png");
 const showMenu = ref(false);
+const profileRef = ref(null);
+const triggerRef = ref(null);
+const menuRef = ref(null);
 
 const props = defineProps({
   userName: {
     type: String,
-    default: "Lucas Dickmann",
-  },
-  avatar: {
-    type: String,
+    default: "Administrador",
   },
 });
 
@@ -53,7 +71,7 @@ const emit = defineEmits(["menu-select", "logout"]);
 const menuItems = [
   {
     id: 1,
-    label: "Meu Perfil",
+    label: "Meu perfil",
     icon: ["fas", "user"],
     action: "profile",
   },
@@ -65,7 +83,7 @@ const menuItems = [
   },
 ];
 
-// Computed para as iniciais do usuário
+// Iniciais do admin logado (sem avatar fixo de terceiros)
 const userInitials = computed(() => {
   if (!props.userName) return "A";
   return props.userName
@@ -76,38 +94,64 @@ const userInitials = computed(() => {
     .slice(0, 2);
 });
 
-// Métodos
-const toggleMenu = () => {
-  showMenu.value = !showMenu.value;
+const menuItemsEls = () => [...(menuRef.value?.querySelectorAll('[role="menuitem"]') ?? [])];
+
+const openMenu = async () => {
+  showMenu.value = true;
+  await nextTick();
+  menuItemsEls()[0]?.focus();
 };
 
-const handleImageError = (event) => {
-  event.target.remove();
+const closeMenu = ({ returnFocus = false } = {}) => {
+  showMenu.value = false;
+  if (returnFocus) triggerRef.value?.focus();
+};
+
+const toggleMenu = () => (showMenu.value ? closeMenu() : openMenu());
+
+// Setas movem entre os itens; Esc fecha e devolve o foco
+const handleMenuKeydown = (event) => {
+  const items = menuItemsEls();
+  const index = items.indexOf(document.activeElement);
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeMenu({ returnFocus: true });
+  } else if (event.key === "ArrowDown") {
+    event.preventDefault();
+    items[(index + 1) % items.length]?.focus();
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    items[(index - 1 + items.length) % items.length]?.focus();
+  } else if (event.key === "Home" || event.key === "End") {
+    event.preventDefault();
+    items[event.key === "Home" ? 0 : items.length - 1]?.focus();
+  } else if (event.key === "Tab") {
+    closeMenu();
+  }
 };
 
 const handleMenuSelect = (item) => {
   emit("menu-select", item.action);
-  showMenu.value = false;
+  closeMenu({ returnFocus: true });
 };
 
 const handleLogout = () => {
   emit("logout");
-  showMenu.value = false;
+  closeMenu();
 };
 
+// Clique fora fecha
 const handleClickOutside = (event) => {
-  if (!profile && showMenu.value) {
-    showMenu.value = false;
-  }
+  if (showMenu.value && !profileRef.value?.contains(event.target)) closeMenu();
 };
 
 // Lifecycle hooks
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
+  document.addEventListener("pointerdown", handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("pointerdown", handleClickOutside);
 });
 </script>
 
