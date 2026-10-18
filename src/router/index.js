@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { createRouter, createWebHashHistory } from 'vue-router';
@@ -5,6 +6,8 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 // Layouts imports
 import MainLayout from '@/layouts/MainLayout.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
+
+const BRAND = 'Smash Burger';
 
 // Rotas do app
 const router = createRouter({
@@ -18,26 +21,31 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: () => import('../views/HomeView.vue'),
+          meta: { title: 'Início' },
         },
         {
           path: 'menu',
           name: 'menu',
           component: () => import('../views/MenuView.vue'),
+          meta: { title: 'Cardápio' },
         },
         {
           path: 'cart',
           name: 'cart',
           component: () => import('../views/CartView.vue'),
+          meta: { title: 'Seu carrinho' },
         },
         {
           path: 'payment',
           name: 'payment',
           component: () => import('../views/PaymentView.vue'),
+          meta: { title: 'Finalizar pedido' },
         },
         {
           path: 'confirmation',
           name: 'confirmation',
           component: () => import('../views/ConfirmationView.vue'),
+          meta: { title: 'Pedido recebido' },
         },
 
         // Registro e login
@@ -45,17 +53,19 @@ const router = createRouter({
           path: 'register',
           name: 'register',
           component: () => import('../views/auth/RegisterView.vue'),
+          meta: { title: 'Criar conta' },
         },
         {
           path: 'login',
           name: 'login',
           component: () => import('../views/auth/LoginView.vue'),
+          meta: { title: 'Entrar' },
         },
         {
           path: 'profile',
           name: 'profile',
           component: () => import('../views/auth/ProfileView.vue'),
-          meta: { requiresAuth: true },
+          meta: { requiresAuth: true, title: 'Sua conta' },
         },
 
         // Página para testes
@@ -63,7 +73,16 @@ const router = createRouter({
           path: 'playground',
           name: 'playground',
           component: () => import('../views/Playground.vue'),
-        }
+          meta: { title: 'Playground' },
+        },
+
+        // Rota 404 - Page Not Found - lazy loading, dentro do layout da loja
+        {
+          path: ':catchAll(.*)*',
+          name: 'NotFound',
+          component: () => import('../views/NotFound.vue'),
+          meta: { title: 'Página não encontrada' },
+        },
       ],
     },
 
@@ -71,6 +90,7 @@ const router = createRouter({
       path: '/admin/login',
       name: 'admin-login',
       component: () => import('../views/admin/LoginAdminView.vue'),
+      meta: { title: 'Painel administrativo' },
     },
 
     // Rotas admin
@@ -82,36 +102,36 @@ const router = createRouter({
           path: '',
           name: 'admin-dashboard',
           component: () => import('../views/admin/AdminDashboard.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true },
+          meta: { requiresAuth: true, requiresAdmin: true, title: 'Painel' },
         },
         {
           path: 'products',
           name: 'product-management',
           component: () => import('../views/admin/ProductManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true },
+          meta: { requiresAuth: true, requiresAdmin: true, title: 'Produtos' },
         },
         {
           path: 'orders',
           name: 'order-management',
           component: () => import('../views/admin/OrderManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true },
+          meta: { requiresAuth: true, requiresAdmin: true, title: 'Pedidos' },
         },
         {
           path: 'reports',
           name: 'sales-reports',
           component: () => import('../views/admin/SalesReports.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true },
+          meta: { requiresAuth: true, requiresAdmin: true, title: 'Relatórios' },
         },
       ],
     },
-
-    // Rota 404 - Page Not Found - lazy loading
-    {
-      path: '/:catchAll(.*)*',
-      name: 'NotFound',
-      component: () => import('../views/NotFound.vue'),
-    }
   ],
+
+  // Topo em rota nova, posição salva no voltar/avançar, âncora quando houver
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    if (to.hash) return { el: to.hash };
+    return { top: 0 };
+  },
 });
 
 // Proteção de rotas
@@ -137,6 +157,24 @@ router.beforeEach((to, from, next) => {
 
   // Rota pública
   next();
+});
+
+// Título da aba e foco no conteúdo a cada troca de rota
+router.afterEach((to, from, failure) => {
+  if (failure) return;
+
+  document.title = to.meta.title ? `${to.meta.title} · ${BRAND}` : `${BRAND} · Delivery`;
+
+  // Na primeira carga o foco fica onde o navegador deixou
+  if (!from.matched.length) return;
+
+  nextTick(() => {
+    const main = document.getElementById('conteudo');
+    // Uma tela que já pôs o foco num elemento próprio (ex.: o h1 da confirmação) é respeitada
+    if (main && !main.contains(document.activeElement)) {
+      main.focus({ preventScroll: true });
+    }
+  });
 });
 
 export default router;
