@@ -25,14 +25,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'yarn'
+          node-version: '22'
 
+      # O yarn.lock e o .yarn/cache são do Yarn 3: o Corepack roda essa versão e
+      # instala exatamente o que está no lockfile (o Yarn 1 do runner o ignorava
+      # e resolvia tudo de novo a cada deploy)
       - name: Install dependencies
-        run: yarn install # Remova o --frozen-lockfile temporariamente
+        run: corepack yarn@3.8.7 install --immutable
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
       - name: Build
-        run: yarn build
+        run: corepack yarn@3.8.7 build
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
