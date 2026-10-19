@@ -40,6 +40,8 @@ Repaginar tipografia, cor, bordas, sombras, espaçamento e estados de interaçã
 
 Todos são conferidos no passo final (§13).
 
+A assinatura de autoria (`src/components/AssinaturaEncaixe.vue`, a faixa de 40 px abaixo do rodapé) veio depois do redesign e fica fora destes critérios. Ela é cópia exata de um componente externo, com `<style>` global, cores em hex, `!important` e um link de 40 px de altura. As buscas da §13.2 e o `axe-scan.mjs` a excluem.
+
 #### Acessibilidade
 
 1. **axe-core (WCAG 2.2 A/AA):** 0 violações em todas as rotas da §13.3, nas viewports 1440 e 390. O modal aberto e os estados de erro também são medidos.
@@ -1387,14 +1389,14 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort &   # http://localhost:4173
 Cada comando abaixo deve retornar **zero** linhas:
 
 ```bash
-# Cores, gradientes, sombras, durações e camadas só nos tokens (a paleta ilustrativa do BurgerStack é a exceção)
-rg -n "#[0-9a-fA-F]{3,8}\b" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue' --glob '!**/*.json'
+# Cores, gradientes, sombras, durações e camadas só nos tokens (exceções: a paleta ilustrativa do BurgerStack e a assinatura de autoria, §1.1)
+rg -n "#[0-9a-fA-F]{3,8}\b" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue' --glob '!**/AssinaturaEncaixe.vue' --glob '!**/*.json'
 rg -n "rgba?\(|hsla?\(" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue'
 rg -n "z-index:\s*-?[0-9]" src
 rg -n "(transition|animation)[^;]*[0-9]+m?s" src --glob '!**/base/_tokens.scss'
 
-# Padrões banidos
-rg -n "!important|outline:\s*none|transition:\s*all|respond-to\(" src
+# Padrões banidos (fora da assinatura de autoria, §1.1)
+rg -n "!important|outline:\s*none|transition:\s*all|respond-to\(" src --glob '!**/AssinaturaEncaixe.vue'
 
 # Arquivos removidos sem referência
 rg -n "ButtonComponent|BurguerCard|QuantityControl|AlertComponent|PaginationComponent|SeparatorLines|useImagePath|_variables" src

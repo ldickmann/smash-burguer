@@ -13,11 +13,13 @@
       email="contato@smashburger.com.br"
       workingHours="Terça a sexta, das 13h à 01h"
     />
+    <AssinaturaEncaixe tom="escuro" />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import AssinaturaEncaixe from "@/components/AssinaturaEncaixe.vue";
 import TheFooter from "@/components/layout/TheFooter.vue";
 import TheNavbar from "@/components/layout/TheNavbar.vue";
 
