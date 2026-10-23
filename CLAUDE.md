@@ -50,7 +50,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 ## Convenções do código (SPEC)
 
-- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Única exceção: as cores das camadas em `BurgerStack.vue`.
+- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue` e a assinatura de autoria (abaixo).
 - **Breakpoints e mixins:** mobile-first, em `base/_breakpoints.scss` (`up()`, `below()`, `hover-capable`, `motion-ok`, `motion-reduced`).
 - **Estilos:** cada componente faz `@use` da própria parcial dentro de `<style scoped>`. O `main.scss` importa só a base.
 - **Animações:**
@@ -59,6 +59,9 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
   - a regra global de movimento reduzido fica em `base/_motion.scss`.
 - **Proibidos:** `!important`, `outline: none`, `transition: all`, hex ou rgba fora dos tokens, e `toFixed`. Preço sempre via `formatPrice`. As buscas da §13.2 do SPEC devem continuar com 0 resultados.
 - **Componentes base:** ficam em `src/components/ui/` (`BaseButton`, `BaseDialog`, `QuantityStepper`, `CategoryTabs`, `AppToast`, `EmptyState`).
+- **Assinatura de autoria:** `src/components/AssinaturaEncaixe.vue`, no `MainLayout`, logo depois do `<TheFooter>`, com `tom="escuro"`.
+  - É cópia exata de um bloco com sha256 `3a9f9cc494d415f3a30c34519336b53b1db8c16955b89d09ddd22043543749fd`: não edite nem formate o arquivo. Se o CSS do projeto vazar para a faixa, corrija a regra do projeto.
+  - Fica fora das convenções acima (`<style>` global, cores em hex, `!important`, animação própria e link de 40 px de altura). A §1.1 e a §13.2 do SPEC e o `axe-scan.mjs` já a excluem.
 - **Textos:** em português. A marca se escreve sempre "Smash Burger".
 - **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session` e `smash-burger:account`. O admin continua em `admin`.
 - **Dependências novas:** pergunte ao usuário antes de adicionar.
