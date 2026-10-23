@@ -100,7 +100,8 @@ for (const w of VPS) {
         const extra = el.classList.contains('btn--sm') ? 4 : 0; // ::after estende o sm a 44
         const inline = el.matches('.link-inline, .prose a') && box.height >= 24;
         const dot = el.matches('.carousel__pagination-button') && box.width >= 24 && box.height >= 24; // §5.2: 24×24
-        if (inline || dot) continue;
+        const assinatura = el.matches('.ldk-encaixe__l') && box.height >= 24; // §1.1: faixa fixa de 40 px
+        if (inline || dot || assinatura) continue;
         if (box.width < 44 || box.height + extra < 44) small.push(`${el.tagName}.${[...el.classList].slice(0, 2).join('.')} "${(el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 24)}" ${Math.round(box.width)}x${Math.round(box.height)}`);
       }
       const h1 = [...document.querySelectorAll('h1')].map((h) => h.textContent.trim());
