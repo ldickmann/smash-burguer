@@ -49,7 +49,7 @@
           </tbody>
         </table>
         <p class="ficha__nota">
-          Modal e toast reais: {{ resumoComuns.passam }} de {{ resumoComuns.total }} pares passam.
+          Modal Personalizar e avisos (componentes reais): {{ resumoComuns.passam }} de {{ resumoComuns.total }} pares passam.
           <template v-if="resumoComuns.falhas.length">Falham: {{ resumoComuns.falhas.join("; ") }}.</template>
         </p>
       </section>

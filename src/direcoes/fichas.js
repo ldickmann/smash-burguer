@@ -30,7 +30,7 @@ export const FICHAS = {
       "As fotos do cardápio, escuras, dependem da sombra e da borda do card para não sumir no fundo.",
     ],
     custo: "Zero: é o sistema atual.",
-    custoResumo: "zero",
+    custoResumo: "Zero",
     desvios: [],
     fontes: [
       { ref: "SPEC", titulo: "SPEC.md, §0, §2 e §7 (neste repositório)" },
@@ -77,7 +77,7 @@ export const FICHAS = {
     ],
     custo:
       "Alto. Todas as cores viram papéis do M3; entram raios novos (botão redondo, card 12, diálogo 28), camada de estado e molas como tokens. BaseButton (formas e troca de forma), ProductCard, CartBadge (badge do M3), CategoryTabs (abas do M3), BaseDialog, AppToast (snackbar), os campos e o admin precisam ser refeitos, e a Roboto passa a ser servida em produção.",
-    custoResumo: "alto",
+    custoResumo: "Alto",
     desvios: [
       "Ícones do Font Awesome no lugar dos Material Symbols.",
       "Molas do Expressive [23] convertidas em curvas linear() por um script: é uma aproximação da física do Compose.",
@@ -87,18 +87,18 @@ export const FICHAS = {
     ],
     fontes: [
       { ref: "1", titulo: "Android Developers: Material Design 3 in Compose", url: "https://developer.android.com/develop/ui/compose/designsystems/material3" },
-      { ref: "5", titulo: "material-web: docs/theming/color.md" },
-      { ref: "10", titulo: "material-web: tokens v0_192, _md-sys-elevation.scss" },
-      { ref: "12", titulo: "androidx (Compose): StateTokens.kt" },
-      { ref: "14", titulo: "material-web: docs/theming/typography.md" },
-      { ref: "15", titulo: "Android Developers: referência de material3/Typography" },
-      { ref: "19", titulo: "androidx (Compose): ButtonSmallTokens.kt e tamanhos XS a XL" },
-      { ref: "23", titulo: "androidx (Compose): ExpressiveMotionTokens.kt" },
+      { ref: "5", titulo: "material-web: docs/theming/color.md", url: "https://github.com/material-components/material-web/blob/main/docs/theming/color.md" },
+      { ref: "10", titulo: "material-web: tokens v0_192, _md-sys-elevation.scss", url: "https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-sys-elevation.scss" },
+      { ref: "12", titulo: "androidx (Compose): StateTokens.kt", url: "https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/StateTokens.kt" },
+      { ref: "14", titulo: "material-web: docs/theming/typography.md", url: "https://github.com/material-components/material-web/blob/main/docs/theming/typography.md" },
+      { ref: "15", titulo: "Android Developers: referência de material3/Typography", url: "https://developer.android.com/reference/kotlin/androidx/compose/material3/Typography" },
+      { ref: "19", titulo: "androidx (Compose): ButtonSmallTokens.kt e tamanhos XS a XL", url: "https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ButtonSmallTokens.kt" },
+      { ref: "23", titulo: "androidx (Compose): ExpressiveMotionTokens.kt", url: "https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ExpressiveMotionTokens.kt" },
       { ref: "25", titulo: "Google: lançamento do Material 3 Expressive (13/05/2025)", url: "https://blog.google/products/android/material-3-expressive-android-wearos-launch" },
       { ref: "26", titulo: "Google Design: pesquisa do Expressive Material Design", url: "https://design.google/library/expressive-material-design-google-research" },
       { ref: "27", titulo: "Android Developers: benefícios do Expressive no Wear OS", url: "https://developer.android.com/design/ui/wear/guides/get-started/benefits" },
       { ref: "29", titulo: "GitHub: material-components/material-web", url: "https://github.com/material-components/material-web" },
-      { ref: "30", titulo: "material-web: docs/components/focus-ring.md" },
+      { ref: "30", titulo: "material-web: docs/components/focus-ring.md", url: "https://github.com/material-components/material-web/blob/main/docs/components/focus-ring.md" },
       { ref: "32", titulo: "GitHub: material-foundation/material-theme-builder (arquivado)", url: "https://github.com/material-foundation/material-theme-builder" },
       { ref: "33", titulo: "GitHub: material-foundation/material-color-utilities", url: "https://github.com/material-foundation/material-color-utilities" },
     ],
@@ -136,7 +136,7 @@ export const FICHAS = {
     ],
     custo:
       "O mais alto. Texturas e sombras viram tokens; botões, cards, abas e campos são redesenhados como objetos; carrinho e pagamento precisam de metáforas próprias; o admin não tem metáfora óbvia; manutenção e desempenho pesam.",
-    custoResumo: "o mais alto",
+    custoResumo: "O mais alto",
     desvios: [
       "Comanda com foto do lanche: a de verdade não tem, mas o cardápio precisa da imagem.",
       "Com movimento reduzido, comandas, etiqueta e carimbo ficam retos (sem o giro de ±1° e de −8°), pela regra do projeto de usar transform só com movimento.",
@@ -144,13 +144,13 @@ export const FICHAS = {
     ],
     fontes: [
       { ref: "E1", titulo: "NN/g: Skeuomorphism (Megan Chan, 15/03/2024)", url: "https://www.nngroup.com/articles/skeuomorphism/" },
-      { ref: "E3", titulo: "NN/g: iOS 7" },
+      { ref: "E3", titulo: "NN/g: iOS 7", url: "https://www.nngroup.com/articles/ios-7/" },
       { ref: "E4", titulo: "Apple HIG: Materials", url: "https://developer.apple.com/design/human-interface-guidelines/materials.md" },
       { ref: "E5", titulo: "Apple: Liquid Glass", url: "https://developer.apple.com/documentation/technologyoverviews/liquid-glass.md" },
       { ref: "E6", titulo: "NN/g: Liquid Glass (10/10/2025)", url: "https://www.nngroup.com/articles/liquid-glass/" },
-      { ref: "E9", titulo: "NN/g: Flat UI Elements Attract Less Attention and Cause Uncertainty" },
+      { ref: "E9", titulo: "NN/g: Flat UI Elements Attract Less Attention and Cause Uncertainty", url: "https://www.nngroup.com/articles/flat-ui-less-attention-cause-uncertainty/" },
       { ref: "E11", titulo: "NN/g: Young Adults and Flat Design", url: "https://www.nngroup.com/articles/young-adults-flat-design/" },
-      { ref: "E12", titulo: "W3C: Understanding 1.4.3 Contrast (Minimum)" },
+      { ref: "E12", titulo: "W3C: Understanding 1.4.3 Contrast (Minimum)", url: "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum" },
     ],
   },
 
@@ -186,7 +186,7 @@ export const FICHAS = {
     ],
     custo:
       "Alto. Sombra dupla e borda viram tokens, e todo componente ganha versão extrudada e afundada com borda. Formulários são o ponto mais caro (campo afundado com borda de 3:1), e o admin, denso, perde hierarquia.",
-    custoResumo: "alto",
+    custoResumo: "Alto",
     desvios: [
       "Borda de 1 px em todo controle (2 px com prefers-contrast: more [N9]) e cor sólida no estado ativo: em cores forçadas a sombra vira none e a borda fica [N8].",
       "O pressionado também muda de cor e ganha ícone, porque só a sombra para dentro não passa no 1.4.11 [N6].",
@@ -195,11 +195,11 @@ export const FICHAS = {
       { ref: "N1", titulo: "Michał Malewicz: Neumorphism in user interfaces (versão do autor)", url: "https://hype4.academy/articles/design/neumorphism-in-user-interfaces" },
       { ref: "N2", titulo: "NN/g: Skeuomorphism", url: "https://www.nngroup.com/articles/skeuomorphism/" },
       { ref: "N3", titulo: "CSS-Tricks: Neumorphism and CSS", url: "https://css-tricks.com/neumorphism-and-css/" },
-      { ref: "N4", titulo: "MDN: box-shadow" },
+      { ref: "N4", titulo: "MDN: box-shadow", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow" },
       { ref: "N5", titulo: "Google: estudo com pessoas de baixa visão (apresentação)", url: "https://docs.google.com/presentation/d/1CFNxozlyO1lmiyRVCFuhQ_0t2c5QTLskY03CCeTpUuA/htmlpresent" },
-      { ref: "N6", titulo: "W3C: Understanding 1.4.11 Non-text Contrast" },
-      { ref: "N8", titulo: "MDN: @media/forced-colors" },
-      { ref: "N9", titulo: "MDN: @media/prefers-contrast" },
+      { ref: "N6", titulo: "W3C: Understanding 1.4.11 Non-text Contrast", url: "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast" },
+      { ref: "N8", titulo: "MDN: @media/forced-colors", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors" },
+      { ref: "N9", titulo: "MDN: @media/prefers-contrast", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast" },
     ],
   },
 
@@ -236,7 +236,7 @@ export const FICHAS = {
     ],
     custo:
       "Médio-alto. Degradês, sombras de argila e molas viram tokens; o BaseButton ganha o achatar; o ProductCard fica em camadas; tilt e paralaxe pedem JS e teste de desempenho; o admin precisa de uma variante calma.",
-    custoResumo: "médio-alto",
+    custoResumo: "Médio-alto",
     desvios: [
       "Contraste do texto medido no ponto mais escuro do degradê, o tomate claro [D22].",
       "Mola do achatar convertida em linear() pelo mesmo script do Material 3 (aproximação).",
@@ -246,17 +246,17 @@ export const FICHAS = {
       { ref: "D3", titulo: "Michał Malewicz: Claymorphism in user interfaces", url: "https://hype4.academy/articles/design/claymorphism-in-user-interfaces" },
       { ref: "D5", titulo: "Airbnb: 2025 Summer Release", url: "https://news.airbnb.com/en-uk/2025-summer-release-now-you-can-airbnb-more-than-an-airbnb/" },
       { ref: "D6", titulo: "W3C: CSS Transforms Module Level 2", url: "https://www.w3.org/TR/css-transforms-2/" },
-      { ref: "D7", titulo: "MDN: linear-gradient()" },
-      { ref: "D8", titulo: "MDN: perspective" },
-      { ref: "D9", titulo: "MDN: transform-style" },
+      { ref: "D7", titulo: "MDN: linear-gradient()", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient" },
+      { ref: "D8", titulo: "MDN: perspective", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/perspective" },
+      { ref: "D9", titulo: "MDN: transform-style", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/transform-style" },
       { ref: "D11", titulo: "Apple HIG: Motion", url: "https://developer.apple.com/design/human-interface-guidelines/motion.md" },
       { ref: "D12", titulo: "NN/g: Executing UX Animations: Duration and Motion Characteristics", url: "https://www.nngroup.com/articles/animation-duration/" },
-      { ref: "D14", titulo: "NN/g: The Role of Animation and Motion in UX" },
+      { ref: "D14", titulo: "NN/g: The Role of Animation and Motion in UX", url: "https://www.nngroup.com/articles/animation-purpose-ux/" },
       { ref: "D16", titulo: "NN/g: Liquid Glass", url: "https://www.nngroup.com/articles/liquid-glass/" },
-      { ref: "D17", titulo: "MDN: @media/hover" },
+      { ref: "D17", titulo: "MDN: @media/hover", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover" },
       { ref: "D18", titulo: "W3C: Understanding 2.3.3 Animation from Interactions", url: "https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions" },
-      { ref: "D21", titulo: "MDN: @media/prefers-reduced-motion" },
-      { ref: "D22", titulo: "W3C: Understanding 1.4.3 Contrast (Minimum)" },
+      { ref: "D21", titulo: "MDN: @media/prefers-reduced-motion", url: "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion" },
+      { ref: "D22", titulo: "W3C: Understanding 1.4.3 Contrast (Minimum)", url: "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum" },
     ],
   },
 
@@ -292,7 +292,7 @@ export const FICHAS = {
     ],
     custo:
       "Médio: baixo nos tokens (cores, raios, nenhuma sombra) e médio nos componentes (botões, cards, abas e campos planos com borda inferior de 3:1). O admin se adapta fácil.",
-    custoResumo: "médio",
+    custoResumo: "Médio",
     desvios: [
       "Botões com canto de 4 px, e não retos, porque a NN/g associa o canto arredondado ao reconhecimento de botão [F5].",
       "O link atual leva sublinhado de 4 px, não só cor [F1].",
@@ -339,7 +339,7 @@ export const FICHAS = {
     ],
     custo:
       "O mais baixo. Cor e raio nos tokens; a largura da Archivo em produção (o arquivo com o eixo de largura é maior que o de peso); componentes mais simples; o admin fica fácil.",
-    custoResumo: "o mais baixo",
+    custoResumo: "O mais baixo",
     desvios: [
       "Sem menu escondido: os quatro links ficam visíveis também no celular [M8].",
       "Setas e paginação ficam visíveis, com o estado ativo óbvio [M9].",
@@ -395,13 +395,13 @@ export const FICHAS = {
     ],
     custo:
       "Médio-baixo, porque os tokens já são semânticos. Na próxima fase vira o modo escuro do estilo escolhido, com o alternador Claro, Escuro e Sistema [49][50].",
-    custoResumo: "médio-baixo",
+    custoResumo: "Médio-baixo",
     desvios: [
       "Neutros com croma 0 no lugar dos neutros gerados da semente, que davam superfícies marrons quase iguais às da Brasa.",
     ],
     fontes: [
-      { ref: "4", titulo: "androidx (Compose): ColorDarkTokens.kt" },
-      { ref: "13", titulo: "material-components-android: docs/theming/Dark.md" },
+      { ref: "4", titulo: "androidx (Compose): ColorDarkTokens.kt", url: "https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ColorDarkTokens.kt" },
+      { ref: "13", titulo: "material-components-android: docs/theming/Dark.md", url: "https://github.com/material-components/material-components-android/blob/master/docs/theming/Dark.md" },
       { ref: "45", titulo: "NN/g: Dark Mode vs. Light Mode: Which Is Better? (2020)", url: "https://www.nngroup.com/articles/dark-mode/" },
       { ref: "46", titulo: "NN/g: Dark Mode: How Users Think About It and Issues to Avoid (2023)", url: "https://www.nngroup.com/articles/dark-mode-users-issues/" },
       { ref: "47", titulo: "Apple HIG: Dark Mode (JSON da página)", url: "https://developer.apple.com/tutorials/data/design/human-interface-guidelines/dark-mode.json" },
