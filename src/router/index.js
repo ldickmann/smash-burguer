@@ -88,34 +88,36 @@ const router = createRouter({
       meta: { title: 'Painel administrativo' },
     },
 
-    // Rotas admin
+    // Rotas admin. O `meta` do registro pai vale para todas as filhas (o `to.meta` junta os
+    // registros casados), então uma rota nova do painel já nasce protegida
     {
       path: '/admin',
       component: AdminLayout,
+      meta: { requiresAdmin: true },
       children: [
         {
           path: '',
           name: 'admin-dashboard',
           component: () => import('../views/admin/AdminDashboard.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Painel' },
+          meta: { title: 'Painel' },
         },
         {
           path: 'products',
           name: 'product-management',
           component: () => import('../views/admin/ProductManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Produtos' },
+          meta: { title: 'Produtos' },
         },
         {
           path: 'orders',
           name: 'order-management',
           component: () => import('../views/admin/OrderManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Pedidos' },
+          meta: { title: 'Pedidos' },
         },
         {
           path: 'reports',
           name: 'sales-reports',
           component: () => import('../views/admin/SalesReports.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Relatórios' },
+          meta: { title: 'Relatórios' },
         },
       ],
     },

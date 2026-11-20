@@ -42,10 +42,13 @@ const router = useRouter();
 const adminStore = useAdminStore();
 const toggleRef = ref(null);
 
-// Nome do administrador logado (as iniciais saem daqui)
+// Nome do administrador logado (as iniciais saem daqui). O admin vem do localStorage:
+// campo que não é texto fica de fora
+const text = (value) => (typeof value === "string" ? value : "");
 const adminName = computed(() => {
   const admin = adminStore.admin ?? {};
-  const fullName = admin.name || [admin.firstName, admin.lastName].filter(Boolean).join(" ");
+  const fullName =
+    text(admin.name) || [text(admin.firstName), text(admin.lastName)].filter(Boolean).join(" ");
   return fullName || "Administrador";
 });
 

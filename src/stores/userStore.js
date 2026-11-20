@@ -1,8 +1,30 @@
 import { defineStore } from 'pinia';
 import { authService, pickProfile } from '@/services/authServices';
 import { useCartStore } from '@/stores/cart';
+import { isOrder, isPlainObject } from '@/utils/storedState';
 
 const FIRST_ORDER_ID = 1001;
+
+/**
+ * Confere a sessão lida do localStorage, campo a campo. O perfil fica só com os campos
+ * do perfil (sessões gravadas antes guardavam o cadastro inteiro, com a senha); pedido
+ * fora do formato sai do histórico; e o próximo número de pedido nunca repete um que já existe.
+ */
+const normalizeSession = (store) => {
+  const user = isPlainObject(store.user) ? pickProfile(store.user) : null;
+  const isAuthenticated = store.isAuthenticated === true && user !== null;
+  const orderHistory = Array.isArray(store.orderHistory) ? store.orderHistory.filter(isOrder) : [];
+  const nextOrderId =
+    Number.isSafeInteger(store.nextOrderId) && store.nextOrderId >= FIRST_ORDER_ID
+      ? store.nextOrderId
+      : FIRST_ORDER_ID;
+
+  store.user = isAuthenticated ? user : null;
+  store.isAuthenticated = isAuthenticated;
+  store.orderHistory = orderHistory;
+  store.lastOrderId = Number.isSafeInteger(store.lastOrderId) ? store.lastOrderId : null;
+  store.nextOrderId = Math.max(nextOrderId, ...orderHistory.map((order) => order.id + 1));
+};
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -82,11 +104,11 @@ export const useUserStore = defineStore('user', {
 
   persist: {
     key: 'smash-burger:session',
-    // Sessões gravadas antes guardavam o cadastro inteiro, com a senha: ficam só os campos do perfil
+    // A sessão salva é editável no navegador: o que mudar na conferência é regravado na hora
     afterHydrate: ({ store }) => {
-      if (!store.user) return;
-      store.user = pickProfile(store.user);
-      store.$persist();
+      const saved = JSON.stringify(store.$state);
+      normalizeSession(store);
+      if (JSON.stringify(store.$state) !== saved) store.$persist();
     },
   },
 });

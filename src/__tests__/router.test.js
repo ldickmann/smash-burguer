@@ -33,6 +33,22 @@ describe('guards do roteador', () => {
     expect(router.currentRoute.value.fullPath).toBe('/register');
   });
 
+  it('o painel inteiro exige admin pelo registro pai, e não pelo meta de cada filha', async () => {
+    // O `meta` do pai vale para as filhas: uma rota nova do painel já nasce protegida
+    const parent = router.getRoutes().find((route) => route.path === '/admin' && route.children.length);
+    expect(parent.meta.requiresAdmin).toBe(true);
+
+    const panel = parent.children.map((child) => router.resolve({ name: child.name }).path);
+    expect(panel).toEqual(['/admin', '/admin/products', '/admin/orders', '/admin/reports']);
+
+    // Sem sessão do painel, cada rota leva ao login do admin
+    for (const path of panel) {
+      expect(router.resolve(path).meta.requiresAdmin).toBe(true);
+      await router.push(path);
+      expect(router.currentRoute.value.path).toBe('/admin/login');
+    }
+  });
+
   it('a página de testes /playground não existe mais e cai no 404', async () => {
     expect(router.hasRoute('playground')).toBe(false);
 

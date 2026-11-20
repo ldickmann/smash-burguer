@@ -62,6 +62,7 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
+import { useToastStore } from "@/stores/toast";
 import { formatPrice } from "@/utils/formatters";
 import { maskCEP } from "@/utils/masks";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -74,6 +75,7 @@ const SUBMIT_DELAY = 800;
 const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const toastStore = useToastStore();
 
 const paymentMethod = ref("");
 const submitting = ref(false);
@@ -93,6 +95,18 @@ const submit = async () => {
   if (!canSubmit.value || submitting.value) return;
   submitting.value = true;
   await new Promise((resolve) => setTimeout(resolve, SUBMIT_DELAY));
+
+  // O pedido leva os preços do cardápio, e não os guardados no carrinho. Se algum mudou ou
+  // uma linha saiu, a pessoa confere o total novo antes de confirmar
+  if (cartStore.syncWithCatalog()) {
+    submitting.value = false;
+    toastStore.show({
+      message: "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.",
+      variant: "info",
+    });
+    if (!cartStore.items.length) router.push("/cart");
+    return;
+  }
 
   const method = PAYMENT_METHODS.find((option) => option.value === paymentMethod.value);
   userStore.placeOrder({

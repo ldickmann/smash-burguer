@@ -798,7 +798,8 @@ As opções, de cima para baixo:
 **CTA:** primário `lg block` "Confirmar pedido · R$ 31,98".
 - Fica **desabilitado** até haver forma de pagamento e endereço, com a ajuda "Escolha uma forma de pagamento" ligada por `aria-describedby` [EST-08, FLX-04].
 - Ao clicar, entra em `loading` ("Enviando pedido…") por 800ms (espera simulada, igual à da autenticação).
-- Depois chama `userStore.placeOrder(...)` (§10.4), limpa o carrinho e vai para `/confirmation`.
+- Depois confere o carrinho com o cardápio (§10.1). Se alguma linha saiu ou mudou de preço, o pedido não é feito: aparece o toast info "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.", e a pessoa confirma de novo com o total novo; se o carrinho ficou vazio, a tela vai para `/cart` (nov/2026).
+- Com o carrinho conferido, chama `userStore.placeOrder(...)` (§10.4), limpa o carrinho e vai para `/confirmation`.
 
 Resolve [HIE-02].
 
@@ -1282,6 +1283,11 @@ Entram porque a nova UI as expõe. Sem elas, os estados novos mostrariam informa
   - `unitPrice` = preço + adicionais.
   - O total da linha é `unitPrice × quantity`.
   - Sai o `finalPrice`.
+- **Carrinho conferido com o cardápio (nov/2026):** o carrinho salvo é editável no navegador, então, na carga (`afterHydrate`) e ao confirmar o pedido (§5.6), a action `syncWithCatalog` refaz cada linha a partir da store de produtos:
+  - preço, nome e imagem vêm do catálogo, e o preço dos adicionais vem do catálogo da categoria;
+  - a linha sai quando não bate com o que a loja oferece: produto ou adicional que não existe, quantidade fora de 1 a 10 (1 a 5 nos adicionais), adicional repetido, ingrediente retirado que o produto não tem ou observação com mais de 140 caracteres;
+  - o que a conferência muda na carga é regravado na hora;
+  - o modal de personalização e a conferência usam a mesma conta (`unitPriceOf`, em `src/utils/cartItems.js`).
 - **Chave do item** na lista: `${productId}-${category}-${index}`. Hoje há chave duplicada.
 
 ### 10.2 Personalização [FLX-02, FLX-03]
@@ -1312,6 +1318,7 @@ Entram porque a nova UI as expõe. Sem elas, os estados novos mostrariam informa
 - **Sair:** limpa a sessão, o histórico e o carrinho; o cadastro continua.
 - **Entrar com outro e-mail:** zera o histórico da sessão anterior.
 - **Cadastro trocado:** se o cadastro salvo não for o da sessão (excluído ou trocado em outra aba), "Salvar alterações" falha e "Excluir conta" não o apaga.
+- **Formato:** na carga, a sessão é conferida campo a campo. Pedido fora do formato sai do histórico, sessão sem perfil não vale, e o próximo número de pedido nunca repete um que já existe. Se algo mudou, a sessão é regravada.
 
 **Admin:** a chave `admin` **não muda**. É defeito de admin, fora do escopo.
 
@@ -1334,7 +1341,7 @@ Os botões viram **links** para `/login?redirect=/payment` e `/register?redirect
 |---|---|
 | `scrollBehavior` | Volta ao topo em rota nova, restaura a posição no voltar/avançar e respeita `#âncora` [A11Y-11] |
 | `afterEach` | Define `document.title` como "{Título da rota} · Smash Burger" (via `meta.title`) e move o foco para `#conteudo` (`main`, `tabindex="-1"`) |
-| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7); `/register` com sessão aberta vai para o `?redirect=` ou para `/profile` (`meta.guestOnly`). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`) |
+| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7); `/register` com sessão aberta vai para o `?redirect=` ou para `/profile` (`meta.guestOnly`). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`). As rotas do painel herdam `meta.requiresAdmin` do registro pai `/admin` (nov/2026), então uma filha nova já nasce protegida |
 | 404 | Vira filha do `MainLayout` |
 
 ---
