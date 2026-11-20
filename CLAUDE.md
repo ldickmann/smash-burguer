@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 45 testes
+npx vitest run                             # 64 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -85,7 +85,7 @@ O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, lim
 
 - "Atualizar status" no admin lança TypeError (`[FLX-09]`).
 - No admin, "Excluir" só faz `console.log`, e produtos criados ou editados não são persistidos.
-- A sessão guarda a senha no localStorage, e o `createAdmin.html` está versionado com credenciais (AUDIT §11.3).
+- O cadastro do cliente guarda a senha em texto puro no localStorage (a sessão não guarda mais), e o `createAdmin.html` está versionado com credenciais (AUDIT §11.3).
 - O `createAdmin.html` grava o admin na chave `admin`, a mesma que o `adminStore` persiste. Depois do primeiro login, entrar de novo exige rodar o `createAdmin.html` outra vez. O link que a página mostra (`/admin/login`) também está errado; o certo é `/smash-burguer/#/admin/login`.
 - Sair da conta apaga o histórico de pedidos.
 - O `.prettierrc.json` (sem ponto e vírgula, aspas simples) não bate com 120 dos 132 arquivos de `src/`. Não rode `yarn format` misturado com outras mudanças.

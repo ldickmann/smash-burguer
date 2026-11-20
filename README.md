@@ -38,7 +38,7 @@ Front-end de delivery de hambúrgueres artesanais feito em Vue 3, com:
 - **Conta:**
   - cadastro com o endereço preenchido a partir do CEP, pela [API ViaCEP](https://viacep.com.br/);
   - login (quem entra pelo carrinho volta direto para o checkout);
-  - perfil com edição dos dados e histórico de pedidos.
+  - perfil com edição dos dados (com as mesmas validações do cadastro), histórico de pedidos e exclusão da conta.
 - **Checkout:**
   - usa o endereço da conta;
   - formas de pagamento: cartão de crédito ou débito na entrega, PIX ou dinheiro;
@@ -172,15 +172,19 @@ Sem back-end, o estado fica no `localStorage`, nestas chaves:
 | Chave | Conteúdo |
 |---|---|
 | `smash-burger:cart:v1` | Itens do carrinho |
-| `smash-burger:session` | Sessão do cliente, histórico de pedidos e número do próximo pedido |
+| `smash-burger:session` | Sessão do cliente (só os dados do perfil, sem a senha), histórico de pedidos e número do próximo pedido |
 | `smash-burger:account` | Cadastro do cliente |
 | `admin` | Administrador de teste e sessão do painel |
+
+- **Sair:** apaga a sessão, o histórico de pedidos e o carrinho; o cadastro continua.
+- **Excluir conta** (no perfil): apaga também o cadastro.
+- **Uma conta por navegador:** criar outra apaga a anterior, e a tela de cadastro avisa quando já existe uma.
 
 Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 45 testes unitários, em 7 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a autenticação, o script de auditoria do lockfile e as proteções do CI e do repositório. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 64 testes unitários, em 11 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a conta (login, sessão, perfil e exclusão), as telas de cadastro e de perfil, a consulta de CEP, a guard do cadastro, o script de auditoria do lockfile e as proteções do CI e do repositório. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
@@ -204,7 +208,7 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
 ## Limitações conhecidas
 
 - **Sem back-end:** contas, pedidos e cardápio existem só no navegador de cada pessoa.
-- **Senhas em texto puro:** o cadastro e a sessão guardam a senha em texto puro no `localStorage`. Use dados fictícios.
+- **Senhas em texto puro:** o cadastro guarda a senha em texto puro no `localStorage`. Use dados fictícios.
 - **Pagamento simulado:** nenhuma cobrança é feita.
 - **Painel administrativo:**
   - indicadores, relatórios e pedidos são dados de exemplo;
