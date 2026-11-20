@@ -14,6 +14,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  // No build, a minificação descarta as chamadas de console.log cujo valor não é usado (warn e error ficam).
+  // Uma arrow function de expressão, como `(x) => console.log(x)`, devolve esse valor: use chaves.
+  esbuild: {
+    pure: ['console.log'],
+  },
   // GitHub Pages deployment configuration
   base: `/smash-burguer/`,
 });

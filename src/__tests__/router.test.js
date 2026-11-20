@@ -32,4 +32,11 @@ describe('guards do roteador', () => {
 
     expect(router.currentRoute.value.fullPath).toBe('/register');
   });
+
+  it('a página de testes /playground não existe mais e cai no 404', async () => {
+    expect(router.hasRoute('playground')).toBe(false);
+
+    await router.push('/playground');
+    expect(router.currentRoute.value.name).toBe('NotFound');
+  });
 });

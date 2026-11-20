@@ -52,7 +52,6 @@ describe('ProfileView', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
-    vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -72,6 +71,13 @@ describe('ProfileView', () => {
     expect(wrapper.find('#email-erro').text()).toBe('O email é obrigatório');
     expect(savedAccount()).toEqual(ACCOUNT);
     expect(useUserStore().user.email).toBe(ACCOUNT.email);
+  });
+
+  it('avisa no campo que o CEP é consultado no ViaCEP', async () => {
+    const { wrapper } = await mountProfile();
+
+    expect(wrapper.find('#CEP-ajuda').text()).toContain('ViaCEP');
+    expect(wrapper.find('#CEP').attributes('aria-describedby')).toContain('CEP-ajuda');
   });
 
   it('CEP incompleto apaga o endereço anterior e bloqueia o envio', async () => {

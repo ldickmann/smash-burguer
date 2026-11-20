@@ -593,7 +593,7 @@ Monta `srcset` e `sizes` a partir do caminho-base da imagem (§9). Substitui o `
 | `src/views/ConfirmationView.vue` + `pages/_confirmation.scss` (novo) | Ver §5.7. | EST-17, FLX-05 |
 | `src/views/auth/LoginView.vue`, `RegisterView.vue`, `ProfileView.vue` + folhas | Ver §5.8 e §5.9. | EST-09, EST-13, EST-14, CON-11, ESP-06 |
 | `src/views/NotFound.vue` + `_not-found.scss` | Entra no `MainLayout` (rota filha) e usa os tokens. | CON-10, COR-12 |
-| `src/views/Playground.vue` | Mínimo: troca `ButtonComponent` por `BaseButton` e nada mais. A rota pública é [FLX-10], fora do escopo. | — |
+| `src/views/Playground.vue` | Mínimo: troca `ButtonComponent` por `BaseButton` e nada mais. A rota pública é [FLX-10], fora do escopo. Depois do redesign, a view, o `_playground.scss` e a rota `/playground` foram removidos (nov/2026). | — |
 
 #### Admin
 
@@ -863,6 +863,7 @@ Resolve [HIE-02].
   | CEP | "00000-000" |
 
 - **CEP:**
+  - antes da consulta, a ajuda avisa "Consultamos o CEP no ViaCEP para preencher o endereço."; depois, mostra o endereço encontrado;
   - durante a consulta, o campo mostra a ajuda "Buscando endereço…" com spinner;
   - a mensagem de erro distingue "CEP não encontrado." de "Não foi possível consultar o CEP agora. Tente de novo.";
   - trocar o CEP descarta na hora o endereço do anterior, e o envio espera a consulta em andamento.
@@ -883,7 +884,7 @@ Resolve [HIE-02].
 - **Layout:** 1 coluna na base; a partir de `lg`, 2 colunas: "Seus dados" (5/12) e "Seus pedidos" (7/12).
 - **Seus dados:** formulário com `FormGroup`.
   - Nome, sobrenome, e-mail, celular e CEP têm a mesma validação do cadastro, com o erro no campo e o foco no primeiro erro.
-  - Rua, bairro, cidade e UF são `readonly` de verdade, preenchidos pelo CEP. Trocar o CEP apaga esses campos até a consulta responder, e o envio espera a consulta em andamento: um CEP nunca é salvo sem o endereço dele.
+  - Rua, bairro, cidade e UF são `readonly` de verdade, preenchidos pelo CEP. A ajuda do CEP avisa "Consultamos o CEP no ViaCEP para preencher rua, bairro, cidade e UF.". Trocar o CEP apaga esses campos até a consulta responder, e o envio espera a consulta em andamento: um CEP nunca é salvo sem o endereço dele.
   - Botão "Salvar alterações" secundário, com `loading` e toast de sucesso ou erro.
 - **Excluir conta:** no fim de "Seus dados", depois de uma linha, o botão ghost "Excluir conta" (`iconStart="trash-can"`).
   - Ele abre um `BaseDialog` "Excluir conta?", com os botões "Cancelar" (secundário) e "Excluir conta" (`danger`, com `loading` "Excluindo…").
@@ -1349,7 +1350,7 @@ Os botões viram **links** para `/login?redirect=/payment` e `/register?redirect
 
 - **Tema claro** e `prefers-color-scheme`.
 - **Defeitos do admin [FLX-09]:** excluir, atualizar status, detalhes, busca, notificações e itens do menu de perfil continuam sem efeito real. Também ficam a chave `admin` compartilhada e o preço salvo como texto no modal de produto (a exibição já fica correta com `formatPrice`).
-- **Rotas públicas [FLX-10]:** `/playground` continua pública.
+- **Rotas públicas [FLX-10]:** `/playground` continua pública. (Removida depois do redesign, em nov/2026: hoje cai no 404.)
 - **Funcionalidades que não existem hoje:** backend, pagamento real, taxa de entrega, rastreio de status, previsão de entrega, minicarrinho em gaveta, placas de status.
 - **Gráfico do dashboard:** a dependência atual é incompatível com o Chart.js 4. Fica o estado vazio.
 

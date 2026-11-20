@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta charset="UTF-8">
   <title>Create Admin User</title>
   <style>
     body {
@@ -28,8 +29,25 @@
   <h1>Create Admin User</h1>
   <div id="status"></div>
   <script>
+    // Chaves do Smash Burger: carrinho, sessão, cadastro e admin. As outras chaves da origem ficam como estão.
+    const APP_KEYS = ['smash-burger:cart:v1', 'smash-burger:session', 'smash-burger:account', 'admin'];
+
+    // Cadastro no formato antigo, em `user` (com email e password): o app o migraria de volta para o cadastro.
+    // Em outro formato, a chave não é do Smash Burger e fica.
+    function removeLegacyAccount() {
+      try {
+        const legacy = JSON.parse(localStorage.getItem('user'));
+        if (legacy && typeof legacy === 'object' && 'email' in legacy && 'password' in legacy) {
+          localStorage.removeItem('user');
+        }
+      } catch (error) {
+        // Não é JSON: não é o cadastro antigo
+      }
+    }
+
     function createAdmin() {
-      localStorage.clear();
+      APP_KEYS.forEach((key) => localStorage.removeItem(key));
+      removeLegacyAccount();
 
       const adminUser = {
         firstName: 'Admin',

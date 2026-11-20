@@ -32,7 +32,7 @@ for (const w of widths) {
   await page.waitForLoadState('networkidle');
   await page.fill('#firstName', 'Maria');
   await page.fill('#lastName', 'Silva');
-  await page.fill('#email', 'maria@exemplo.com');
+  await page.fill('#email', 'maria@example.com');
   await page.fill('#password', 'senha123');
   await page.fill('#dateOfBirth', '1990-05-10');
   await page.fill('#phone', '47999999999');
@@ -117,7 +117,7 @@ for (const w of widths) {
 
   // Login
   console.log('Login');
-  await page.fill('#email', 'maria@exemplo.com');
+  await page.fill('#email', 'maria@example.com');
   await page.fill('#password', 'errada123');
   const t0 = Date.now();
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
@@ -165,7 +165,7 @@ for (const w of widths) {
   check(prof.orders[0] === 'Pedido #1001' && norm(prof.meta).includes('R$ 29,49'), '"Seus pedidos" lista o #1001 com o total certo', `${prof.orders} ${norm(prof.meta)}`);
   await page.getByRole('button', { name: 'Sair' }).click();
   await page.waitForTimeout(300);
-  await page.fill('#email', 'maria@exemplo.com');
+  await page.fill('#email', 'maria@example.com');
   await page.fill('#password', 'senha123');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await page.waitForTimeout(1500);

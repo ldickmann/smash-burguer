@@ -21,7 +21,7 @@ npm init -y >/dev/null && npm i playwright@1.56.1 axe-core@4.10.3
 
 | Script | O que verifica |
 |---|---|
-| `axe-scan.mjs <loja\|admin\|todos> [1440,390] [reduce]` | axe WCAG 2.2 AA, rolagem horizontal, alvos de toque, fontes e título em 22 telas. Com `SCAN_OUT=pasta`, salva screenshots. |
+| `axe-scan.mjs <loja\|admin\|todos> [1440,390] [reduce]` | axe WCAG 2.2 AA, rolagem horizontal, alvos de toque, fontes, título e violações da CSP em 22 telas. Com `SCAN_OUT=pasta`, salva screenshots. |
 | `flow.mjs` | Fluxo de pedido completo, guards e restauração de rolagem (§13.4). |
 | `keyboard.mjs` | Teclado: skip link, anel de foco, foco preso no modal, setas no pagamento, menus (§13.5). |
 | `micro-final.mjs` | Flip, odômetro, tilt e montador do burger, com movimento normal e reduzido (§13.6). |

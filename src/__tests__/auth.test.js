@@ -11,7 +11,7 @@ import {
 import { useUserStore } from '../stores/userStore';
 import { useCartStore } from '../stores/cart';
 
-const account = { firstName: 'Maria', email: 'maria@exemplo.com', password: 'senha123' };
+const account = { firstName: 'Maria', email: 'maria@example.com', password: 'senha123' };
 
 // Cadastro completo, como o formulário de cadastro grava
 const fullAccount = {

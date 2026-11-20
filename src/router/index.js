@@ -71,14 +71,6 @@ const router = createRouter({
           meta: { requiresAuth: true, title: 'Sua conta' },
         },
 
-        // Página para testes
-        {
-          path: 'playground',
-          name: 'playground',
-          component: () => import('../views/Playground.vue'),
-          meta: { title: 'Playground' },
-        },
-
         // Rota 404 - Page Not Found - lazy loading, dentro do layout da loja
         {
           path: ':catchAll(.*)*',
