@@ -6,45 +6,59 @@ on:
       - main # ou master, dependendo da sua branch principal
   workflow_dispatch:
 
+# Só leitura por padrão: cada job declara o que precisa
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: 'pages'
   cancel-in-progress: false
 
+# As actions são fixadas pelo SHA do commit, com a versão em comentário. O
+# Dependabot (.github/dependabot.yml) troca os dois juntos
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Este job roda código das dependências (scripts de instalação e plugins do
+    # Vite), então só lê. O pages: read é para o configure-pages consultar o Pages
+    permissions:
+      contents: read
+      pages: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Nenhum passo seguinte usa o git; assim o token não fica no .git/config
+          persist-credentials: false
 
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
 
-      # O yarn.lock e o .yarn/cache são do Yarn 3: o Corepack roda essa versão e
-      # instala exatamente o que está no lockfile (o Yarn 1 do runner o ignorava
-      # e resolvia tudo de novo a cada deploy)
+      # O yarn.lock e o .yarn/cache são do Yarn 3. O Corepack baixa o Yarn do
+      # packageManager, confere o hash e o usa para instalar exatamente o que está
+      # no lockfile (o Yarn 1 do runner o ignorava e resolvia tudo de novo a cada
+      # deploy). Não ponha a versão na linha de comando (yarn@x.y.z): com ela, o
+      # Corepack não confere o hash.
+      # O --check-cache baixa de novo cada pacote do registro e compara com o zip
+      # do .yarn/cache, porque os binários de cada plataforma não têm checksum
+      # no yarn.lock
       - name: Install dependencies
-        run: corepack yarn@3.8.7 install --immutable
+        run: corepack yarn install --immutable --check-cache
         env:
           COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
       - name: Build
-        run: corepack yarn@3.8.7 build
+        run: corepack yarn build
         env:
           COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
       - name: Setup Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: './dist'
 
@@ -54,7 +68,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    # Só este job publica: pages: write cria o deploy, e id-token: write pede o
+    # token OIDC que prova de onde ele veio
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

@@ -134,7 +134,9 @@ O `createAdmin.html` não vai para o site publicado. Na demonstração online, o
 ├── .claude/
 │   ├── e2e/              # verificação no navegador (Playwright + axe-core)
 │   └── lockfile-audit.py # confere as versões do yarn.lock na base de advisories do npm
-├── .github/workflows/    # deploy no GitHub Pages
+├── .github/
+│   ├── workflows/        # deploy no GitHub Pages
+│   └── dependabot.yml    # PR mensal com as versões novas das actions
 ├── docs/screenshots/     # imagens deste README
 ├── public/images/        # fotos do cardápio, fundos, ícones e manifest
 ├── src/
@@ -178,15 +180,19 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 41 testes unitários, em 6 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a autenticação e o script de auditoria do lockfile. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 45 testes unitários, em 7 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a autenticação, o script de auditoria do lockfile e as proteções do CI e do repositório. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
 Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy.yml), que:
 
-1. instala as dependências com `yarn install --immutable` (Node 22);
+1. instala as dependências com `yarn install --immutable --check-cache` (Node 22), com o Yarn conferido pelo hash do `packageManager` e cada pacote do `.yarn/cache` comparado com o do registro do npm;
 2. gera o build;
 3. publica a pasta `dist/` no GitHub Pages.
+
+O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica. As actions são fixadas por SHA, e o Dependabot abre uma PR por mês para a `develop` com as versões novas.
+
+Como cada pacote é baixado de novo, o deploy depende do registro do npm: se ele estiver fora do ar, rode o workflow de novo mais tarde.
 
 Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.config.js`.
 

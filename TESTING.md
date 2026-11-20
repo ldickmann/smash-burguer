@@ -2,7 +2,7 @@
 
 O projeto tem duas camadas de verificação:
 
-- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 41 testes em 6 arquivos.
+- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 45 testes em 7 arquivos.
 - **Verificação no navegador**, com os scripts Playwright + axe-core de `.claude/e2e/`: acessibilidade, fluxo de pedido, teclado e micro-interações. Eles rodam à mão contra o build e ainda não fazem parte do CI.
 
 ## Como rodar os testes unitários
@@ -29,6 +29,7 @@ Desde o Vitest 4, o relatório só lista os arquivos que os testes importam, a m
 | `cart.test.js` | 4 | Store do carrinho: total de itens e subtotal; campos padrão do item; quantidade nunca abaixo de 1; remover e "Desfazer" devolvendo o item à mesma posição |
 | `auth.test.js` | 6 | Login com credenciais válidas e inválidas; sair e entrar de novo; migração do cadastro antigo para a chave nova; numeração dos pedidos a partir de 1001 |
 | `lockfile-audit.test.js` | 6 | Script `.claude/lockfile-audit.py`, com a consulta ao npm trocada por uma resposta fixa: faixas com espaço depois do operador, pré-lançamentos (incluídos nas faixas, como no `npm audit`), curingas e versões parciais; uma alternativa em formato desconhecido (`^`, `~`, hífen) só vira erro quando a resposta depende dela; advisory que não casa com nenhuma versão do lockfile entra como "versão não identificada", e o script sai com 1. Roda no ambiente `node` e chama o Python do sistema (`py -3`, `python3` ou `python`); sem Python 3, os testes são pulados |
+| `repo-config.test.js` | 4 | Proteções do CI e do repositório, lidas dos próprios arquivos: actions do `deploy.yml` fixadas pelo SHA, com a versão em comentário; escrita (`pages: write` e `id-token: write`) só no job `deploy`, e o `build` sem guardar o token do checkout; `packageManager` com hash sha512 e nenhum `corepack yarn@x.y.z` no workflow; install com `--immutable --check-cache`; `.gitignore` ignorando `.env`, `.env.[modo]`, o `.yarn/install-state.gz` e a pasta `.vscode/`, sem casar com nenhum arquivo rastreado. O `.gitignore` é avaliado num repositório temporário que só tem ele, sem o `.git/info/exclude` nem o gitignore global da máquina. Roda no ambiente `node`; sem git, o teste do `.gitignore` é pulado |
 
 ### Cobertura (outubro de 2026)
 

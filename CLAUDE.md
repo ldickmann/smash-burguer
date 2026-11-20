@@ -12,13 +12,13 @@ Converse com o usuário em português. Commits também em português, no formato
 
 ## Comandos no ambiente cloud
 
-O projeto usa Yarn 3.8.7, fixado em `packageManager` no `package.json`; o `yarn.lock` está no formato do Yarn 3 e o `.yarn/cache` é versionado. O `repo.yarnpkg.com` é bloqueado no container, então:
+O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `package.json`; o `yarn.lock` está no formato do Yarn 3 e o `.yarn/cache` é versionado. O `repo.yarnpkg.com` é bloqueado no container, então:
 
 ```bash
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
-corepack yarn@3.8.7 install --immutable   # altera .yarn/install-state.gz; não commite só isso
+corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 41 testes
+npx vitest run                             # 45 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -31,9 +31,15 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Fluxo:** branch de trabalho → PR para `develop` → PR `develop` → `main`.
 - **Merge:** use sempre "Create a merge commit", sem squash nem rebase.
 - **`develop` em dia:** antes, confirme que a `develop` contém a `main` com `git merge-base --is-ancestor origin/main origin/develop`. Se não contiver, abra primeiro uma PR `main` → `develop`.
-- **Deploy:** o merge na `main` publica o site. Ele instala com `corepack yarn@3.8.7 install --immutable` no Node 22; se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
+- **Deploy:** o merge na `main` publica o site. Se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
+  - O CI instala com `corepack yarn install --immutable --check-cache` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
+  - O `--check-cache` baixa de novo cada pacote e compara com o zip do `.yarn/cache`. É a única conferência dos binários de plataforma (`@esbuild/linux-x64` e outros), que não têm checksum no `yarn.lock`. Ao revisar uma PR que mexe no `.yarn/cache`, rode o mesmo install no container, que é Linux.
+  - Com isso, o deploy depende do registro do npm. Se ele estiver fora do ar, rode o workflow de novo mais tarde; se uma versão do `yarn.lock` for retirada do registro, o deploy falha até a dependência ser atualizada.
+  - Só o job `deploy` tem permissão de escrita (`pages: write` e `id-token: write`). O `build`, que roda código das dependências, só lê e não guarda o token no `.git/config`.
 - **Merges e PRs:** só com pedido explícito do usuário.
-- **Actions:** o workflow usa os majors que rodam em Node 24: `checkout@v7`, `setup-node@v7`, `configure-pages@v6`, `upload-pages-artifact@v5` e `deploy-pages@v5`.
+- **Actions:** fixadas pelo SHA completo do commit, com a versão em comentário: `checkout` v7.0.1, `setup-node` v7.1.0, `configure-pages` v6.0.0, `upload-pages-artifact` v5.0.0 e `deploy-pages` v5.0.1, todas em Node 24.
+  - O Dependabot (`.github/dependabot.yml`) abre uma PR por mês para a `develop`, trocando o SHA e o comentário juntos. Os commits dele saem em inglês (`ci(deps): bump …`): é a exceção à regra de commits em português.
+  - Para trocar à mão, pegue o SHA do commit com `gh api repos/actions/<nome>/commits/<versão> --jq .sha`, que resolve também tag anotada, e mude SHA e comentário juntos. Não volte a usar só a tag.
 
 ## Dependências
 
