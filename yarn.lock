@@ -4980,7 +4980,7 @@ __metadata:
     prettier: ^3.4.2
     sass-embedded: ^1.83.4
     typescript: ^5.9.3
-    vite: ^6.4.3
+    vite: ^6.4.6
     vite-plugin-vue-devtools: ^8.2.1
     vitest: ^4.1.12
     vue: ^3.5.44
@@ -5496,9 +5496,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^6.4.3":
-  version: 6.4.3
-  resolution: "vite@npm:6.4.3"
+"vite@npm:^6.4.6":
+  version: 6.4.6
+  resolution: "vite@npm:6.4.6"
   dependencies:
     esbuild: ^0.25.0
     fdir: ^6.4.4
@@ -5547,7 +5547,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 349e2cc44efa3fad3f89f415f45c5a94ee08d710b87b3e8b3f2556494c34b0f56af9f92c42316ff2117e442bbda617aa2ee502772f2301fcb687020b6be96f7e
+  checksum: 4aa90fa98a78e5a08369ac2af81364ce88cb34351d9f6b9509df9392e4baa7ea8a97d08dd7b0c22e71c1607df10bdf3dd6fca860e15ad476a5e904fc12b883a9
   languageName: node
   linkType: hard
 

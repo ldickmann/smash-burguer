@@ -178,7 +178,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 35 testes unitários, em 5 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a autenticação. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 41 testes unitários, em 6 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a autenticação e o script de auditoria do lockfile. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
