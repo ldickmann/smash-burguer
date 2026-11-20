@@ -1,5 +1,5 @@
 /* global process */
-// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque e fontes.
+// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque, fontes e violações da CSP.
 // uso: node axe-scan.mjs <grupo: loja|admin|todos> [viewports] [reduce]
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -60,6 +60,7 @@ const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENA
 
 const browser = await chromium.launch();
 let total = 0;
+let cspTotal = 0;
 for (const w of VPS) {
   for (const sc of list) {
     const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 }, reducedMotion: REDUCE ? 'reduce' : 'no-preference' });
@@ -67,6 +68,9 @@ for (const w of VPS) {
     const storage = Object.fromEntries(Object.entries(sc.storage || {}).map(([k, v]) => [k, JSON.stringify(v)]));
     await ctx.addInitScript((s) => { if (sessionStorage.getItem('__s')) return; localStorage.clear(); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, v); sessionStorage.setItem('__s', '1'); }, storage);
     const page = await ctx.newPage();
+    // Violações da Content-Security-Policy do index.html: o Chromium as escreve no console
+    const csp = [];
+    page.on('console', (m) => { if (m.type() === 'error' && /Content Security Policy/i.test(m.text())) csp.push(m.text()); });
     await page.goto(BASE + sc.hash);
     await page.waitForLoadState('networkidle').catch(() => {});
     await page.waitForTimeout(300);
@@ -82,7 +86,8 @@ for (const w of VPS) {
         await page.screenshot({ path: `${OUT}/${tag}-full.png`, fullPage: true });
       }
     }
-    await page.addScriptTag({ content: AXE });
+    // Por evaluate, e não por <script> inline, que a CSP bloqueia
+    await page.evaluate(AXE);
     const res = await page.evaluate(async () => {
       const r = await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] } });
       const vw = innerWidth;
@@ -119,12 +124,15 @@ for (const w of VPS) {
       };
     });
     total += res.violations.length;
-    const flag = res.violations.length || res.overflow || res.small.length ? '✗' : '✓';
-    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
+    cspTotal += csp.length;
+    const flag = res.violations.length || res.overflow || res.small.length || csp.length ? '✗' : '✓';
+    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} csp=${csp.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
     res.violations.forEach((v) => console.log('    axe:', v));
     res.small.forEach((v) => console.log('    alvo:', v));
+    csp.forEach((v) => console.log('    csp:', v));
     await ctx.close();
   }
 }
 console.log('TOTAL violações axe:', total);
+console.log('TOTAL violações CSP:', cspTotal);
 await browser.close();
