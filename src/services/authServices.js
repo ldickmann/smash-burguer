@@ -102,9 +102,14 @@ export const authService = {
       const { ok, needsUpgrade } = await verifyPassword(credentials.password, savedUser.password);
       if (!ok) throw new Error('Credenciais inválidas');
 
-      // Cadastro de antes do hash: a senha em texto puro dá lugar ao hash
+      // Cadastro de antes do hash: a senha em texto puro dá lugar ao hash. Se não der (cota
+      // cheia, ou um endereço sem WebCrypto), a pessoa entra assim mesmo e a troca fica para depois
       if (needsUpgrade) {
-        writeAccount({ ...savedUser, password: await hashPassword(credentials.password) });
+        try {
+          writeAccount({ ...savedUser, password: await hashPassword(credentials.password) });
+        } catch {
+          // Fica para o próximo login
+        }
       }
       // A sessão recebe só os campos do perfil; a senha fica no cadastro
       return { ok: true, user: pickProfile(savedUser), ...ordersOf(savedUser) };
@@ -136,7 +141,12 @@ export const authService = {
   saveOrders(currentEmail, { orderHistory, nextOrderId }) {
     const account = readAccount();
     if (!isPlainObject(account) || !currentEmail || account.email !== currentEmail) return;
-    writeAccount({ ...account, orderHistory, nextOrderId });
+    try {
+      writeAccount({ ...account, orderHistory, nextOrderId });
+    } catch {
+      // Cota do localStorage cheia: a cópia do histórico fica para depois, e o "Sair", o
+      // login e o pedido seguem
+    }
   },
 
   /**

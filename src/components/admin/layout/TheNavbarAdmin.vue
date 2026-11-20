@@ -13,7 +13,13 @@
         :aria-expanded="String(sidebarOpen)"
         @click="handleToggleSidebar"
       />
-      <SearchBar :model-value="searchQuery" @search="handleSearch" @submit="handleSearchSubmit" />
+      <!-- Recriada a cada página: o campo mostra a busca da página nova, e não o que sobrou da anterior -->
+      <SearchBar
+        :key="route.path"
+        :model-value="searchQuery"
+        @search="handleSearch"
+        @submit="handleSearchSubmit"
+      />
     </div>
     <div class="navbar-admin__right">
       <NotificationBar :notifications="notifications" />

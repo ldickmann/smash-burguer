@@ -1,13 +1,18 @@
 import { mount, flushPromises } from '@vue/test-utils';
 import { describe, it, expect, vi } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
 import ModalProducts from '../components/admin/ModalProducts.vue';
+import { UPLOAD_BUDGET, useProductsStore } from '../stores/products';
 
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d, 0x49, 0x48, 0x44, 0x52]);
 
-const mountModal = (props = {}) =>
-  mount(ModalProducts, {
+const mountModal = (props = {}) => {
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  return mount(ModalProducts, {
     props,
     global: {
+      plugins: [pinia],
       stubs: {
         'font-awesome-icon': { template: '<svg />' },
         // O <dialog> nativo não existe no jsdom: o stub só mostra o conteúdo
@@ -15,6 +20,7 @@ const mountModal = (props = {}) =>
       },
     },
   });
+};
 
 const chooseFile = async (wrapper, file) => {
   const input = wrapper.find('input#image');
@@ -128,5 +134,18 @@ describe('ModalProducts', () => {
       description: 'Clássico',
       image: '/images/foods/smash-burger',
     });
+  });
+
+  it('sem espaço no navegador para a imagem, não salva e mostra o erro no campo da imagem', async () => {
+    const wrapper = mountModal();
+    useProductsStore().addProduct({ category: 'drinks', name: 'Grande', price: 1, image: `data:image/png;base64,${'A'.repeat(UPLOAD_BUDGET)}` });
+    await fillFields(wrapper);
+    await chooseFile(wrapper, new File([PNG], 'mate.png', { type: 'image/png' }));
+    await vi.waitFor(() => expect(wrapper.find('.file-picker__name').text()).toBe('mate.png'));
+
+    await submit(wrapper);
+
+    expect(wrapper.emitted('submit')).toBeUndefined();
+    expect(wrapper.find('#image-erro').text()).toContain('Não há espaço neste navegador para mais esta imagem.');
   });
 });

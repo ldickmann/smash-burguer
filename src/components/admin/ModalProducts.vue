@@ -100,6 +100,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
 import { useFormValidation } from "@/composables/useFormValidation";
+import { useProductsStore } from "@/stores/products";
 import {
   DESCRIPTION_MAX,
   IMAGE_HELP,
@@ -140,6 +141,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "submit", "cancel"]);
+
+const productsStore = useProductsStore();
+const NO_SPACE =
+  "Não há espaço neste navegador para mais esta imagem. Use uma imagem menor ou exclua produtos com imagem enviada.";
 
 // Cópia local do produto, com o preço no formato do campo ("25,90")
 const toForm = (product) => ({
@@ -222,11 +227,20 @@ const uploadImage = (event) => {
   });
 };
 
-// Sem imagem, o produto não sai. Na edição, depois de um arquivo recusado, a imagem atual vale
+// Sem imagem, o produto não sai. Na edição, depois de um arquivo recusado, a imagem atual vale.
+// A imagem enviada precisa caber no espaço que o cardápio salvo tem no navegador: o erro fica
+// no campo, porque um aviso fora do modal ficaria atrás do fundo dele
 const validateImage = () => {
-  if (localProduct.value.image) return true;
-  imageError.value = "Escolha uma imagem para o produto.";
-  return false;
+  if (!localProduct.value.image) {
+    imageError.value = "Escolha uma imagem para o produto.";
+    return false;
+  }
+  const replaced = props.mode === "edit" ? props.product : null;
+  if (!productsStore.fitsUploadBudget(localProduct.value.image, replaced)) {
+    imageError.value = NO_SPACE;
+    return false;
+  }
+  return true;
 };
 
 const focusField = async (id) => {

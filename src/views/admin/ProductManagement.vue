@@ -75,8 +75,8 @@
       @close="productToDelete = null"
     >
       <p>
-        “{{ productToDelete?.name }}” sai do cardápio. Os produtos ainda não são salvos: ao
-        recarregar a página, o cardápio volta ao original.
+        “{{ productToDelete?.name }}” sai do cardápio salvo neste navegador. Para trazê-lo de
+        volta, use Configurações › Restaurar cardápio original.
       </p>
       <template #footer>
         <div class="product-delete__actions">
@@ -116,9 +116,6 @@ const productsStore = useProductsStore();
 const toast = useToastStore();
 const route = useRoute();
 const router = useRouter();
-
-const NO_SPACE =
-  "Não há espaço neste navegador para mais esta imagem. Use uma imagem menor ou exclua produtos com imagem enviada.";
 
 const showAddModal = ref(false);
 const showEditModal = ref(false);
@@ -184,14 +181,9 @@ const focusTitleIfLost = async () => {
 };
 
 // O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria.
-// Sem espaço para a imagem nova, o modal continua aberto, com o aviso
+// O espaço da imagem já foi conferido no modal
 const onEditSubmit = (changes) => {
   const { category, id } = selectedProduct.value;
-  const current = productsStore[category]?.find((product) => product.id === id) ?? null;
-  if (!productsStore.fitsUploadBudget(changes.image, current)) {
-    toast.show({ message: NO_SPACE, variant: "error" });
-    return;
-  }
   const updated = productsStore.updateProduct(category, id, changes);
   showEditModal.value = false;
   if (updated) toast.show({ message: "Produto atualizado." });
@@ -200,10 +192,6 @@ const onEditSubmit = (changes) => {
 
 // Depois de criar, o filtro mostra a categoria do produto novo
 const onAddSubmit = (newProduct) => {
-  if (!productsStore.fitsUploadBudget(newProduct.image)) {
-    toast.show({ message: NO_SPACE, variant: "error" });
-    return;
-  }
   const created = productsStore.addProduct(newProduct);
   showAddModal.value = false;
   if (!created) return;

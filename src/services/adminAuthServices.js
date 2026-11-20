@@ -57,10 +57,14 @@ const loginSavedAdmin = async (credentials) => {
   if (needsUpgrade) {
     // eslint-disable-next-line no-unused-vars
     const { admin, isAuthenticated, ...registration } = saved;
-    localStorage.setItem(
-      ADMIN_KEY,
-      JSON.stringify({ ...registration, password: await hashPassword(credentials.password) })
-    );
+    try {
+      localStorage.setItem(
+        ADMIN_KEY,
+        JSON.stringify({ ...registration, password: await hashPassword(credentials.password) })
+      );
+    } catch {
+      // Cota cheia ou endereço sem WebCrypto: entra assim mesmo, e a troca fica para depois
+    }
   }
   return saved;
 };

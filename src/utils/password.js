@@ -9,8 +9,19 @@
 
 const PREFIX = "pbkdf2-sha256";
 const ITERATIONS = 600000;
+// Um valor salvo com um número absurdo de iterações travaria o login: acima disto, recusa
+const MAX_ITERATIONS = ITERATIONS * 10;
 const SALT_BYTES = 16;
 const HASH_BITS = 256;
+
+/** Mensagem do erro lançado quando o navegador não oferece o WebCrypto. */
+export const NO_WEBCRYPTO = "WebCrypto indisponível";
+
+/**
+ * O navegador calcula o hash? O `crypto.subtle` só existe em HTTPS e em localhost: aberto
+ * por HTTP num IP da rede, o site não consegue criar conta nem conferir uma senha em hash.
+ */
+export const canHashPasswords = () => Boolean(globalThis.crypto?.subtle);
 
 const encoder = new TextEncoder();
 
@@ -18,6 +29,7 @@ const toBase64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));
 const fromBase64 = (text) => Uint8Array.from(atob(text), (char) => char.charCodeAt(0));
 
 const derive = async (password, salt, iterations) => {
+  if (!canHashPasswords()) throw new Error(NO_WEBCRYPTO);
   const key = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, [
     "deriveBits",
   ]);
@@ -37,6 +49,7 @@ export const isPasswordHash = (stored) =>
  * @returns {Promise<string>} o hash no formato guardado
  */
 export const hashPassword = async (password) => {
+  if (!canHashPasswords()) throw new Error(NO_WEBCRYPTO);
   const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const hash = await derive(String(password), salt, ITERATIONS);
   return `${PREFIX}$${ITERATIONS}$${toBase64(salt)}$${toBase64(hash)}`;
@@ -55,6 +68,7 @@ const sameBytes = (a, b) => {
  * @param {string} password - a senha digitada
  * @param {unknown} stored - o valor do cadastro: hash, ou texto puro de antes do hash
  * @returns {Promise<{ ok: boolean, needsUpgrade: boolean }>}
+ * @throws {Error} NO_WEBCRYPTO, com um hash salvo e um navegador sem WebCrypto
  */
 export const verifyPassword = async (password, stored) => {
   if (typeof password !== "string" || typeof stored !== "string" || !stored) {
@@ -67,7 +81,11 @@ export const verifyPassword = async (password, stored) => {
 
   const [, iterationsText, saltText, hashText] = stored.split("$");
   const iterations = Number(iterationsText);
-  if (!Number.isSafeInteger(iterations) || iterations < 1) return { ok: false, needsUpgrade: false };
+  if (!Number.isSafeInteger(iterations) || iterations < 1 || iterations > MAX_ITERATIONS) {
+    return { ok: false, needsUpgrade: false };
+  }
+  // Sem WebCrypto não há como conferir: quem chamou mostra um aviso, e não "senha incorreta"
+  if (!canHashPasswords()) throw new Error(NO_WEBCRYPTO);
   try {
     const expected = fromBase64(hashText);
     const actual = new Uint8Array(await derive(password, fromBase64(saltText), iterations));

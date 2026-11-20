@@ -192,21 +192,6 @@ describe('telas do painel', () => {
     expect(names(wrapper)).toHaveLength(4);
   });
 
-  it('sem espaço para a imagem, o produto não é criado e o modal continua aberto', async () => {
-    const { wrapper } = await mountAdmin(ProductManagement, '/admin/products');
-    const store = useProductsStore();
-    store.addProduct({ category: 'drinks', name: 'Grande', price: 1, image: `data:image/png;base64,${'A'.repeat(UPLOAD_BUDGET)}` });
-    const before = store.drinks.length;
-
-    await wrapper.findAll('button').find((b) => b.text().includes('Novo produto')).trigger('click');
-    wrapper.findComponent({ name: 'ModalProducts' }).vm.$emit('submit', { category: 'drinks', name: 'Mate', price: 6.5, image: PNG });
-    await flushPromises();
-
-    expect(store.drinks).toHaveLength(before);
-    expect(wrapper.find('.modal-stub').exists()).toBe(true);
-    expect(useToastStore().toasts.at(-1)).toMatchObject({ variant: 'error' });
-  });
-
   it('pedidos: a busca acha pelo cliente, pelo número e pelo item; "Detalhes" mostra o pedido', async () => {
     const { wrapper, router } = await mountAdmin(OrderManagement, '/admin/orders?q=maria');
     expect(wrapper.findAll('.orders-list > li')).toHaveLength(1);
@@ -241,7 +226,13 @@ describe('telas do painel', () => {
     await flushPromises();
     expect(router.currentRoute.value.fullPath).toBe('/admin/products?q=coca');
 
+    // Texto digitado sem Enter numa tela sem busca não fica no campo ao trocar de página
+    await router.push('/admin');
+    await wrapper.find('#busca-admin').setValue('burger');
     await router.push('/admin/orders?status=pending');
+    await flushPromises();
+    expect(wrapper.find('#busca-admin').element.value).toBe('');
+
     await wrapper.find('#busca-admin').setValue('maria');
     await flushPromises();
     expect(router.currentRoute.value.query).toEqual({ status: 'pending', q: 'maria' });

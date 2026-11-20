@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { hashPassword, isPasswordHash, verifyPassword } from '../utils/password';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { NO_WEBCRYPTO, hashPassword, isPasswordHash, verifyPassword } from '../utils/password';
 
 describe('hash de senha', () => {
   it('gera PBKDF2-SHA256 com 600 mil iterações e sal diferente a cada vez', async () => {
@@ -52,5 +52,29 @@ describe('hash de senha', () => {
     const weak = `${prefix}$1000$${salt}$${btoa(String.fromCharCode(...new Uint8Array(bits)))}`;
 
     expect(await verifyPassword('senha123', weak)).toEqual({ ok: true, needsUpgrade: true });
+  });
+
+  it('recusa sem calcular um hash salvo com iterações demais', async () => {
+    const stored = await hashPassword('senha123');
+    const [prefix, , salt, hash] = stored.split('$');
+    const derive = vi.spyOn(crypto.subtle, 'deriveBits');
+
+    expect(await verifyPassword('senha123', `${prefix}$6000001$${salt}$${hash}`)).toEqual({ ok: false, needsUpgrade: false });
+    expect(derive).not.toHaveBeenCalled();
+    derive.mockRestore();
+  });
+
+  describe('sem WebCrypto (HTTP fora de localhost)', () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('o hash e a conferência de um hash avisam, em vez de dizer que a senha está errada', async () => {
+      const stored = await hashPassword('senha123');
+      vi.stubGlobal('crypto', { getRandomValues: (bytes) => bytes });
+
+      await expect(hashPassword('senha123')).rejects.toThrow(NO_WEBCRYPTO);
+      await expect(verifyPassword('senha123', stored)).rejects.toThrow(NO_WEBCRYPTO);
+      // A senha em texto puro de antes do hash ainda é conferida
+      expect(await verifyPassword('senha123', 'senha123')).toEqual({ ok: true, needsUpgrade: true });
+    });
   });
 });

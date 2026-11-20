@@ -152,7 +152,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toast";
 import { useAuthHandlers } from "@/handlers/authHandlers";
@@ -166,6 +166,7 @@ import {
   validateEmail,
   validatePhone,
   validateCEPFormat,
+  validateCEP,
 } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -226,11 +227,23 @@ const formatDate = (date) =>
     new Date(date)
   );
 
-// Endereço salvo de um CEP sem rua: ela foi digitada, e continua editável
+// Endereço salvo de um CEP sem rua (CEP único da cidade): a rua foi digitada, e continua
+// editável. O endereço salvo não diz de onde a rua veio, então a tela consulta o CEP salvo ao
+// abrir; sem resposta, os campos ficam só leitura (a não ser que a rua esteja vazia)
 const { manual, streetError, setFromLookup, validateStreet } = useManualAddress(
   () => userInfo.value.address
 );
 if (addressCep.value && !userInfo.value.address.street) setFromLookup(userInfo.value.address);
+
+onMounted(async () => {
+  const savedCep = addressCep.value;
+  if (!savedCep) return;
+  const result = await validateCEP(savedCep);
+  // O CEP pode ter mudado na tela enquanto a consulta corria
+  if (result.isValid && addressCep.value === savedCep && addressMatchesCep()) {
+    setFromLookup(result.address);
+  }
+});
 
 // Consulta o CEP e põe o endereço na tela, se o campo ainda tiver esse CEP quando a resposta chegar
 const lookupCep = async (value) => {

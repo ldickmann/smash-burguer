@@ -20,11 +20,11 @@ const ACCOUNT = {
 
 const Blank = { template: '<div />' };
 
-const mountProfile = async () => {
+const mountProfile = async (account = ACCOUNT) => {
   const pinia = createPinia();
   setActivePinia(pinia);
-  localStorage.setItem(ACCOUNT_KEY, JSON.stringify(ACCOUNT));
-  useUserStore().setUser(ACCOUNT);
+  localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
+  useUserStore().setUser(account);
 
   const router = createRouter({
     history: createMemoryHistory(),
@@ -48,10 +48,23 @@ const mountProfile = async () => {
 const savedAccount = () => JSON.parse(localStorage.getItem(ACCOUNT_KEY));
 const buttonByText = (wrapper, text) => wrapper.findAll('button').find((b) => b.text() === text);
 
+// ViaCEP simulado: o CEP de Navegantes tem rua; 35588000 vale para a cidade toda (sem rua)
+const viaCep = () =>
+  vi.fn((url) =>
+    Promise.resolve({
+      json: async () =>
+        url.includes('35588000')
+          ? { logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' }
+          : { logradouro: 'Rua Beira da Praia', bairro: 'Centro', localidade: 'Navegantes', uf: 'SC' },
+    })
+  );
+
 describe('ProfileView', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
+    // A tela consulta o CEP salvo ao abrir; nenhum teste vai à rede
+    vi.stubGlobal('fetch', viaCep());
   });
 
   afterEach(() => {
@@ -130,13 +143,8 @@ describe('ProfileView', () => {
   });
 
   it('com CEP único da cidade (sem rua), a rua fica editável e é obrigatória', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({ json: async () => ({ logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' }) })
-      )
-    );
     const { wrapper } = await mountProfile();
+    await flushPromises();
     expect(wrapper.find('#street').attributes('readonly')).toBeDefined();
 
     await wrapper.find('#CEP').setValue('35588000');
@@ -155,6 +163,25 @@ describe('ProfileView', () => {
     await flushPromises();
 
     expect(savedAccount().address).toEqual({ street: 'Rua das Flores, 10', neighborhood: '', city: 'Serra Azul', state: 'MG' });
+  });
+
+  it('a rua digitada para um CEP único da cidade continua editável quando o perfil abre', async () => {
+    const account = {
+      ...ACCOUNT,
+      CEP: '35588000',
+      address: { street: 'Rua das Flores, 10', neighborhood: '', city: 'Serra Azul', state: 'MG' },
+    };
+    const { wrapper } = await mountProfile(account);
+    await flushPromises();
+
+    expect(wrapper.find('#street').attributes('readonly')).toBeUndefined();
+    expect(wrapper.find('#street').element.value).toBe('Rua das Flores, 10');
+
+    await wrapper.find('#street').setValue('Rua das Flores, 12');
+    await wrapper.find('form').trigger('submit');
+    await vi.advanceTimersByTimeAsync(1000);
+    await flushPromises();
+    expect(savedAccount().address.street).toBe('Rua das Flores, 12');
   });
 
   it('"Excluir conta" pede confirmação e apaga a conta, a sessão e o carrinho', async () => {

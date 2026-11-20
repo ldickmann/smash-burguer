@@ -324,6 +324,21 @@ describe('histórico de pedidos no cadastro', () => {
     expect(store.placeOrder(order).id).toBe(1003);
   });
 
+  it('com o localStorage cheio, sair, pedir e entrar continuam funcionando', async () => {
+    const store = useUserStore();
+    await loginWith(store);
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('cota', 'QuotaExceededError');
+    });
+
+    expect(store.placeOrder(order).id).toBe(1001);
+    store.logout();
+    expect(store.isAuthenticated).toBe(false);
+    await loginWith(store);
+    expect(store.isAuthenticated).toBe(true);
+    setItem.mockRestore();
+  });
+
   it('migra o formato de sessão da versão antiga, com o histórico, para o cadastro', async () => {
     localStorage.clear();
     const oldOrder = { id: 1001, date: '2026-10-17T22:15:00.000Z', status: 'Recebido', total: 10, paymentMethod: 'PIX', items: [] };

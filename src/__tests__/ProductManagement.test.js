@@ -107,7 +107,8 @@ describe('ProductManagement', () => {
     const total = store.drinks.length;
 
     await buttonsByText(wrapper, 'Excluir')[1].trigger('click');
-    expect(wrapper.find('.dialog-stub').text()).toContain('“Coca Cola Lata” sai do cardápio.');
+    expect(wrapper.find('.dialog-stub').text()).toContain('“Coca Cola Lata” sai do cardápio salvo neste navegador.');
+    expect(wrapper.find('.dialog-stub').text()).toContain('Restaurar cardápio original');
     await buttonsByText(wrapper, 'Cancelar')[0].trigger('click');
     expect(wrapper.find('.dialog-stub').exists()).toBe(false);
     expect(store.drinks).toHaveLength(total);
