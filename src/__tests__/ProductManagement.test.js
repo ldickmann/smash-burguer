@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import ProductManagement from '../views/admin/ProductManagement.vue';
@@ -16,6 +16,7 @@ const mountPage = () => {
   const pinia = createPinia();
   setActivePinia(pinia);
   const wrapper = mount(ProductManagement, {
+    attachTo: document.body,
     global: {
       plugins: [pinia],
       stubs: {
@@ -40,6 +41,7 @@ const buttonsByText = (wrapper, text) => wrapper.findAll('button').filter((b) =>
 describe('ProductManagement', () => {
   beforeEach(() => {
     localStorage.clear();
+    document.body.innerHTML = '';
   });
 
   it('os destaques não são sorteados de novo ao trocar o filtro e voltar', async () => {
@@ -60,15 +62,19 @@ describe('ProductManagement', () => {
     const cocaCola = { ...store.drinks.find((p) => p.id === 2) };
 
     // Editar o Smash Burger (foods, id 2) e mandá-lo para Bebidas
-    await buttonsByText(wrapper, 'Editar')[1].trigger('click');
+    const edit = buttonsByText(wrapper, 'Editar')[1];
+    edit.element.focus();
+    await edit.trigger('click');
     const modal = wrapper.findComponent(ModalStub);
     expect(modal.props('product')).toMatchObject({ id: 2, name: 'Smash Burger' });
     modal.vm.$emit('submit', { ...modal.props('product'), category: 'drinks' });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
     expect(store.drinks.find((p) => p.id === 2)).toEqual(cocaCola);
     expect(store.drinks.at(-1)).toMatchObject({ name: 'Smash Burger', category: 'drinks' });
     expect(names(wrapper)).not.toContain('Smash Burger');
+    // O "Editar" saiu da lista filtrada com o produto: o foco vai para o título
+    expect(document.activeElement).toBe(wrapper.find('h1').element);
   });
 
   it('criar uma bebida antes de abrir o filtro de bebidas cria o produto e mostra a categoria dele', async () => {
@@ -102,8 +108,9 @@ describe('ProductManagement', () => {
 
     await buttonsByText(wrapper, 'Excluir')[1].trigger('click');
     await buttonsByText(wrapper, 'Excluir produto')[0].trigger('click');
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
+    expect(document.activeElement).toBe(wrapper.find('h1').element);
     expect(wrapper.find('.dialog-stub').exists()).toBe(false);
     expect(store.drinks).toHaveLength(total - 1);
     expect(store.drinks.some((p) => p.name === 'Coca Cola Lata')).toBe(false);

@@ -110,7 +110,7 @@ Abra <http://localhost:5173/smash-burguer/>. O caminho `/smash-burguer/` vem do 
 
 O login do painel compara o e-mail e a senha com um administrador salvo no `localStorage`, na chave `admin`.
 
-- **No `yarn dev`:** há também um administrador de teste, com credenciais fictícias e públicas, que não grava nada no navegador. Em <http://localhost:5173/smash-burguer/#/admin/login>, o botão "Usar admin de teste" preenche o formulário. Ele fica atrás de `import.meta.env.DEV` e não vai para o build.
+- **No `yarn dev`:** há também um administrador de teste, com credenciais fictícias e públicas, que dispensa o cadastro no navegador; o login grava só a sessão do painel, sem a senha, na chave `admin`. Em <http://localhost:5173/smash-burguer/#/admin/login>, o botão "Usar admin de teste" preenche o formulário. Ele fica atrás de `import.meta.env.DEV` e não vai para o build.
 - **No site publicado:** o painel só abre com um administrador criado à mão. Na página do site, rode no console do navegador o comando abaixo, com dados fictícios (a senha fica em texto puro), e **recarregue a página antes de entrar**:
 
   ```js
@@ -188,7 +188,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 172 testes unitários, em 21 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos e contadores), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 176 testes unitários, em 21 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos e contadores), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 

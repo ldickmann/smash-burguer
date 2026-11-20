@@ -68,6 +68,32 @@ describe('OrderManagement', () => {
     expect(chips(wrapper)).toEqual(['Pendente', 'A caminho']);
   });
 
+  it('quando o botão sai da lista filtrada ou fica desabilitado, o foco vai para o título', async () => {
+    const { wrapper } = await mountPage('/admin/orders?status=pending');
+    document.body.appendChild(wrapper.element);
+
+    const pending = updateButtons(wrapper)[0];
+    pending.element.focus();
+    await pending.trigger('click');
+    await flushPromises();
+    expect(wrapper.find('.empty-state').exists()).toBe(true);
+    expect(document.activeElement).toBe(wrapper.find('h1').element);
+
+    const all = await mountPage('/admin/orders?status=preparing');
+    document.body.appendChild(all.wrapper.element);
+    all.store.advanceStatus(2);
+    await all.wrapper.find('select#statusFilter').setValue('');
+    await flushPromises();
+    const delivery = updateButtons(all.wrapper)[1];
+    await delivery.trigger('click');
+    await flushPromises();
+    expect(delivery.attributes('disabled')).toBeDefined();
+    expect(document.activeElement).toBe(all.wrapper.find('h1').element);
+
+    wrapper.element.remove();
+    all.wrapper.element.remove();
+  });
+
   it('abre já filtrado pelo status do endereço; status desconhecido vale como "Todos"', async () => {
     const pending = await mountPage('/admin/orders?status=pending');
     expect(pending.wrapper.find('select#statusFilter').element.value).toBe('pending');

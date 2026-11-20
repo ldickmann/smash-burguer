@@ -133,12 +133,23 @@ const openEditModal = (product) => {
   showEditModal.value = true;
 };
 
+// Se o botão que abriu o modal saiu da tela (o produto mudou de categoria com a lista
+// filtrada), o foco ficaria no <body> ou num <dialog> já fechado: vai para o título da página
+const focusTitleIfLost = async () => {
+  await nextTick();
+  const active = document.activeElement;
+  if (!active || active === document.body || active.closest("dialog:not([open])")) {
+    titleRef.value?.focus();
+  }
+};
+
 // O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria
 const onEditSubmit = (changes) => {
   const { category, id } = selectedProduct.value;
   const updated = productsStore.updateProduct(category, id, changes);
   showEditModal.value = false;
   if (updated) toast.show({ message: "Produto atualizado." });
+  focusTitleIfLost();
 };
 
 // Depois de criar, o filtro mostra a categoria do produto novo

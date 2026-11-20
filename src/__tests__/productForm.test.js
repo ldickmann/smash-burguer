@@ -72,13 +72,14 @@ describe('campos do formulário de produto', () => {
     expect(validateProductDescription('a'.repeat(161)).isValid).toBe(false);
   });
 
-  it('converte para o modelo do cardápio: preço em número, textos sem espaço nas pontas e quantidade vazia de fora', () => {
+  it('converte para o modelo do cardápio: preço em número, textos sem espaço nas pontas e quantidade vazia como null', () => {
     const form = { category: 'drinks', name: ' Mate ', price: '6,50', quantity: '', description: ' Gelado ', image: 'data:image/png;base64,AA==' };
 
     expect(toProduct(form)).toEqual({
       category: 'drinks',
       name: 'Mate',
       price: 6.5,
+      quantity: null,
       description: 'Gelado',
       image: 'data:image/png;base64,AA==',
     });

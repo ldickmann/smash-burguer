@@ -81,9 +81,9 @@ export const validateProductDescription = (description) =>
 
 /**
  * Valores do formulário convertidos para o modelo do cardápio. Só chamar depois da validação.
- * A quantidade vazia fica de fora.
+ * A quantidade vazia vira `null`, para a edição também poder apagá-la.
  * @param {object} form
- * @returns {{ category: string, name: string, price: number, quantity?: number, description: string, image: string }}
+ * @returns {{ category: string, name: string, price: number, quantity: number|null, description: string, image: string }}
  */
 export const toProduct = (form) => {
   const quantity = String(form.quantity ?? "").trim();
@@ -91,7 +91,7 @@ export const toProduct = (form) => {
     category: form.category,
     name: form.name.trim(),
     price: parsePrice(form.price),
-    ...(quantity && { quantity: Number(quantity) }),
+    quantity: quantity ? Number(quantity) : null,
     description: String(form.description ?? "").trim(),
     image: form.image,
   };

@@ -55,6 +55,15 @@ describe('store de produtos', () => {
     expect(store.drinks.at(-1)).toEqual(moved);
   });
 
+  it('a edição apaga a quantidade quando o formulário a manda vazia', () => {
+    const store = useProductsStore();
+    const created = store.addProduct({ ...DRINK, quantity: 5 });
+
+    const updated = store.updateProduct('drinks', created.id, { ...DRINK, quantity: null });
+
+    expect(updated.quantity).toBeNull();
+  });
+
   it('não acha o produto: nada muda', () => {
     const store = useProductsStore();
     const before = store.foods.map((p) => ({ ...p }));

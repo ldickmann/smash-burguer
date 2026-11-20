@@ -67,6 +67,8 @@ describe('login do admin', () => {
 
     expect(result).toBeUndefined();
     expect(store.isAdmin).toBe(true);
+    // A sessão do painel não guarda a senha
+    expect(store.admin).toEqual({ firstName: 'Gerente', lastName: 'Teste', email: SAVED_ADMIN.email, role: 'admin' });
   });
 
   it('com JSON ilegível na chave admin, o login é recusado em vez de ficar pendente', async () => {

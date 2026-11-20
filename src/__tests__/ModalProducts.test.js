@@ -76,13 +76,34 @@ describe('ModalProducts', () => {
     const wrapper = mountModal();
     await fillFields(wrapper);
 
+    await chooseFile(wrapper, new File([PNG], 'boa.png', { type: 'image/png' }));
+    await vi.waitFor(() => expect(wrapper.find('.file-picker__name').text()).toBe('boa.png'));
     await chooseFile(wrapper, new File(['<html></html>'], 'pagina.html', { type: 'text/html' }));
     await vi.waitFor(() => expect(wrapper.find('#image-erro').exists()).toBe(true));
-    await submit(wrapper);
 
     expect(wrapper.find('#image-erro').text()).toContain('Escolha uma imagem PNG, JPEG ou WebP.');
+    // O arquivo recusado leva o seletor de volta ao estado em que o modal abriu
     expect(wrapper.find('.file-picker__name').text()).toBe('Nenhuma imagem escolhida');
+
+    await submit(wrapper);
     expect(wrapper.emitted('submit')).toBeUndefined();
+    expect(wrapper.find('#image-erro').text()).toContain('Escolha uma imagem para o produto.');
+  });
+
+  it('na edição, um arquivo recusado depois de outro aceito volta à imagem atual, que pode ser salva', async () => {
+    const wrapper = mountModal({
+      mode: 'edit',
+      product: { id: 1, category: 'drinks', name: 'Mate', price: 6.5, image: '/images/drinks/mate' },
+    });
+
+    await chooseFile(wrapper, new File([PNG], 'nova.png', { type: 'image/png' }));
+    await vi.waitFor(() => expect(wrapper.find('.file-picker__name').text()).toBe('nova.png'));
+    await chooseFile(wrapper, new File(['<html></html>'], 'pagina.png', { type: 'image/png' }));
+    await vi.waitFor(() => expect(wrapper.find('#image-erro').exists()).toBe(true));
+
+    expect(wrapper.find('.file-picker__name').text()).toBe('Imagem atual');
+    await submit(wrapper);
+    expect(wrapper.emitted('submit')[0][0].image).toBe('/images/drinks/mate');
   });
 
   it('na edição, mostra o preço com vírgula e salva sem trocar a imagem nem exigir quantidade', async () => {
@@ -102,6 +123,7 @@ describe('ModalProducts', () => {
       category: 'foods',
       name: 'Smash Burger',
       price: 23.9,
+      quantity: null,
       description: 'Clássico',
       image: '/images/foods/smash-burger',
     });

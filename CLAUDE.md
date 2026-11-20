@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 120 testes
+npx vitest run                             # 176 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -86,7 +86,7 @@ O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, lim
 ## Problemas conhecidos (fora do escopo do redesign)
 
 - No admin, produtos criados, editados ou excluídos e o status dos pedidos ficam só na memória da aba; os pedidos são dados de exemplo (`src/stores/adminOrders.js`). "Detalhes", a busca e os itens do menu de perfil só fazem `console.log` (`[FLX-09]`).
-- O cadastro do cliente guarda a senha em texto puro no localStorage (a sessão não guarda mais).
+- O cadastro do cliente e o admin criado à mão guardam a senha em texto puro no localStorage. As sessões do cliente e do painel não guardam mais.
 - **Admin de teste:** no `yarn dev`, o login do painel aceita o admin de `devTestAdmin()` (`src/services/adminAuthServices.js`), com credenciais fictícias e públicas, atrás de `import.meta.env.DEV`. O `build-config.test.js` confere que ele não vai para o build; não o tire de trás do `DEV`.
 - **Admin no site publicado:** só entra com o admin criado à mão na chave `admin`, que também guarda a sessão do painel. Criado com a página aberta, o cadastro se perde no primeiro login; é preciso recarregar antes de entrar (README, "Acessar o painel administrativo").
 - Sair da conta apaga o histórico de pedidos.

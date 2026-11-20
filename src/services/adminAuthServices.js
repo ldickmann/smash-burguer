@@ -20,6 +20,18 @@ export const devTestAdmin = () =>
       }
     : null;
 
+const PROFILE_FIELDS = ['firstName', 'lastName', 'name', 'email', 'role'];
+
+/**
+ * Campos do admin que a sessão do painel guarda: sem a senha, como a sessão do cliente.
+ * @param {object} admin
+ * @returns {object}
+ */
+export const pickAdminProfile = (admin) =>
+  Object.fromEntries(
+    PROFILE_FIELDS.filter((field) => field in admin).map((field) => [field, admin[field]])
+  );
+
 // Valor ilegível na chave conta como nenhum admin salvo. Sem o `try`, o erro do
 // `JSON.parse` sairia do `setTimeout`, e a promise do login nunca terminaria
 const readSavedAdmin = () => {
@@ -42,7 +54,7 @@ export const adminAuthService = {
         setTimeout(() => {
           const admin = [readSavedAdmin(), devTestAdmin()].find(matches);
           if (admin) {
-            resolve({ ok: true, user: admin });
+            resolve({ ok: true, user: pickAdminProfile(admin) });
           } else {
             reject(new Error('Credenciais de administrador inválidas'));
           }

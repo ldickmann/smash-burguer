@@ -213,6 +213,17 @@ describe('estado salvo no localStorage', () => {
       expect(saved('admin')).toMatchObject({ admin: null, isAuthenticated: false });
     });
 
+    it('a sessão gravada com a senha perde a senha ao carregar e continua valendo', () => {
+      save('admin', { admin: ADMIN, isAuthenticated: true });
+      loadPinia();
+
+      const store = useAdminStore();
+
+      expect(store.isAdmin).toBe(true);
+      expect(store.admin).not.toHaveProperty('password');
+      expect(saved('admin').admin).toEqual({ firstName: 'Admin', lastName: 'User', email: 'admin@example.com', role: 'admin' });
+    });
+
     it('o cadastro do admin criado à mão na mesma chave fica como está', () => {
       const raw = JSON.stringify(ADMIN);
       localStorage.setItem('admin', raw);

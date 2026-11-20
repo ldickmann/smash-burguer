@@ -1,6 +1,6 @@
 <template>
   <section class="order-management">
-    <h1 class="admin-page__title order-management__title">Pedidos</h1>
+    <h1 ref="titleRef" class="admin-page__title order-management__title" tabindex="-1">Pedidos</h1>
 
     <FormGroup
       id="statusFilter"
@@ -50,7 +50,7 @@
                 variant="secondary"
                 size="sm"
                 :disabled="order.status === LAST_STATUS"
-                @click="updateStatus(order)"
+                @click="updateStatus(order, $event)"
               >
                 Atualizar status
               </BaseButton>
@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { formatPrice } from "@/utils/formatters";
 import { ORDER_STATUSES, STATUS_LABELS, useAdminOrdersStore } from "@/stores/adminOrders";
@@ -92,6 +92,7 @@ const ordersStore = useAdminOrdersStore();
 const toast = useToastStore();
 const route = useRoute();
 const router = useRouter();
+const titleRef = ref(null);
 
 // O filtro fica no endereço (?status=pending), para os contadores da barra abrirem a
 // tela já filtrada. Valor fora da lista vale como "Todos"
@@ -106,10 +107,15 @@ const filteredOrders = computed(() => {
   return ordersStore.orders.filter((order) => order.status === statusFilter.value);
 });
 
-// Leva o pedido ao próximo status; o aviso anuncia a mudança também para leitores de tela
-const updateStatus = (order) => {
+// Leva o pedido ao próximo status; o aviso anuncia a mudança também para leitores de tela.
+// O botão sai da lista filtrada ou fica desabilitado em "Concluído": aí o foco vai para o título
+const updateStatus = async (order, event) => {
+  const button = event?.currentTarget;
   const status = ordersStore.advanceStatus(order.id);
-  if (status) toast.show({ message: `Pedido #${order.id}: ${STATUS_LABELS[status]}.` });
+  if (!status) return;
+  toast.show({ message: `Pedido #${order.id}: ${STATUS_LABELS[status]}.` });
+  await nextTick();
+  if (button && (!button.isConnected || button.disabled)) titleRef.value?.focus();
 };
 
 // Função para visualizar os detalhes do pedido

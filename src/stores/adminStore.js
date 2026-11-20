@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { adminAuthService } from '@/services/adminAuthServices';
+import { adminAuthService, pickAdminProfile } from '@/services/adminAuthServices';
 import { isPlainObject } from '@/utils/storedState';
 
 export const useAdminStore = defineStore('admin', {
@@ -32,11 +32,17 @@ export const useAdminStore = defineStore('admin', {
 
   persist: {
     // A sessão do painel salva é editável no navegador: `admin` precisa ser um objeto, e sem
-    // ele a sessão não vale. O cadastro do admin criado à mão na mesma chave não muda
+    // ele a sessão não vale. Uma sessão gravada antes, com a senha, perde a senha. O cadastro
+    // do admin criado à mão na mesma chave não muda
     afterHydrate: ({ store }) => {
-      const admin = isPlainObject(store.admin) ? store.admin : null;
+      const admin = isPlainObject(store.admin) ? pickAdminProfile(store.admin) : null;
       const isAuthenticated = store.isAuthenticated === true && admin !== null;
-      if (admin === store.admin && isAuthenticated === store.isAuthenticated) return;
+      if (
+        JSON.stringify(admin) === JSON.stringify(store.admin) &&
+        isAuthenticated === store.isAuthenticated
+      ) {
+        return;
+      }
       store.admin = admin;
       store.isAuthenticated = isAuthenticated;
       store.$persist();

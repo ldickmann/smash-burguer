@@ -151,6 +151,8 @@ const toForm = (product) => ({
 
 const formRef = ref(null);
 const localProduct = ref(toForm(props.product));
+// Imagem com que o modal abriu: um arquivo recusado volta a ela
+const openedImage = ref(localProduct.value.image);
 const fileName = ref("");
 const imageError = ref("");
 const readingImage = ref(false);
@@ -167,6 +169,7 @@ watch(
   () => props.product,
   (newProduct) => {
     localProduct.value = toForm(newProduct);
+    openedImage.value = localProduct.value.image;
     fileName.value = "";
     imageError.value = "";
   }
@@ -200,13 +203,15 @@ const uploadImage = (event) => {
 
   const upload = ++lastUpload;
   readingImage.value = true;
+  fileName.value = "";
   pendingRead = readProductImage(file).then((result) => {
     // Só vale a última escolha
     if (upload !== lastUpload) return;
     readingImage.value = false;
     if (result.error) {
+      // O arquivo recusado não entra: volta a imagem com que o modal abriu
       imageError.value = result.error;
-      fileName.value = "";
+      localProduct.value.image = openedImage.value;
       // Permite escolher o mesmo arquivo de novo depois de corrigi-lo
       input.value = "";
       return;
@@ -217,13 +222,11 @@ const uploadImage = (event) => {
   });
 };
 
+// Sem imagem, o produto não sai. Na edição, depois de um arquivo recusado, a imagem atual vale
 const validateImage = () => {
-  if (imageError.value) return false;
-  if (!localProduct.value.image) {
-    imageError.value = "Escolha uma imagem para o produto.";
-    return false;
-  }
-  return true;
+  if (localProduct.value.image) return true;
+  imageError.value = "Escolha uma imagem para o produto.";
+  return false;
 };
 
 const focusField = async (id) => {
