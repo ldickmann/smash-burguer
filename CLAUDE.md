@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado em `packageManager` no `package.json`; o `yarn.
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable   # altera .yarn/install-state.gz; não commite só isso
 corepack yarn@3.8.7 build
-npx vitest run                             # 35 testes
+npx vitest run                             # 41 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -46,6 +46,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **`resolutions`:** só pisos dentro da faixa que os pacotes pedem (hoje, só o `rollup`). Forçar outro major, como o `tar` 6 que existia, bloqueia as correções de segurança.
 - **Alertas do Dependabot:**
   - para conferir, rode `corepack yarn@3.8.7 npm audit --all --recursive` e também `python3 -I .claude/lockfile-audit.py`, porque o primeiro deixa passar versões fixadas por transitivas;
+  - no script, a marca "versão não identificada" indica um advisory cuja faixa não casou com nenhuma versão do lockfile: confira à mão;
   - para corrigir uma transitiva, use `corepack yarn@3.8.7 up -R <pacote>`.
 
 ## Convenções do código (SPEC)
