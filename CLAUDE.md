@@ -57,7 +57,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 ## Convenções do código (SPEC)
 
-- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue` e a assinatura de autoria (abaixo).
+- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue`, a assinatura de autoria e os `_tokens.scss` das direções visuais (seções abaixo).
 - **Breakpoints e mixins:** mobile-first, em `base/_breakpoints.scss` (`up()`, `below()`, `hover-capable`, `motion-ok`, `motion-reduced`).
 - **Estilos:** cada componente faz `@use` da própria parcial dentro de `<style scoped>`. O `main.scss` importa só a base.
 - **Animações:**
@@ -74,6 +74,16 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Textos:** em português. A marca se escreve sempre "Smash Burger".
 - **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session` e `smash-burger:account`. O admin continua em `admin`.
 - **Dependências novas:** pergunte ao usuário antes de adicionar.
+
+## Direções visuais (exploração, só no `yarn dev`)
+
+- **Onde:** `#/direcoes` (índice com uma ficha por estilo) e `#/direcoes/<estilo>` (`brasa`, `material`, `esqueumorfismo`, `neumorfismo`, `3d`, `flat`, `minimalismo`, `escuro`). Código em `src/direcoes/`; pesquisa em `docs/direcoes/PESQUISA.md`.
+- **Fora do build:** as rotas ficam dentro do ramo `import.meta.env.DEV` de `src/direcoes/rotas.js`; com a lista fora do ramo, o build gerava os chunks. Depois de mexer nelas, rode o build e confira que o `dist/` não tem `direcoes` nem as fontes novas.
+- **Tokens:** cada estilo redefine todos os tokens do projeto em `:root[data-direcao="<estilo>"]` (o modal Personalizar e o aviso continuam os reais) e tem os próprios, com prefixo (`--m3-*`, `--esq-*`, `--neu-*`, `--3d-*`, `--flat-*`, `--min-*`, `--esc-*`).
+  - Os `_tokens.scss` são importados pelo `<script>`, não no `<style scoped>`, que reescreveria o `:root`.
+  - São os únicos arquivos da exploração com hex, rgba e durações (exceção na §13.2 do SPEC).
+- **Fontes:** Roboto, Open Sans, Courier Prime, Nunito e Fredoka são `devDependencies`, só das direções. A do estilo escolhido passa a `dependencies` quando ele for levado ao sistema; as outras saem.
+- **Capturas:** `?captura=1` esconde o alternador. O botão do Vue DevTools aparece no `yarn dev`; remova-o antes de capturar.
 
 ## Verificação
 

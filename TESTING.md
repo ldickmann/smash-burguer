@@ -74,6 +74,16 @@ Os scripts de [`.claude/e2e/`](./.claude/e2e/README.md) abrem o build num Chromi
 
 Na entrega do redesign, na atualização de dependências (ambas em outubro de 2026), nas correções da conta e do perfil e na conferência do estado salvo (novembro de 2026), todos passaram, e o axe não encontrou violações.
 
+### Direções visuais
+
+As Homes de `#/direcoes` existem só no `yarn dev` e foram verificadas contra o servidor de desenvolvimento (porta 5173), com Playwright e axe-core numa pasta fora do projeto, por scripts adaptados do `axe-scan.mjs` e do `tokens-contrast.mjs` (não versionados):
+
+- **axe-core (WCAG 2.2 AA):** o índice e as oito Homes, em 1440 e 390 px, com e sem movimento reduzido, e o modal Personalizar aberto em cada Home. Também mede rolagem horizontal e alvos de toque de 44 px.
+- **Layout:** em 1440, 1024 e 390 px, captura de página inteira e checagem automática de rolagem horizontal, de controle coberto por outro e de texto cortado.
+- **Fluxo do "Adicionar":** modal, confirmação, retorno visual, contador do carrinho, anúncio para leitor de tela e foco de volta no botão (pelo teclado).
+- **Contraste:** os pares de `src/direcoes/contraste.js`, medidos também na ficha de cada estilo, no navegador.
+- **Build:** a busca por `direcoes`, `data-direcao`, "Direções visuais" e pelos nomes das fontes novas no `dist/` tem de dar zero resultados.
+
 ## Escrevendo novos testes
 
 - **Onde ficam:** em `src/__tests__/` com o sufixo `.test.js`. É nessa pasta que o ESLint aplica as regras do plugin do Vitest.

@@ -1413,11 +1413,11 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort &   # http://localhost:4173
 Cada comando abaixo deve retornar **zero** linhas:
 
 ```bash
-# Cores, gradientes, sombras, durações e camadas só nos tokens (exceções: a paleta ilustrativa do BurgerStack e a assinatura de autoria, §1.1)
-rg -n "#[0-9a-fA-F]{3,8}\b" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue' --glob '!**/AssinaturaEncaixe.vue' --glob '!**/*.json'
-rg -n "rgba?\(|hsla?\(" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue'
+# Cores, gradientes, sombras, durações e camadas só nos tokens (exceções: a paleta ilustrativa do BurgerStack, a assinatura de autoria, §1.1, e os tokens das direções visuais, abaixo)
+rg -n "#[0-9a-fA-F]{3,8}\b" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue' --glob '!**/AssinaturaEncaixe.vue' --glob '!**/*.json' --glob '!**/direcoes/**/_tokens.scss'
+rg -n "rgba?\(|hsla?\(" src --glob '!**/base/_tokens.scss' --glob '!**/BurgerStack.vue' --glob '!**/direcoes/**/_tokens.scss'
 rg -n "z-index:\s*-?[0-9]" src
-rg -n "(transition|animation)[^;]*[0-9]+m?s" src --glob '!**/base/_tokens.scss'
+rg -n "(transition|animation)[^;]*[0-9]+m?s" src --glob '!**/base/_tokens.scss' --glob '!**/direcoes/**/_tokens.scss'
 
 # Padrões banidos (fora da assinatura de autoria, §1.1)
 rg -n "!important|outline:\s*none|transition:\s*all|respond-to\(" src --glob '!**/AssinaturaEncaixe.vue'
@@ -1434,6 +1434,8 @@ rg -n -i "smash burgers|smash burguer|smashburguer" src index.html public
 # Nenhum texto em inglês que existia na interface
 rg -n "Address|Working Hours|Follow Us|Search\.\.\.|First Name|Last Name|\"Password\"|Status: pending" src
 ```
+
+**Exceção das direções visuais (novembro de 2026):** `src/direcoes/` guarda a exploração de estilos de `#/direcoes`, que só existe no `yarn dev` e não entra no build. Cada estilo tem os próprios tokens em `src/direcoes/estilos/<estilo>/_tokens.scss`, e o índice e o alternador em `src/direcoes/_tokens.scss`. Esses arquivos, e só eles, podem ter hex, rgba e durações escritos por extenso; o resto de `src/direcoes/` segue as buscas acima. As proibições da §0 ficam liberadas nessa exploração, só onde o traço define o estilo.
 
 ### 13.3 Varredura visual e de acessibilidade
 
