@@ -28,7 +28,7 @@ Desde o Vitest 4, o relatório só lista os arquivos que os testes importam, a m
 | `BannerComponent.test.js` | 5 | Título como único `h1`; variante `hero` com `<picture>`, carregamento imediato e `fetchpriority="high"`; variante `page` com imagem `lazy`; slot de ações; nenhum estilo inline na imagem |
 | `cart.test.js` | 4 | Store do carrinho: total de itens e subtotal; campos padrão do item; quantidade nunca abaixo de 1; remover e "Desfazer" devolvendo o item à mesma posição |
 | `auth.test.js` | 6 | Login com credenciais válidas e inválidas; sair e entrar de novo; migração do cadastro antigo para a chave nova; numeração dos pedidos a partir de 1001 |
-| `lockfile-audit.test.js` | 6 | Script `.claude/lockfile-audit.py`, com a consulta ao npm trocada por uma resposta fixa: faixas com espaço depois do operador, pré-lançamentos e curingas; faixa em formato desconhecido vira erro; advisory que não casa com nenhuma versão do lockfile entra como "versão não identificada", e o script sai com 1. Roda no ambiente `node` e chama o Python do sistema (`py -3`, `python3` ou `python`); sem Python 3, os testes são pulados |
+| `lockfile-audit.test.js` | 6 | Script `.claude/lockfile-audit.py`, com a consulta ao npm trocada por uma resposta fixa: faixas com espaço depois do operador, pré-lançamentos (incluídos nas faixas, como no `npm audit`), curingas e versões parciais; uma alternativa em formato desconhecido (`^`, `~`, hífen) só vira erro quando a resposta depende dela; advisory que não casa com nenhuma versão do lockfile entra como "versão não identificada", e o script sai com 1. Roda no ambiente `node` e chama o Python do sistema (`py -3`, `python3` ou `python`); sem Python 3, os testes são pulados |
 
 ### Cobertura (outubro de 2026)
 

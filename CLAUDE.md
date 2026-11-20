@@ -46,7 +46,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **`resolutions`:** só pisos dentro da faixa que os pacotes pedem (hoje, só o `rollup`). Forçar outro major, como o `tar` 6 que existia, bloqueia as correções de segurança.
 - **Alertas do Dependabot:**
   - para conferir, rode `corepack yarn@3.8.7 npm audit --all --recursive` e também `python3 -I .claude/lockfile-audit.py`, porque o primeiro deixa passar versões fixadas por transitivas;
-  - no script, a marca "versão não identificada" indica um advisory cuja faixa não casou com nenhuma versão do lockfile: confira à mão;
+  - no script, a marca "versão não identificada" indica um advisory que ele não ligou a nenhuma versão do lockfile (a faixa não casou ou está num formato que ele não entende, como `^`, `~` ou hífen): confira à mão;
   - para corrigir uma transitiva, use `corepack yarn@3.8.7 up -R <pacote>`.
 
 ## Convenções do código (SPEC)

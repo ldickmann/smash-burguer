@@ -67,35 +67,60 @@ def versao(v):
     return (*numeros, 0, tuple((0, int(p), '') if p.isdigit() else (1, 0, p) for p in pre.split('.')))
 
 
+def inicio(numeros):
+    """Menor versão que começa com estes números, pré-lançamentos incluídos: [1, 2] -> 1.2.0-0."""
+    return versao('.'.join(map(str, numeros + [0] * (3 - len(numeros)))) + '-0')
+
+
 def comparador(cond):
-    """Converte um comparador ('>=1.2.3', '<2.0.0-beta.3', '=6.4.4', '1.2.x', '*') num teste da chave da versão."""
+    """Converte um comparador ('>=1.2.3', '<2.0.0-beta.3', '=6.4.4', '1.2.x', '<2', '*') num teste da chave da versão."""
     m = COMPARADOR.fullmatch(cond)
     if not m:
         raise ValueError(f'comparador não reconhecido: {cond!r}')
     op, *partes, pre = m.groups()
-    numeros = list(itertools.takewhile(str.isdigit, (p or 'x' for p in partes)))
+    numeros = [int(p) for p in itertools.takewhile(str.isdigit, (p or 'x' for p in partes))]
     if len(numeros) == 3:
-        alvo = versao('.'.join(numeros) + (pre or ''))
+        alvo = versao('.'.join(map(str, numeros)) + (pre or ''))
         return lambda chave: OPERACOES[op or '='](chave, alvo)
-    if op not in (None, '=') or pre:
-        # '>=1.2', '<1.x' e afins têm regras próprias no semver; melhor avisar do que adivinhar
+    if pre:
         raise ValueError(f'comparador não reconhecido: {cond!r}')
-    prefixo = tuple(map(int, numeros))
-    return lambda chave: chave[:len(prefixo)] == prefixo
+    if not numeros:
+        # '*' e 'x' aceitam tudo; '>*' e '<*', nada
+        return lambda chave: op not in ('>', '<')
+    # Versão parcial, como no node-semver: '1.2' vai de 1.2.0-0 (inclusive) a 1.3.0-0 (exclusive),
+    # '>1.2' vira '>=1.3.0-0' e '<=1.2' vira '<1.3.0-0'
+    de, ate = inicio(numeros), inicio(numeros[:-1] + [numeros[-1] + 1])
+    return {
+        None: lambda chave: de <= chave < ate,
+        '=': lambda chave: de <= chave < ate,
+        '>=': lambda chave: chave >= de,
+        '>': lambda chave: chave >= ate,
+        '<': lambda chave: chave < de,
+        '<=': lambda chave: chave < ate,
+    }[op]
 
 
 def satisfaz(v, faixa):
     """Checa faixas no formato dos advisories do npm (ex.: '>=9.0.0 <9.0.7 || <3.1.4').
 
-    Aceita espaço depois do operador ('>= 1.0.0'), pré-lançamentos e curingas sem operador
-    ('1.2.x'). Uma faixa fora desse formato levanta ValueError, em vez de virar False.
+    Segue o node-semver com os pré-lançamentos incluídos nas faixas, como o `npm audit`. Aceita
+    espaço depois do operador ('>= 1.0.0'), curingas ('1.2.x') e versões parciais ('<2'). Uma
+    alternativa (entre '||') com comparador desconhecido, como '^', '~' ou hífen, não é avaliada;
+    se a resposta depender dela, levanta ValueError em vez de responder False.
     """
-    alternativas = [
-        [comparador(c) for c in re.sub(r'(>=|<=|>|<|=)\s+', r'\1', alternativa).split()]
-        for alternativa in faixa.split('||')
-    ]
     chave = versao(v)
-    return any(all(teste(chave) for teste in testes) for testes in alternativas)
+    duvida = False
+    for alternativa in faixa.split('||'):
+        try:
+            testes = [comparador(c) for c in re.sub(r'(>=|<=|>|<|=)\s+', r'\1', alternativa).split()]
+        except ValueError:
+            duvida = True
+            continue
+        if all(teste(chave) for teste in testes):
+            return True
+    if duvida:
+        raise ValueError(f'faixa não reconhecida: {faixa!r}')
+    return False
 
 
 def main():
@@ -130,13 +155,18 @@ def main():
     for nome, advisories in resposta.items():
         locais = sorted(versoes.get(nome, ()))
         for a in advisories:
-            try:
-                afetadas = [v for v in locais if satisfaz(v, a['vulnerable_versions'])]
-            except ValueError:
-                afetadas = []
+            afetadas, duvidas = [], []
+            for v in locais:
+                try:
+                    if satisfaz(v, a['vulnerable_versions']):
+                        afetadas.append(v)
+                except ValueError:
+                    duvidas.append(v)
             # o servidor só devolve advisories que afetam alguma versão enviada: se a conferência
-            # local não casar nenhuma, o advisory entra assim mesmo, sem a versão
-            for v in afetadas or [None]:
+            # local não casar nenhuma, ou não souber decidir alguma, o advisory entra sem a versão
+            if duvidas or not afetadas:
+                afetadas.append(None)
+            for v in afetadas:
                 achados.append((a['severity'], nome, v, a['vulnerable_versions'], a['url'].rsplit('/', 1)[-1]))
     achados.sort(key=lambda x: (SEVERIDADES.index(x[0]) if x[0] in SEVERIDADES else 9, x[1], x[2] or ''))
 

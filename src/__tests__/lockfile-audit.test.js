@@ -13,7 +13,7 @@ const SCRIPT = fileURLToPath(new URL('../../.claude/lockfile-audit.py', import.m
 // O `py -3` vem antes para, no Windows, não cair no atalho da Microsoft Store.
 // Sem Python 3, os testes são pulados.
 const PYTHON = [['py', '-3'], ['python3'], ['python']].find(([comando, ...args]) => {
-  const r = spawnSync(comando, [...args, '--version'], { encoding: 'utf8' });
+  const r = spawnSync(comando, [...args, '--version'], { encoding: 'utf8', timeout: 10000 });
   return r.status === 0 && /^Python 3\./.test(r.stdout);
 });
 
@@ -90,8 +90,9 @@ describe.skipIf(!PYTHON)('lockfile-audit.py', () => {
     const r = spawnSync(comando, [...args, '-I', '-B', '-X', 'utf8', join(pasta, 'driver.py')], {
       input: JSON.stringify({ script: SCRIPT, ...pedido }),
       encoding: 'utf8',
+      timeout: 10000,
     });
-    if (r.status !== 0) throw new Error(r.stderr);
+    if (r.status !== 0) throw new Error(r.error?.message || r.stderr);
     return JSON.parse(r.stdout);
   };
   const satisfaz = (pares) => rodar({ acao: 'satisfaz', pares });
@@ -117,7 +118,9 @@ describe.skipIf(!PYTHON)('lockfile-audit.py', () => {
     ).toEqual([true, true, false]);
   });
 
-  it('compara pré-lançamentos como o semver', () => {
+  // A precedência é a da especificação do semver; como no `npm audit` (includePrerelease),
+  // os pré-lançamentos entram nas faixas
+  it('ordena pré-lançamentos pela precedência do semver e os inclui nas faixas', () => {
     expect(
       satisfaz([
         ['2.0.0-beta.1', '<2.0.0-beta.3'],
@@ -128,28 +131,33 @@ describe.skipIf(!PYTHON)('lockfile-audit.py', () => {
     ).toEqual([true, false, true, true]);
   });
 
-  it('aceita curingas, versão exata e alternativas com ||', () => {
+  it('aceita curingas, versões parciais, versão exata e alternativas com ||', () => {
     expect(
       satisfaz([
         ['1.2.5', '1.2.x'],
         ['1.3.0', '1.2.x'],
+        ['1.5.0', '<2'],
+        ['2.0.0-beta.1', '<2'],
+        ['1.2.9', '<=1.2'],
+        ['1.2.9', '>1.2'],
         ['6.4.4', '=6.4.4'],
         ['6.4.5', '=6.4.4'],
         ['3.1.3', '>=9.0.0 <9.0.7 || <3.1.4'],
         ['3.1.4', '>=9.0.0 <9.0.7 || <3.1.4'],
       ]),
-    ).toEqual([true, false, true, false, true, false]);
+    ).toEqual([true, false, true, false, true, false, true, false, true, false]);
   });
 
-  it('levanta erro com faixas fora do formato, em vez de responder false', () => {
+  it('só levanta erro quando a resposta depende de um formato desconhecido', () => {
     expect(
       satisfaz([
         ['1.2.3', '^1.2.0'],
         ['1.2.3', '~1.2.0'],
         ['1.2.3', '1.0.0 - 2.0.0'],
-        ['1.2.3', '>=1.2'],
+        ['1.1.0', '>=1.0.0 <1.2.3 || ^2.0.0'],
+        ['2.1.0', '>=1.0.0 <1.2.3 || ^2.0.0'],
       ]),
-    ).toEqual(['erro', 'erro', 'erro', 'erro']);
+    ).toEqual(['erro', 'erro', 'erro', true, 'erro']);
   });
 
   it('relata o advisory que não casa com nenhuma versão do lockfile e sai com 1', () => {
@@ -158,14 +166,20 @@ describe.skipIf(!PYTHON)('lockfile-audit.py', () => {
         advisory('high', '>= 1.0.0 < 1.2.3', 'GHSA-teste-0001'),
         advisory('moderate', '<1.0.0', 'GHSA-teste-0002'),
         advisory('moderate', '^1.1.0', 'GHSA-teste-0003'),
+        advisory('high', '>=1.0.0 <1.2.3 || ^2.0.0', 'GHSA-teste-0005'),
       ],
       beta: [advisory('low', '<2.0.0-beta.3', 'GHSA-teste-0004')],
     });
 
     expect(enviado).toEqual({ alfa: ['1.1.0'], beta: ['2.0.0-beta.1'] });
     expect(codigo).toBe(1);
-    expect(saida).toContain('4 advisories: 1 high, 2 moderate, 1 low');
+    expect(saida).toContain('5 advisories: 2 high, 2 moderate, 1 low');
     expect(saida).toContain('[high] alfa@1.1.0 (vulnerável: >= 1.0.0 < 1.2.3) GHSA-teste-0001\n    via package.json');
+    // a alternativa desconhecida não esconde a versão que casou com a outra
+    expect(saida).toContain(
+      '[high] alfa@1.1.0 (vulnerável: >=1.0.0 <1.2.3 || ^2.0.0) GHSA-teste-0005\n    via package.json',
+    );
+    expect(saida).not.toContain('alfa (versão não identificada; vulnerável: >=1.0.0 <1.2.3 || ^2.0.0)');
     expect(saida).toContain(
       '[moderate] alfa (versão não identificada; vulnerável: <1.0.0) GHSA-teste-0002\n    versões no lockfile: 1.1.0',
     );
