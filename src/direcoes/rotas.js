@@ -43,5 +43,11 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./estilos/neumorfismo/HomeNeumorfismo.vue"),
         meta: titulo("Neumorfismo"),
       },
+      {
+        path: "/direcoes/3d",
+        name: "direcao-3d",
+        component: () => import("./estilos/3d/Home3D.vue"),
+        meta: titulo("3D e gradientes suaves"),
+      },
     ]
   : [];

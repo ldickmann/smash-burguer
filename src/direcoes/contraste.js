@@ -135,4 +135,15 @@ export const PARES_POR_DIRECAO = {
     { frente: "neu-tinta", fundo: "neu-kraft", minimo: 3, onde: "anel de foco" },
     { frente: "neu-sombra", fundo: "neu-kraft", minimo: 3, informativo: true, onde: "sombra escura (decorativa, não conta)" },
   ],
+  "3d": [
+    { frente: "3d-carne", fundo: "3d-pao-claro", minimo: 4.5, onde: "texto no topo do degradê" },
+    { frente: "3d-carne", fundo: "3d-tomate-claro", minimo: 4.5, onde: "texto no ponto mais escuro do degradê" },
+    { frente: "3d-carne-suave", fundo: "3d-tomate-claro", minimo: 4.5, onde: "texto secundário no ponto mais escuro" },
+    { frente: "3d-carne-suave", fundo: "3d-maionese", minimo: 4.5, onde: "descrição no card" },
+    { frente: "3d-branco", fundo: "3d-ketchup-claro", minimo: 4.5, onde: "Ver cardápio (hover, o mais claro)" },
+    { frente: "3d-maionese", fundo: "3d-carne", minimo: 4.5, onde: "Adicionar" },
+    { frente: "3d-branco", fundo: "3d-alface", minimo: 4.5, onde: "face Adicionado" },
+    { frente: "3d-carne-suave", fundo: "3d-alface-clara", minimo: 3, onde: "ponto da paginação no fim do degradê" },
+    { frente: "3d-carne", fundo: "3d-tomate-claro", minimo: 3, onde: "anel de foco" },
+  ],
 };

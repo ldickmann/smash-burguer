@@ -1,0 +1,146 @@
+// 3D e gradientes suaves, "Camadas" (só desenvolvimento, #/direcoes/3d).
+// A profundidade é a do próprio lanche: as cores das camadas (pão, tomate, alface) viram o
+// degradê da página, os botões incham como pão e achatam quando apertados.
+
+:root[data-direcao="3d"],
+[data-direcao="3d"] {
+  // ---------- Cores das camadas ----------
+  --3d-pao-claro: #fce7c8;
+  --3d-tomate-claro: #f9d4c4;
+  --3d-alface-clara: #ddefd6;
+  --3d-maionese: #fff6ec;
+  --3d-carne: #3b2418;
+  --3d-carne-suave: #6b4e3d;
+  --3d-carne-clara: #57382a;
+  --3d-ketchup: #b83227;
+  --3d-ketchup-claro: #c63c30;
+  --3d-ketchup-escuro: #9b291f;
+  --3d-alface: #2e7d4f;
+  --3d-branco: #ffffff;
+
+  // Fundo: pão claro → tomate claro → alface clara, interpolado em oklab
+  --3d-fundo: linear-gradient(to bottom in oklab, #fce7c8, #f9d4c4 55%, #ddefd6);
+  // Palco do hero e reflexo especular dos botões inflados
+  --3d-halo: radial-gradient(closest-side, rgba(255, 246, 236, 0.95), rgba(255, 246, 236, 0));
+  --3d-especular: radial-gradient(ellipse 70% 55% at 30% 18%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 70%);
+  --3d-chapa: radial-gradient(ellipse 60% 55% at 45% 35%, #6e4a37, #3b2418 70%);
+  --3d-contato: radial-gradient(closest-side, rgba(59, 36, 24, 0.45), rgba(59, 36, 24, 0));
+
+  // ---------- Argila: duas sombras internas e uma externa grande e macia ----------
+  --3d-argila: inset 6px 6px 10px rgba(255, 255, 255, 0.75), inset -8px -10px 16px rgba(107, 78, 61, 0.14), 6px 18px 30px -8px rgba(59, 36, 24, 0.22);
+  --3d-argila-alta: inset 6px 6px 10px rgba(255, 255, 255, 0.75), inset -8px -10px 16px rgba(107, 78, 61, 0.14), 8px 26px 34px -8px rgba(59, 36, 24, 0.26);
+  --3d-argila-pequena: inset 3px 3px 5px rgba(255, 255, 255, 0.8), inset -4px -5px 8px rgba(107, 78, 61, 0.16), 6px 9px 16px rgba(59, 36, 24, 0.16);
+  --3d-argila-afundada: inset 3px 4px 8px rgba(107, 78, 61, 0.25), inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+  // Inflado, para os botões coloridos (ketchup e carne): o volume por dentro e a sombra no chão
+  --3d-inflado-dentro: inset 3px 4px 6px rgba(255, 255, 255, 0.35), inset -4px -6px 10px rgba(0, 0, 0, 0.25);
+  --3d-inflado-fora: 0 12px 22px rgba(59, 36, 24, 0.28);
+  --3d-inflado-fora-apertado: 0 4px 8px rgba(59, 36, 24, 0.24);
+  --3d-sombra-foto: 0 16px 24px rgba(59, 36, 24, 0.28);
+  --3d-sombra-chapa: inset 0 6px 10px rgba(255, 255, 255, 0.16), 0 22px 34px rgba(59, 36, 24, 0.32);
+
+  // ---------- Forma e profundidade ----------
+  --3d-raio-card: 32px;
+  --3d-raio-foto: 22px;
+  --3d-raio-palco: 48px;
+  --3d-raio-pilula: 999px;
+  --3d-perspectiva: 1100px;
+  --3d-perspectiva-card: 900px;
+  --3d-z-fundo: -1;
+
+  // ---------- Tipografia ----------
+  --3d-fonte: "Fredoka Variable", "Fredoka", system-ui, sans-serif;
+  --3d-titulo: clamp(2.75rem, 1.8rem + 3.4vw, 4.5rem);
+
+  // ---------- Movimento ----------
+  // Mola (amortecimento 0,6, rigidez 800) convertida em linear() pelo mesmo script do Material 3
+  --3d-mola: linear(0, 0.044, 0.154, 0.3, 0.458, 0.611, 0.748, 0.862, 0.952, 1.017, 1.06, 1.085, 1.094, 1.093, 1.084, 1.071, 1.056, 1.042, 1.028, 1.016, 1.007, 1, 0.995, 0.993, 0.991, 0.991, 0.992, 0.993, 0.994, 0.996, 0.997, 0.998, 1);
+  --3d-dur-mola: 360ms;
+  --3d-dur-achatar: 90ms;
+  --3d-dur-virar: 320ms;
+
+  // ---------- Tokens do projeto ----------
+  --color-bg: var(--3d-pao-claro);
+  --color-surface-sunken: var(--3d-maionese);
+  --color-surface-1: var(--3d-maionese);
+  --color-surface-2: var(--3d-maionese);
+  --color-surface-3: var(--3d-maionese);
+  --color-surface-4: #f6e6d4;
+  --color-input: #fffbf6;
+  --color-overlay: rgba(59, 36, 24, 0.45);
+
+  --color-ink: var(--3d-carne);
+  --color-ink-muted: var(--3d-carne-suave);
+  --color-ink-subtle: var(--3d-carne-suave);
+  --color-ink-disabled: #a48b7b;
+
+  --color-border-strong: #8a6b59;
+  --color-border: #ead6c2;
+  --color-border-subtle: rgba(59, 36, 24, 0.1);
+
+  --color-accent: var(--3d-ketchup);
+  --color-accent-hover: var(--3d-ketchup-claro);
+  --color-accent-pressed: var(--3d-ketchup-escuro);
+  --color-accent-ink: var(--3d-branco);
+  --color-accent-soft: rgba(184, 50, 39, 0.1);
+  --color-focus: var(--3d-carne);
+
+  --color-success: var(--3d-alface);
+  --color-danger: var(--3d-ketchup);
+  --color-danger-solid: var(--3d-ketchup);
+  --color-danger-solid-ink: var(--3d-branco);
+  --color-warning: #7d5200;
+  --color-info: #1f5c8f;
+
+  --color-danger-soft: rgba(184, 50, 39, 0.1);
+  --color-warning-soft: rgba(125, 82, 0, 0.12);
+  --color-info-soft: rgba(31, 92, 143, 0.1);
+  --color-success-soft: rgba(46, 125, 79, 0.12);
+  --color-hover-ghost: rgba(59, 36, 24, 0.06);
+  --color-sheen: rgba(255, 255, 255, 0.35);
+  --gradient-scrim: linear-gradient(to bottom, rgba(59, 36, 24, 0.1), rgba(59, 36, 24, 0.85));
+  --glow-hero: none;
+
+  --focus-width: 3px;
+  --focus-offset: 3px;
+
+  --font-display: var(--3d-fonte);
+  --font-text: var(--3d-fonte);
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.375rem;
+  --text-3xl: 3.25rem;
+  --text-4xl: 5rem;
+  --text-hero: var(--3d-titulo);
+  --text-page: clamp(2.375rem, 1.9rem + 1.6vw, 3.25rem);
+  --leading-display: 1;
+  --leading-tight: 1.2;
+  --leading-body: 1.5;
+  --leading-compact: 1.4;
+
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: var(--3d-raio-card);
+
+  --elev-0: none;
+  --elev-1: var(--3d-argila-pequena);
+  --elev-2: var(--3d-argila);
+  --elev-3: var(--3d-argila-alta);
+  --glow-accent: none;
+  --underline-active: inset 0 -3px 0 var(--3d-carne);
+
+  --dur-instant: 80ms;
+  --dur-fast: 150ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+  --dur-hold: 1200ms;
+  --dur-stagger: 40ms;
+  --dur-spin: 800ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: var(--3d-mola);
+
+  --ficha-titulo-peso: 600;
+}
