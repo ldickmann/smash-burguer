@@ -122,7 +122,7 @@
           autocomplete="address-line1"
           :error="streetError"
           required
-          @blur="validateStreet(form.address)"
+          @blur="validateStreet"
         />
         <FormGroup
           v-if="manual.neighborhood"
@@ -210,7 +210,7 @@ const redirectQuery = computed(() =>
   route.query.redirect ? { redirect: route.query.redirect } : {}
 );
 
-const { manual, streetError, setFromLookup, validateStreet } = useManualAddress();
+const { manual, streetError, setFromLookup, validateStreet } = useManualAddress(() => form.value.address);
 
 // Consulta o CEP e guarda uma cópia do endereço, se o campo ainda tiver esse CEP quando a
 // resposta chegar (a cópia não muda a resposta guardada pela consulta)
@@ -263,7 +263,7 @@ const handleRegister = async () => {
     // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
     if (!form.value.address) await lookupCep(form.value.CEP);
     const isValid = validateAll();
-    const hasStreet = validateStreet(form.value.address);
+    const hasStreet = validateStreet();
 
     if (!isValid || !form.value.address || !hasStreet) {
       await focusFirstError();

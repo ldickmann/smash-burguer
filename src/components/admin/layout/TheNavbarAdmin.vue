@@ -13,7 +13,7 @@
         :aria-expanded="String(sidebarOpen)"
         @click="handleToggleSidebar"
       />
-      <SearchBar :model-value="searchQuery" @search="handleSearch" />
+      <SearchBar :model-value="searchQuery" @search="handleSearch" @submit="handleSearchSubmit" />
     </div>
     <div class="navbar-admin__right">
       <NotificationBar :notifications="notifications" />
@@ -93,16 +93,17 @@ const toggleSidebar = inject("toggleSidebar", () => {
 
 const handleToggleSidebar = () => toggleSidebar(toggleRef.value);
 
-// Busca (?q=): em Produtos e em Pedidos, filtra a própria tela; nas outras, leva a Produtos
+// Busca (?q=): em Produtos e em Pedidos, filtra a própria tela a cada digitação; nas outras,
+// o Enter leva a Produtos (trocar de página a cada letra tiraria o foco do campo)
 const SEARCHABLE = ["/admin/products", "/admin/orders"];
 const searchQuery = computed(() => searchQueryOf(route.query.q));
 const handleSearch = (text) => {
-  const q = text.trim() || undefined;
-  if (SEARCHABLE.includes(route.path)) {
-    router.replace({ query: { ...route.query, q } });
-  } else if (q) {
-    router.push({ path: "/admin/products", query: { q } });
-  }
+  if (!SEARCHABLE.includes(route.path)) return;
+  router.replace({ query: { ...route.query, q: text.trim() || undefined } });
+};
+const handleSearchSubmit = (text) => {
+  const q = text.trim();
+  if (q && !SEARCHABLE.includes(route.path)) router.push({ path: "/admin/products", query: { q } });
 };
 
 // Itens do menu de perfil

@@ -204,8 +204,9 @@ router.afterEach((to, from, failure) => {
 
   document.title = to.meta.title ? `${to.meta.title} · ${BRAND}` : `${BRAND} · Delivery`;
 
-  // Na primeira carga o foco fica onde o navegador deixou
-  if (!from.matched.length) return;
+  // Na primeira carga o foco fica onde o navegador deixou. Na mesma página, com só a query
+  // mudando (filtro de status, busca do painel), o foco fica onde a pessoa está digitando
+  if (!from.matched.length || to.path === from.path) return;
 
   nextTick(() => {
     const main = document.getElementById('conteudo');

@@ -34,6 +34,26 @@ describe('guards do roteador', () => {
     expect(router.currentRoute.value.query).toEqual({ redirect: '/profile' });
   });
 
+  it('o foco por rota age na troca de página, e não quando só a query muda', async () => {
+    const main = document.createElement('main');
+    main.id = 'conteudo';
+    main.tabIndex = -1;
+    const search = document.createElement('input');
+    document.body.append(main, search);
+
+    await router.push('/menu');
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement).toBe(main);
+
+    search.focus();
+    await router.replace('/menu?q=coca');
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement).toBe(search);
+
+    main.remove();
+    search.remove();
+  });
+
   it('sem sessão, o cadastro abre', async () => {
     await router.push('/register');
 

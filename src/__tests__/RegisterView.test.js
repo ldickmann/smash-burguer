@@ -137,6 +137,8 @@ describe('RegisterView', () => {
     expect(localStorage.getItem(ACCOUNT_KEY)).toBeNull();
 
     await wrapper.find('#street').setValue('Rua das Flores, 10');
+    // O erro some durante a digitação, sem esperar o blur (que mudaria o botão de lugar no clique)
+    expect(wrapper.find('#street-erro').exists()).toBe(false);
     await wrapper.find('#neighborhood').setValue('Centro');
     await wrapper.find('form').trigger('submit');
     await vi.advanceTimersByTimeAsync(1000);

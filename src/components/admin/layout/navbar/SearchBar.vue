@@ -9,6 +9,7 @@
       type="search"
       :placeholder="placeholder"
       @input="handleSearch"
+      @keydown.enter.prevent="emit('submit', searchQuery)"
     />
   </div>
 </template>
@@ -29,7 +30,8 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["search"]);
+// "search" a cada digitação; "submit" no Enter
+const emit = defineEmits(["search", "submit"]);
 const searchQuery = ref(props.modelValue);
 
 watch(

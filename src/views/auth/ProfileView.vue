@@ -71,7 +71,7 @@
             :readonly="!manual.street"
             :required="manual.street"
             :error="streetError"
-            @blur="validateStreet(userInfo.address)"
+            @blur="validateStreet"
           />
           <FormGroup
             id="neighborhood"
@@ -227,7 +227,9 @@ const formatDate = (date) =>
   );
 
 // Endereço salvo de um CEP sem rua: ela foi digitada, e continua editável
-const { manual, streetError, setFromLookup, validateStreet } = useManualAddress();
+const { manual, streetError, setFromLookup, validateStreet } = useManualAddress(
+  () => userInfo.value.address
+);
 if (addressCep.value && !userInfo.value.address.street) setFromLookup(userInfo.value.address);
 
 // Consulta o CEP e põe o endereço na tela, se o campo ainda tiver esse CEP quando a resposta chegar
@@ -273,7 +275,7 @@ const handleUpdateProfile = async () => {
 
     // A validação e a cópia dos dados (dentro do updateProfile) acontecem no mesmo instante
     const isValid = validateAll();
-    const hasStreet = validateStreet(userInfo.value.address);
+    const hasStreet = validateStreet();
     if (!isValid || !addressMatchesCep() || !hasStreet) {
       await focusFirstError();
       return;

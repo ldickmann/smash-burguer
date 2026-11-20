@@ -230,10 +230,14 @@ describe('telas do painel', () => {
     expect(wrapper.find('.dialog-stub').exists()).toBe(false);
   });
 
-  it('a busca da barra leva a Produtos fora de Produtos e Pedidos, e o menu de perfil abre as telas', async () => {
+  it('a busca da barra leva a Produtos no Enter fora de Produtos e Pedidos, e o menu de perfil abre as telas', async () => {
     const { wrapper, router } = await mountAdmin(TheNavbarAdmin, '/admin');
 
+    // Digitar não troca de página (o foco sairia do campo); o Enter leva a Produtos
     await wrapper.find('#busca-admin').setValue('coca');
+    await flushPromises();
+    expect(router.currentRoute.value.fullPath).toBe('/admin');
+    await wrapper.find('#busca-admin').trigger('keydown', { key: 'Enter' });
     await flushPromises();
     expect(router.currentRoute.value.fullPath).toBe('/admin/products?q=coca');
 
