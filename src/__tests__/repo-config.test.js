@@ -1,7 +1,9 @@
 // @vitest-environment node
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Regressão das proteções do CI e do repositório: escrita só no job que publica,
@@ -53,41 +55,48 @@ describe('workflow de deploy', () => {
 });
 
 // O core.excludesFile vazio desliga o gitignore global de quem roda o teste
-const git = (...args) =>
-  spawnSync('git', ['-c', 'core.excludesFile=', ...args], { cwd: RAIZ, encoding: 'utf8', timeout: 10000 });
+const git = (cwd, args, input) =>
+  spawnSync('git', ['-c', 'core.excludesFile=', ...args], { cwd, input, encoding: 'utf8', timeout: 10000 });
 
 // Sem git, ou fora de um repositório, o teste do .gitignore é pulado
-const GIT = git('rev-parse', '--is-inside-work-tree').stdout?.trim() === 'true';
+const GIT = git(RAIZ, ['rev-parse', '--is-inside-work-tree']).stdout?.trim() === 'true';
 
 describe.skipIf(!GIT)('.gitignore', () => {
-  // --no-index avalia só as regras, sem considerar o que já está rastreado
-  const ignorado = (caminho) => {
-    const r = git('check-ignore', '--no-index', '-q', caminho);
-    if (r.status !== 0 && r.status !== 1) throw new Error(`git check-ignore falhou para ${caminho}`);
-    return r.status === 0;
+  // Repositório vazio, sem template, só com o .gitignore do projeto: assim o
+  // .git/info/exclude e o gitignore global de cada máquina não entram na conta
+  let pasta;
+
+  beforeAll(() => {
+    pasta = mkdtempSync(join(tmpdir(), 'gitignore-'));
+    git(pasta, ['init', '-q', '--template=']);
+    copyFileSync(join(RAIZ, '.gitignore'), join(pasta, '.gitignore'));
+  });
+
+  afterAll(() => {
+    if (pasta) rmSync(pasta, { recursive: true, force: true });
+  });
+
+  // Dos caminhos dados, devolve os que o .gitignore ignora (--no-index: só as regras)
+  const ignorados = (caminhos) => {
+    const r = git(pasta, ['check-ignore', '--no-index', '--stdin', '-z'], caminhos.join('\0'));
+    if (r.status !== 0 && r.status !== 1) throw new Error(`git check-ignore falhou: ${r.stderr}`);
+    return r.stdout.split('\0').filter(Boolean);
   };
 
-  it('ignora os arquivos de ambiente, o estado da instalação e a pasta .vscode', () => {
-    const caminhos = [
-      '.env',
-      '.env.production',
-      '.env.local',
-      '.env.example',
-      '.yarn/install-state.gz',
-      '.vscode/extensions.json',
-      'createAdmin.html',
-    ];
+  it('ignora os arquivos de ambiente, o estado da instalação e a pasta .vscode, e nenhum arquivo rastreado', () => {
+    expect(
+      ignorados([
+        '.env',
+        '.env.production',
+        '.env.local',
+        '.env.example',
+        '.yarn/install-state.gz',
+        '.vscode/extensions.json',
+      ]),
+    ).toEqual(['.env', '.env.production', '.env.local', '.yarn/install-state.gz', '.vscode/extensions.json']);
 
-    expect(Object.fromEntries(caminhos.map((caminho) => [caminho, ignorado(caminho)]))).toEqual({
-      '.env': true,
-      '.env.production': true,
-      '.env.local': true,
-      '.env.example': false,
-      '.yarn/install-state.gz': true,
-      '.vscode/extensions.json': true,
-      'createAdmin.html': false,
-    });
-    // Nenhum arquivo rastreado casa com as regras, nem o install-state
-    expect(git('ls-files', '-ci', '--exclude-standard').stdout).toBe('');
+    const rastreados = git(RAIZ, ['ls-files', '-z']).stdout.split('\0').filter(Boolean);
+    expect(rastreados).not.toHaveLength(0);
+    expect(ignorados(rastreados)).toEqual([]);
   });
 });

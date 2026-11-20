@@ -34,11 +34,12 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Deploy:** o merge na `main` publica o site. Se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
   - O CI instala com `corepack yarn install --immutable --check-cache` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
   - O `--check-cache` baixa de novo cada pacote e compara com o zip do `.yarn/cache`. É a única conferência dos binários de plataforma (`@esbuild/linux-x64` e outros), que não têm checksum no `yarn.lock`. Ao revisar uma PR que mexe no `.yarn/cache`, rode o mesmo install no container, que é Linux.
+  - Com isso, o deploy depende do registro do npm. Se ele estiver fora do ar, rode o workflow de novo mais tarde; se uma versão do `yarn.lock` for retirada do registro, o deploy falha até a dependência ser atualizada.
   - Só o job `deploy` tem permissão de escrita (`pages: write` e `id-token: write`). O `build`, que roda código das dependências, só lê e não guarda o token no `.git/config`.
 - **Merges e PRs:** só com pedido explícito do usuário.
 - **Actions:** fixadas pelo SHA completo do commit, com a versão em comentário: `checkout` v7.0.1, `setup-node` v7.1.0, `configure-pages` v6.0.0, `upload-pages-artifact` v5.0.0 e `deploy-pages` v5.0.1, todas em Node 24.
-  - O Dependabot (`.github/dependabot.yml`) abre uma PR por mês para a `develop`, trocando o SHA e o comentário juntos.
-  - Para trocar à mão, use o SHA do commit da tag da release (`gh api repos/actions/<nome>/git/ref/tags/<versão>`) e mude os dois juntos. Não volte a usar só a tag.
+  - O Dependabot (`.github/dependabot.yml`) abre uma PR por mês para a `develop`, trocando o SHA e o comentário juntos. Os commits dele saem em inglês (`ci(deps): bump …`): é a exceção à regra de commits em português.
+  - Para trocar à mão, pegue o SHA do commit com `gh api repos/actions/<nome>/commits/<versão> --jq .sha`, que resolve também tag anotada, e mude SHA e comentário juntos. Não volte a usar só a tag.
 
 ## Dependências
 

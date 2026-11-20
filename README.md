@@ -192,6 +192,8 @@ Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy
 
 O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica. As actions são fixadas por SHA, e o Dependabot abre uma PR por mês para a `develop` com as versões novas.
 
+Como cada pacote é baixado de novo, o deploy depende do registro do npm: se ele estiver fora do ar, rode o workflow de novo mais tarde.
+
 Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.config.js`.
 
 ## Documentação de design
