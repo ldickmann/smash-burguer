@@ -234,6 +234,11 @@
       background: transparent;
       color: var(--m3-primary);
     }
+
+    // A aba ocupa a altura da barra: o anel fica por dentro, para não sair da janela no topo
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--focus-width));
+    }
   }
 }
 
