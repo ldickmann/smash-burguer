@@ -370,10 +370,10 @@ export const FICHAS = {
       { nome: "Contorno (outline)", token: "esc-outline" },
     ],
     diferencas: [
-      { tema: "Fundo", brasa: "#15110E, carvão quente", aqui: "#131313, grafite neutro (croma 0) [48]" },
+      { tema: "Fundo", brasa: "carvão quente (color-bg)", aqui: "grafite neutro, surface N6 com croma 0 [48]" },
       { tema: "Elevação", brasa: "superfície, sombra e brilho", aqui: "só degraus tonais e contorno nos cards [46][4]" },
-      { tema: "Acento", brasa: "#FF5B1A, vivo e único", aqui: "tom 80 dessaturado, com papéis secundário e terciário [48]" },
-      { tema: "Texto", brasa: "#F5EEE8", aqui: "on-surface (tom 90), sem branco puro; 7:1 no texto pequeno como a Apple sugere [47]" },
+      { tema: "Acento", brasa: "laranja vivo e único", aqui: "tom 80 dessaturado, com papéis secundário e terciário [48]" },
+      { tema: "Texto", brasa: "quase branco quente (color-ink)", aqui: "on-surface (tom 90), sem branco puro; 7:1 no texto pequeno como a Apple sugere [47]" },
       { tema: "Hero", brasa: "brilho de brasa atrás do lanche", aqui: "sem brilho" },
     ],
     tipografia:
