@@ -148,6 +148,19 @@ export const validatePhone = (phone) => {
 };
 
 /**
+ * Confere só o formato do CEP (8 dígitos), sem consultar a API.
+ *
+ * @param {string} cep - O CEP, com ou sem máscara.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
+export const validateCEPFormat = (cep) => {
+  const digits = String(cep ?? "").replace(/\D/g, "");
+  if (!digits) return { isValid: false, message: "O CEP é obrigatório" };
+  if (digits.length !== 8) return { isValid: false, message: "CEP inválido. Devem conter 8 dígitos" };
+  return { isValid: true, message: "" };
+};
+
+/**
  * Valida o CEP, realizando requisição à API ViaCEP para buscar o endereço correspondente.
  *
  * @param {string} cep - O CEP a ser validado (pode conter formatação).
