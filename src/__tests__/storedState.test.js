@@ -7,9 +7,11 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import router from '../router';
 import TheNavbarAdmin from '../components/admin/layout/TheNavbarAdmin.vue';
 import UserProfileBar from '../components/admin/layout/navbar/UserProfileBar.vue';
+import { useCartStore } from '../stores/cart';
 import { useUserStore } from '../stores/userStore';
 import { useAdminStore } from '../stores/adminStore';
 
+const CART_KEY = 'smash-burger:cart:v1';
 const SESSION_KEY = 'smash-burger:session';
 
 const USER = {
@@ -68,6 +70,48 @@ describe('estado salvo no localStorage', () => {
   beforeEach(() => localStorage.clear());
 
   afterEach(() => vi.restoreAllMocks());
+
+  describe('carrinho', () => {
+    it('com items que não é lista, começa vazio e as contas não quebram', () => {
+      save(CART_KEY, { items: 'x' });
+      loadPinia();
+
+      const cart = useCartStore();
+
+      expect(cart.items).toEqual([]);
+      expect(cart.itemCount).toBe(0);
+      expect(cart.subtotal).toBe(0);
+      expect(saved(CART_KEY)).toEqual({ items: [] });
+    });
+
+    it('preço editado volta ao do cardápio, e a linha fora do cardápio sai', () => {
+      save(CART_KEY, {
+        items: [
+          { ...BURGER, unitPrice: -500 },
+          { ...BURGER, productId: 99 },
+          { ...BURGER, image: 7 },
+        ],
+      });
+      loadPinia();
+
+      const cart = useCartStore();
+
+      expect(cart.items).toHaveLength(2);
+      expect(cart.subtotal).toBeCloseTo(2 * 29.49);
+      expect(cart.items.every((item) => item.image === BURGER.image)).toBe(true);
+      expect(localStorage.getItem(CART_KEY)).not.toContain('-500');
+      expect(saved(CART_KEY).items).toHaveLength(2);
+    });
+
+    it('um carrinho que bate com o cardápio não é regravado', () => {
+      const raw = JSON.stringify({ items: [BURGER] });
+      localStorage.setItem(CART_KEY, raw);
+      loadPinia();
+
+      expect(useCartStore().itemCount).toBe(1);
+      expect(localStorage.getItem(CART_KEY)).toBe(raw);
+    });
+  });
 
   describe('sessão do cliente', () => {
     beforeEach(() => {

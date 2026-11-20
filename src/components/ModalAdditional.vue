@@ -74,6 +74,7 @@
 import { computed, ref, watch } from "vue";
 import { formatPrice } from "@/utils/formatters";
 import { useProductsStore } from "@/stores/products";
+import { unitPriceOf } from "@/utils/cartItems";
 import { responsiveImage } from "@/composables/useResponsiveImage";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -153,13 +154,8 @@ watch(
   { immediate: true }
 );
 
-const unitPrice = computed(() => {
-  const extras = additionals.value.reduce(
-    (sum, additional) => sum + additional.price * additional.quantity,
-    0
-  );
-  return (props.product?.price ?? 0) + extras;
-});
+// A mesma conta que o carrinho refaz pelo cardápio ao carregar e ao fechar o pedido
+const unitPrice = computed(() => unitPriceOf(props.product?.price ?? 0, additionals.value));
 
 const total = computed(() => unitPrice.value * quantity.value);
 
