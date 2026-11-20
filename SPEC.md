@@ -611,7 +611,7 @@ Monta `srcset` e `sizes` a partir do caminho-base da imagem (§9). Substitui o `
 | `src/stores/userStore.js`, `src/services/authServices.js`, `src/handlers/authHandlers.js` | Ver §10. Chaves separadas, rejeição correta, `redirect`, `placeOrder`. | EST-13, FLX-01, FLX-05, FLX-06 |
 | `src/stores/products.js` | Não guarda mais as quantidades escolhidas nos adicionais: o modal trabalha numa cópia. Usa `useResponsiveImage`. | FLX-03 |
 | `src/router/index.js` | Ver §10.6. `scrollBehavior`, título e foco por rota, guards de pagamento e confirmação, 404 dentro do layout, `?redirect=`. | A11Y-11, FLX-04, CON-10 |
-| `src/utils/buttonHandlers.js` | Ficam só `handleImageUpload` e `handleFormReset` (admin). Saem os handlers de navegação que o `ButtonComponent` chamava. | DEB-03, FLX-04 |
+| `src/utils/buttonHandlers.js` | Ficam só `handleImageUpload` e `handleFormReset` (admin). Saem os handlers de navegação que o `ButtonComponent` chamava. Depois do redesign, o arquivo foi substituído por `src/utils/productForm.js`, com a validação do formulário e da imagem do produto (nov/2026). | DEB-03, FLX-04 |
 | `src/utils/formatters.js` | `formatPrice` é a única forma de exibir preço; o `toFixed` sai de cards, admin e pedidos. | TIP-04 |
 | `src/json/products.json` | Campo `image` passa a ser o caminho-base sem extensão (§9). Corrige "Queijo Cheddar" e "hambúrguer de soja". | CON-11, RES-01 |
 
@@ -927,6 +927,7 @@ O admin usa os mesmos tokens, com densidade maior: o texto de tabelas e cards é
 - O painel tem margem lateral `--gutter` no mobile [ESP-07].
 - Link "Voltar à loja".
 - A rota passa a ter `<main>`.
+- **Só no `yarn dev`** (acrescentado em nov/2026): entre o formulário e o "Voltar à loja", um bloco com borda superior tracejada `--color-border`, texto `--color-ink-muted` `--text-sm` e o secundário `sm` "Usar admin de teste", que preenche o formulário e leva o foco ao "Entrar". O admin de teste não vai para o build.
 
 #### AdminLayout
 
@@ -954,6 +955,7 @@ O admin usa os mesmos tokens, com densidade maior: o texto de tabelas e cards é
   - foco com o contorno global; sai o `outline: none` [EST-03];
   - a borda dourada sai.
 - **NotificationBar:** vira `BaseButton iconOnly`, com os rótulos "Mensagens", "Notificações" e "Tarefas" [A11Y-07]. O comportamento continua: só `console.log`, ver [FLX-09].
+  - Depois do redesign (nov/2026), os atalhos passaram a contar os pedidos do painel: "Notificações" conta os pendentes e "Tarefas" os em preparo. Cada um é um link para Pedidos com o filtro do status (`?status=`), com o número no rótulo ("Notificações, 1 pedido pendente") e um selo no canto, nas cores e medidas do `CartBadge`, com `aria-hidden` e acima de 9 como "9+". O selo some no 0. "Mensagens" saiu, porque o app não tem mensagens.
 - **UserProfileBar:**
   - o avatar vira `<button aria-haspopup="menu" aria-expanded>`;
   - mostra as **iniciais** do admin em um círculo `--color-surface-3` com `--radius-round`. Sai o avatar fixo do GitHub [CON-12];
@@ -964,10 +966,10 @@ O admin usa os mesmos tokens, com densidade maior: o texto de tabelas e cards é
 | Tela | Especificação |
 |---|---|
 | **Dashboard** | `h1` "Painel". Quatro cards de KPI com os mesmos dados de exemplo dos Relatórios: rótulo `--color-ink-muted` `--text-sm` e valor em Archivo 700 `--text-2xl`, tabular. No lugar do gráfico, `EmptyState` "Gráfico de vendas indisponível nesta versão" [EST-10, HIE-07]. |
-| **Produtos** | `h1` "Produtos" (era `h2`) e primário "Novo produto". O select ganha rótulo "Categoria" e opções em português ("Destaques", "Hambúrgueres", "Bebidas", "Sobremesas") [CON-05]. A grade usa `ProductCard variant="admin"`, com as ações "Editar" (secundário `sm`) e "Excluir" (danger `sm`) [CON-08]. Preço com `formatPrice`. O comportamento de excluir não muda ([FLX-09], fora). |
-| **Pedidos** | `h1` "Pedidos" e filtro com rótulo "Status" [A11Y-09]. Os cards mostram o chip de status em português: "Pendente" (texto `--color-warning` sobre `--color-warning-soft`), "Em preparo" e "A caminho" (texto `--color-info` sobre `--color-info-soft`), "Concluído" (texto `--color-success` sobre `--color-success-soft`). Chip com `--radius-sm` e `--text-xs` 700 [CON-05]. Ações: secundário "Atualizar status" e ghost "Detalhes" (comportamento não muda). Filtro sem resultado: `EmptyState`. |
+| **Produtos** | `h1` "Produtos" (era `h2`) e primário "Novo produto". O select ganha rótulo "Categoria" e opções em português ("Destaques", "Hambúrgueres", "Bebidas", "Sobremesas") [CON-05]. A grade usa `ProductCard variant="admin"`, com as ações "Editar" (secundário `sm`) e "Excluir" (danger `sm`) [CON-08]. Preço com `formatPrice`. O comportamento de excluir não muda ([FLX-09], fora). Em nov/2026, "Excluir" passou a remover o produto, depois de um `BaseDialog` de confirmação ("Cancelar" secundário e "Excluir produto" danger), com o foco no `h1` ao fim; os destaques passaram a ser sorteados uma vez, ao abrir a página. |
+| **Pedidos** | `h1` "Pedidos" e filtro com rótulo "Status" [A11Y-09]. Os cards mostram o chip de status em português: "Pendente" (texto `--color-warning` sobre `--color-warning-soft`), "Em preparo" e "A caminho" (texto `--color-info` sobre `--color-info-soft`), "Concluído" (texto `--color-success` sobre `--color-success-soft`). Chip com `--radius-sm` e `--text-xs` 700 [CON-05]. Ações: secundário "Atualizar status" e ghost "Detalhes" (comportamento não muda). Filtro sem resultado: `EmptyState`. Em nov/2026, "Atualizar status" passou a levar o pedido ao próximo status, com um aviso, e fica desabilitado em "Concluído"; o filtro passou a ficar no endereço (`?status=`). |
 | **Relatórios** | `h1` "Relatórios". O conteúdo dos cards passa para o slot padrão do `AdminCard` (hoje está em `#content`, que não existe), e os valores de exemplo aparecem [EST-10]. "Produtos mais vendidos" vira uma lista ordenada com o nome e a quantidade (tabular). |
-| **ModalProducts** | Usa o `BaseDialog`. Botões "Salvar" (primário) e "Cancelar" (secundário, **não vermelho**) [CON-08]. O seletor de arquivo vira um `<label>` estilizado como botão secundário com o nome do arquivo escolhido; sai o "Choose File" do navegador. O preço usa `inputmode="decimal"`. |
+| **ModalProducts** | Usa o `BaseDialog`. Botões "Salvar" (primário) e "Cancelar" (secundário, **não vermelho**) [CON-08]. O seletor de arquivo vira um `<label>` estilizado como botão secundário com o nome do arquivo escolhido; sai o "Choose File" do navegador. O preço usa `inputmode="decimal"`. Em nov/2026: nome e preço obrigatórios, preço salvo como número, quantidade opcional; a imagem aceita só PNG, JPEG e WebP de até 300 kB, com a ajuda e o erro abaixo do seletor (como a ajuda e o erro do `FormGroup`), e "Salvar" espera a leitura do arquivo. |
 | **AdminCard** | `--color-surface-2`, `--elev-1`, `--radius-md`. Slot padrão de conteúdo. O `role="region"` só aparece com `aria-labelledby` apontando para o título. |
 
 ---
@@ -1356,14 +1358,14 @@ Os botões viram **links** para `/login?redirect=/payment` e `/register?redirect
 ### 11.2 Funcionalidades
 
 - **Tema claro** e `prefers-color-scheme`.
-- **Defeitos do admin [FLX-09]:** excluir, atualizar status, detalhes, busca, notificações e itens do menu de perfil continuam sem efeito real. Também ficam a chave `admin` compartilhada e o preço salvo como texto no modal de produto (a exibição já fica correta com `formatPrice`).
+- **Defeitos do admin [FLX-09]:** excluir, atualizar status, detalhes, busca, notificações e itens do menu de perfil continuam sem efeito real. Também ficam a chave `admin` compartilhada e o preço salvo como texto no modal de produto (a exibição já fica correta com `formatPrice`). (Depois do redesign, em nov/2026, excluir, atualizar status e as notificações passaram a funcionar na memória da aba, e o preço passou a ser salvo como número. Detalhes, busca e itens do menu de perfil continuam sem efeito real.)
 - **Rotas públicas [FLX-10]:** `/playground` continua pública. (Removida depois do redesign, em nov/2026: hoje cai no 404.)
 - **Funcionalidades que não existem hoje:** backend, pagamento real, taxa de entrega, rastreio de status, previsão de entrega, minicarrinho em gaveta, placas de status.
 - **Gráfico do dashboard:** a dependência atual é incompatível com o Chart.js 4. Fica o estado vazio.
 
 ### 11.3 Segurança, marca e documentação
 
-- **Segurança** (seção 5 do AUDIT): autenticação só no cliente, senha em texto puro e `createAdmin.html` versionado.
+- **Segurança** (seção 5 do AUDIT): autenticação só no cliente, senha em texto puro e `createAdmin.html` versionado. (O `createAdmin.html` foi removido em nov/2026: o `yarn dev` tem um admin de teste embutido, que não vai para o build.)
 - **Identidade:** logotipo novo e ilustrações. A marca continua sendo só o wordmark.
 - **Documentação e CI:** `README.md` e `TESTING.md`; CI com lint e testes.
 
@@ -1543,7 +1545,7 @@ Só com Tab, Shift+Tab, Enter, Espaço, setas e Esc:
 
 ### 13.8 Admin
 
-Com o admin semeado pelo `createAdmin.html`, rodar §13.3 nas rotas de admin e conferir:
+Com o admin criado à mão na chave `admin` (ou, no `yarn dev`, o admin de teste), rodar §13.3 nas rotas de admin e conferir:
 - **Sidebar:** um único item ativo por rota. Em 390 começa fechada e "Novo produto" fica clicável sem fechar nada.
 - **Telas:** relatórios mostram os valores, o filtro de pedidos tem rótulo e o status aparece em português.
 

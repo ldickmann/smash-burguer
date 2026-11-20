@@ -49,8 +49,8 @@ Front-end de delivery de hambúrgueres artesanais feito em Vue 3, com:
 Fica em `#/admin/login` e tem quatro telas:
 
 - **Painel:** indicadores de venda.
-- **Produtos:** criar e editar produtos.
-- **Pedidos:** lista com filtro por status.
+- **Produtos:** criar, editar e excluir produtos. O formulário confere os campos e aceita só imagens PNG, JPEG e WebP de até 300 kB.
+- **Pedidos:** lista com filtro por status e botão para avançar o status. A barra do painel conta os pedidos pendentes e em preparo e leva à lista já filtrada.
 - **Relatórios.**
 
 Os números e os pedidos são dados de exemplo; veja as [limitações conhecidas](#limitações-conhecidas).
@@ -108,12 +108,16 @@ Abra <http://localhost:5173/smash-burguer/>. O caminho `/smash-burguer/` vem do 
 
 ### Acessar o painel administrativo
 
-O login do painel compara o e-mail e a senha com um administrador salvo no `localStorage`. Para criar esse administrador de teste:
+O login do painel compara o e-mail e a senha com um administrador salvo no `localStorage`, na chave `admin`.
 
-1. Com o `yarn dev` rodando, abra <http://localhost:5173/smash-burguer/createAdmin.html>. A página apaga os dados salvos do Smash Burger (carrinho, sessão, cadastro, inclusive o do formato antigo, e admin), sem mexer nas outras chaves do `localStorage` da mesma origem, cria o administrador e mostra o e-mail e a senha.
-2. Entre em <http://localhost:5173/smash-burguer/#/admin/login>. O link que a página mostra aponta para `/admin/login`, endereço que não existe neste projeto.
+- **No `yarn dev`:** há também um administrador de teste, com credenciais fictícias e públicas, que não grava nada no navegador. Em <http://localhost:5173/smash-burguer/#/admin/login>, o botão "Usar admin de teste" preenche o formulário. Ele fica atrás de `import.meta.env.DEV` e não vai para o build.
+- **No site publicado:** o painel só abre com um administrador criado à mão. Na página do site, rode no console do navegador o comando abaixo, com dados fictícios (a senha fica em texto puro), e **recarregue a página antes de entrar**:
 
-O `createAdmin.html` não vai para o site publicado. Na demonstração online, o painel só abre se o administrador for criado à mão no `localStorage`.
+  ```js
+  localStorage.setItem('admin', JSON.stringify({ firstName: 'Admin', lastName: 'Teste', email: 'voce@example.com', password: 'troque123', role: 'admin' }))
+  ```
+
+  A mesma chave guarda a sessão do painel. Sem recarregar, o primeiro login regrava a chave sem o cadastro, e depois de sair não dá para entrar de novo.
 
 ## Scripts
 
@@ -155,14 +159,13 @@ O `createAdmin.html` não vai para o site publicado. Na demonstração online, o
 │   ├── plugins/          # registro dos ícones do Font Awesome
 │   ├── router/           # rotas, guards, título da página e foco
 │   ├── services/         # autenticação simulada do cliente e do administrador
-│   ├── stores/           # Pinia: carrinho, sessão, produtos, admin e avisos
-│   ├── utils/            # preço, máscaras, validações e dados de exemplo do painel
+│   ├── stores/           # Pinia: carrinho, sessão, produtos, admin, pedidos do painel e avisos
+│   ├── utils/            # preço, máscaras, validações, formulário de produto e dados de exemplo do painel
 │   └── views/            # páginas da loja, auth/ e admin/
 ├── AUDIT.md              # auditoria de UI/UX que deu origem ao redesign
 ├── SPEC.md               # especificação do redesign "Brasa"
 ├── TESTING.md            # testes
-├── CLAUDE.md             # orientações para o Claude Code
-└── createAdmin.html      # cria o administrador de teste (só em desenvolvimento)
+└── CLAUDE.md             # orientações para o Claude Code
 ```
 
 ## Dados no navegador
@@ -174,7 +177,7 @@ Sem back-end, o estado fica no `localStorage`, nestas chaves:
 | `smash-burger:cart:v1` | Itens do carrinho |
 | `smash-burger:session` | Sessão do cliente (só os dados do perfil, sem a senha), histórico de pedidos e número do próximo pedido |
 | `smash-burger:account` | Cadastro do cliente |
-| `admin` | Administrador de teste e sessão do painel |
+| `admin` | Administrador criado à mão (no site publicado) e sessão do painel |
 
 - **Sair:** apaga a sessão, o histórico de pedidos e o carrinho; o cadastro continua.
 - **Excluir conta** (no perfil): apaga também o cadastro.
@@ -185,7 +188,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 120 testes unitários, em 17 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o login do painel, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 172 testes unitários, em 21 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos e contadores), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
@@ -215,10 +218,9 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
 - **Pagamento simulado:** nenhuma cobrança é feita.
 - **Painel administrativo:**
   - indicadores, relatórios e pedidos são dados de exemplo;
-  - produtos criados ou editados somem ao recarregar a página;
-  - "Excluir" não remove o produto;
-  - "Atualizar status" dá erro ([FLX-09](./AUDIT.md)).
-- **Login do administrador:** o cadastro do admin e a sessão do painel usam a mesma chave `admin`. Depois de sair, rode o `createAdmin.html` de novo para entrar.
+  - produtos criados, editados ou excluídos e o status dos pedidos ficam só na memória da aba: ao recarregar a página, voltam ao original;
+  - "Detalhes", a busca e os itens do menu de perfil ainda não fazem nada.
+- **Login do administrador:** no site publicado, o cadastro do admin e a sessão do painel usam a mesma chave `admin`; por isso, depois de criar o admin à mão, recarregue a página antes de entrar ([veja como](#acessar-o-painel-administrativo)).
 - **CEP:** a busca depende da API pública ViaCEP, e a ajuda do campo avisa isso.
 - **Embutir em `<iframe>`:** a diretiva `frame-ancestors` não vale em `<meta>`, e o GitHub Pages não deixa enviá-la por cabeçalho. Por isso, outro site pode exibir este dentro de um `<iframe>`.
 
@@ -226,7 +228,7 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
 
 - [ ] API e banco de dados para contas, pedidos e cardápio
 - [ ] Integração com um gateway de pagamento
-- [ ] Painel administrativo com dados reais e status de pedido funcionando
+- [ ] Painel administrativo com dados reais, salvos no back-end
 - [ ] Notificações do andamento do pedido em tempo real
 - [ ] Mais testes (utilitários, rotas, telas) e verificação no navegador no CI
 

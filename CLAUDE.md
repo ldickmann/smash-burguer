@@ -85,9 +85,9 @@ O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, lim
 
 ## Problemas conhecidos (fora do escopo do redesign)
 
-- "Atualizar status" no admin lança TypeError (`[FLX-09]`).
-- No admin, "Excluir" só faz `console.log`, e produtos criados ou editados não são persistidos.
-- O cadastro do cliente guarda a senha em texto puro no localStorage (a sessão não guarda mais). O `createAdmin.html`, versionado, cria um admin com credenciais fictícias e públicas (AUDIT §11.3).
-- O `createAdmin.html` grava o admin na chave `admin`, a mesma que o `adminStore` persiste. Depois do primeiro login, entrar de novo exige rodar o `createAdmin.html` outra vez. O link que a página mostra (`/admin/login`) também está errado; o certo é `/smash-burguer/#/admin/login`.
+- No admin, produtos criados, editados ou excluídos e o status dos pedidos ficam só na memória da aba; os pedidos são dados de exemplo (`src/stores/adminOrders.js`). "Detalhes", a busca e os itens do menu de perfil só fazem `console.log` (`[FLX-09]`).
+- O cadastro do cliente guarda a senha em texto puro no localStorage (a sessão não guarda mais).
+- **Admin de teste:** no `yarn dev`, o login do painel aceita o admin de `devTestAdmin()` (`src/services/adminAuthServices.js`), com credenciais fictícias e públicas, atrás de `import.meta.env.DEV`. O `build-config.test.js` confere que ele não vai para o build; não o tire de trás do `DEV`.
+- **Admin no site publicado:** só entra com o admin criado à mão na chave `admin`, que também guarda a sessão do painel. Criado com a página aberta, o cadastro se perde no primeiro login; é preciso recarregar antes de entrar (README, "Acessar o painel administrativo").
 - Sair da conta apaga o histórico de pedidos.
 - O `.prettierrc.json` (sem ponto e vírgula, aspas simples) não bate com 120 dos 132 arquivos de `src/`. Não rode `yarn format` misturado com outras mudanças.
