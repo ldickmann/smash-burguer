@@ -110,7 +110,7 @@ Abra <http://localhost:5173/smash-burguer/>. O caminho `/smash-burguer/` vem do 
 
 O login do painel compara o e-mail e a senha com um administrador salvo no `localStorage`. Para criar esse administrador de teste:
 
-1. Com o `yarn dev` rodando, abra <http://localhost:5173/smash-burguer/createAdmin.html>. A página apaga os dados salvos do site (carrinho, sessão e cadastro), cria o administrador e mostra o e-mail e a senha.
+1. Com o `yarn dev` rodando, abra <http://localhost:5173/smash-burguer/createAdmin.html>. A página apaga os dados salvos do Smash Burger (carrinho, sessão, cadastro e admin), sem mexer nas outras chaves do `localStorage` da mesma origem, cria o administrador e mostra o e-mail e a senha.
 2. Entre em <http://localhost:5173/smash-burguer/#/admin/login>. O link que a página mostra aponta para `/admin/login`, endereço que não existe neste projeto.
 
 O `createAdmin.html` não vai para o site publicado. Na demonstração online, o painel só abre se o administrador for criado à mão no `localStorage`.
@@ -184,7 +184,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 65 testes unitários, em 11 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a conta (login, sessão, perfil e exclusão), as telas de cadastro e de perfil, a consulta de CEP, a guard do cadastro, o script de auditoria do lockfile e as proteções do CI e do repositório. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 74 testes unitários, em 13 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a conta (login, sessão, perfil e exclusão), as telas de cadastro e de perfil, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
@@ -197,6 +197,8 @@ Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy
 O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica. As actions são fixadas por SHA, e o Dependabot abre uma PR por mês para a `develop` com as versões novas.
 
 Como cada pacote é baixado de novo, o deploy depende do registro do npm: se ele estiver fora do ar, rode o workflow de novo mais tarde.
+
+O GitHub Pages não permite configurar cabeçalhos, então a Content-Security-Policy fica numa `<meta>` do `index.html`: scripts só do próprio site, e conexões só com ele e com o ViaCEP. Um recurso novo de outra origem (script, API, imagem ou fonte) precisa entrar nessa política. O build também descarta as chamadas de `console.log`.
 
 Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.config.js`.
 
@@ -216,7 +218,8 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
   - "Excluir" não remove o produto;
   - "Atualizar status" dá erro ([FLX-09](./AUDIT.md)).
 - **Login do administrador:** o cadastro do admin e a sessão do painel usam a mesma chave `admin`. Depois de sair, rode o `createAdmin.html` de novo para entrar.
-- **CEP:** a busca depende da API pública ViaCEP.
+- **CEP:** a busca depende da API pública ViaCEP, e a ajuda do campo avisa isso.
+- **Embutir em `<iframe>`:** a diretiva `frame-ancestors` não vale em `<meta>`, e o GitHub Pages não deixa enviá-la por cabeçalho. Por isso, outro site pode exibir este dentro de um `<iframe>`.
 
 ## Próximos passos
 
