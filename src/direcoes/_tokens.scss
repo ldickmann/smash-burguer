@@ -1,0 +1,44 @@
+// Tokens do índice das direções e do alternador (só desenvolvimento).
+// Ficam fora dos estilos: o índice e o alternador têm a mesma cara em qualquer direção.
+// Junto com os `_tokens.scss` de src/direcoes/estilos/, são os únicos arquivos da exploração
+// com cores, sombras e durações escritas por extenso (exceção registrada na §13.2 do SPEC).
+// Importado pelo <script> dos componentes, e não no <style scoped>, que reescreveria o :root.
+
+:root {
+  // Índice
+  --dir-fundo: #eef0f3;
+  --dir-papel: #ffffff;
+  --dir-tinta: #15171c;
+  --dir-tinta-suave: #4a505c;
+  --dir-linha: #c5cad3;
+  --dir-linha-forte: #747b88;
+  --dir-foco: #0b57d0;
+  --dir-ok: #1e6b34;
+  --dir-falha: #b3261e;
+  --dir-raio: 12px;
+  --dir-raio-amostra: 8px;
+  --dir-raio-pilula: 999px;
+  --dir-sombra: 0 1px 2px rgba(21, 23, 28, 0.08), 0 6px 20px rgba(21, 23, 28, 0.06);
+  --dir-fonte: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --dir-texto-pequeno: 0.875rem;
+  --dir-texto: 1rem;
+  --dir-texto-titulo: 1.375rem;
+  --dir-texto-pagina: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+
+  // Alternador: escuro com contorno claro, legível sobre qualquer página
+  --dir-seletor-fundo: #15171c;
+  --dir-seletor-tinta: #ffffff;
+  --dir-seletor-tinta-suave: #c9ced8;
+  --dir-seletor-hover: rgba(255, 255, 255, 0.12);
+  --dir-seletor-contorno: rgba(255, 255, 255, 0.55);
+  --dir-seletor-sombra: 0 8px 28px rgba(0, 0, 0, 0.35);
+  --dir-seletor-raio: 16px;
+  --dir-seletor-raio-item: 10px;
+
+  // Anel de foco duplo: claro por dentro, escuro por fora, visível em página clara ou escura
+  --dir-anel-claro: #ffffff;
+  --dir-anel-escuro: #15171c;
+  --dir-anel: 3px;
+  --dir-anel-halo: 6px;
+  --dir-duracao: 120ms;
+}
