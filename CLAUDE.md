@@ -16,7 +16,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 
 ```bash
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
-corepack yarn@3.8.7 install --immutable   # altera .yarn/install-state.gz; não commite só isso
+corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
 npx vitest run                             # 41 testes
 npx eslint .                               # deve dar 0 erros
