@@ -1,0 +1,109 @@
+import { mount, flushPromises } from '@vue/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import ModalProducts from '../components/admin/ModalProducts.vue';
+
+const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d, 0x49, 0x48, 0x44, 0x52]);
+
+const mountModal = (props = {}) =>
+  mount(ModalProducts, {
+    props,
+    global: {
+      stubs: {
+        'font-awesome-icon': { template: '<svg />' },
+        // O <dialog> nativo não existe no jsdom: o stub só mostra o conteúdo
+        BaseDialog: { props: ['open'], template: '<div class="dialog-stub"><slot /><slot name="footer" /></div>' },
+      },
+    },
+  });
+
+const chooseFile = async (wrapper, file) => {
+  const input = wrapper.find('input#image');
+  Object.defineProperty(input.element, 'files', { value: [file], configurable: true });
+  await input.trigger('change');
+};
+
+const fillFields = async (wrapper, { name = 'Mate', price = '6,50' } = {}) => {
+  await wrapper.find('input#name').setValue(name);
+  await wrapper.find('input#price').setValue(price);
+};
+
+const submit = async (wrapper) => {
+  await wrapper.find('form').trigger('submit');
+  await flushPromises();
+};
+
+describe('ModalProducts', () => {
+  it('com os campos vazios, não salva e mostra os erros, inclusive o da imagem', async () => {
+    const wrapper = mountModal();
+
+    await submit(wrapper);
+
+    expect(wrapper.emitted('submit')).toBeUndefined();
+    expect(wrapper.find('#name-erro').text()).toContain('Informe o nome do produto.');
+    expect(wrapper.find('#price-erro').text()).toContain('Informe o preço.');
+    expect(wrapper.find('#image-erro').text()).toContain('Escolha uma imagem para o produto.');
+    expect(wrapper.find('input#image').attributes('aria-invalid')).toBe('true');
+  });
+
+  it('com o preço em texto, não salva', async () => {
+    const wrapper = mountModal();
+    await fillFields(wrapper, { price: 'vinte e cinco' });
+    await chooseFile(wrapper, new File([PNG], 'mate.png', { type: 'image/png' }));
+    await vi.waitFor(() => expect(wrapper.find('.file-picker__name').text()).toBe('mate.png'));
+
+    await submit(wrapper);
+
+    expect(wrapper.emitted('submit')).toBeUndefined();
+    expect(wrapper.find('#price-erro').text()).toContain('Use só números, como 25,90.');
+  });
+
+  it('salva com o preço em número e a imagem lida, mesmo com o envio logo depois da escolha do arquivo', async () => {
+    const wrapper = mountModal();
+    await fillFields(wrapper, { price: '25,90' });
+
+    await chooseFile(wrapper, new File([PNG], 'mate.png', { type: 'image/png' }));
+    // Sem esperar a leitura do arquivo terminar
+    await wrapper.find('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.emitted('submit')).toHaveLength(1));
+
+    const [product] = wrapper.emitted('submit')[0];
+    expect(product).toMatchObject({ category: 'foods', name: 'Mate', price: 25.9 });
+    expect(product.image.startsWith('data:image/png;base64,')).toBe(true);
+    expect(wrapper.emitted('close')).toHaveLength(1);
+  });
+
+  it('recusa um arquivo que não é imagem e não o guarda no produto', async () => {
+    const wrapper = mountModal();
+    await fillFields(wrapper);
+
+    await chooseFile(wrapper, new File(['<html></html>'], 'pagina.html', { type: 'text/html' }));
+    await vi.waitFor(() => expect(wrapper.find('#image-erro').exists()).toBe(true));
+    await submit(wrapper);
+
+    expect(wrapper.find('#image-erro').text()).toContain('Escolha uma imagem PNG, JPEG ou WebP.');
+    expect(wrapper.find('.file-picker__name').text()).toBe('Nenhuma imagem escolhida');
+    expect(wrapper.emitted('submit')).toBeUndefined();
+  });
+
+  it('na edição, mostra o preço com vírgula e salva sem trocar a imagem nem exigir quantidade', async () => {
+    const wrapper = mountModal({
+      mode: 'edit',
+      product: { id: 2, category: 'foods', name: 'Smash Burger', price: 22.5, description: 'Clássico', image: '/images/foods/smash-burger' },
+    });
+
+    expect(wrapper.find('input#price').element.value).toBe('22,50');
+    expect(wrapper.find('.file-picker__name').text()).toBe('Imagem atual');
+
+    await wrapper.find('input#price').setValue('23,90');
+    await submit(wrapper);
+
+    const [product] = wrapper.emitted('submit')[0];
+    expect(product).toEqual({
+      category: 'foods',
+      name: 'Smash Burger',
+      price: 23.9,
+      description: 'Clássico',
+      image: '/images/foods/smash-burger',
+    });
+  });
+});
