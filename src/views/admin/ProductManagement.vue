@@ -59,6 +59,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useProductsStore } from "@/stores/products.js";
+import { useToastStore } from "@/stores/toast";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import ProductCard from "@/components/ProductCard.vue";
@@ -71,39 +72,34 @@ const CATEGORY_FILTERS = [
   { value: "desserts", label: "Sobremesas" },
 ];
 
+const HIGHLIGHTS = 4;
+
 const productsStore = useProductsStore();
+const toast = useToastStore();
 
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const selectedProduct = ref({});
 const selectedCategory = ref("");
 
-// Função para retornar N produtos aleatórios a partir de um array
-const getRandomProducts = (arr, count) => {
-  if (!arr || arr.length === 0) return [];
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-};
+// Destaques: 4 hambúrgueres sorteados uma vez, quando a página abre. A lista guarda só os
+// ids, então trocar o filtro ou editar um produto não sorteia de novo
+const highlightIds = [...productsStore.foods]
+  .sort(() => 0.5 - Math.random())
+  .slice(0, HIGHLIGHTS)
+  .map((product) => product.id);
 
-// Computa a lista de produtos a serem renderizados
 const filteredProducts = computed(() => {
   if (!selectedCategory.value) {
-    // Destaques: 4 produtos aleatórios da categoria "foods", quando abre a página
-    return getRandomProducts(productsStore.foods, 4);
+    return highlightIds
+      .map((id) => productsStore.foods.find((product) => product.id === id))
+      .filter(Boolean);
   }
   return productsStore[selectedCategory.value] ?? [];
 });
 
 // Abre o modal de adicionar produto
 const openAddModal = () => {
-  selectedProduct.value = {
-    name: "",
-    price: "",
-    quantity: "",
-    description: "",
-    image: "",
-    category: "foods",
-  };
   showAddModal.value = true;
 };
 
@@ -113,22 +109,21 @@ const openEditModal = (product) => {
   showEditModal.value = true;
 };
 
-// Realiza a edição do produto
-const onEditSubmit = (updatedProduct) => {
-  const category = updatedProduct.category;
-  const index = productsStore.menuItems[category]?.findIndex(
-    (p) => p.id === updatedProduct.id
-  );
-  if (index !== -1) {
-    productsStore.menuItems[category].splice(index, 1, updatedProduct);
-  }
+// O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria
+const onEditSubmit = (changes) => {
+  const { category, id } = selectedProduct.value;
+  const updated = productsStore.updateProduct(category, id, changes);
   showEditModal.value = false;
+  if (updated) toast.show({ message: "Produto atualizado." });
 };
 
-// Adiciona o novo produto via store
+// Depois de criar, o filtro mostra a categoria do produto novo
 const onAddSubmit = (newProduct) => {
-  productsStore.addProduct(newProduct);
+  const created = productsStore.addProduct(newProduct);
   showAddModal.value = false;
+  if (!created) return;
+  selectedCategory.value = created.category;
+  toast.show({ message: "Produto criado." });
 };
 
 // Excluir continua sem efeito real (FLX-09, fora do escopo)
