@@ -125,7 +125,7 @@ export const PARES_POR_DIRECAO = {
   neumorfismo: [
     { frente: "neu-tinta", fundo: "neu-kraft", minimo: 4.5, onde: "texto principal" },
     { frente: "neu-tinta-suave", fundo: "neu-kraft", minimo: 4.5, onde: "texto secundário" },
-    { frente: "neu-tinta-suave", fundo: "neu-sombra", minimo: 4.5, onde: "texto no ponto mais escuro da sombra" },
+    { frente: "neu-tinta-suave", fundo: "neu-sombra-sob-texto", sobre: "neu-kraft", minimo: 4.5, onde: "texto do rodapé junto à sombra interna" },
     { frente: "neu-branco", fundo: "neu-ketchup", minimo: 4.5, onde: "Ver cardápio" },
     { frente: "neu-branco", fundo: "neu-ketchup-claro", minimo: 4.5, onde: "Ver cardápio no hover" },
     { frente: "neu-branco", fundo: "neu-alface", minimo: 4.5, onde: "face Adicionado" },

@@ -18,6 +18,8 @@
   --neu-ketchup-escuro: #8a211b;
   --neu-alface: #2e6b2e;
   --neu-branco: #ffffff;
+  // Sombra interna a uns 24 px da borda do painel afundado, onde começa o texto (para medir)
+  --neu-sombra-sob-texto: rgba(176, 156, 127, 0.25);
 
   // Convexo: degradê no ângulo da luz
   --neu-convexo: linear-gradient(145deg, #e5d3b6, #c9b79a);
@@ -73,7 +75,8 @@
   --color-focus: var(--neu-tinta);
 
   --color-success: var(--neu-alface);
-  --color-danger: var(--neu-ketchup);
+  // Erro como texto: o ketchup escuro, que passa de 4,5:1 sobre o kraft
+  --color-danger: var(--neu-ketchup-escuro);
   --color-danger-solid: var(--neu-ketchup);
   --color-danger-solid-ink: var(--neu-branco);
   --color-warning: #7a5200;
