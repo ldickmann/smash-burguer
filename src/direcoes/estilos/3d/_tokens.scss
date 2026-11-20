@@ -23,8 +23,10 @@
   // Palco do hero e reflexo especular dos botões inflados
   --3d-halo: radial-gradient(closest-side, rgba(255, 246, 236, 0.95), rgba(255, 246, 236, 0));
   --3d-especular: radial-gradient(ellipse 70% 55% at 30% 18%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 70%);
-  --3d-chapa: radial-gradient(ellipse 60% 55% at 45% 35%, #6e4a37, #3b2418 70%);
-  --3d-contato: radial-gradient(closest-side, rgba(59, 36, 24, 0.45), rgba(59, 36, 24, 0));
+  --3d-chapa: radial-gradient(ellipse 75% 65% at 45% 30%, #7a5440, #3b2418 62%, #23140c);
+  // Superfície de cozinhar, mais clara, com o brilho da gordura no topo
+  --3d-chapa-superficie: radial-gradient(ellipse 70% 60% at 40% 25%, rgba(255, 220, 190, 0.28), rgba(255, 220, 190, 0) 60%), radial-gradient(ellipse at 50% 50%, #5a3a2a, #452b1f 70%);
+  --3d-contato: radial-gradient(closest-side, rgba(20, 10, 5, 0.75), rgba(20, 10, 5, 0));
 
   // ---------- Argila: duas sombras internas e uma externa grande e macia ----------
   --3d-argila: inset 6px 6px 10px rgba(255, 255, 255, 0.75), inset -8px -10px 16px rgba(107, 78, 61, 0.14), 6px 18px 30px -8px rgba(59, 36, 24, 0.22);
@@ -36,7 +38,9 @@
   --3d-inflado-fora: 0 12px 22px rgba(59, 36, 24, 0.28);
   --3d-inflado-fora-apertado: 0 4px 8px rgba(59, 36, 24, 0.24);
   --3d-sombra-foto: 0 16px 24px rgba(59, 36, 24, 0.28);
-  --3d-sombra-chapa: inset 0 6px 10px rgba(255, 255, 255, 0.16), 0 22px 34px rgba(59, 36, 24, 0.32);
+  // Aro: realce na borda de cima, escuro embaixo, e a sombra da chapa no chão
+  --3d-sombra-chapa: inset 0 5px 6px rgba(255, 236, 214, 0.38), inset 0 -8px 12px rgba(0, 0, 0, 0.45), 0 26px 40px rgba(59, 36, 24, 0.35);
+  --3d-sombra-superficie: inset 0 6px 10px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 236, 214, 0.25);
 
   // ---------- Forma e profundidade ----------
   --3d-raio-card: 32px;

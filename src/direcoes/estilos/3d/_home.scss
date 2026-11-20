@@ -420,14 +420,25 @@
   border-radius: var(--radius-round);
   background: var(--3d-chapa);
   box-shadow: var(--3d-sombra-chapa);
+
+  // A superfície de cozinhar, um degrau abaixo do aro
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 14% 7% 20%;
+    border-radius: inherit;
+    background: var(--3d-chapa-superficie);
+    box-shadow: var(--3d-sombra-superficie);
+  }
 }
 
+// Sombra de contato do pão na chapa, mais larga que a base do lanche
 .d3-cena__contato {
   position: absolute;
-  right: 18%;
-  bottom: 17%;
-  left: 18%;
-  height: 10%;
+  right: 14%;
+  bottom: 19%;
+  left: 14%;
+  height: 9%;
   border-radius: var(--radius-round);
   background: var(--3d-contato);
 }
@@ -584,8 +595,8 @@
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   color: var(--3d-carne-suave);
   font-size: 0.9375rem;
   line-height: 1.45;

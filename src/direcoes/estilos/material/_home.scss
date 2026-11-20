@@ -597,12 +597,13 @@
 
 .m3-card__preco {
   color: var(--m3-on-surface);
-  font-size: var(--m3-title-m);
+  font-size: var(--m3-title-l);
   font-weight: 500;
-  line-height: var(--m3-title-m-linha);
+  line-height: var(--m3-title-l-linha);
 }
 
-// "Adicionar": filled tonal redondo; apertado, canto 8; confirmado, primary-container com check
+// "Adicionar": filled (a ação que vende é a mais forte do card); apertado, canto 12; confirmado,
+// primary-container com check
 .m3-adicionar {
   min-height: var(--target-min);
   padding-inline: var(--space-4);

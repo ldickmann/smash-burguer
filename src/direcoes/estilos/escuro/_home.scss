@@ -426,8 +426,8 @@
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   color: var(--esc-on-surface-variant);
   font-size: 0.9375rem;
   font-weight: var(--esc-peso-texto);
@@ -448,7 +448,8 @@
   font-weight: 700;
 }
 
-// "Adicionar" tonal (secondary-container); o flip da Brasa mostra a face em tertiary-container
+// "Adicionar" preenchido em primary, como na Brasa, onde ele é o mais forte do card; o flip mostra
+// a face em tertiary-container
 .esc-adicionar {
   flex-shrink: 0;
   min-height: var(--target-min);
@@ -477,18 +478,18 @@
 }
 
 .esc-adicionar__face--frente {
-  background: var(--esc-secondary-container);
-  color: var(--esc-on-secondary-container);
+  background: var(--esc-primary);
+  color: var(--esc-on-primary);
 }
 
 @include hover-capable {
   .esc-adicionar:hover .esc-adicionar__face--frente {
-    background: var(--esc-secondary-container-hover);
+    background: var(--esc-primary-hover);
   }
 }
 
 .esc-adicionar:active .esc-adicionar__face--frente {
-  background: var(--esc-secondary-container-pressed);
+  background: var(--esc-primary-pressed);
 }
 
 .esc-adicionar__face--verso {

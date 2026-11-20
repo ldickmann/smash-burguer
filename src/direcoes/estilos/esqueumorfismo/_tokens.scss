@@ -50,7 +50,11 @@
   --esq-papel-curva: linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.04));
   // Luz quente atrás do lanche na chapa e a sombra de contato
   --esq-calor: radial-gradient(closest-side, rgba(255, 170, 90, 0.22), rgba(255, 170, 90, 0));
-  --esq-contato: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  --esq-contato: radial-gradient(closest-side, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+  // Marcas da espátula na chapa curada: anéis finos, claros e escuros, em volta do ponto de calor
+  --esq-chapa-riscos: repeating-radial-gradient(ellipse at 70% 60%, rgba(255, 255, 255, 0.025) 0 2px, rgba(0, 0, 0, 0.06) 2px 5px, rgba(255, 255, 255, 0) 5px 9px);
+  // Brilho da gordura na chapa, no lado da luz
+  --esq-chapa-brilho: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 240, 220, 0.07) 48%, rgba(255, 255, 255, 0) 62%);
 
   // Picote serrilhado (máscara): dentes de 7 px na borda de baixo ou de cima
   --esq-picote-baixo: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;

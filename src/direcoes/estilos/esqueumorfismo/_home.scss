@@ -366,7 +366,7 @@
   position: relative;
   overflow: hidden;
   padding-block: var(--space-7) var(--space-8);
-  background: var(--esq-chapa-tempera), var(--esq-chapa);
+  background: var(--esq-chapa-brilho), var(--esq-chapa-riscos), var(--esq-chapa-tempera), var(--esq-chapa);
   color: var(--esq-letra);
 }
 
@@ -401,7 +401,7 @@
   --color-focus: var(--esq-tinta);
 
   position: relative;
-  max-width: 26rem;
+  max-width: 30rem;
   padding: var(--space-5) var(--space-5) var(--space-4);
   border-radius: 2px;
   background: var(--esq-grao), var(--esq-papel-curva), var(--esq-papel);
@@ -456,11 +456,12 @@
     background: var(--esq-calor);
   }
 
+  // Sombra de contato rente à base do pão (a imagem tem uma margem transparente embaixo)
   &::after {
-    bottom: 2%;
-    width: 86%;
-    height: 14%;
-    margin-left: -43%;
+    bottom: 5%;
+    width: 80%;
+    height: 12%;
+    margin-left: -40%;
     background: var(--esq-contato);
   }
 }
@@ -727,10 +728,10 @@
   --color-focus: var(--esq-tinta);
 
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4) var(--space-6);
   max-width: 34rem;
   margin-inline: auto;
-  padding: var(--space-7) var(--space-5);
+  padding: var(--space-6) var(--space-5);
   background: var(--esq-grao), var(--esq-papel);
   color: var(--esq-tinta);
   font-family: var(--esq-fonte-impressa);
@@ -743,7 +744,22 @@
   mask-composite: intersect;
 
   @include up(md) {
+    grid-template-columns: 1.25fr 1fr;
+    max-width: 48rem;
     padding-inline: var(--space-7);
+  }
+}
+
+// Marca, descrição e rodapé do cupom ocupam as duas colunas; o endereço desce pela primeira
+.esq-cupom__marca,
+.esq-cupom__descricao,
+.esq-cupom__copy {
+  grid-column: 1 / -1;
+}
+
+.esq-cupom__bloco:first-of-type {
+  @include up(md) {
+    grid-row: span 2;
   }
 }
 

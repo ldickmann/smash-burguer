@@ -135,7 +135,7 @@
                         <p class="m3-card__preco tabular">{{ cartao.preco }}</p>
                         <button
                           type="button"
-                          class="m3-botao m3-botao--tonal m3-adicionar"
+                          class="m3-botao m3-botao--filled m3-adicionar"
                           :class="{ 'is-adicionado': cartao.adicionado }"
                           :aria-label="`Adicionar ${produto.name}`"
                           @click="personalizar(produto, cartao.contexto)"

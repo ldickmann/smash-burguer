@@ -411,8 +411,8 @@
   overflow: hidden;
   margin-top: var(--space-1);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   color: var(--neu-tinta-suave);
   font-size: 0.9375rem;
   line-height: 1.45;
@@ -432,18 +432,18 @@
   font-weight: 800;
 }
 
-// "Adicionar": pílula de kraft com borda. Confirmado, fica afundado e verde com check por
-// --dur-hold e volta: o smash literal.
+// "Adicionar": pílula extrudada em ketchup, a mesma cor da ação do hero. Confirmado, fica afundado
+// e verde com check por --dur-hold e volta: o smash literal.
 .neu-adicionar {
-  @include relevo(var(--neu-elevado-pequeno), var(--neu-afundado));
+  @include relevo(var(--neu-elevado-pequeno), var(--neu-afundado-cor));
   display: inline-grid;
   place-items: center;
   min-height: var(--target-min);
   padding-inline: var(--space-5);
-  border: var(--neu-borda-largura) solid var(--neu-borda);
+  border: var(--neu-borda-largura) solid var(--neu-ketchup-escuro);
   border-radius: var(--neu-raio-pilula);
-  background: var(--neu-convexo);
-  color: var(--neu-tinta);
+  background: var(--neu-convexo-ketchup);
+  color: var(--neu-branco);
   font-weight: 800;
   transition:
     background-color var(--dur-fast),
@@ -451,7 +451,7 @@
 
   @include hover-capable {
     &:hover {
-      background: var(--neu-convexo-hover);
+      background: var(--neu-convexo-ketchup-hover);
     }
   }
 
