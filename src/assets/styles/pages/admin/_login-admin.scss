@@ -34,3 +34,15 @@
   position: relative;
   z-index: var(--z-raised);
 }
+
+// Atalho do admin de teste, só no `yarn dev`
+.admin-login__dev {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--color-border);
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+}

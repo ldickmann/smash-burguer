@@ -213,7 +213,7 @@ describe('estado salvo no localStorage', () => {
       expect(saved('admin')).toMatchObject({ admin: null, isAuthenticated: false });
     });
 
-    it('o cadastro que o createAdmin.html grava na mesma chave fica como está', () => {
+    it('o cadastro do admin criado à mão na mesma chave fica como está', () => {
       const raw = JSON.stringify(ADMIN);
       localStorage.setItem('admin', raw);
       loadPinia();

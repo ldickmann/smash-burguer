@@ -32,7 +32,7 @@ export const useAdminStore = defineStore('admin', {
 
   persist: {
     // A sessão do painel salva é editável no navegador: `admin` precisa ser um objeto, e sem
-    // ele a sessão não vale. O cadastro que o createAdmin.html grava na mesma chave não muda
+    // ele a sessão não vale. O cadastro do admin criado à mão na mesma chave não muda
     afterHydrate: ({ store }) => {
       const admin = isPlainObject(store.admin) ? store.admin : null;
       const isAuthenticated = store.isAuthenticated === true && admin !== null;

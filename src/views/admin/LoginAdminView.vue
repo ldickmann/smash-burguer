@@ -18,7 +18,7 @@
         <p>E-mail ou senha incorretos.</p>
       </div>
 
-      <form novalidate class="auth-form" @submit.prevent="handleLogin">
+      <form ref="formRef" novalidate class="auth-form" @submit.prevent="handleLogin">
         <FormGroup
           id="email"
           v-model="credentials.email"
@@ -46,6 +46,14 @@
         </BaseButton>
       </form>
 
+      <!-- Só no `yarn dev`: no build, devTestAdmin() devolve null -->
+      <div v-if="testAdmin" class="admin-login__dev">
+        <p>Desenvolvimento: o admin de teste entra sem cadastro.</p>
+        <BaseButton variant="secondary" size="sm" @click="fillTestAdmin">
+          Usar admin de teste
+        </BaseButton>
+      </div>
+
       <p class="auth-panel__footer">
         <RouterLink to="/" class="link-inline">Voltar à loja</RouterLink>
       </p>
@@ -54,8 +62,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useAdminStore } from "@/stores/adminStore";
+import { devTestAdmin } from "@/services/adminAuthServices";
 import { useRouter } from "vue-router";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import { useFormValidation } from "@/composables/useFormValidation";
@@ -84,6 +93,16 @@ const { errors, touch, validateAll } = useFormValidation(credentials, {
 
 const loading = ref(false);
 const authError = ref(false);
+const formRef = ref(null);
+
+// Preenche o formulário com o admin de teste e leva o foco ao "Entrar"
+const testAdmin = devTestAdmin();
+const fillTestAdmin = async () => {
+  credentials.value = { email: testAdmin.email, password: testAdmin.password };
+  authError.value = false;
+  await nextTick();
+  formRef.value?.querySelector('button[type="submit"]')?.focus();
+};
 
 // Um único handler, no submit
 const handleLogin = async () => {
