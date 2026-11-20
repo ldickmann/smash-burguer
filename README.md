@@ -134,7 +134,9 @@ O `createAdmin.html` não vai para o site publicado. Na demonstração online, o
 ├── .claude/
 │   ├── e2e/              # verificação no navegador (Playwright + axe-core)
 │   └── lockfile-audit.py # confere as versões do yarn.lock na base de advisories do npm
-├── .github/workflows/    # deploy no GitHub Pages
+├── .github/
+│   ├── workflows/        # deploy no GitHub Pages
+│   └── dependabot.yml    # PR mensal com as versões novas das actions
 ├── docs/screenshots/     # imagens deste README
 ├── public/images/        # fotos do cardápio, fundos, ícones e manifest
 ├── src/
@@ -184,11 +186,11 @@ Há 41 testes unitários, em 6 arquivos, cobrindo `BaseButton`, `AppToast`, `Ban
 
 Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy.yml), que:
 
-1. instala as dependências com `yarn install --immutable` (Node 22);
+1. instala as dependências com `yarn install --immutable` (Node 22), com o Yarn conferido pelo hash do `packageManager`;
 2. gera o build;
 3. publica a pasta `dist/` no GitHub Pages.
 
-O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica.
+O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica. As actions são fixadas por SHA, e o Dependabot abre uma PR por mês para a `develop` com as versões novas.
 
 Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.config.js`.
 
