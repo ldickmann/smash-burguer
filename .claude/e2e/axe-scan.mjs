@@ -15,7 +15,7 @@ const OUT = process.env.SCAN_OUT;
 if (OUT) fs.mkdirSync(OUT, { recursive: true });
 
 const USER = {
-  firstName: 'Maria', lastName: 'Silva', email: 'maria@exemplo.com', password: 'senha123',
+  firstName: 'Maria', lastName: 'Silva', email: 'maria@example.com', password: 'senha123',
   dateOfBirth: '1990-05-10', phone: '47999999999', CEP: '88370000',
   address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' },
 };
