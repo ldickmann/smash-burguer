@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { useCartStore } from '@/stores/cart';
 import { useToastStore } from '@/stores/toast';
+import { safeRedirect } from '@/handlers/authHandlers';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Layouts imports
@@ -55,7 +56,7 @@ const router = createRouter({
           path: 'register',
           name: 'register',
           component: () => import('../views/auth/RegisterView.vue'),
-          meta: { title: 'Criar conta' },
+          meta: { title: 'Criar conta', guestOnly: true },
         },
         {
           path: 'login',
@@ -171,6 +172,13 @@ router.beforeEach((to, from, next) => {
       next('/menu');
       return;
     }
+  }
+
+  // Cadastro com sessão aberta: a conta nova substituiria a da sessão. Vai para o destino
+  // do `?redirect=` (só caminhos internos) ou para o perfil
+  if (to.meta.guestOnly && userStore.isAuthenticated) {
+    next(safeRedirect(to.query.redirect) ?? '/profile');
+    return;
   }
 
   // Verifica rotas de usuários normais

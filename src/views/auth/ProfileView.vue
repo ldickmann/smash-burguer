@@ -9,10 +9,35 @@
       <section class="profile-page__card" aria-labelledby="seus-dados">
         <h2 id="seus-dados" class="profile-page__section-title">Seus dados</h2>
 
-        <form class="profile-page__form" novalidate @submit.prevent="handleUpdateProfile">
-          <FormGroup id="firstName" v-model="userInfo.firstName" label="Nome" autocomplete="given-name" />
-          <FormGroup id="lastName" v-model="userInfo.lastName" label="Sobrenome" autocomplete="family-name" />
-          <FormGroup id="email" v-model="userInfo.email" label="E-mail" type="email" autocomplete="email" />
+        <form ref="formRef" class="profile-page__form" novalidate @submit.prevent="handleUpdateProfile">
+          <FormGroup
+            id="firstName"
+            v-model="userInfo.firstName"
+            label="Nome"
+            autocomplete="given-name"
+            :error="errors.firstName"
+            required
+            @blur="touch('firstName')"
+          />
+          <FormGroup
+            id="lastName"
+            v-model="userInfo.lastName"
+            label="Sobrenome"
+            autocomplete="family-name"
+            :error="errors.lastName"
+            required
+            @blur="touch('lastName')"
+          />
+          <FormGroup
+            id="email"
+            v-model="userInfo.email"
+            label="E-mail"
+            type="email"
+            autocomplete="email"
+            :error="errors.email"
+            required
+            @blur="touch('email')"
+          />
           <FormGroup
             id="phone"
             v-model="userInfo.phone"
@@ -21,6 +46,9 @@
             mask="phone"
             inputmode="tel"
             autocomplete="tel-national"
+            :error="errors.phone"
+            required
+            @blur="touch('phone')"
           />
           <FormGroup
             id="CEP"
@@ -29,9 +57,11 @@
             mask="cep"
             inputmode="numeric"
             autocomplete="postal-code"
-            :error="cep.error.value"
+            :error="cepError"
             :helper="cep.loading.value ? 'Buscando endereço…' : 'Rua, bairro, cidade e UF vêm do CEP.'"
             :loading="cep.loading.value"
+            required
+            @blur="touch('CEP')"
           />
           <!-- Preenchidos pelo CEP -->
           <FormGroup id="street" v-model="userInfo.address.street" label="Rua" readonly />
@@ -45,6 +75,15 @@
             {{ saving ? "Salvando…" : "Salvar alterações" }}
           </BaseButton>
         </form>
+
+        <div class="profile-delete">
+          <p class="profile-delete__text">
+            Excluir a conta apaga deste navegador seus dados, o histórico de pedidos e o carrinho.
+          </p>
+          <BaseButton variant="ghost" icon-start="trash-can" @click="deleteOpen = true">
+            Excluir conta
+          </BaseButton>
+        </div>
       </section>
 
       <section class="profile-page__card" aria-labelledby="seus-pedidos">
@@ -75,25 +114,58 @@
         </EmptyState>
       </section>
     </div>
+
+    <BaseDialog
+      :open="deleteOpen"
+      title="Excluir conta?"
+      title-id="excluir-conta-titulo"
+      max-width="480px"
+      @close="closeDeleteDialog"
+    >
+      <p>
+        Seus dados, o histórico de pedidos e o carrinho serão apagados deste navegador. Não é possível
+        desfazer.
+      </p>
+      <template #footer>
+        <div class="profile-delete__actions">
+          <BaseButton variant="secondary" :disabled="deleting" @click="closeDeleteDialog">Cancelar</BaseButton>
+          <BaseButton variant="danger" :loading="deleting" @click="confirmDelete">
+            {{ deleting ? "Excluindo…" : "Excluir conta" }}
+          </BaseButton>
+        </div>
+      </template>
+    </BaseDialog>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toast";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { useCepLookup } from "@/composables/useCepLookup";
+import { useFormValidation } from "@/composables/useFormValidation";
 import { formatItemCount, formatPrice } from "@/utils/formatters";
+import {
+  validateFirstName,
+  validateLastName,
+  validateEmail,
+  validatePhone,
+  validateCEPFormat,
+} from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseDialog from "@/components/ui/BaseDialog.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import OrderSummary from "@/components/OrderSummary.vue";
 
 const userStore = useUserStore();
 const toastStore = useToastStore();
-const { handleLogout } = useAuthHandlers();
+const { handleLogout, handleDeleteAccount } = useAuthHandlers();
 const cep = useCepLookup();
+
+const addressOf = (data) => ({ street: "", neighborhood: "", city: "", state: "", ...data });
+const digitsOf = (value) => String(value ?? "").replace(/\D/g, "");
 
 // Carrega os dados do usuário (a rota exige sessão)
 const userData = userStore.user ?? {};
@@ -103,16 +175,29 @@ const userInfo = ref({
   email: userData.email || "",
   phone: userData.phone || "",
   CEP: userData.CEP || "",
-  address: {
-    street: "",
-    neighborhood: "",
-    city: "",
-    state: "",
-    ...(userData.address || {}),
-  },
+  address: addressOf(userData.address),
 });
 
+// Mesmas regras do cadastro
+const { errors, touch, validateAll, firstInvalid } = useFormValidation(userInfo, {
+  firstName: validateFirstName,
+  lastName: validateLastName,
+  email: validateEmail,
+  phone: validatePhone,
+  CEP: validateCEPFormat,
+});
+
+const formRef = ref(null);
 const saving = ref(false);
+const deleteOpen = ref(false);
+const deleting = ref(false);
+
+// CEP a que pertence o endereço da tela ("" enquanto não há endereço para o CEP atual)
+const addressCep = ref(
+  Object.values(userInfo.value.address).some(Boolean) ? digitsOf(userInfo.value.CEP) : ""
+);
+const addressMatchesCep = () =>
+  Boolean(addressCep.value) && addressCep.value === digitsOf(userInfo.value.CEP);
 
 // O pedido mais recente primeiro
 const orders = computed(() =>
@@ -127,30 +212,74 @@ const formatDate = (date) =>
     new Date(date)
   );
 
-// Novo CEP: o endereço vem da consulta e os campos de endereço são só leitura
+// Consulta o CEP e põe o endereço na tela, se o campo ainda tiver esse CEP quando a resposta chegar
+const lookupCep = async (value) => {
+  const address = await cep.lookup(value);
+  if (!address || userInfo.value.CEP !== value) return;
+  userInfo.value.address = addressOf(address);
+  addressCep.value = digitsOf(value);
+};
+
+// Novo CEP: o endereço anterior sai na hora e o novo vem da consulta (campos só leitura)
 watch(
   () => userInfo.value.CEP,
-  async (value, previous) => {
+  (value, previous) => {
     if (value === previous) return;
-    const address = await cep.lookup(value);
-    if (address) {
-      Object.assign(userInfo.value.address, address);
-    } else if (cep.error.value) {
-      Object.assign(userInfo.value.address, { street: "", neighborhood: "", city: "", state: "" });
-    }
+    userInfo.value.address = addressOf();
+    addressCep.value = "";
+    lookupCep(value);
   }
 );
 
+const cepError = computed(() => errors.CEP || cep.error.value);
+
+const focusFirstError = async () => {
+  await nextTick();
+  const field = firstInvalid() ?? (addressMatchesCep() ? null : "CEP");
+  if (field) formRef.value?.querySelector(`#${field}`)?.focus();
+};
+
+// Envio em andamento, inclusive a espera pela consulta do CEP: um segundo envio é ignorado
+let submitting = false;
+
 const handleUpdateProfile = async () => {
-  saving.value = true;
+  if (submitting) return;
+  submitting = true;
   try {
+    // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
+    if (!addressMatchesCep()) await lookupCep(userInfo.value.CEP);
+
+    // A validação e a cópia dos dados (dentro do updateProfile) acontecem no mesmo instante
+    if (!validateAll() || !addressMatchesCep()) {
+      await focusFirstError();
+      return;
+    }
+
+    saving.value = true;
     await userStore.updateProfile(userInfo.value);
     toastStore.show({ message: "Dados salvos.", variant: "success" });
   } catch {
     toastStore.show({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
   } finally {
     saving.value = false;
+    submitting = false;
   }
+};
+
+const closeDeleteDialog = () => {
+  if (!deleting.value) deleteOpen.value = false;
+};
+
+const confirmDelete = async () => {
+  deleting.value = true;
+  const result = await handleDeleteAccount();
+  deleting.value = false;
+
+  if (result?.error) {
+    toastStore.show({ message: result.error, variant: "error" });
+    return;
+  }
+  deleteOpen.value = false;
 };
 </script>
 

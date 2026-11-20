@@ -1,0 +1,107 @@
+import { mount, flushPromises } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { createRouter, createMemoryHistory } from 'vue-router';
+import RegisterView from '../views/auth/RegisterView.vue';
+import { ACCOUNT_KEY, authService } from '../services/authServices';
+
+const Blank = { template: '<div />' };
+
+const mountRegister = async () => {
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: ['/', '/login', '/register'].map((path) => ({ path, component: Blank })),
+  });
+  await router.push('/register');
+
+  return mount(RegisterView, {
+    global: {
+      plugins: [pinia, router],
+      stubs: { 'font-awesome-icon': { template: '<svg />' } },
+    },
+  });
+};
+
+const fillForm = async (wrapper) => {
+  const values = {
+    firstName: 'Maria',
+    lastName: 'Silva',
+    email: 'maria@example.com',
+    password: 'senha123',
+    dateOfBirth: '1990-05-10',
+    phone: '47999999999',
+  };
+  for (const [id, value] of Object.entries(values)) {
+    await wrapper.find(`#${id}`).setValue(value);
+  }
+};
+
+const viaCepResponse = (logradouro, localidade) => ({
+  json: async () => ({ logradouro, bairro: 'Centro', localidade, uf: 'SC' }),
+});
+
+describe('RegisterView', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('avisa quando já existe uma conta salva neste navegador', async () => {
+    const empty = await mountRegister();
+    expect(empty.find('#aviso-conta-salva').exists()).toBe(false);
+    expect(empty.find('button[type="submit"]').attributes('aria-describedby')).toBeUndefined();
+
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ email: 'maria@example.com', password: 'senha123' }));
+    const wrapper = await mountRegister();
+
+    expect(wrapper.find('#aviso-conta-salva').text()).toContain('a anterior será apagada');
+    expect(wrapper.find('button[type="submit"]').attributes('aria-describedby')).toBe('aviso-conta-salva');
+  });
+
+  it('com o CEP trocado antes da resposta, a conta é criada uma vez, com o endereço do CEP novo', async () => {
+    // O primeiro CEP responde na hora; o segundo, só quando o teste mandar
+    let respondSecond;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url) =>
+        url.includes('88370000')
+          ? Promise.resolve(viaCepResponse('Rua Beira da Praia', 'Navegantes'))
+          : new Promise((resolve) => {
+              respondSecond = () => resolve(viaCepResponse('Praça da Sé', 'São Paulo'));
+            })
+      )
+    );
+    const wrapper = await mountRegister();
+    const register = vi.spyOn(authService, 'register');
+    await fillForm(wrapper);
+    await wrapper.find('#CEP').setValue('88370000');
+    await flushPromises();
+
+    await wrapper.find('#CEP').setValue('01001000');
+    await wrapper.find('form').trigger('submit');
+    await wrapper.find('form').trigger('submit'); // segundo envio durante a espera: ignorado
+    await vi.advanceTimersByTimeAsync(1000);
+    // Sem a resposta do CEP novo, nada é gravado com o endereço do anterior
+    expect(localStorage.getItem(ACCOUNT_KEY)).toBeNull();
+
+    respondSecond();
+    await flushPromises();
+    await vi.advanceTimersByTimeAsync(1000);
+    await flushPromises();
+
+    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toMatchObject({
+      CEP: '01001000',
+      address: { street: 'Praça da Sé', city: 'São Paulo' },
+    });
+    expect(register).toHaveBeenCalledTimes(1);
+  });
+});

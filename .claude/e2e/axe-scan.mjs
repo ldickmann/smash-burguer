@@ -42,7 +42,9 @@ const SCENARIOS = {
     { name: 'login-erro', hash: '#/login', storage: { 'smash-burger:account': USER }, act: async (p) => { await p.fill('#email', USER.email); await p.fill('#password', 'errada123'); await p.getByRole('button', { name: 'Entrar', exact: true }).click(); await p.waitForTimeout(1600); } },
     { name: 'register', hash: '#/register' },
     { name: 'register-vazio', hash: '#/register', act: async (p) => { await p.getByRole('button', { name: 'Criar conta', exact: true }).click(); await p.waitForTimeout(600); } },
+    { name: 'register-conta-salva', hash: '#/register', storage: { 'smash-burger:account': USER } },
     { name: 'profile', hash: '#/profile', storage: LOGGED },
+    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); } },
     { name: '404', hash: '#/rota-inexistente' },
   ],
   admin: [

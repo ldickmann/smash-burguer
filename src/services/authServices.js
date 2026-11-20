@@ -13,6 +13,33 @@ const readAccount = () => {
   }
 };
 
+const text = (value) => (typeof value === 'string' ? value : '');
+
+/**
+ * Os campos do perfil: os que a tela edita e os únicos que a sessão guarda (sem a senha
+ * nem a data de nascimento). A cópia é feita campo a campo, então não divide objetos com
+ * quem chamou, como o endereço reativo do formulário.
+ * @param {object} data
+ * @returns {{ firstName: string, lastName: string, email: string, phone: string, CEP: string,
+ *   address: { street: string, neighborhood: string, city: string, state: string } }}
+ */
+export const pickProfile = (data) => ({
+  firstName: text(data?.firstName),
+  lastName: text(data?.lastName),
+  email: text(data?.email),
+  phone: text(data?.phone),
+  CEP: text(data?.CEP),
+  address: {
+    street: text(data?.address?.street),
+    neighborhood: text(data?.address?.neighborhood),
+    city: text(data?.address?.city),
+    state: text(data?.address?.state),
+  },
+});
+
+/** Há um cadastro salvo neste navegador? O app guarda um só. */
+export const hasSavedAccount = () => readAccount() !== null;
+
 /**
  * Migração: se `localStorage.user` tiver o formato de cadastro (email e password na raiz),
  * copia para `smash-burger:account` e apaga a chave antiga.
@@ -39,7 +66,8 @@ export const authService = {
           const savedUser = readAccount();
           if (savedUser?.email === credentials.email &&
             savedUser?.password === credentials.password) {
-            resolve({ ok: true, user: savedUser });
+            // A sessão recebe só os campos do perfil; a senha fica no cadastro
+            resolve({ ok: true, user: pickProfile(savedUser) });
           } else {
             reject(new Error('Credenciais inválidas'));
           }
@@ -54,25 +82,57 @@ export const authService = {
 
   async register(userData) {
     try {
+      // Copiado na hora do envio: o que mudar no formulário durante a espera não entra
+      const account = {
+        ...pickProfile(userData),
+        password: text(userData?.password),
+        dateOfBirth: text(userData?.dateOfBirth),
+      };
       // Simular uma chamada à API
       await new Promise(resolve => setTimeout(resolve, 1000));
-      localStorage.setItem(ACCOUNT_KEY, JSON.stringify(userData));
+      localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
       return { ok: true };
     } catch (error) {
       throw new Error('Erro ao registrar usuário: ' + error.message);
     }
   },
 
-  async updateProfile(userData) {
+  /**
+   * @param {object} userData - dados do formulário do perfil
+   * @param {string} currentEmail - e-mail da sessão; o cadastro salvo precisa ser o dela
+   */
+  async updateProfile(userData, currentEmail) {
     try {
+      // Copiado na hora do envio, campo a campo (ver pickProfile)
+      const changes = pickProfile(userData);
       // Simular uma chamada à API
       await new Promise(resolve => setTimeout(resolve, 1000));
       const currentUser = readAccount();
-      const updatedUser = { ...currentUser, ...userData };
+      // Cadastro excluído ou trocado por outro (por exemplo, em outra aba)
+      if (!currentUser || currentUser.email !== currentEmail) {
+        throw new Error('o cadastro salvo não é o da sessão');
+      }
+      const updatedUser = { ...currentUser, ...changes };
       localStorage.setItem(ACCOUNT_KEY, JSON.stringify(updatedUser));
-      return { ok: true, user: updatedUser };
+      return { ok: true, user: pickProfile(updatedUser) };
     } catch (error) {
       throw new Error('Erro ao atualizar perfil: ' + error.message);
+    }
+  },
+
+  /**
+   * Apaga o cadastro deste navegador, se for o da sessão; a userStore encerra a sessão depois.
+   * @param {string} currentEmail - e-mail da sessão
+   */
+  async deleteAccount(currentEmail) {
+    try {
+      // Simular uma chamada à API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // O cadastro de outra pessoa (trocado em outra aba) não é apagado
+      if (readAccount()?.email === currentEmail) localStorage.removeItem(ACCOUNT_KEY);
+      return { ok: true };
+    } catch (error) {
+      throw new Error('Erro ao excluir a conta: ' + error.message);
     }
   },
 

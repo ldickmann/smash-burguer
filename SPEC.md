@@ -864,7 +864,12 @@ Resolve [HIE-02].
 
 - **CEP:**
   - durante a consulta, o campo mostra a ajuda "Buscando endereço…" com spinner;
-  - a mensagem de erro distingue "CEP não encontrado." de "Não foi possível consultar o CEP agora. Tente de novo."
+  - a mensagem de erro distingue "CEP não encontrado." de "Não foi possível consultar o CEP agora. Tente de novo.";
+  - trocar o CEP descarta na hora o endereço do anterior, e o envio espera a consulta em andamento.
+- **Conta já salva:** o app guarda uma conta só por navegador.
+  - Quando já existe uma, a tela mostra o aviso "Já existe uma conta salva neste navegador. Se você criar outra, a anterior será apagada.", com a borda esquerda `--color-warning` e o fundo `--color-warning-soft`.
+  - O aviso fica ligado ao botão de envio por `aria-describedby`.
+  - Com sessão aberta, `/register` leva ao `?redirect=` (só caminhos internos) ou a `/profile` (§10.6).
 
 **Depois do sucesso:**
 - Login: vai para o `redirect` da URL, ou para `/`.
@@ -877,8 +882,12 @@ Resolve [HIE-02].
 - **Cabeçalho:** `h1` "Sua conta" e, à direita, o botão ghost "Sair" (`iconStart="sign-out-alt"`). Não é mais vermelho [COR-11, ESP-06].
 - **Layout:** 1 coluna na base; a partir de `lg`, 2 colunas: "Seus dados" (5/12) e "Seus pedidos" (7/12).
 - **Seus dados:** formulário com `FormGroup`.
-  - Rua, bairro, cidade e UF são `readonly` de verdade, preenchidos pelo CEP.
+  - Nome, sobrenome, e-mail, celular e CEP têm a mesma validação do cadastro, com o erro no campo e o foco no primeiro erro.
+  - Rua, bairro, cidade e UF são `readonly` de verdade, preenchidos pelo CEP. Trocar o CEP apaga esses campos até a consulta responder, e o envio espera a consulta em andamento: um CEP nunca é salvo sem o endereço dele.
   - Botão "Salvar alterações" secundário, com `loading` e toast de sucesso ou erro.
+- **Excluir conta:** no fim de "Seus dados", depois de uma linha, o botão ghost "Excluir conta" (`iconStart="trash-can"`).
+  - Ele abre um `BaseDialog` "Excluir conta?", com os botões "Cancelar" (secundário) e "Excluir conta" (`danger`, com `loading` "Excluindo…").
+  - Confirmar apaga o cadastro, a sessão (com o histórico) e o carrinho, e vai para `/` com o toast "Conta excluída.".
 - **Seus pedidos:** lista de cards, com o pedido mais recente primeiro. Cada card mostra:
   - "Pedido #1001";
   - a data (`dd/mm/aaaa, hh:mm`);
@@ -1296,6 +1305,13 @@ Entram porque a nova UI as expõe. Sem elas, os estados novos mostrariam informa
 
 **Migração:** na carga, se `localStorage.user` tiver o formato de cadastro (com `email` e `password` na raiz), copiar para `smash-burger:account` e apagar `user`.
 
+**O que a sessão guarda (nov/2026):**
+- **Campos:** só os do perfil (nome, sobrenome, e-mail, celular, CEP e endereço), sem a senha nem a data de nascimento. Uma sessão gravada no formato antigo é regravada na carga (`afterHydrate`).
+- **Cópias:** o cadastro e o perfil gravam uma cópia dos dados feita na hora do envio, e a sessão não divide objetos com o formulário.
+- **Sair:** limpa a sessão, o histórico e o carrinho; o cadastro continua.
+- **Entrar com outro e-mail:** zera o histórico da sessão anterior.
+- **Cadastro trocado:** se o cadastro salvo não for o da sessão (excluído ou trocado em outra aba), "Salvar alterações" falha e "Excluir conta" não o apaga.
+
 **Admin:** a chave `admin` **não muda**. É defeito de admin, fora do escopo.
 
 ### 10.4 Pedido [FLX-04, FLX-05]
@@ -1317,7 +1333,7 @@ Os botões viram **links** para `/login?redirect=/payment` e `/register?redirect
 |---|---|
 | `scrollBehavior` | Volta ao topo em rota nova, restaura a posição no voltar/avançar e respeita `#âncora` [A11Y-11] |
 | `afterEach` | Define `document.title` como "{Título da rota} · Smash Burger" (via `meta.title`) e move o foco para `#conteudo` (`main`, `tabindex="-1"`) |
-| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`) |
+| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7); `/register` com sessão aberta vai para o `?redirect=` ou para `/profile` (`meta.guestOnly`). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`) |
 | 404 | Vira filha do `MainLayout` |
 
 ---
