@@ -61,5 +61,11 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./estilos/minimalismo/HomeMinimalismo.vue"),
         meta: titulo("Minimalismo"),
       },
+      {
+        path: "/direcoes/escuro",
+        name: "direcao-escuro",
+        component: () => import("./estilos/escuro/HomeEscuro.vue"),
+        meta: titulo("Dark mode"),
+      },
     ]
   : [];
