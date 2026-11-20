@@ -49,5 +49,11 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./estilos/3d/Home3D.vue"),
         meta: titulo("3D e gradientes suaves"),
       },
+      {
+        path: "/direcoes/flat",
+        name: "direcao-flat",
+        component: () => import("./estilos/flat/HomeFlat.vue"),
+        meta: titulo("Flat"),
+      },
     ]
   : [];
