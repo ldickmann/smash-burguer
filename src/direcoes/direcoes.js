@@ -7,6 +7,7 @@ export const DIRECOES = [
   { slug: "neumorfismo", nome: "Neumorfismo", apelido: "Kraft prensado", esquema: "light" },
   { slug: "3d", nome: "3D e gradientes suaves", apelido: "Camadas", esquema: "light" },
   { slug: "flat", nome: "Flat", apelido: "Ladrilhos", esquema: "light" },
+  { slug: "minimalismo", nome: "Minimalismo", apelido: "Só o que importa", esquema: "light" },
 ];
 
 export const caminhoDirecao = (slug) => `/direcoes/${slug}`;

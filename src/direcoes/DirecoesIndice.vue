@@ -85,6 +85,8 @@ import "@fontsource-variable/fredoka";
 import "./estilos/3d/_tokens.scss";
 import "@fontsource-variable/open-sans";
 import "./estilos/flat/_tokens.scss";
+import "@fontsource-variable/archivo/wdth.css";
+import "./estilos/minimalismo/_tokens.scss";
 import { ref } from "vue";
 import FichaDirecao from "./FichaDirecao.vue";
 import { DIRECOES, caminhoDirecao } from "./direcoes";

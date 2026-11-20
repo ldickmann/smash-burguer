@@ -159,4 +159,12 @@ export const PARES_POR_DIRECAO = {
     { frente: "flat-cheddar", fundo: "flat-cebola", minimo: 3, onde: "anel de foco no ladrilho roxo" },
     { frente: "flat-tinta", fundo: "flat-papel", minimo: 3, onde: "anel de foco no branco" },
   ],
+  minimalismo: [
+    { frente: "min-preto", fundo: "min-branco", minimo: 4.5, onde: "texto, título e Adicionado" },
+    { frente: "min-cinza-texto", fundo: "min-branco", minimo: 4.5, onde: "descrição e texto secundário" },
+    { frente: "min-branco", fundo: "min-preto", minimo: 4.5, onde: "Ver cardápio e Adicionar" },
+    { frente: "min-branco", fundo: "min-preto-hover", minimo: 4.5, onde: "botão no hover" },
+    { frente: "min-cinza-linha", fundo: "min-branco", minimo: 3, onde: "segmento da paginação" },
+    { frente: "min-preto", fundo: "min-branco", minimo: 3, onde: "sublinhado do link atual e anel de foco" },
+  ],
 };

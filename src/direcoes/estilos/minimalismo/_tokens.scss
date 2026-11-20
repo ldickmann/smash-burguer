@@ -1,0 +1,114 @@
+// Minimalismo, "Só o que importa" (só desenvolvimento, #/direcoes/minimalismo).
+// A interface fica em preto e branco, e a única cor da página é a da comida, nas fotos. A tipografia
+// larga e pesada faz o papel do smash: prensada até ficar baixa e larga.
+
+:root[data-direcao="minimalismo"],
+[data-direcao="minimalismo"] {
+  // ---------- Cores ----------
+  --min-branco: #ffffff;
+  --min-preto: #000000;
+  --min-preto-hover: #2b2b2b;
+  --min-cinza-texto: #5e5e5e;
+  --min-cinza-linha: #8c8c8c;
+  --min-erro: #b3261e;
+
+  // ---------- Tipografia: Archivo com eixo de largura ----------
+  --min-fonte: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --min-largura-expandida: 125%;
+  // Pela largura da tela: duas linhas em dois terços da página a partir de 768 px, até 112 px
+  --min-titulo: clamp(3rem, 5.8vw, 7rem);
+  --min-largura-pagina: 90rem;
+  --min-titulo-linha: 0.9;
+
+  // ---------- Forma ----------
+  --min-regua: 1px;
+  --min-borda-botao: 2px;
+
+  // ---------- Tokens do projeto ----------
+  --color-bg: var(--min-branco);
+  --color-surface-sunken: var(--min-branco);
+  --color-surface-1: var(--min-branco);
+  --color-surface-2: var(--min-branco);
+  --color-surface-3: var(--min-branco);
+  --color-surface-4: #f2f2f2;
+  --color-input: var(--min-branco);
+  --color-overlay: rgba(0, 0, 0, 0.5);
+
+  --color-ink: var(--min-preto);
+  --color-ink-muted: var(--min-cinza-texto);
+  --color-ink-subtle: var(--min-cinza-texto);
+  --color-ink-disabled: #a6a6a6;
+
+  --color-border-strong: var(--min-cinza-linha);
+  --color-border: #d9d9d9;
+  --color-border-subtle: #ededed;
+
+  // A cor da ação principal é o preto, sempre o mesmo
+  --color-accent: var(--min-preto);
+  --color-accent-hover: var(--min-preto-hover);
+  --color-accent-pressed: var(--min-preto);
+  --color-accent-ink: var(--min-branco);
+  --color-accent-soft: #f2f2f2;
+  --color-focus: var(--min-preto);
+
+  --color-success: var(--min-preto);
+  --color-danger: var(--min-erro);
+  --color-danger-solid: var(--min-erro);
+  --color-danger-solid-ink: var(--min-branco);
+  --color-warning: var(--min-preto);
+  --color-info: var(--min-preto);
+
+  --color-danger-soft: #fbe9e8;
+  --color-warning-soft: #f2f2f2;
+  --color-info-soft: #f2f2f2;
+  --color-success-soft: #f2f2f2;
+  --color-hover-ghost: #f2f2f2;
+  --color-sheen: rgba(255, 255, 255, 0);
+  --gradient-scrim: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+  --glow-hero: none;
+
+  --focus-width: 3px;
+  --focus-offset: 3px;
+
+  --font-display: var(--min-fonte);
+  --font-text: var(--min-fonte);
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+  --text-3xl: 3.5rem;
+  --text-4xl: 6rem;
+  --text-hero: var(--min-titulo);
+  --text-page: clamp(2.5rem, 2rem + 1.6vw, 3.5rem);
+  --leading-display: var(--min-titulo-linha);
+  --leading-tight: 1.2;
+  --leading-body: 1.55;
+  --leading-compact: 1.4;
+
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+
+  --elev-0: none;
+  --elev-1: none;
+  --elev-2: none;
+  --elev-3: none;
+  --glow-accent: none;
+  --underline-active: inset 0 -2px 0 var(--min-preto);
+
+  --dur-instant: 80ms;
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 320ms;
+  --dur-hold: 1200ms;
+  --dur-stagger: 0ms;
+  --dur-spin: 800ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --ficha-titulo-peso: 800;
+  --ficha-titulo-largura: 125%;
+}
