@@ -1,0 +1,182 @@
+// Esqueumorfismo, "O passe da cozinha" (só desenvolvimento, #/direcoes/esqueumorfismo).
+// Os materiais do caminho do pedido: inox da coifa e do trilho, a chapa, o papel térmico da
+// comanda e do cupom, o vermelho do botão físico. Texturas só atrás de área sólida com texto.
+
+:root[data-direcao="esqueumorfismo"],
+[data-direcao="esqueumorfismo"] {
+  // ---------- Materiais ----------
+  --esq-inox: #c5cad0;
+  --esq-inox-claro: #e4e7ea;
+  --esq-inox-escuro: #9aa0a7;
+  --esq-inox-borda: #6f757c;
+  --esq-placa: #3b3f45;
+  --esq-placa-escura: #24272b;
+  --esq-chapa: #2a2624;
+  --esq-papel: #fbfaf6;
+  --esq-papel-dobra: #ece8de;
+  --esq-tinta: #26221e;
+  --esq-tinta-clara: #5e5852;
+  --esq-ketchup: #b3261e;
+  --esq-ketchup-claro: #c8342b;
+  --esq-ketchup-escuro: #7a1712;
+  --esq-letra: #f3efea;
+  --esq-letra-suave: #cfc7be;
+  --esq-led: #f0a80f;
+  --esq-led-apagado: #4a4e54;
+  --esq-led-aro: #2b2e32;
+  --esq-carimbo: #b3261e;
+
+  // Inox escovado: riscos horizontais finos sobre o degradê da chapa de aço
+  --esq-escovado:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0 1px, rgba(0, 0, 0, 0.035) 1px 2px, rgba(255, 255, 255, 0) 2px 3px),
+    linear-gradient(180deg, #eef0f2, #c5cad0 48%, #aeb4bb);
+  --esq-escovado-claro:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0 1px, rgba(0, 0, 0, 0.025) 1px 2px, rgba(255, 255, 255, 0) 2px 3px),
+    linear-gradient(180deg, #e9ecef, #d8dce0);
+  --esq-placa-metal: linear-gradient(180deg, #4a4f56, #2c2f34);
+  --esq-trilho: linear-gradient(180deg, #f6f7f8 0%, #b9bfc6 35%, #7d848c 70%, #b3b9c0 100%);
+  --esq-cromado: radial-gradient(circle at 35% 30%, #ffffff, #e2e5e8 28%, #a3a9b0 68%, #737a82);
+  --esq-rebite: radial-gradient(circle at 35% 35%, #f4f5f6, #9aa0a7 55%, #4f545a);
+  // Chapa curada: manchas de têmpera sobre o ferro
+  --esq-chapa-tempera:
+    radial-gradient(ellipse 60% 70% at 22% 35%, rgba(98, 84, 140, 0.16), rgba(98, 84, 140, 0) 70%),
+    radial-gradient(ellipse 45% 55% at 78% 70%, rgba(170, 102, 48, 0.16), rgba(170, 102, 48, 0) 70%),
+    radial-gradient(ellipse 80% 60% at 50% 115%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0) 70%);
+  // Grão do papel: ruído do feTurbulence, gerado aqui (alfa de até 12%)
+  --esq-grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.13 0 0 0 0 0.1 0.12 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  // Ponto mais escuro do grão, para medir o contraste do texto sobre o papel
+  --esq-grao-max: rgba(38, 33, 26, 0.12);
+  // Curvatura do papel preso no trilho
+  --esq-papel-curva: linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.04));
+  // Luz quente atrás do lanche na chapa e a sombra de contato
+  --esq-calor: radial-gradient(closest-side, rgba(255, 170, 90, 0.22), rgba(255, 170, 90, 0));
+  --esq-contato: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+
+  // Picote serrilhado (máscara): dentes de 7 px na borda de baixo ou de cima
+  --esq-picote-baixo: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+  --esq-picote-cima: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+
+  // ---------- Sombras e relevo ----------
+  --esq-gravado: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(0, 0, 0, 0.25);
+  --esq-gravado-escuro: 0 -1px 0 rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
+  --esq-estampado: 0 3px 0 rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(255, 255, 255, 0.14);
+  --esq-bisel: inset 0 2px 0 rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.22);
+  --esq-bisel-inox: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+  // Botão físico: aro escuro, a lateral do botão embaixo (some ao apertar) e a sombra no balcão
+  --esq-sombra-botao: 0 0 0 3px #24272b, 0 5px 0 3px #24272b, 0 10px 14px 2px rgba(0, 0, 0, 0.35);
+  --esq-sombra-botao-apertado: 0 0 0 3px #24272b, 0 2px 0 3px #24272b, 0 4px 6px 1px rgba(0, 0, 0, 0.3);
+  // A sombra da comanda segue o picote: drop-shadow no papel recortado
+  --esq-filtro-comanda: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2)) drop-shadow(0 12px 12px rgba(0, 0, 0, 0.28));
+  --esq-filtro-cupom: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+  --esq-sombra-cromado: 0 3px 6px rgba(0, 0, 0, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+  --esq-sombra-cromado-apertado: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  --esq-sombra-comanda: 0 1px 1px rgba(0, 0, 0, 0.18), 0 14px 18px -8px rgba(0, 0, 0, 0.45);
+  --esq-sombra-comanda-solta: 0 2px 2px rgba(0, 0, 0, 0.16), 0 22px 26px -10px rgba(0, 0, 0, 0.45);
+  --esq-sombra-coifa: 0 6px 12px rgba(0, 0, 0, 0.3);
+  --esq-sombra-trilho: 0 3px 4px rgba(0, 0, 0, 0.35);
+  --esq-sombra-placa: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 2px 3px rgba(0, 0, 0, 0.4);
+  --esq-sombra-etiqueta: 0 2px 2px rgba(0, 0, 0, 0.25), 0 12px 20px rgba(0, 0, 0, 0.4);
+  --esq-sombra-cupom: 0 18px 40px rgba(0, 0, 0, 0.55);
+  --esq-sombra-led: inset 0 2px 3px rgba(0, 0, 0, 0.6);
+  --esq-brilho-led: 0 0 10px rgba(240, 168, 15, 0.75), inset 0 -2px 3px rgba(122, 70, 0, 0.5);
+  --esq-sombra-janela: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+  --esq-raio-botao: 999px;
+  --esq-z-fundo: -1;
+  --esq-z-trilho: 2;
+
+  // ---------- Tipografia: a do próprio objeto ----------
+  --esq-fonte-impressa: "Courier Prime", "Courier New", monospace;
+  --esq-fonte-placa: "Bebas Neue", "Arial Narrow", sans-serif;
+  --esq-titulo: clamp(3.25rem, 2rem + 4.4vw, 5.75rem);
+
+  // ---------- Movimento ----------
+  --esq-dur-carimbo: 320ms;
+  --esq-dur-balanco: 600ms;
+  --esq-ease-carimbo: cubic-bezier(0.3, 1.5, 0.6, 1);
+
+  // ---------- Tokens do projeto ----------
+  --color-bg: var(--esq-inox-claro);
+  --color-surface-sunken: var(--esq-chapa);
+  --color-surface-1: var(--esq-inox-claro);
+  --color-surface-2: var(--esq-papel);
+  --color-surface-3: var(--esq-papel);
+  --color-surface-4: var(--esq-papel-dobra);
+  --color-input: #f3f0e8;
+  --color-overlay: rgba(20, 17, 15, 0.7);
+
+  --color-ink: var(--esq-tinta);
+  --color-ink-muted: var(--esq-tinta-clara);
+  --color-ink-subtle: var(--esq-tinta-clara);
+  --color-ink-disabled: #9a948d;
+
+  --color-border-strong: #6f6a64;
+  --color-border: #cfcac0;
+  --color-border-subtle: rgba(38, 34, 30, 0.1);
+
+  --color-accent: var(--esq-ketchup);
+  --color-accent-hover: var(--esq-ketchup-claro);
+  --color-accent-pressed: #8f1d17;
+  --color-accent-ink: #ffffff;
+  --color-accent-soft: rgba(179, 38, 30, 0.1);
+  --color-focus: var(--esq-tinta);
+
+  --color-success: #2e6b2e;
+  --color-danger: var(--esq-ketchup);
+  --color-danger-solid: var(--esq-ketchup);
+  --color-danger-solid-ink: #ffffff;
+  --color-warning: #8a5a00;
+  --color-info: #1f5f99;
+
+  --color-danger-soft: rgba(179, 38, 30, 0.1);
+  --color-warning-soft: rgba(138, 90, 0, 0.12);
+  --color-info-soft: rgba(31, 95, 153, 0.1);
+  --color-success-soft: rgba(46, 107, 46, 0.12);
+  --color-hover-ghost: rgba(38, 34, 30, 0.06);
+  --color-sheen: rgba(255, 255, 255, 0.2);
+  --gradient-scrim: linear-gradient(to bottom, rgba(42, 38, 36, 0.1), rgba(42, 38, 36, 0.9));
+  --glow-hero: none;
+
+  --focus-width: 3px;
+  --focus-offset: 3px;
+
+  --font-display: var(--esq-fonte-placa);
+  --font-text: var(--esq-fonte-impressa);
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.375rem;
+  --text-3xl: 3.125rem;
+  --text-4xl: 4.1875rem;
+  --text-hero: var(--esq-titulo);
+  --text-page: clamp(2.375rem, 1.9rem + 1.6vw, 3.125rem);
+  --leading-display: 0.92;
+  --leading-tight: 1.2;
+  --leading-body: 1.5;
+  --leading-compact: 1.35;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --elev-0: none;
+  --elev-1: 0 1px 1px rgba(0, 0, 0, 0.18), 0 2px 4px rgba(0, 0, 0, 0.14);
+  --elev-2: 0 2px 3px rgba(0, 0, 0, 0.2), 0 8px 18px rgba(0, 0, 0, 0.22);
+  --elev-3: 0 4px 6px rgba(0, 0, 0, 0.25), 0 20px 48px rgba(0, 0, 0, 0.35);
+  --glow-accent: none;
+  --underline-active: inset 0 -3px 0 var(--esq-tinta);
+
+  --dur-instant: 80ms;
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+  --dur-hold: 1200ms;
+  --dur-stagger: 40ms;
+  --dur-spin: 800ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --ficha-titulo-peso: 400;
+}

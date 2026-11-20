@@ -1,0 +1,816 @@
+// Home em esqueumorfismo (scoped). Só var(--…): materiais, sombras e texturas em ./_tokens.scss.
+// Troca de sombra por camadas em pseudo-elementos (opacidade); transform só com movimento.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// ---------- Peças comuns ----------
+
+// Botão físico vermelho, com aro e lateral: afunda 3 px ao apertar
+.esq-botao {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-5) 0;
+  border-radius: var(--esq-raio-botao);
+  background: linear-gradient(180deg, var(--esq-ketchup-claro), var(--esq-ketchup));
+  box-shadow: var(--esq-bisel);
+  color: var(--color-accent-ink);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.375rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--esq-z-fundo);
+    border-radius: inherit;
+    transition: opacity var(--dur-instant) var(--ease-out);
+  }
+
+  &::before {
+    box-shadow: var(--esq-sombra-botao);
+  }
+
+  &::after {
+    box-shadow: var(--esq-sombra-botao-apertado);
+    opacity: 0;
+  }
+
+  @include hover-capable {
+    &:hover {
+      background: linear-gradient(180deg, var(--esq-ketchup-claro), var(--esq-ketchup-claro));
+    }
+  }
+
+  &:active {
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.esq-botao--grande {
+  min-height: 3.5rem;
+  padding-inline: var(--space-6);
+  font-size: 1.75rem;
+}
+
+// Botão cromado redondo: setas e menu
+.esq-cromado {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-round);
+  background: var(--esq-cromado);
+  color: var(--esq-tinta);
+  font-size: 1.125rem;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--esq-z-fundo);
+    border-radius: inherit;
+    transition: opacity var(--dur-instant) var(--ease-out);
+  }
+
+  &::before {
+    box-shadow: var(--esq-sombra-cromado);
+  }
+
+  &::after {
+    box-shadow: var(--esq-sombra-cromado-apertado);
+    opacity: 0;
+  }
+
+  &:active {
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+// Afundar: só com movimento
+@include motion-ok {
+  .esq-botao,
+  .esq-cromado {
+    transition: transform var(--dur-instant) var(--ease-out);
+
+    &:active {
+      transform: translateY(3px);
+    }
+  }
+}
+
+// Placa de metal com quatro rebites e o texto gravado: marca e títulos de seção
+.esq-placa {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: var(--space-1) var(--space-6) 0;
+  border-radius: var(--radius-sm);
+  background: var(--esq-placa-metal);
+  box-shadow: var(--esq-sombra-placa);
+  color: var(--esq-letra);
+
+  // Rebites
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: -0.25rem;
+    border-radius: var(--radius-round);
+    background: var(--esq-rebite);
+  }
+
+  &::before {
+    left: var(--space-2);
+  }
+
+  &::after {
+    right: var(--space-2);
+  }
+}
+
+.esq-placa__texto {
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado-escuro);
+}
+
+// Texto gravado no inox (links da coifa)
+.esq-gravado {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-3) 0;
+  border-radius: var(--radius-sm);
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado);
+
+  @include hover-capable {
+    &:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 6px;
+    }
+  }
+
+  &[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+}
+
+// ---------- Coifa de inox ----------
+
+.esq-coifa {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navbar);
+  border-bottom: 3px solid var(--esq-inox-borda);
+  background: var(--esq-escovado);
+  box-shadow: var(--esq-sombra-coifa);
+}
+
+.esq-coifa__interno {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 4.5rem;
+}
+
+.esq-coifa > .esq-coifa__interno > .esq-placa .esq-placa__texto {
+  font-size: 1.625rem;
+}
+
+.esq-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: none;
+  padding: var(--space-3) var(--gutter) var(--space-4);
+  border-bottom: 3px solid var(--esq-inox-borda);
+  background: var(--esq-escovado);
+  box-shadow: var(--esq-sombra-coifa);
+
+  &.is-aberto {
+    display: block;
+  }
+
+  @include up(md) {
+    position: static;
+    display: block;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+}
+
+.esq-menu__lista {
+  display: grid;
+  gap: var(--space-1);
+
+  @include up(md) {
+    display: flex;
+    gap: var(--space-2);
+  }
+}
+
+.esq-coifa__acoes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+
+  @include up(md) {
+    margin-left: 0;
+  }
+}
+
+.esq-coifa__menu {
+  @include up(md) {
+    display: none;
+  }
+}
+
+// Carrinho com contador de tambor numa janelinha escura
+.esq-carrinho {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  border: 1px solid var(--esq-inox-borda);
+  border-radius: var(--radius-md);
+  background: var(--esq-escovado-claro);
+  box-shadow: var(--esq-bisel-inox);
+  color: var(--esq-tinta);
+}
+
+.esq-carrinho__icone {
+  font-size: 1.25rem;
+}
+
+.esq-tambor {
+  display: inline-flex;
+  padding: var(--space-1) var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--esq-placa-escura);
+  box-shadow: var(--esq-sombra-janela);
+  color: var(--esq-letra);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.esq-tambor__janela {
+  position: relative;
+  display: inline-block;
+  width: 0.75em;
+  height: 1.1em;
+  overflow: hidden;
+  text-align: center;
+}
+
+.esq-tambor__digito {
+  display: block;
+  line-height: 1.1;
+}
+
+.esq-tambor-sobe-leave-active,
+.esq-tambor-desce-leave-active,
+.esq-tambor-nenhum-leave-active {
+  position: absolute;
+  inset: 0;
+}
+
+.esq-tambor-sobe-enter-active,
+.esq-tambor-sobe-leave-active,
+.esq-tambor-desce-enter-active,
+.esq-tambor-desce-leave-active,
+.esq-tambor-nenhum-enter-active,
+.esq-tambor-nenhum-leave-active {
+  transition: opacity var(--dur-fast);
+}
+
+.esq-tambor-sobe-enter-from,
+.esq-tambor-sobe-leave-to,
+.esq-tambor-desce-enter-from,
+.esq-tambor-desce-leave-to,
+.esq-tambor-nenhum-enter-from,
+.esq-tambor-nenhum-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .esq-tambor-sobe-enter-active,
+  .esq-tambor-sobe-leave-active,
+  .esq-tambor-desce-enter-active,
+  .esq-tambor-desce-leave-active {
+    transition:
+      transform var(--dur-base) var(--ease-in-out),
+      opacity var(--dur-base);
+  }
+
+  .esq-tambor-sobe-enter-from,
+  .esq-tambor-desce-leave-to {
+    transform: translateY(100%);
+  }
+
+  .esq-tambor-sobe-leave-to,
+  .esq-tambor-desce-enter-from {
+    transform: translateY(-100%);
+  }
+}
+
+// ---------- Hero: a chapa ----------
+
+.esq-chapa {
+  --color-focus: var(--esq-letra);
+
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-7) var(--space-8);
+  background: var(--esq-chapa-tempera), var(--esq-chapa);
+  color: var(--esq-letra);
+}
+
+.esq-chapa__interno {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+
+  @include up(lg) {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+.esq-chapa__texto {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+}
+
+.esq-chapa__titulo {
+  color: var(--esq-letra);
+  font-family: var(--esq-fonte-placa);
+  font-size: var(--esq-titulo);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: var(--leading-display);
+  text-shadow: var(--esq-estampado);
+}
+
+// Etiqueta de papel presa por um clipe de metal
+.esq-etiqueta {
+  --color-focus: var(--esq-tinta);
+
+  position: relative;
+  max-width: 26rem;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-radius: 2px;
+  background: var(--esq-grao), var(--esq-papel-curva), var(--esq-papel);
+  box-shadow: var(--esq-sombra-etiqueta);
+  color: var(--esq-tinta);
+
+  // Clipe
+  &::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--space-3));
+    left: var(--space-6);
+    width: 3.5rem;
+    height: 1.5rem;
+    border: 3px solid var(--esq-inox-escuro);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background: var(--esq-escovado);
+    box-shadow: var(--esq-bisel-inox);
+  }
+}
+
+.esq-etiqueta__texto {
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.esq-chapa__midia {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 22rem);
+
+  @include up(lg) {
+    width: min(100%, 35rem);
+  }
+
+  // Calor atrás do lanche e a sombra de contato na chapa
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    z-index: var(--esq-z-fundo);
+    border-radius: var(--radius-round);
+  }
+
+  &::before {
+    top: 0;
+    width: 110%;
+    height: 100%;
+    margin-left: -55%;
+    background: var(--esq-calor);
+  }
+
+  &::after {
+    bottom: 2%;
+    width: 86%;
+    height: 14%;
+    margin-left: -43%;
+    background: var(--esq-contato);
+  }
+}
+
+.esq-chapa__foto {
+  position: relative;
+}
+
+.esq-chapa__img {
+  width: 100%;
+  height: auto;
+}
+
+@include motion-ok {
+  .esq-etiqueta {
+    transform: rotate(-1.5deg);
+  }
+}
+
+// ---------- Mais pedidos: o passe ----------
+
+.esq-passe {
+  padding-block: var(--space-7) var(--space-8);
+  border-top: 3px solid var(--esq-inox-borda);
+  background: var(--esq-escovado-claro);
+}
+
+.esq-passe__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.esq-placa--titulo .esq-placa__texto {
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.375rem);
+}
+
+.esq-passe__setas {
+  display: flex;
+  gap: var(--space-3);
+}
+
+// Trilho de inox: as comandas ficam presas embaixo dele
+.esq-trilho {
+  position: relative;
+  padding-top: var(--space-2);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: calc(-1 * var(--space-3));
+    left: calc(-1 * var(--space-3));
+    z-index: var(--esq-z-trilho);
+    height: 1.125rem;
+    border-radius: var(--radius-lg);
+    background: var(--esq-trilho);
+    box-shadow: var(--esq-sombra-trilho);
+  }
+}
+
+.esq-carrossel__slide {
+  align-items: stretch;
+  // Folga para a comanda girar e para a sombra não ser cortada pela janela do carrossel
+  padding: 0 var(--space-2) var(--space-6);
+}
+
+.esq-comanda {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: var(--esq-filtro-comanda);
+  transform-origin: 50% 0;
+}
+
+.esq-comanda__papel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  background: var(--esq-grao), var(--esq-papel-curva), var(--esq-papel);
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-impressa);
+  mask: var(--esq-picote-baixo);
+}
+
+.esq-comanda__foto {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--color-border);
+  background: var(--esq-papel-dobra);
+
+  > picture {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.esq-comanda__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.esq-comanda__reserva {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--esq-tinta-clara);
+  font-size: 2.5rem;
+}
+
+.esq-comanda__nome {
+  margin-top: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.esq-comanda__descricao {
+  margin-top: var(--space-2);
+  color: var(--esq-tinta-clara);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.esq-comanda__total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+}
+
+.esq-comanda__preco {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+// Carimbo vermelho "Adicionado", impresso sobre o papel (abaixo da foto, onde o vermelho tem contraste)
+.esq-carimbo {
+  position: absolute;
+  right: 0;
+  bottom: var(--space-9);
+  left: 0;
+  width: fit-content;
+  height: fit-content;
+  margin-inline: auto;
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  border: 4px solid var(--esq-carimbo);
+  border-radius: var(--radius-md);
+  color: var(--esq-carimbo);
+  font-family: var(--esq-fonte-placa);
+  font-size: 2.5rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast);
+}
+
+.esq-comanda.is-carimbada .esq-carimbo {
+  opacity: 0.92;
+}
+
+@include motion-ok {
+  // Comandas penduradas, alternando ±1°; o hover balança 1° para o outro lado
+  .esq-comanda {
+    transform: rotate(-1deg);
+    transition: transform var(--esq-dur-balanco) var(--ease-spring);
+  }
+
+  .esq-carrossel__slide:nth-child(even) .esq-comanda {
+    transform: rotate(1deg);
+  }
+
+  @include hover-capable {
+    .esq-comanda:hover {
+      transform: rotate(0deg);
+    }
+  }
+
+  .esq-carimbo {
+    transform: rotate(-8deg) scale(1.3);
+    transition:
+      transform var(--esq-dur-carimbo) var(--esq-ease-carimbo),
+      opacity var(--dur-fast);
+  }
+
+  .esq-comanda.is-carimbada .esq-carimbo {
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+// Paginação em LEDs: o ativo acende em âmbar. Alvo de 24 px.
+.esq-carrossel :deep(.carousel__pagination) {
+  position: static;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: 0;
+  transform: none;
+  list-style: none;
+}
+
+.esq-carrossel :deep(.carousel__pagination-button) {
+  position: relative;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border-radius: var(--radius-round);
+  background: transparent;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0.1875rem;
+    border-radius: var(--radius-round);
+  }
+
+  &::before {
+    border: 2px solid var(--esq-led-aro);
+    background: var(--esq-led-apagado);
+    box-shadow: var(--esq-sombra-led);
+  }
+
+  &::after {
+    inset: 0.3125rem;
+    background: var(--esq-led);
+    box-shadow: var(--esq-brilho-led);
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+  }
+}
+
+.esq-carrossel :deep(.carousel__pagination-button--active)::after {
+  opacity: 1;
+}
+
+// ---------- Rodapé: o cupom ----------
+
+.esq-rodape {
+  --color-focus: var(--esq-letra);
+
+  padding-block: var(--space-8);
+  background: var(--esq-chapa-tempera), var(--esq-chapa);
+}
+
+.esq-cupom {
+  --color-focus: var(--esq-tinta);
+
+  display: grid;
+  gap: var(--space-5);
+  max-width: 34rem;
+  margin-inline: auto;
+  padding: var(--space-7) var(--space-5);
+  background: var(--esq-grao), var(--esq-papel);
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1rem;
+  line-height: 1.5;
+  filter: var(--esq-filtro-cupom);
+  mask:
+    var(--esq-picote-cima),
+    var(--esq-picote-baixo);
+  mask-composite: intersect;
+
+  @include up(md) {
+    padding-inline: var(--space-7);
+  }
+}
+
+.esq-cupom__marca {
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.esq-cupom__descricao {
+  padding-bottom: var(--space-4);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+  text-align: center;
+}
+
+.esq-cupom__bloco {
+  display: grid;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+}
+
+.esq-cupom__titulo {
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.esq-cupom__lista {
+  display: grid;
+}
+
+.esq-cupom__redes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+.esq-cupom__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  color: var(--esq-tinta);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+
+  @include hover-capable {
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+}
+
+.esq-cupom__icone {
+  flex-shrink: 0;
+  width: 1rem;
+}
+
+.esq-cupom__copy {
+  color: var(--esq-tinta-clara);
+  font-size: 0.9375rem;
+  text-align: center;
+}

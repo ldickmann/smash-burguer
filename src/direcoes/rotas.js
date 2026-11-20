@@ -31,5 +31,11 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./estilos/material/HomeMaterial.vue"),
         meta: titulo("Material 3 Expressive"),
       },
+      {
+        path: "/direcoes/esqueumorfismo",
+        name: "direcao-esqueumorfismo",
+        component: () => import("./estilos/esqueumorfismo/HomeEsqueumorfismo.vue"),
+        meta: titulo("Esqueumorfismo"),
+      },
     ]
   : [];

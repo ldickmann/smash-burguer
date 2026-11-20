@@ -77,6 +77,8 @@ import "./_tokens.scss";
 // Tokens e fonte de cada estilo, para a faixa e a amostra de cada ficha
 import "@fontsource-variable/roboto";
 import "./estilos/material/_tokens.scss";
+import "@fontsource/courier-prime/400.css";
+import "./estilos/esqueumorfismo/_tokens.scss";
 import { ref } from "vue";
 import FichaDirecao from "./FichaDirecao.vue";
 import { DIRECOES, caminhoDirecao } from "./direcoes";
