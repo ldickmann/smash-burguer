@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 176 testes
+npx vitest run                             # 239 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -30,6 +30,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 - **Fluxo:** branch de trabalho → PR para `develop` → PR `develop` → `main`.
 - **Merge:** use sempre "Create a merge commit", sem squash nem rebase.
+- **Regras das branches:** a `develop` exige PR (sem aprovação obrigatória) e não aceita force push nem exclusão; a `main` exige aprovação de code owner e está travada. Nas duas, o admin passa por cima.
 - **`develop` em dia:** antes, confirme que a `develop` contém a `main` com `git merge-base --is-ancestor origin/main origin/develop`. Se não contiver, abra primeiro uma PR `main` → `develop`.
 - **Deploy:** o merge na `main` publica o site. Se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
   - O CI instala com `corepack yarn install --immutable --check-cache` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
@@ -39,6 +40,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Merges e PRs:** só com pedido explícito do usuário.
 - **Actions:** fixadas pelo SHA completo do commit, com a versão em comentário: `checkout` v7.0.1, `setup-node` v7.1.0, `configure-pages` v6.0.0, `upload-pages-artifact` v5.0.0 e `deploy-pages` v5.0.1, todas em Node 24.
   - O Dependabot (`.github/dependabot.yml`) abre uma PR por mês para a `develop`, trocando o SHA e o comentário juntos. Os commits dele saem em inglês (`ci(deps): bump …`): é a exceção à regra de commits em português.
+  - O repositório só aceita actions de autoria do GitHub (`actions/*`). Uma action de terceiros precisa ser liberada nas configurações antes.
   - Para trocar à mão, pegue o SHA do commit com `gh api repos/actions/<nome>/commits/<versão> --jq .sha`, que resolve também tag anotada, e mude SHA e comentário juntos. Não volte a usar só a tag.
 
 ## Dependências
@@ -50,6 +52,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Vitest:** `vitest` e `@vitest/coverage-v8` andam sempre na mesma versão.
 - **`.yarnrc.yml`:** um `packageExtensions` declara o peer `vue` que falta no `vite-plugin-vue-devtools`.
 - **`resolutions`:** só pisos dentro da faixa que os pacotes pedem (hoje, só o `rollup`). Forçar outro major, como o `tar` 6 que existia, bloqueia as correções de segurança.
+- **Advisories que ficaram (nov/2026):** 3 moderate, de `glob` 13 e `minimatch` 10, que só o `js-beautify` 2, o `editorconfig` 3 e o `cacache` 20 puxam (ferramentas de desenvolvimento). Saem quando eles aceitarem o `glob` 14 e o `minimatch` 11; não force por `resolutions`.
 - **Alertas do Dependabot:**
   - para conferir, rode `corepack yarn@3.8.7 npm audit --all --recursive` e também `python3 -I .claude/lockfile-audit.py`, porque o primeiro deixa passar versões fixadas por transitivas;
   - no script, a marca "versão não identificada" indica um advisory que ele não ligou a nenhuma versão do lockfile (a faixa não casou ou está num formato que ele não entende, como `^`, `~` ou hífen): confira à mão;
@@ -72,7 +75,8 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
   - É cópia exata de um bloco com sha256 `3a9f9cc494d415f3a30c34519336b53b1db8c16955b89d09ddd22043543749fd`: não edite nem formate o arquivo. Se o CSS do projeto vazar para a faixa, corrija a regra do projeto.
   - Fica fora das convenções acima (`<style>` global, cores em hex, `!important`, animação própria e link de 40 px de altura). A §1.1 e a §13.2 do SPEC e o `axe-scan.mjs` já a excluem.
 - **Textos:** em português. A marca se escreve sempre "Smash Burger".
-- **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session` e `smash-burger:account`. O admin continua em `admin`.
+- **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session`, `smash-burger:account`, `smash-burger:admin-session` (sessão do painel), `smash-burger:catalog` (cardápio editado no painel) e `smash-burger:admin-orders` (pedidos do painel). O cadastro do admin criado à mão continua em `admin`. Todo estado persistido é conferido ao carregar (`afterHydrate`, com as funções de `src/utils/storedState.js`): o que vem do localStorage é editável no navegador.
+- **Senhas:** só por `hashPassword`/`verifyPassword` (`src/utils/password.js`, PBKDF2-SHA256 do WebCrypto). Não grave senha em texto, nem na sessão.
 - **Dependências novas:** pergunte ao usuário antes de adicionar.
 
 ## Verificação
@@ -85,9 +89,9 @@ O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, lim
 
 ## Problemas conhecidos (fora do escopo do redesign)
 
-- No admin, produtos criados, editados ou excluídos e o status dos pedidos ficam só na memória da aba; os pedidos são dados de exemplo (`src/stores/adminOrders.js`). "Detalhes", a busca e os itens do menu de perfil só fazem `console.log` (`[FLX-09]`).
-- O cadastro do cliente e o admin criado à mão guardam a senha em texto puro no localStorage. As sessões do cliente e do painel não guardam mais.
+- Sem back-end, o login é conferido no navegador, e o cardápio e os pedidos editados no painel valem só no navegador onde foram editados; os pedidos iniciais são dados de exemplo (`src/stores/adminOrders.js`).
+- O hash das senhas precisa do WebCrypto, que só existe em HTTPS e em `localhost`: por HTTP num IP da rede, o cadastro e o login mostram um aviso.
 - **Admin de teste:** no `yarn dev`, o login do painel aceita o admin de `devTestAdmin()` (`src/services/adminAuthServices.js`), com credenciais fictícias e públicas, atrás de `import.meta.env.DEV`. O `build-config.test.js` confere que ele não vai para o build; não o tire de trás do `DEV`.
-- **Admin no site publicado:** só entra com o admin criado à mão na chave `admin`, que também guarda a sessão do painel. Criado com a página aberta, o cadastro se perde no primeiro login; é preciso recarregar antes de entrar (README, "Acessar o painel administrativo").
-- Sair da conta apaga o histórico de pedidos.
+- **Admin no site publicado:** só entra com o admin criado à mão na chave `admin` (README, "Acessar o painel administrativo"); a senha em texto vira hash no primeiro login.
+- **Regra da `main`:** exige aprovação de code owner e está travada (`lock_branch`); o usuário mergeia como admin. Não ligue "Do not allow bypassing".
 - O `.prettierrc.json` (sem ponto e vírgula, aspas simples) não bate com 120 dos 132 arquivos de `src/`. Não rode `yarn format` misturado com outras mudanças.
