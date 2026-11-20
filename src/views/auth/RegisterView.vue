@@ -12,6 +12,15 @@
         <p>{{ submitError }}</p>
       </div>
 
+      <div v-if="hasAccount" id="aviso-conta-salva" class="auth-alert auth-alert--warning">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="auth-alert__icon"
+          aria-hidden="true"
+        />
+        <p>Já existe uma conta salva neste navegador. Se você criar outra, a anterior será apagada.</p>
+      </div>
+
       <form ref="formRef" novalidate class="auth-form" @submit.prevent="handleRegister">
         <div class="auth-form__names">
           <FormGroup
@@ -104,7 +113,14 @@
           @blur="touch('CEP')"
         />
 
-        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+        <BaseButton
+          type="submit"
+          size="lg"
+          block
+          :loading="loading"
+          :aria-describedby="hasAccount ? 'aviso-conta-salva' : undefined"
+          class="auth-form__submit"
+        >
           {{ loading ? "Criando conta…" : "Criar conta" }}
         </BaseButton>
       </form>
@@ -125,6 +141,7 @@ import { useRoute } from "vue-router";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { useCepLookup } from "@/composables/useCepLookup";
+import { hasSavedAccount } from "@/services/authServices";
 import {
   validateFirstName,
   validateLastName,
@@ -132,6 +149,7 @@ import {
   validatePassword,
   validateBirthDate,
   validatePhone,
+  validateCEPFormat,
 } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -151,12 +169,8 @@ const form = ref({
   address: null, // Armazena os dados do endereço retornados pela API viaCEP
 });
 
-const validateCEPFormat = (value) => {
-  const digits = String(value ?? "").replace(/\D/g, "");
-  if (!digits) return { isValid: false, message: "O CEP é obrigatório" };
-  if (digits.length !== 8) return { isValid: false, message: "CEP inválido. Devem conter 8 dígitos" };
-  return { isValid: true, message: "" };
-};
+// O app guarda uma conta só: criar outra apaga a que já está salva
+const hasAccount = hasSavedAccount();
 
 const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
   firstName: validateFirstName,
@@ -176,11 +190,18 @@ const redirectQuery = computed(() =>
   route.query.redirect ? { redirect: route.query.redirect } : {}
 );
 
-// O CEP é consultado assim que tiver 8 dígitos
+// Consulta o CEP e guarda o endereço, se o campo ainda tiver esse CEP quando a resposta chegar
+const lookupCep = async (value) => {
+  const address = await cep.lookup(value);
+  if (form.value.CEP === value) form.value.address = address;
+};
+
+// O CEP é consultado assim que tiver 8 dígitos; o endereço do CEP anterior sai na hora
 watch(
   () => form.value.CEP,
-  async (value) => {
-    form.value.address = await cep.lookup(value);
+  (value) => {
+    form.value.address = null;
+    lookupCep(value);
   }
 );
 
@@ -199,12 +220,10 @@ const focusFirstError = async () => {
 
 const handleRegister = async () => {
   submitError.value = "";
-  const isValid = validateAll();
 
-  // Garante o endereço antes de criar a conta
-  if (isValid && !form.value.address) {
-    form.value.address = await cep.lookup(form.value.CEP);
-  }
+  // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
+  if (!form.value.address) await lookupCep(form.value.CEP);
+  const isValid = validateAll();
 
   if (!isValid || !form.value.address) {
     await focusFirstError();

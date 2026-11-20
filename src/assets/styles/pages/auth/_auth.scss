@@ -55,6 +55,16 @@
   color: var(--color-danger);
 }
 
+// Aviso que não é erro (ex.: a conta nova substitui a que já está salva)
+.auth-alert--warning {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-soft);
+
+  .auth-alert__icon {
+    color: var(--color-warning);
+  }
+}
+
 .auth-panel__footer {
   color: var(--color-ink-muted);
   text-align: center;
