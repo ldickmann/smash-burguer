@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { useCepLookup } from '../composables/useCepLookup';
 
 const streets = { '88370000': 'Rua Beira da Praia', '01001000': 'Praça da Sé' };
@@ -21,14 +21,21 @@ const stubViaCep = () => {
 };
 
 describe('useCepLookup', () => {
-  beforeEach(() => {
-    // O validateCEP escreve a resposta no console
-    vi.spyOn(console, 'log').mockImplementation(() => {});
-  });
-
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+  });
+
+  it('a resposta do ViaCEP não vai para o console', async () => {
+    const log = vi.spyOn(console, 'log');
+    const { respond } = stubViaCep();
+    const cep = useCepLookup();
+
+    const pending = cep.lookup('88370000');
+    respond('88370000');
+    expect(await pending).toMatchObject({ street: 'Rua Beira da Praia' });
+
+    expect(log).not.toHaveBeenCalled();
   });
 
   it('o endereço do CEP anterior não vale enquanto o novo está sendo consultado', async () => {

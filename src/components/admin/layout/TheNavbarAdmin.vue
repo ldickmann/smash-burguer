@@ -63,9 +63,16 @@ const toggleSidebar = inject("toggleSidebar", () => {
 
 const handleToggleSidebar = () => toggleSidebar(toggleRef.value);
 
-const handleSearch = (query) => console.log("Pesquisando:", query);
-const handleNotification = (type) => console.log("Notificação clicada:", type);
-const handleMenuSelect = (item) => console.log("Item do menu selecionado:", item);
+// Com chaves: o build só descarta console.log cujo valor não é usado (vite.config.js)
+const handleSearch = (query) => {
+  console.log("Pesquisando:", query);
+};
+const handleNotification = (type) => {
+  console.log("Notificação clicada:", type);
+};
+const handleMenuSelect = (item) => {
+  console.log("Item do menu selecionado:", item);
+};
 const handleLogout = () => {
   adminStore.logout();
   router.push("/admin/login");

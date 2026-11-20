@@ -185,8 +185,6 @@ export const validateCEP = async (cep) => {
     const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
     const data = await response.json();
 
-    console.log('Resposta da API:', data); // Debug
-
     if (data.erro) {
       return {
         isValid: false,
