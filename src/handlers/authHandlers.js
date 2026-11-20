@@ -50,9 +50,24 @@ export function useAuthHandlers() {
     }
   };
 
+  // Exclui a conta e volta para a Home
+  const handleDeleteAccount = async () => {
+    try {
+      await userStore.deleteAccount();
+      toastStore.show({ message: 'Conta excluída.', variant: 'success' });
+      router.push('/');
+      return { success: true };
+    } catch {
+      return {
+        error: 'Não foi possível excluir a conta. Tente de novo.'
+      };
+    }
+  };
+
   return {
     handleLogin,
     handleLogout,
-    handleRegister
+    handleRegister,
+    handleDeleteAccount
   };
 }
