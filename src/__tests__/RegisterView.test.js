@@ -46,7 +46,6 @@ describe('RegisterView', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
-    vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -65,6 +64,16 @@ describe('RegisterView', () => {
 
     expect(wrapper.find('#aviso-conta-salva').text()).toContain('a anterior será apagada');
     expect(wrapper.find('button[type="submit"]').attributes('aria-describedby')).toBe('aviso-conta-salva');
+  });
+
+  it('avisa no campo que o CEP é consultado no ViaCEP antes de enviá-lo', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const wrapper = await mountRegister();
+
+    expect(wrapper.find('#CEP-ajuda').text()).toContain('ViaCEP');
+    expect(wrapper.find('#CEP').attributes('aria-describedby')).toContain('CEP-ajuda');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('com o CEP trocado antes da resposta, a conta é criada uma vez, com o endereço do CEP novo', async () => {

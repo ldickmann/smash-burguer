@@ -58,7 +58,7 @@
             inputmode="numeric"
             autocomplete="postal-code"
             :error="cepError"
-            :helper="cep.loading.value ? 'Buscando endereço…' : 'Rua, bairro, cidade e UF vêm do CEP.'"
+            :helper="cep.loading.value ? 'Buscando endereço…' : 'Consultamos o CEP no ViaCEP para preencher rua, bairro, cidade e UF.'"
             :loading="cep.loading.value"
             required
             @blur="touch('CEP')"

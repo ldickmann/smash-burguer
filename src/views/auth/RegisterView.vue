@@ -209,7 +209,9 @@ const cepError = computed(() => errors.CEP || cep.error.value);
 const cepHelper = computed(() => {
   if (cep.loading.value) return "Buscando endereço…";
   const address = form.value.address;
-  return address ? `${address.street}, ${address.neighborhood} — ${address.city}/${address.state}` : "";
+  return address
+    ? `${address.street}, ${address.neighborhood} — ${address.city}/${address.state}`
+    : "Consultamos o CEP no ViaCEP para preencher o endereço.";
 });
 
 const focusFirstError = async () => {
