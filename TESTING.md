@@ -2,7 +2,7 @@
 
 O projeto tem duas camadas de verificação:
 
-- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 74 testes em 13 arquivos.
+- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 75 testes em 13 arquivos.
 - **Verificação no navegador**, com os scripts Playwright + axe-core de `.claude/e2e/`: acessibilidade, fluxo de pedido, teclado e micro-interações. Eles rodam à mão contra o build e ainda não fazem parte do CI.
 
 ## Como rodar os testes unitários
@@ -34,8 +34,8 @@ Desde o Vitest 4, o relatório só lista os arquivos que os testes importam, a m
 | `router.test.js` | 3 | Guard do cadastro: com sessão aberta, `/register` leva ao `?redirect=` interno ou a `/profile`; sem sessão, abre. A antiga página de testes `/playground` não existe e cai no 404 |
 | `lockfile-audit.test.js` | 6 | Script `.claude/lockfile-audit.py`, com a consulta ao npm trocada por uma resposta fixa: faixas com espaço depois do operador, pré-lançamentos (incluídos nas faixas, como no `npm audit`), curingas e versões parciais; uma alternativa em formato desconhecido (`^`, `~`, hífen) só vira erro quando a resposta depende dela; advisory que não casa com nenhuma versão do lockfile entra como "versão não identificada", e o script sai com 1. Roda no ambiente `node` e chama o Python do sistema (`py -3`, `python3` ou `python`); sem Python 3, os testes são pulados |
 | `repo-config.test.js` | 4 | Proteções do CI e do repositório, lidas dos próprios arquivos: actions do `deploy.yml` fixadas pelo SHA, com a versão em comentário; escrita (`pages: write` e `id-token: write`) só no job `deploy`, e o `build` sem guardar o token do checkout; `packageManager` com hash sha512 e nenhum `corepack yarn@x.y.z` no workflow; install com `--immutable --check-cache`; `.gitignore` ignorando `.env`, `.env.[modo]`, o `.yarn/install-state.gz` e a pasta `.vscode/`, sem casar com nenhum arquivo rastreado. O `.gitignore` é avaliado num repositório temporário que só tem ele, sem o `.git/info/exclude` nem o gitignore global da máquina. Roda no ambiente `node`; sem git, o teste do `.gitignore` é pulado |
-| `build-config.test.js` | 3 | Content-Security-Policy do `index.html`: a `<meta>` fica no `<head>`, antes de qualquer script ou estilo; scripts só da própria origem, conexões só com a própria origem e o ViaCEP, `object-src 'none'`, `base-uri` e `form-action` restritos, sem `frame-ancestors` (ignorada em `<meta>`). Build: com as opções de `esbuild` do `vite.config.js`, a minificação descarta `console.log` e mantém `console.warn` e `console.error`. Roda no ambiente `node` |
-| `createAdmin.test.js` | 2 | `createAdmin.html` aberto no jsdom: apaga só as chaves do Smash Burger, mantém as outras chaves da mesma origem e cria o admin; declara UTF-8 nos primeiros 1024 bytes. Roda no ambiente `node` |
+| `build-config.test.js` | 3 | Content-Security-Policy do `index.html`: a `<meta>` fica no `<head>`, antes de qualquer script ou estilo; scripts só da própria origem, conexões só com a própria origem e o ViaCEP, `object-src 'none'`, `base-uri` e `form-action` restritos, sem `frame-ancestors` (ignorada em `<meta>`). Build: um `build()` do Vite com o `vite.config.js` do projeto, sobre uma entrada virtual, descarta `console.log` (inclusive dentro de uma arrow function com chaves) e mantém `console.warn` e `console.error`. Roda no ambiente `node` |
+| `createAdmin.test.js` | 3 | `createAdmin.html` aberto no jsdom: apaga só as chaves do Smash Burger, mantém as outras chaves da mesma origem e cria o admin; apaga a chave `user` só quando ela tem o cadastro no formato antigo, que o app migraria de volta; declara UTF-8 nos primeiros 1024 bytes. Roda no ambiente `node` |
 
 ### Cobertura (outubro de 2026)
 

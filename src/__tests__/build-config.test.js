@@ -2,9 +2,8 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
-import { transform } from 'esbuild';
+import { build } from 'vite';
 import { JSDOM } from 'jsdom';
-import viteConfig from '../../vite.config.js';
 
 const indexHtml = readFileSync(fileURLToPath(new URL('../../index.html', import.meta.url)), 'utf8');
 
@@ -45,11 +44,39 @@ describe('Content-Security-Policy do index.html', () => {
 });
 
 describe('build', () => {
-  it('a minificação descarta console.log e mantém console.warn e console.error', async () => {
-    const source = 'console.log("resposta", data); console.warn("aviso"); console.error("erro");';
+  // Build de verdade, com o vite.config.js do projeto e uma entrada virtual no lugar do index.html
+  const buildEntry = async (code) => {
+    const result = await build({
+      configFile: fileURLToPath(new URL('../../vite.config.js', import.meta.url)),
+      logLevel: 'silent',
+      plugins: [
+        {
+          name: 'entrada-virtual',
+          resolveId: (id) => (id === 'virtual:entrada' ? '\0entrada' : null),
+          load: (id) => (id === '\0entrada' ? code : null),
+        },
+      ],
+      build: { write: false, rollupOptions: { input: 'virtual:entrada' } },
+    });
+    return [result]
+      .flat()
+      .flatMap(({ output }) => output)
+      .filter((file) => file.type === 'chunk')
+      .map((chunk) => chunk.code)
+      .join('\n');
+  };
 
-    const { code } = await transform(source, { ...viteConfig.esbuild, minify: true });
+  it('descarta console.log, inclusive em arrow function com chaves, e mantém console.warn e console.error', async () => {
+    const code = await buildEntry(`
+      console.log('resposta', globalThis.dado);
+      globalThis.onPick = (item) => {
+        console.log('item', item);
+      };
+      console.warn('aviso');
+      console.error('erro');
+    `);
 
+    expect(code).toContain('globalThis.onPick');
     expect(code).not.toContain('console.log');
     expect(code).not.toContain('resposta');
     expect(code).toContain('console.warn');

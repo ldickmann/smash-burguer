@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 74 testes
+npx vitest run                             # 75 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -64,8 +64,8 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
   - só `transform` e `opacity`;
   - `transform` e durações acima de `--dur-fast` ficam só dentro de `motion-ok`;
   - a regra global de movimento reduzido fica em `base/_motion.scss`.
-- **CSP:** fica numa `<meta>` do `index.html`, porque o GitHub Pages não aceita cabeçalhos. Recurso novo de outra origem (script, `fetch`, imagem ou fonte) precisa entrar nela. O `'unsafe-inline'` de `style-src` fica: o Font Awesome e o servidor de desenvolvimento do Vite injetam `<style>`.
-- **`console.log`:** o build descarta as chamadas cujo valor não é usado (`esbuild.pure` no `vite.config.js`). Numa arrow function de expressão, como `(x) => console.log(x)`, use chaves.
+- **CSP:** fica numa `<meta>` do `index.html`, porque o GitHub Pages não aceita cabeçalhos. Recurso novo de outra origem (script, `fetch`, imagem ou fonte) precisa entrar nela. O `'unsafe-inline'` de `style-src` fica: o Font Awesome e o servidor de desenvolvimento do Vite injetam `<style>`. No `yarn dev`, o Vite e o devtools põem scripts antes da `<meta>`; a ordem que vale é a do `dist/index.html`.
+- **`console.log`:** o build descarta as chamadas cujo valor não é usado (`esbuild.pure` no `vite.config.js`). Numa arrow function de expressão, como `(x) => console.log(x)`, use chaves; o `eslint .` acusa esse caso (`no-restricted-syntax`).
 - **Proibidos:** `!important`, `outline: none`, `transition: all`, hex ou rgba fora dos tokens, e `toFixed`. Preço sempre via `formatPrice`. As buscas da §13.2 do SPEC devem continuar com 0 resultados.
 - **Componentes base:** ficam em `src/components/ui/` (`BaseButton`, `BaseDialog`, `QuantityStepper`, `CategoryTabs`, `AppToast`, `EmptyState`).
 - **Assinatura de autoria:** `src/components/AssinaturaEncaixe.vue`, no `MainLayout`, logo depois do `<TheFooter>`, com `tom="escuro"`.

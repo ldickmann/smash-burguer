@@ -37,6 +37,15 @@ describe('createAdmin.html', () => {
     expect(window.document.getElementById('status').textContent).toContain('Admin criado com sucesso!');
   });
 
+  it('apaga o cadastro no formato antigo, que o app migraria de volta, e mantém um `user` de outro formato', () => {
+    const legacy = openPage({ user: '{"email":"maria@example.com","password":"senha123"}' });
+    expect(legacy.localStorage.getItem('user')).toBeNull();
+
+    for (const other of ['{"nome":"João"}', 'joao']) {
+      expect(openPage({ user: other }).localStorage.getItem('user')).toBe(other);
+    }
+  });
+
   it('declara UTF-8 nos primeiros 1024 bytes, para o navegador não quebrar acentos e emojis', () => {
     const start = Buffer.from(html, 'utf8').subarray(0, 1024).toString('utf8');
 
