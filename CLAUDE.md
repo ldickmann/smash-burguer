@@ -32,7 +32,8 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Merge:** use sempre "Create a merge commit", sem squash nem rebase.
 - **`develop` em dia:** antes, confirme que a `develop` contém a `main` com `git merge-base --is-ancestor origin/main origin/develop`. Se não contiver, abra primeiro uma PR `main` → `develop`.
 - **Deploy:** o merge na `main` publica o site. Se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
-  - O CI instala com `corepack yarn install --immutable` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
+  - O CI instala com `corepack yarn install --immutable --check-cache` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
+  - O `--check-cache` baixa de novo cada pacote e compara com o zip do `.yarn/cache`. É a única conferência dos binários de plataforma (`@esbuild/linux-x64` e outros), que não têm checksum no `yarn.lock`. Ao revisar uma PR que mexe no `.yarn/cache`, rode o mesmo install no container, que é Linux.
   - Só o job `deploy` tem permissão de escrita (`pages: write` e `id-token: write`). O `build`, que roda código das dependências, só lê e não guarda o token no `.git/config`.
 - **Merges e PRs:** só com pedido explícito do usuário.
 - **Actions:** fixadas pelo SHA completo do commit, com a versão em comentário: `checkout` v7.0.1, `setup-node` v7.1.0, `configure-pages` v6.0.0, `upload-pages-artifact` v5.0.0 e `deploy-pages` v5.0.1, todas em Node 24.

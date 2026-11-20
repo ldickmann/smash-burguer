@@ -186,7 +186,7 @@ Há 41 testes unitários, em 6 arquivos, cobrindo `BaseButton`, `AppToast`, `Ban
 
 Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy.yml), que:
 
-1. instala as dependências com `yarn install --immutable` (Node 22), com o Yarn conferido pelo hash do `packageManager`;
+1. instala as dependências com `yarn install --immutable --check-cache` (Node 22), com o Yarn conferido pelo hash do `packageManager` e cada pacote do `.yarn/cache` comparado com o do registro do npm;
 2. gera o build;
 3. publica a pasta `dist/` no GitHub Pages.
 

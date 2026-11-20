@@ -40,9 +40,12 @@ jobs:
       # packageManager, confere o hash e o usa para instalar exatamente o que está
       # no lockfile (o Yarn 1 do runner o ignorava e resolvia tudo de novo a cada
       # deploy). Não ponha a versão na linha de comando (yarn@x.y.z): com ela, o
-      # Corepack não confere o hash
+      # Corepack não confere o hash.
+      # O --check-cache baixa de novo cada pacote do registro e compara com o zip
+      # do .yarn/cache, porque os binários de cada plataforma não têm checksum
+      # no yarn.lock
       - name: Install dependencies
-        run: corepack yarn install --immutable
+        run: corepack yarn install --immutable --check-cache
         env:
           COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
