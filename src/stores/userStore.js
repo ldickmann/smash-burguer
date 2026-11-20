@@ -37,11 +37,36 @@ export const useUserStore = defineStore('user', {
   }),
 
   actions: {
+    /**
+     * Entra e traz o histórico guardado no cadastro. Se a mesma conta já estava com a sessão
+     * aberta, os pedidos dela que ainda não estavam no cadastro continuam.
+     */
     async login(credentials) {
-      const { user } = await authService.login(credentials);
-      // Outra conta entrando: o histórico da sessão anterior não passa para ela
-      if (this.user?.email !== user.email) this.clearOrders();
+      const { user, orderHistory, nextOrderId } = await authService.login(credentials);
+      const sameAccount = this.user?.email === user.email;
+      const known = new Set(orderHistory.map((order) => order.id));
+      const history = sameAccount
+        ? [...orderHistory, ...this.orderHistory.filter((order) => !known.has(order.id))]
+        : orderHistory;
+
       this.setUser(user);
+      this.orderHistory = history.sort((a, b) => new Date(b.date) - new Date(a.date));
+      this.lastOrderId = sameAccount ? this.lastOrderId : null;
+      this.nextOrderId = Math.max(
+        FIRST_ORDER_ID,
+        nextOrderId ?? 0,
+        ...history.map((order) => order.id + 1)
+      );
+      this.saveOrders();
+    },
+
+    // O cadastro guarda o histórico, para ele sobreviver ao "Sair"
+    saveOrders() {
+      if (!this.user) return;
+      authService.saveOrders(this.user.email, {
+        orderHistory: this.orderHistory,
+        nextOrderId: this.nextOrderId,
+      });
     },
 
     async register(userData) {
@@ -54,11 +79,11 @@ export const useUserStore = defineStore('user', {
       this.setUser(user);
     },
 
-    // Apaga o cadastro e tudo o que a sessão guardava, inclusive o carrinho
+    // Apaga o cadastro (com o histórico) e tudo o que a sessão guardava, inclusive o carrinho.
+    // Sem o cadastro, o `saveOrders` do logout não tem onde gravar
     async deleteAccount() {
       await authService.deleteAccount(this.user?.email);
       this.logout();
-      this.nextOrderId = FIRST_ORDER_ID;
     },
 
     // A sessão guarda só os campos do perfil, numa cópia própria (sem a senha)
@@ -89,14 +114,18 @@ export const useUserStore = defineStore('user', {
       this.nextOrderId += 1;
       this.orderHistory.unshift(order);
       this.lastOrderId = order.id;
+      this.saveOrders();
       return order;
     },
 
+    // A sessão sai da tela, mas o histórico fica no cadastro e volta no próximo login
     logout() {
+      this.saveOrders();
       authService.logout();
       this.user = null;
       this.isAuthenticated = false;
       this.clearOrders();
+      this.nextOrderId = FIRST_ORDER_ID;
       // O carrinho, com as observações, não fica para quem usar o navegador depois
       useCartStore().clearCart();
     },

@@ -105,7 +105,8 @@ describe('RegisterView', () => {
     respondSecond();
     await flushPromises();
     await vi.advanceTimersByTimeAsync(1000);
-    await flushPromises();
+    // O hash da senha é calculado de verdade (WebCrypto), fora do relógio falso
+    await vi.waitFor(() => expect(localStorage.getItem(ACCOUNT_KEY)).not.toBeNull());
 
     expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toMatchObject({
       CEP: '01001000',

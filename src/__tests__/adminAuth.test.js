@@ -71,6 +71,26 @@ describe('login do admin', () => {
     expect(store.admin).toEqual({ firstName: 'Gerente', lastName: 'Teste', email: SAVED_ADMIN.email, role: 'admin' });
   });
 
+  it('o cadastro criado à mão com a senha em texto puro passa a guardar o hash, e sair não o apaga', async () => {
+    localStorage.setItem('admin', JSON.stringify({ ...SAVED_ADMIN, admin: { role: 'admin' }, isAuthenticated: true }));
+    const store = useAdminStore();
+    const credentials = { email: SAVED_ADMIN.email, password: SAVED_ADMIN.password };
+
+    expect(await settle(store.login(credentials))).toBeUndefined();
+    const saved = JSON.parse(localStorage.getItem('admin'));
+    expect(saved.password).toMatch(/^pbkdf2-sha256\$600000\$/);
+    // Os campos de sessão de antes da separação das chaves saem do cadastro
+    expect(saved).toEqual({ ...SAVED_ADMIN, password: saved.password });
+
+    store.logout();
+    expect(JSON.parse(localStorage.getItem('admin'))).toEqual(saved);
+    expect(await settle(store.login(credentials))).toBeUndefined();
+    expect(store.isAdmin).toBe(true);
+
+    const wrong = await settle(adminAuthService.login({ ...credentials, password: 'errada123' }));
+    expect(wrong).toBeInstanceOf(Error);
+  });
+
   it('com JSON ilegível na chave admin, o login é recusado em vez de ficar pendente', async () => {
     localStorage.setItem('admin', '{');
 

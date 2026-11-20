@@ -49,11 +49,11 @@ const SCENARIOS = {
   ],
   admin: [
     { name: 'admin-login', hash: '#/admin/login' },
-    { name: 'admin', hash: '#/admin', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-produtos', hash: '#/admin/products', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-modal', hash: '#/admin/products', storage: { admin: { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
-    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin', hash: '#/admin', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-produtos', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-modal', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
+    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
   ],
 };
 const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENARIOS[GROUP];

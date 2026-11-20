@@ -1,5 +1,7 @@
-// Simula a autenticação de um administrador
+// Simula a autenticação de um administrador. O cadastro do admin fica na chave `admin`
+// (criado à mão no site publicado); a sessão do painel fica em outra chave, na adminStore.
 import { isPlainObject } from '@/utils/storedState';
+import { hashPassword, verifyPassword } from '@/utils/password';
 
 const ADMIN_KEY = 'admin';
 
@@ -42,32 +44,42 @@ const readSavedAdmin = () => {
   }
 };
 
+/**
+ * Confere as credenciais com o admin salvo. Um cadastro com a senha em texto puro (criado
+ * à mão) entra e passa a guardar o hash; os campos de sessão que a mesma chave guardava
+ * antes da separação saem.
+ */
+const loginSavedAdmin = async (credentials) => {
+  const saved = readSavedAdmin();
+  if (!isPlainObject(saved) || saved.email !== credentials.email) return null;
+  const { ok, needsUpgrade } = await verifyPassword(credentials.password, saved.password);
+  if (!ok) return null;
+  if (needsUpgrade) {
+    // eslint-disable-next-line no-unused-vars
+    const { admin, isAuthenticated, ...registration } = saved;
+    localStorage.setItem(
+      ADMIN_KEY,
+      JSON.stringify({ ...registration, password: await hashPassword(credentials.password) })
+    );
+  }
+  return saved;
+};
+
 export const adminAuthService = {
   async login(credentials) {
-    const matches = (admin) =>
-      isPlainObject(admin) &&
-      admin.email === credentials.email &&
-      admin.password === credentials.password;
-
     try {
-      const response = await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          const admin = [readSavedAdmin(), devTestAdmin()].find(matches);
-          if (admin) {
-            resolve({ ok: true, user: pickAdminProfile(admin) });
-          } else {
-            reject(new Error('Credenciais de administrador inválidas'));
-          }
-        }, 1000);
-      });
-
-      return response;
+      // Simular uma chamada à API
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const testAdmin = devTestAdmin();
+      const admin =
+        (await loginSavedAdmin(credentials)) ??
+        (testAdmin?.email === credentials.email && testAdmin.password === credentials.password
+          ? testAdmin
+          : null);
+      if (!admin) throw new Error('Credenciais de administrador inválidas');
+      return { ok: true, user: pickAdminProfile(admin) };
     } catch (error) {
       throw new Error('Erro ao fazer login de administrador: ' + error.message);
     }
   },
-
-  logout() {
-    localStorage.removeItem(ADMIN_KEY);
-  }
 };

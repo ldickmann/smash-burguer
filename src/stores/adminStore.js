@@ -19,8 +19,8 @@ export const useAdminStore = defineStore('admin', {
       this.isAuthenticated = true;
     },
 
+    // Sair encerra só a sessão; o cadastro do admin, na chave `admin`, continua
     logout() {
-      adminAuthService.logout();
       this.admin = null;
       this.isAuthenticated = false;
     }
@@ -31,9 +31,11 @@ export const useAdminStore = defineStore('admin', {
   },
 
   persist: {
+    // A sessão tem chave própria: antes ela dividia a chave `admin` com o cadastro, e o
+    // primeiro login podia regravá-la sem o cadastro
+    key: 'smash-burger:admin-session',
     // A sessão do painel salva é editável no navegador: `admin` precisa ser um objeto, e sem
-    // ele a sessão não vale. Uma sessão gravada antes, com a senha, perde a senha. O cadastro
-    // do admin criado à mão na mesma chave não muda
+    // ele a sessão não vale. Uma sessão gravada com a senha perde a senha
     afterHydrate: ({ store }) => {
       const admin = isPlainObject(store.admin) ? pickAdminProfile(store.admin) : null;
       const isAuthenticated = store.isAuthenticated === true && admin !== null;

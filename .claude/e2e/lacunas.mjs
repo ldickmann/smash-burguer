@@ -126,7 +126,7 @@ for (const reduce of [false, true]) {
 }
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await seed(ctx, { admin: { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
+  await seed(ctx, { 'smash-burger:admin-session': { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
   const page = await ctx.newPage();
   await go(page, '#/admin');
   const kpis = await page.evaluate(() => [...document.querySelectorAll('.kpi__value')].map((k) => k.textContent.trim()));
