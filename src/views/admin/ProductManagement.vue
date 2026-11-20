@@ -15,7 +15,20 @@
       :options="CATEGORY_FILTERS"
     />
 
-    <ul class="products-list" role="list">
+    <!-- Busca da barra do painel (?q=): o resultado é anunciado a leitores de tela -->
+    <p v-if="query" class="admin-page__search-result" role="status">
+      {{ searchSummary }}
+      <button type="button" class="link-inline" @click="clearSearch">Limpar busca</button>
+    </p>
+
+    <EmptyState
+      v-if="query && !filteredProducts.length"
+      icon="magnifying-glass"
+      title="Nenhum produto encontrado"
+      text="Confira o texto da busca ou escolha outra categoria."
+    />
+
+    <ul v-else class="products-list" role="list">
       <li v-for="product in filteredProducts" :key="`${product.category}-${product.id}`">
         <ProductCard :product="product" variant="admin" :heading-level="2">
           <template #actions>
@@ -79,10 +92,13 @@
 
 <script setup>
 import { ref, computed, nextTick } from "vue";
-import { useProductsStore } from "@/stores/products.js";
+import { useRoute, useRouter } from "vue-router";
+import { CATEGORIES, useProductsStore } from "@/stores/products.js";
 import { useToastStore } from "@/stores/toast";
+import { matchesSearch, searchQueryOf } from "@/utils/search";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ModalProducts from "@/components/admin/ModalProducts.vue";
@@ -98,6 +114,11 @@ const HIGHLIGHTS = 4;
 
 const productsStore = useProductsStore();
 const toast = useToastStore();
+const route = useRoute();
+const router = useRouter();
+
+const NO_SPACE =
+  "Não há espaço neste navegador para mais esta imagem. Use uma imagem menor ou exclua produtos com imagem enviada.";
 
 const showAddModal = ref(false);
 const showEditModal = ref(false);
@@ -113,7 +134,16 @@ const highlightIds = [...productsStore.foods]
   .slice(0, HIGHLIGHTS)
   .map((product) => product.id);
 
+// Busca pelo nome e pela descrição. Em "Destaques", ela olha o cardápio inteiro
+const query = computed(() => searchQueryOf(route.query.q));
+
 const filteredProducts = computed(() => {
+  if (query.value) {
+    const base = selectedCategory.value
+      ? productsStore[selectedCategory.value] ?? []
+      : CATEGORIES.flatMap((category) => productsStore[category]);
+    return base.filter((product) => matchesSearch(query.value, product.name, product.description));
+  }
   if (!selectedCategory.value) {
     return highlightIds
       .map((id) => productsStore.foods.find((product) => product.id === id))
@@ -121,6 +151,16 @@ const filteredProducts = computed(() => {
   }
   return productsStore[selectedCategory.value] ?? [];
 });
+
+const searchSummary = computed(() => {
+  const count = filteredProducts.value.length;
+  const found = count === 1 ? "1 produto" : `${count} produtos`;
+  return `${found} para “${query.value}”.`;
+});
+
+const clearSearch = () => {
+  router.replace({ query: { ...route.query, q: undefined } });
+};
 
 // Abre o modal de adicionar produto
 const openAddModal = () => {
@@ -143,9 +183,15 @@ const focusTitleIfLost = async () => {
   }
 };
 
-// O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria
+// O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria.
+// Sem espaço para a imagem nova, o modal continua aberto, com o aviso
 const onEditSubmit = (changes) => {
   const { category, id } = selectedProduct.value;
+  const current = productsStore[category]?.find((product) => product.id === id) ?? null;
+  if (!productsStore.fitsUploadBudget(changes.image, current)) {
+    toast.show({ message: NO_SPACE, variant: "error" });
+    return;
+  }
   const updated = productsStore.updateProduct(category, id, changes);
   showEditModal.value = false;
   if (updated) toast.show({ message: "Produto atualizado." });
@@ -154,6 +200,10 @@ const onEditSubmit = (changes) => {
 
 // Depois de criar, o filtro mostra a categoria do produto novo
 const onAddSubmit = (newProduct) => {
+  if (!productsStore.fitsUploadBudget(newProduct.image)) {
+    toast.show({ message: NO_SPACE, variant: "error" });
+    return;
+  }
   const created = productsStore.addProduct(newProduct);
   showAddModal.value = false;
   if (!created) return;

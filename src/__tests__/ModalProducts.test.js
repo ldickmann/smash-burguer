@@ -69,7 +69,8 @@ describe('ModalProducts', () => {
     const [product] = wrapper.emitted('submit')[0];
     expect(product).toMatchObject({ category: 'foods', name: 'Mate', price: 25.9 });
     expect(product.image.startsWith('data:image/png;base64,')).toBe(true);
-    expect(wrapper.emitted('close')).toHaveLength(1);
+    // Quem fecha é a tela, depois de salvar
+    expect(wrapper.emitted('close')).toBeUndefined();
   });
 
   it('recusa um arquivo que não é imagem e não o guarda no produto', async () => {

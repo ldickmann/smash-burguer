@@ -46,7 +46,7 @@ describe('guards do roteador', () => {
     expect(parent.meta.requiresAdmin).toBe(true);
 
     const panel = parent.children.map((child) => router.resolve({ name: child.name }).path);
-    expect(panel).toEqual(['/admin', '/admin/products', '/admin/orders', '/admin/reports']);
+    expect(panel).toEqual(['/admin', '/admin/products', '/admin/orders', '/admin/reports', '/admin/profile', '/admin/settings']);
 
     // Sem sessão do painel, cada rota leva ao login do admin
     for (const path of panel) {

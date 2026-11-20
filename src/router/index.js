@@ -119,6 +119,19 @@ const router = createRouter({
           component: () => import('../views/admin/SalesReports.vue'),
           meta: { title: 'Relatórios' },
         },
+        // Itens do menu de perfil
+        {
+          path: 'profile',
+          name: 'admin-profile',
+          component: () => import('../views/admin/AdminProfile.vue'),
+          meta: { title: 'Meu perfil' },
+        },
+        {
+          path: 'settings',
+          name: 'admin-settings',
+          component: () => import('../views/admin/AdminSettings.vue'),
+          meta: { title: 'Configurações' },
+        },
       ],
     },
   ],

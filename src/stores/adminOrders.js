@@ -1,7 +1,8 @@
-// Pedidos do painel administrativo. São dados de exemplo e ficam só na memória da aba:
-// recarregar a página volta aos pedidos iniciais. A tela Pedidos e os contadores da barra
-// do painel leem daqui.
+// Pedidos do painel administrativo. Começam com dados de exemplo e ficam salvos neste
+// navegador (`smash-burger:admin-orders`), com o status de cada um. A tela Pedidos e os
+// contadores da barra do painel leem daqui; Configurações restaura os de exemplo.
 import { defineStore } from "pinia";
+import { isAdminOrder } from "@/utils/storedState";
 
 // Ordem do andamento de um pedido; "completed" é o último
 export const ORDER_STATUSES = ["pending", "preparing", "delivery", "completed"];
@@ -64,6 +65,24 @@ export const useAdminOrdersStore = defineStore("adminOrders", {
 
       order.status = ORDER_STATUSES[index + 1];
       return order.status;
+    },
+
+    // Volta aos pedidos de exemplo, com os status do começo
+    resetOrders() {
+      this.orders = sampleOrders();
+    },
+  },
+
+  persist: {
+    key: "smash-burger:admin-orders",
+    // Os pedidos salvos são editáveis no navegador: o que não é lista volta aos de exemplo,
+    // e o pedido fora do formato (ou com um status desconhecido) sai
+    afterHydrate: ({ store }) => {
+      const saved = JSON.stringify(store.orders);
+      store.orders = Array.isArray(store.orders)
+        ? store.orders.filter((order) => isAdminOrder(order, ORDER_STATUSES))
+        : sampleOrders();
+      if (JSON.stringify(store.orders) !== saved) store.$persist();
     },
   },
 });

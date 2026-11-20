@@ -1,6 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { createRouter, createMemoryHistory } from 'vue-router';
 import ProductManagement from '../views/admin/ProductManagement.vue';
 import { useProductsStore } from '../stores/products';
 
@@ -12,13 +13,18 @@ const ModalStub = {
   template: '<div class="modal-stub" />',
 };
 
-const mountPage = () => {
+const mountPage = async (path = '/admin/products') => {
   const pinia = createPinia();
   setActivePinia(pinia);
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [{ path: '/admin/products', component: { template: '<div />' } }],
+  });
+  await router.push(path);
   const wrapper = mount(ProductManagement, {
     attachTo: document.body,
     global: {
-      plugins: [pinia],
+      plugins: [pinia, router],
       stubs: {
         'font-awesome-icon': { template: '<svg />' },
         ModalProducts: ModalStub,
@@ -31,7 +37,7 @@ const mountPage = () => {
       },
     },
   });
-  return { wrapper, store: useProductsStore() };
+  return { wrapper, router, store: useProductsStore() };
 };
 
 const names = (wrapper) => wrapper.findAll('.card-stub h2').map((h) => h.text());
@@ -45,7 +51,7 @@ describe('ProductManagement', () => {
   });
 
   it('os destaques não são sorteados de novo ao trocar o filtro e voltar', async () => {
-    const { wrapper } = mountPage();
+    const { wrapper } = await mountPage();
     const highlights = names(wrapper);
     expect(highlights).toHaveLength(4);
 
@@ -57,7 +63,7 @@ describe('ProductManagement', () => {
   });
 
   it('editar e trocar a categoria procura o produto na categoria de origem', async () => {
-    const { wrapper, store } = mountPage();
+    const { wrapper, store } = await mountPage();
     await selectCategory(wrapper, 'foods');
     const cocaCola = { ...store.drinks.find((p) => p.id === 2) };
 
@@ -78,7 +84,7 @@ describe('ProductManagement', () => {
   });
 
   it('criar uma bebida antes de abrir o filtro de bebidas cria o produto e mostra a categoria dele', async () => {
-    const { wrapper, store } = mountPage();
+    const { wrapper, store } = await mountPage();
 
     await wrapper.findAll('button').find((b) => b.text().includes('Novo produto')).trigger('click');
     wrapper.findComponent(ModalStub).vm.$emit('submit', {
@@ -96,7 +102,7 @@ describe('ProductManagement', () => {
   });
 
   it('"Excluir" pede confirmação: cancelar mantém o produto, confirmar o tira da lista e da store', async () => {
-    const { wrapper, store } = mountPage();
+    const { wrapper, store } = await mountPage();
     await selectCategory(wrapper, 'drinks');
     const total = store.drinks.length;
 

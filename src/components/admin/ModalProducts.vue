@@ -250,8 +250,9 @@ const handleSubmit = async () => {
       return;
     }
 
+    // Quem abriu o modal fecha depois de salvar; se não salvar (sem espaço para a imagem,
+    // por exemplo), o formulário continua aberto e preenchido
     emit("submit", toProduct(localProduct.value));
-    closeModal();
   } finally {
     submitting = false;
   }

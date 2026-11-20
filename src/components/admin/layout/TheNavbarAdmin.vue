@@ -13,7 +13,7 @@
         :aria-expanded="String(sidebarOpen)"
         @click="handleToggleSidebar"
       />
-      <SearchBar @search="handleSearch" />
+      <SearchBar :model-value="searchQuery" @search="handleSearch" />
     </div>
     <div class="navbar-admin__right">
       <NotificationBar :notifications="notifications" />
@@ -24,9 +24,11 @@
 
 <script setup>
 import { ref, computed, inject } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
 import { useAdminOrdersStore } from "@/stores/adminOrders";
+import { useAdminLogout } from "@/composables/useAdminLogout";
+import { searchQueryOf } from "@/utils/search";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import SearchBar from "@/components/admin/layout/navbar/SearchBar.vue";
 import NotificationBar from "@/components/admin/layout/navbar/NotificationBar.vue";
@@ -39,6 +41,7 @@ defineProps({
   },
 });
 
+const route = useRoute();
 const router = useRouter();
 const adminStore = useAdminStore();
 const toggleRef = ref(null);
@@ -90,17 +93,25 @@ const toggleSidebar = inject("toggleSidebar", () => {
 
 const handleToggleSidebar = () => toggleSidebar(toggleRef.value);
 
-// Com chaves: o build só descarta console.log cujo valor não é usado (vite.config.js)
-const handleSearch = (query) => {
-  console.log("Pesquisando:", query);
+// Busca (?q=): em Produtos e em Pedidos, filtra a própria tela; nas outras, leva a Produtos
+const SEARCHABLE = ["/admin/products", "/admin/orders"];
+const searchQuery = computed(() => searchQueryOf(route.query.q));
+const handleSearch = (text) => {
+  const q = text.trim() || undefined;
+  if (SEARCHABLE.includes(route.path)) {
+    router.replace({ query: { ...route.query, q } });
+  } else if (q) {
+    router.push({ path: "/admin/products", query: { q } });
+  }
 };
-const handleMenuSelect = (item) => {
-  console.log("Item do menu selecionado:", item);
+
+// Itens do menu de perfil
+const MENU_ROUTES = { profile: "/admin/profile", settings: "/admin/settings" };
+const handleMenuSelect = (action) => {
+  if (MENU_ROUTES[action]) router.push(MENU_ROUTES[action]);
 };
-const handleLogout = () => {
-  adminStore.logout();
-  router.push("/admin/login");
-};
+
+const handleLogout = useAdminLogout();
 </script>
 
 <style scoped lang="scss">
