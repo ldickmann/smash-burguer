@@ -24,5 +24,12 @@ export const rotasDirecoes = import.meta.env.DEV
           },
         ],
       },
+      // Homes dos estilos: página inteira, sem o MainLayout
+      {
+        path: "/direcoes/material",
+        name: "direcao-material",
+        component: () => import("./estilos/material/HomeMaterial.vue"),
+        meta: titulo("Material 3 Expressive"),
+      },
     ]
   : [];

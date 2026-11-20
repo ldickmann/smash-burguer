@@ -16,7 +16,7 @@ export const razao = (a, b) => {
   return (clara + 0.05) / (escura + 0.05);
 };
 
-// "#rgb", "#rrggbb", "#rrggbbaa", "rgb(…)" e "rgba(…)" → [r, g, b, alfa]; o resto → null
+// Hex de 3, 4, 6 ou 8 dígitos e as funções rgb e rgba → [r, g, b, alfa]; o resto → null
 export const lerCor = (texto) => {
   const valor = String(texto ?? "").trim().toLowerCase();
   if (valor === "transparent") return [0, 0, 0, 0];
@@ -93,5 +93,19 @@ export const PARES_POR_DIRECAO = {
     { frente: "color-accent-ink", fundo: "color-success", minimo: 4.5, onde: "face Adicionado" },
     { frente: "color-accent", fundo: "color-bg", minimo: 3, onde: "indicador ativo" },
     { frente: "color-focus", fundo: "color-surface-2", minimo: 3, onde: "anel de foco no card" },
+  ],
+  material: [
+    { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal" },
+    { frente: "m3-on-surface-variant", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "descrição no card" },
+    { frente: "m3-on-primary", fundo: "m3-primary", minimo: 4.5, onde: "Ver cardápio" },
+    { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 4.5, onde: "Adicionar, setas e item do menu" },
+    { frente: "m3-on-secondary-container", fundo: "m3-secondary-container-pressed", minimo: 4.5, onde: "Adicionar pressionado" },
+    { frente: "m3-on-primary-container", fundo: "m3-primary-container", minimo: 4.5, onde: "face Adicionado" },
+    { frente: "m3-primary", fundo: "m3-surface-container", minimo: 4.5, onde: "links do rodapé" },
+    { frente: "m3-on-error", fundo: "m3-error", minimo: 4.5, onde: "badge do carrinho" },
+    { frente: "m3-primary", fundo: "m3-surface", minimo: 3, onde: "indicador da aba ativa" },
+    { frente: "m3-outline", fundo: "m3-surface-container-low", minimo: 3, onde: "ponto da paginação" },
+    { frente: "m3-secondary", fundo: "m3-surface", minimo: 3, onde: "anel de foco" },
+    { frente: "m3-secondary", fundo: "m3-surface-container-highest", minimo: 3, onde: "anel de foco no card" },
   ],
 };

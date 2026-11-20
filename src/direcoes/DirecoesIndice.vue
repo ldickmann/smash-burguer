@@ -74,6 +74,9 @@
 
 <script setup>
 import "./_tokens.scss";
+// Tokens e fonte de cada estilo, para a faixa e a amostra de cada ficha
+import "@fontsource-variable/roboto";
+import "./estilos/material/_tokens.scss";
 import { ref } from "vue";
 import FichaDirecao from "./FichaDirecao.vue";
 import { DIRECOES, caminhoDirecao } from "./direcoes";
@@ -136,8 +139,10 @@ const focarConteudo = () => conteudo.value?.focus();
   padding-bottom: var(--space-9);
 }
 
+// minmax(0, 1fr): a tabela larga rola dentro da própria caixa, sem alargar a página
 .indice__secao {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-top: var(--space-6);
 }
@@ -148,7 +153,9 @@ const focarConteudo = () => conteudo.value?.focus();
   font-weight: 800;
 }
 
+// position: relative prende os .visually-hidden (absolutos) das células dentro da rolagem
 .indice__tabela-rolagem {
+  position: relative;
   overflow-x: auto;
   border: 1px solid var(--dir-linha);
   border-radius: var(--dir-raio);
@@ -219,11 +226,12 @@ const focarConteudo = () => conteudo.value?.focus();
 
 .indice__fichas {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   align-items: start;
 
   @include up(lg) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

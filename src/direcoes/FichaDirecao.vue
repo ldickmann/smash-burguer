@@ -171,6 +171,7 @@ const resumoComuns = computed(() => {
 @use "@/assets/styles/base/breakpoints" as *;
 
 .ficha {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -230,6 +231,7 @@ const resumoComuns = computed(() => {
 
 .ficha__corpo {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   padding: var(--space-5);
   font-family: var(--dir-fonte);

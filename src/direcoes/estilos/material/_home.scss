@@ -1,0 +1,791 @@
+// Home em Material 3 Expressive (scoped). Só var(--…): os valores ficam em ./_tokens.scss.
+// Camadas de estado e troca de forma são feitas por pseudo-elementos que trocam por opacidade.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// ---------- Peças comuns ----------
+
+// Camada de estado sobre a cor de conteúdo (currentColor): 8% no hover, 10% pressionado
+@mixin camada-de-estado {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--m3-z-fundo);
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  @include hover-capable {
+    &:hover::before {
+      opacity: 0.08;
+    }
+  }
+
+  &:active::before {
+    opacity: 0.1;
+  }
+}
+
+.m3-icone-botao {
+  @include camada-de-estado;
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface-variant);
+  font-size: 1.25rem;
+}
+
+.m3-icone-botao--tonal {
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+}
+
+// Botão do M3 com a troca de forma do Expressive: redondo em repouso, cantos menores ao apertar.
+// ::before é o contêiner redondo, ::after o quadrado; o pressionado troca um pelo outro.
+.m3-botao {
+  --botao-fundo: var(--m3-primary);
+  --botao-fundo-hover: var(--m3-primary-hover);
+  --botao-fundo-pressionado: var(--m3-primary-pressed);
+  --botao-forma-pressionada: var(--m3-forma-m);
+
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--m3-forma-full);
+  font-family: var(--m3-fonte);
+  font-weight: 500;
+  letter-spacing: 0.00625rem;
+  white-space: nowrap;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--m3-z-fundo);
+    background: var(--botao-fundo);
+    transition:
+      background-color var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  &::before {
+    border-radius: var(--m3-forma-full);
+  }
+
+  &::after {
+    border-radius: var(--botao-forma-pressionada);
+    opacity: 0;
+  }
+
+  @include hover-capable {
+    &:hover {
+      --botao-fundo: var(--botao-fundo-hover);
+    }
+  }
+
+  &:active {
+    --botao-fundo: var(--botao-fundo-pressionado);
+
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.m3-botao--filled {
+  color: var(--m3-on-primary);
+}
+
+.m3-botao--tonal {
+  --botao-fundo: var(--m3-secondary-container);
+  --botao-fundo-hover: var(--m3-secondary-container-hover);
+  --botao-fundo-pressionado: var(--m3-secondary-container-pressed);
+  --botao-forma-pressionada: var(--m3-forma-s);
+
+  color: var(--m3-on-secondary-container);
+}
+
+// Text button: links do rodapé
+.m3-texto-botao {
+  @include camada-de-estado;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  margin-inline: calc(-1 * var(--space-3));
+  padding-inline: var(--space-3);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-primary);
+  font-size: var(--m3-label-l);
+  font-weight: 500;
+  line-height: var(--m3-label-l-linha);
+  letter-spacing: 0.00625rem;
+}
+
+.m3-texto-botao__icone {
+  flex-shrink: 0;
+  width: 1.125rem;
+}
+
+// ---------- Top app bar ----------
+
+.m3-barra {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navbar);
+  background: var(--m3-surface);
+}
+
+.m3-barra__interno {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--navbar-h);
+}
+
+.m3-marca {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--m3-forma-s);
+  color: var(--m3-on-surface);
+  font-size: var(--m3-title-l);
+  font-weight: 500;
+  line-height: var(--m3-title-l-linha);
+}
+
+// Celular: painel em surface-container sob a barra, com o item atual em secondary-container
+.m3-abas {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: none;
+  padding: var(--space-2) var(--gutter) var(--space-4);
+  border-radius: 0 0 var(--m3-forma-xl) var(--m3-forma-xl);
+  background: var(--m3-surface-container);
+  box-shadow: var(--m3-elevacao-2);
+
+  &.is-aberto {
+    display: block;
+  }
+
+  @include up(md) {
+    position: static;
+    display: block;
+    margin-inline: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.m3-abas__lista {
+  display: grid;
+  gap: var(--space-1);
+
+  @include up(md) {
+    display: flex;
+    gap: 0;
+  }
+}
+
+.m3-aba {
+  @include camada-de-estado;
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface-variant);
+  font-size: var(--m3-label-l);
+  font-weight: 500;
+  line-height: var(--m3-label-l-linha);
+  letter-spacing: 0.00625rem;
+
+  &[aria-current="page"] {
+    background: var(--m3-secondary-container);
+    color: var(--m3-on-secondary-container);
+  }
+
+  // Desktop: primary tabs de 64 px, com o indicador de 3 px do tamanho do rótulo
+  @include up(md) {
+    justify-content: center;
+    height: var(--navbar-h);
+    padding-inline: var(--space-4);
+    border-radius: 0;
+
+    &[aria-current="page"] {
+      background: transparent;
+      color: var(--m3-primary);
+    }
+  }
+}
+
+.m3-aba__rotulo {
+  @include up(md) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .m3-aba[aria-current="page"] &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+      background: var(--m3-primary);
+    }
+  }
+}
+
+.m3-barra__acoes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+
+  @include up(md) {
+    margin-left: 0;
+  }
+}
+
+.m3-barra__menu {
+  @include up(md) {
+    display: none;
+  }
+}
+
+// Badge grande do M3: 16 px, cor de erro
+.m3-badge {
+  position: absolute;
+  top: 0.375rem;
+  left: 1.625rem;
+  display: grid;
+  place-items: center;
+  min-width: 1rem;
+  height: 1rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-error);
+  color: var(--m3-on-error);
+  font-size: var(--m3-label-s);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.m3-badge-enter-active,
+.m3-badge-leave-active {
+  transition: opacity var(--dur-fast);
+}
+
+.m3-badge-enter-from,
+.m3-badge-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .m3-badge-enter-active {
+    transition:
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida),
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  .m3-badge-enter-from {
+    transform: scale(0);
+  }
+}
+
+// ---------- Hero ----------
+
+.m3-hero {
+  padding-block: var(--space-6) var(--space-7);
+
+  @include up(lg) {
+    padding-block: var(--space-7) var(--space-8);
+  }
+}
+
+.m3-hero__interno {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+
+  @include up(lg) {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: var(--space-7);
+  }
+}
+
+.m3-hero__texto {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.m3-hero__titulo {
+  color: var(--m3-on-surface);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-display-s);
+  font-weight: 500;
+  line-height: var(--m3-display-s-linha);
+  letter-spacing: 0;
+  text-transform: none;
+
+  @include up(md) {
+    font-size: var(--m3-display-m);
+    line-height: var(--m3-display-m-linha);
+  }
+
+  @include up(lg) {
+    font-size: var(--m3-display-l);
+    line-height: var(--m3-display-l-linha);
+    letter-spacing: -0.015625rem;
+  }
+}
+
+.m3-hero__descricao {
+  max-width: 36ch;
+  color: var(--m3-on-surface-variant);
+  font-size: var(--m3-body-l);
+  line-height: var(--m3-body-l-linha);
+  letter-spacing: 0.03125rem;
+}
+
+// Botão M (56 px) no celular e L (96 px) no desktop, com o rótulo na escala do tamanho
+.m3-botao--hero {
+  min-height: 3.5rem;
+  margin-top: var(--space-2);
+  padding-inline: var(--space-5);
+  font-size: var(--m3-title-m);
+  line-height: var(--m3-title-m-linha);
+
+  @include up(lg) {
+    --botao-forma-pressionada: var(--m3-forma-l);
+
+    min-height: 6rem;
+    padding-inline: var(--space-7);
+    font-size: var(--m3-headline-s);
+    line-height: var(--m3-headline-s-linha);
+  }
+}
+
+.m3-hero__midia {
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+
+  @include up(sm) {
+    width: min(100%, 26rem);
+  }
+
+  @include up(lg) {
+    width: min(100%, 32.5rem);
+  }
+}
+
+// O lanche fica menor que a forma, para o recorte de 12 lobos aparecer em volta dele
+.m3-hero__forma {
+  position: absolute;
+  inset: 0;
+  background: var(--m3-primary-container);
+  clip-path: var(--m3-forma-cookie);
+}
+
+.m3-hero__foto {
+  position: relative;
+  width: 78%;
+  margin-top: 6%;
+}
+
+.m3-hero__img {
+  width: 100%;
+  height: auto;
+}
+
+// O único movimento que não responde a uma ação: a forma gira até o lugar com a mola lenta
+@include motion-ok {
+  .m3-hero__forma {
+    animation: m3-forma-entra var(--m3-dur-mola-espacial-lenta) var(--m3-mola-espacial-lenta) both;
+  }
+
+  @keyframes m3-forma-entra {
+    from {
+      transform: rotate(-30deg) scale(0.88);
+    }
+
+    to {
+      transform: none;
+    }
+  }
+}
+
+// ---------- Mais pedidos ----------
+
+.m3-populares {
+  padding-bottom: var(--space-8);
+}
+
+// Folha tonal (surface-container-low) com o canto extra-grande do Expressive
+.m3-populares__folha {
+  padding: var(--space-5) var(--space-4) var(--space-5);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+
+  @include up(md) {
+    padding: var(--space-6);
+  }
+}
+
+.m3-populares__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.m3-populares__titulo {
+  color: var(--m3-on-surface);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-headline-m);
+  font-weight: 400;
+  line-height: var(--m3-headline-m-linha);
+}
+
+.m3-populares__setas {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.m3-carrossel {
+  // O anel de foco dos cards não pode ser cortado pela janela do carrossel
+  padding: var(--space-1);
+  margin: calc(-1 * var(--space-1));
+}
+
+.m3-carrossel__slide {
+  align-items: stretch;
+}
+
+// Filled card: surface-container-highest, canto médio (12); a foto leva o canto extra-grande (28)
+.m3-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-2);
+  border-radius: var(--m3-forma-m);
+  background: var(--m3-surface-container-highest);
+  color: var(--m3-on-surface);
+  text-align: left;
+
+  // Elevação 1 quando a ação do card está em foco ou sob o ponteiro
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--m3-z-fundo);
+    border-radius: inherit;
+    box-shadow: var(--m3-elevacao-1);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--m3-ease-standard);
+  }
+
+  &:has(.m3-adicionar:focus-visible)::after {
+    opacity: 1;
+  }
+
+  @include hover-capable {
+    &:has(.m3-adicionar:hover)::after {
+      opacity: 1;
+    }
+  }
+}
+
+.m3-card__midia {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container);
+
+  // Algumas fotos são 3:2: a imagem cobre a moldura 4:3 inteira
+  > picture {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.m3-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.m3-card__reserva {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--m3-on-surface-variant);
+  font-size: 2.5rem;
+}
+
+.m3-card__corpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-2) var(--space-2);
+}
+
+.m3-card__nome {
+  color: var(--m3-on-surface);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-title-l);
+  font-weight: 400;
+  line-height: var(--m3-title-l-linha);
+}
+
+.m3-card__descricao {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--m3-on-surface-variant);
+  font-size: var(--m3-body-m);
+  line-height: var(--m3-body-m-linha);
+  letter-spacing: 0.015625rem;
+}
+
+.m3-card__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+.m3-card__preco {
+  color: var(--m3-on-surface);
+  font-size: var(--m3-title-m);
+  font-weight: 500;
+  line-height: var(--m3-title-m-linha);
+}
+
+// "Adicionar": filled tonal redondo; apertado, canto 8; confirmado, primary-container com check
+.m3-adicionar {
+  min-height: var(--target-min);
+  padding-inline: var(--space-4);
+  font-size: var(--m3-label-l);
+  line-height: var(--m3-label-l-linha);
+
+  &.is-adicionado {
+    --botao-fundo: var(--m3-primary-container);
+    --botao-fundo-hover: var(--m3-primary-container);
+    --botao-fundo-pressionado: var(--m3-primary-container);
+
+    color: var(--m3-on-primary-container);
+  }
+}
+
+.m3-adicionar__face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-adicionar__face--verso {
+  opacity: 0;
+}
+
+.m3-adicionar.is-adicionado {
+  .m3-adicionar__face--frente {
+    opacity: 0;
+  }
+
+  .m3-adicionar__face--verso {
+    opacity: 1;
+  }
+}
+
+@include motion-ok {
+  .m3-adicionar__check {
+    transform: scale(0);
+    transition: transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .m3-adicionar.is-adicionado .m3-adicionar__check {
+    transform: none;
+  }
+}
+
+// Paginação em pílulas: ponto de 8 px em outline; o ativo se alonga em primary. Alvo de 24 px.
+.m3-carrossel :deep(.carousel__pagination) {
+  position: static;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-5);
+  padding: 0;
+  transform: none;
+  list-style: none;
+}
+
+.m3-carrossel :deep(.carousel__pagination-button) {
+  position: relative;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border-radius: var(--m3-forma-full);
+  background: transparent;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 0.5rem;
+    margin-top: -0.25rem;
+    border-radius: var(--m3-forma-full);
+  }
+
+  &::before {
+    width: 0.5rem;
+    margin-left: -0.25rem;
+    background: var(--m3-outline);
+  }
+
+  &::after {
+    width: 1.25rem;
+    margin-left: -0.625rem;
+    background: var(--m3-primary);
+    opacity: 0;
+    transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+}
+
+.m3-carrossel :deep(.carousel__pagination-button--active)::after {
+  opacity: 1;
+}
+
+@include motion-ok {
+  .m3-carrossel :deep(.carousel__pagination-button)::after {
+    transform: scaleX(0.4);
+    transition:
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida),
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  .m3-carrossel :deep(.carousel__pagination-button--active)::after {
+    transform: none;
+  }
+
+  .m3-carrossel :deep(.carousel__track) {
+    transition-timing-function: var(--m3-mola-espacial);
+  }
+}
+
+// ---------- Rodapé ----------
+
+.m3-rodape {
+  padding-block: var(--space-7) var(--space-5);
+  border-radius: var(--m3-forma-xl) var(--m3-forma-xl) 0 0;
+  background: var(--m3-surface-container);
+  color: var(--m3-on-surface);
+}
+
+.m3-rodape__grade {
+  display: grid;
+  gap: var(--space-6);
+
+  @include up(md) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include up(lg) {
+    grid-template-columns: 1.6fr 1.6fr 1fr 1fr;
+  }
+}
+
+.m3-rodape__marca {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.m3-rodape__nome {
+  font-size: var(--m3-title-l);
+  font-weight: 500;
+  line-height: var(--m3-title-l-linha);
+}
+
+.m3-rodape__descricao,
+.m3-rodape__texto {
+  max-width: 40ch;
+  color: var(--m3-on-surface-variant);
+  font-size: var(--m3-body-m);
+  line-height: var(--m3-body-m-linha);
+}
+
+.m3-rodape__coluna {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.m3-rodape__titulo {
+  color: var(--m3-on-surface);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-title-m);
+  font-weight: 500;
+  line-height: var(--m3-title-m-linha);
+}
+
+.m3-rodape__lista {
+  display: grid;
+  justify-items: start;
+}
+
+.m3-rodape__redes {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.m3-rodape__copy {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--m3-outline-variant);
+  color: var(--m3-on-surface-variant);
+  font-size: var(--m3-body-s);
+  line-height: var(--m3-body-s-linha);
+}
