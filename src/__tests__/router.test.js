@@ -14,11 +14,16 @@ describe('guards do roteador', () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  it('com sessão aberta, o cadastro leva ao perfil', async () => {
+  it('com sessão aberta, o cadastro leva ao destino interno do redirect ou ao perfil', async () => {
     useUserStore().setUser({ firstName: 'Maria', email: 'maria@example.com' });
 
     await router.push('/register');
+    expect(router.currentRoute.value.fullPath).toBe('/profile');
 
+    await router.push('/register?redirect=/menu');
+    expect(router.currentRoute.value.fullPath).toBe('/menu');
+
+    await router.push({ path: '/register', query: { redirect: '//example.com' } });
     expect(router.currentRoute.value.fullPath).toBe('/profile');
   });
 

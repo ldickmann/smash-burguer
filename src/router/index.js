@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { useCartStore } from '@/stores/cart';
 import { useToastStore } from '@/stores/toast';
+import { safeRedirect } from '@/handlers/authHandlers';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Layouts imports
@@ -173,9 +174,10 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Cadastro com sessão aberta: a conta nova substituiria a da sessão
+  // Cadastro com sessão aberta: a conta nova substituiria a da sessão. Vai para o destino
+  // do `?redirect=` (só caminhos internos) ou para o perfil
   if (to.meta.guestOnly && userStore.isAuthenticated) {
-    next('/profile');
+    next(safeRedirect(to.query.redirect) ?? '/profile');
     return;
   }
 

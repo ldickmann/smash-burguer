@@ -214,27 +214,36 @@ const cepHelper = computed(() => {
 
 const focusFirstError = async () => {
   await nextTick();
-  const field = firstInvalid() ?? (cepError.value ? "CEP" : null);
+  // Sem erro nos campos, o que falta é o endereço do CEP (consulta com erro ou ainda em andamento)
+  const field = firstInvalid() ?? (form.value.address ? null : "CEP");
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
+// Envio em andamento, inclusive a espera pela consulta do CEP: um segundo envio é ignorado
+let submitting = false;
+
 const handleRegister = async () => {
-  submitError.value = "";
+  if (submitting) return;
+  submitting = true;
+  try {
+    submitError.value = "";
 
-  // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
-  if (!form.value.address) await lookupCep(form.value.CEP);
-  const isValid = validateAll();
+    // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
+    if (!form.value.address) await lookupCep(form.value.CEP);
+    const isValid = validateAll();
 
-  if (!isValid || !form.value.address) {
-    await focusFirstError();
-    return;
+    if (!isValid || !form.value.address) {
+      await focusFirstError();
+      return;
+    }
+
+    loading.value = true;
+    const result = await authRegister(form.value, route.query.redirect);
+    if (result?.error) submitError.value = result.error;
+  } finally {
+    loading.value = false;
+    submitting = false;
   }
-
-  loading.value = true;
-  const result = await authRegister(form.value, route.query.redirect);
-  loading.value = false;
-
-  if (result?.error) submitError.value = result.error;
 };
 </script>
 

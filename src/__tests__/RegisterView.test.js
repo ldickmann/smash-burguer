@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import RegisterView from '../views/auth/RegisterView.vue';
-import { ACCOUNT_KEY } from '../services/authServices';
+import { ACCOUNT_KEY, authService } from '../services/authServices';
 
 const Blank = { template: '<div />' };
 
@@ -67,7 +67,7 @@ describe('RegisterView', () => {
     expect(wrapper.find('button[type="submit"]').attributes('aria-describedby')).toBe('aviso-conta-salva');
   });
 
-  it('com o CEP trocado antes da resposta, a conta leva o endereço do CEP novo', async () => {
+  it('com o CEP trocado antes da resposta, a conta é criada uma vez, com o endereço do CEP novo', async () => {
     // O primeiro CEP responde na hora; o segundo, só quando o teste mandar
     let respondSecond;
     vi.stubGlobal(
@@ -81,12 +81,14 @@ describe('RegisterView', () => {
       )
     );
     const wrapper = await mountRegister();
+    const register = vi.spyOn(authService, 'register');
     await fillForm(wrapper);
     await wrapper.find('#CEP').setValue('88370000');
     await flushPromises();
 
     await wrapper.find('#CEP').setValue('01001000');
     await wrapper.find('form').trigger('submit');
+    await wrapper.find('form').trigger('submit'); // segundo envio durante a espera: ignorado
     await vi.advanceTimersByTimeAsync(1000);
     // Sem a resposta do CEP novo, nada é gravado com o endereço do anterior
     expect(localStorage.getItem(ACCOUNT_KEY)).toBeNull();
@@ -100,5 +102,6 @@ describe('RegisterView', () => {
       CEP: '01001000',
       address: { street: 'Praça da Sé', city: 'São Paulo' },
     });
+    expect(register).toHaveBeenCalledTimes(1);
   });
 });

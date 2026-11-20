@@ -5,7 +5,7 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import ProfileView from '../views/auth/ProfileView.vue';
 import { useUserStore } from '../stores/userStore';
 import { useCartStore } from '../stores/cart';
-import { ACCOUNT_KEY } from '../services/authServices';
+import { ACCOUNT_KEY, authService } from '../services/authServices';
 
 const ACCOUNT = {
   firstName: 'Maria',
@@ -88,7 +88,7 @@ describe('ProfileView', () => {
     expect(savedAccount()).toEqual(ACCOUNT);
   });
 
-  it('com a consulta do CEP novo em andamento, espera a resposta e salva o endereço dela', async () => {
+  it('com a consulta do CEP novo em andamento, espera a resposta e salva uma vez o endereço dela', async () => {
     let respond;
     vi.stubGlobal(
       'fetch',
@@ -101,9 +101,11 @@ describe('ProfileView', () => {
       )
     );
     const { wrapper } = await mountProfile();
+    const save = vi.spyOn(authService, 'updateProfile');
 
     await wrapper.find('#CEP').setValue('01001000');
     await wrapper.find('form').trigger('submit');
+    await wrapper.find('form').trigger('submit'); // segundo envio durante a espera: ignorado
     await vi.advanceTimersByTimeAsync(1000);
     expect(savedAccount()).toEqual(ACCOUNT);
 
@@ -118,6 +120,7 @@ describe('ProfileView', () => {
       address: { street: 'Praça da Sé', city: 'São Paulo', state: 'SP' },
     });
     expect(useUserStore().user.address.street).toBe('Praça da Sé');
+    expect(save).toHaveBeenCalledTimes(1);
   });
 
   it('"Excluir conta" pede confirmação e apaga a conta, a sessão e o carrinho', async () => {

@@ -9,12 +9,15 @@ export function useCepLookup() {
   let lastQuery = "";
   // Consulta em andamento do `lastQuery`, devolvida a quem pedir o mesmo CEP
   let pending = null;
+  // Número da consulta mais recente: só a resposta dela muda o estado
+  let latest = 0;
 
-  const run = async (digits) => {
+  const run = async (digits, id) => {
     const result = await validateCEP(digits);
 
-    // Outro CEP (ou um CEP incompleto) tomou o lugar deste: a resposta é descartada
-    if (lastQuery !== digits) return null;
+    // Uma consulta mais nova tomou o lugar desta. Se for do mesmo CEP (digitado de novo),
+    // quem esperava por esta recebe a resposta da nova; se for de outro CEP, recebe null
+    if (id !== latest) return lastQuery === digits ? (pending ?? address.value) : null;
 
     pending = null;
     loading.value = false;
@@ -30,6 +33,7 @@ export function useCepLookup() {
   const lookup = (cep) => {
     const digits = String(cep ?? "").replace(/\D/g, "");
     if (digits.length !== 8) {
+      latest += 1;
       lastQuery = "";
       pending = null;
       loading.value = false;
@@ -43,11 +47,12 @@ export function useCepLookup() {
     }
 
     // Até a resposta chegar, nenhum endereço vale para o CEP novo
+    latest += 1;
     lastQuery = digits;
     address.value = null;
     error.value = "";
     loading.value = true;
-    pending = run(digits);
+    pending = run(digits, latest);
     return pending;
   };
 

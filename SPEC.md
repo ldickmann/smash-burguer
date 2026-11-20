@@ -869,7 +869,7 @@ Resolve [HIE-02].
 - **Conta já salva:** o app guarda uma conta só por navegador.
   - Quando já existe uma, a tela mostra o aviso "Já existe uma conta salva neste navegador. Se você criar outra, a anterior será apagada.", com a borda esquerda `--color-warning` e o fundo `--color-warning-soft`.
   - O aviso fica ligado ao botão de envio por `aria-describedby`.
-  - Com sessão aberta, `/register` leva a `/profile` (§10.6).
+  - Com sessão aberta, `/register` leva ao `?redirect=` (só caminhos internos) ou a `/profile` (§10.6).
 
 **Depois do sucesso:**
 - Login: vai para o `redirect` da URL, ou para `/`.
@@ -1333,7 +1333,7 @@ Os botões viram **links** para `/login?redirect=/payment` e `/register?redirect
 |---|---|
 | `scrollBehavior` | Volta ao topo em rota nova, restaura a posição no voltar/avançar e respeita `#âncora` [A11Y-11] |
 | `afterEach` | Define `document.title` como "{Título da rota} · Smash Burger" (via `meta.title`) e move o foco para `#conteudo` (`main`, `tabindex="-1"`) |
-| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7); `/register` com sessão aberta vai para `/profile` (`meta.guestOnly`). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`) |
+| `beforeEach` | `/payment` exige sessão e carrinho com itens; `/confirmation` exige `lastOrderId` (§5.6, §5.7); `/register` com sessão aberta vai para o `?redirect=` ou para `/profile` (`meta.guestOnly`). Login e cadastro respeitam `?redirect=` (só caminhos internos começando com `/`) |
 | 404 | Vira filha do `MainLayout` |
 
 ---

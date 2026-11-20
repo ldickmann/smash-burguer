@@ -3,19 +3,21 @@ import { useCepLookup } from '../composables/useCepLookup';
 
 const streets = { '88370000': 'Rua Beira da Praia', '01001000': 'Praça da Sé' };
 
-// ViaCEP simulado: cada consulta só responde quando o teste chama respond(cep)
+// ViaCEP simulado: cada consulta só responde quando o teste chama respond(cep),
+// que responde a consulta mais antiga ainda pendente desse CEP
 const stubViaCep = () => {
-  const pending = {};
+  const queue = {};
   const fetchMock = vi.fn(
     (url) =>
       new Promise((resolve) => {
         const cep = url.match(/ws\/(\d{8})\//)[1];
-        pending[cep] = () =>
-          resolve({ json: async () => ({ logradouro: streets[cep], bairro: 'Centro', localidade: 'Cidade', uf: 'SC' }) });
+        (queue[cep] ??= []).push(() =>
+          resolve({ json: async () => ({ logradouro: streets[cep], bairro: 'Centro', localidade: 'Cidade', uf: 'SC' }) })
+        );
       })
   );
   vi.stubGlobal('fetch', fetchMock);
-  return { fetchMock, respond: (cep) => pending[cep]() };
+  return { fetchMock, respond: (cep) => queue[cep].shift()() };
 };
 
 describe('useCepLookup', () => {
@@ -79,6 +81,26 @@ describe('useCepLookup', () => {
     respond('88370000');
     expect(await pending).toBeNull();
     expect(cep.address.value).toBeNull();
+    expect(cep.loading.value).toBe(false);
+  });
+
+  it('o mesmo CEP digitado de novo: a resposta da primeira consulta não encerra a segunda', async () => {
+    const { fetchMock, respond } = stubViaCep();
+    const cep = useCepLookup();
+
+    const first = cep.lookup('88370000');
+    await cep.lookup('8837000');
+    const second = cep.lookup('88370000');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    respond('88370000'); // a primeira consulta responde
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(cep.loading.value).toBe(true);
+    expect(cep.address.value).toBeNull();
+
+    respond('88370000'); // a segunda
+    expect(await second).toMatchObject({ street: 'Rua Beira da Praia' });
+    expect(await first).toMatchObject({ street: 'Rua Beira da Praia' });
     expect(cep.loading.value).toBe(false);
   });
 });

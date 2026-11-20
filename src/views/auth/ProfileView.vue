@@ -239,24 +239,30 @@ const focusFirstError = async () => {
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
+// Envio em andamento, inclusive a espera pela consulta do CEP: um segundo envio é ignorado
+let submitting = false;
+
 const handleUpdateProfile = async () => {
-  // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
-  if (!addressMatchesCep()) await lookupCep(userInfo.value.CEP);
-
-  // A validação e a cópia dos dados (dentro do updateProfile) acontecem no mesmo instante
-  if (!validateAll() || !addressMatchesCep()) {
-    await focusFirstError();
-    return;
-  }
-
-  saving.value = true;
+  if (submitting) return;
+  submitting = true;
   try {
+    // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
+    if (!addressMatchesCep()) await lookupCep(userInfo.value.CEP);
+
+    // A validação e a cópia dos dados (dentro do updateProfile) acontecem no mesmo instante
+    if (!validateAll() || !addressMatchesCep()) {
+      await focusFirstError();
+      return;
+    }
+
+    saving.value = true;
     await userStore.updateProfile(userInfo.value);
     toastStore.show({ message: "Dados salvos.", variant: "success" });
   } catch {
     toastStore.show({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
   } finally {
     saving.value = false;
+    submitting = false;
   }
 };
 
