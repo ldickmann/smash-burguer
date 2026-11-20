@@ -47,6 +47,9 @@ describe('itens do carrinho conferidos com o cardápio', () => {
   it('um item montado pelo modal passa igual, com o mesmo preço', () => {
     expect(resolveCartItem(burger(), catalog)).toEqual(burger());
     expect(resolveCartItem(soda(), catalog)).toEqual(soda());
+    // A observação no limite do modal (140 caracteres) passa
+    const longNote = { ...burger(), observation: 'x'.repeat(140) };
+    expect(resolveCartItem(longNote, catalog)).toEqual(longNote);
   });
 
   it('preço, nome e imagem vêm do catálogo, e não do item salvo', () => {
@@ -91,6 +94,7 @@ describe('itens do carrinho conferidos com o cardápio', () => {
       },
     ],
     ['observação que não é texto', { observation: 42 }],
+    ['observação acima de 140 caracteres', { observation: 'x'.repeat(141) }],
   ])('recusa o item com %s', (_case, change) => {
     const item = typeof change === 'object' && change && !Array.isArray(change)
       ? { ...burger(), ...change }

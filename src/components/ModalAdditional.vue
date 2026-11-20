@@ -74,7 +74,7 @@
 import { computed, ref, watch } from "vue";
 import { formatPrice } from "@/utils/formatters";
 import { useProductsStore } from "@/stores/products";
-import { unitPriceOf } from "@/utils/cartItems";
+import { OBSERVATION_MAX, unitPriceOf } from "@/utils/cartItems";
 import { responsiveImage } from "@/composables/useResponsiveImage";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -83,8 +83,6 @@ import FormGroup from "@/components/FormGroup.vue";
 import IngredientsList from "@/components/IngredientsList.vue";
 import AdditionalsList from "@/components/AdditionalsList.vue";
 import BurgerStack, { isBurger } from "@/components/BurgerStack.vue";
-
-const OBSERVATION_MAX = 140;
 
 const props = defineProps({
   open: {

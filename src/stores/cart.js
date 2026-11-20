@@ -66,9 +66,12 @@ export const useCartStore = defineStore('cart', {
   persist: {
     // Versão na chave: uma mudança futura no modelo do item não tenta ler dados antigos
     key: 'smash-burger:cart:v1',
-    // O carrinho salvo é editável no navegador: formato trocado ou preço alterado não entram
+    // O carrinho salvo é editável no navegador: formato trocado, preço, nome ou imagem
+    // alterados não entram, e o que a conferência mudar é regravado na hora
     afterHydrate: ({ store }) => {
-      if (store.syncWithCatalog()) store.$persist();
+      const saved = JSON.stringify(store.items);
+      store.syncWithCatalog();
+      if (JSON.stringify(store.items) !== saved) store.$persist();
     },
   },
 });

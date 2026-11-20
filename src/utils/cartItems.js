@@ -3,9 +3,10 @@
 // preço, nome e imagem vêm dele, e a linha que não bate com ele sai do carrinho.
 import { isPlainObject } from '@/utils/storedState';
 
-// Os mesmos limites dos seletores de quantidade do modal e do carrinho
+// Os mesmos limites do modal de personalização e do carrinho
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_QUANTITY = 5;
+export const OBSERVATION_MAX = 140;
 
 const CATEGORIES = ['foods', 'drinks', 'desserts'];
 
@@ -43,7 +44,8 @@ export const resolveCartItem = (raw, catalog) => {
   if (!product || !Number.isFinite(product.price)) return null;
 
   const { quantity, removedIngredients = [], additionals = [], observation = '' } = raw;
-  if (!isIntegerBetween(quantity, 1, MAX_QUANTITY) || typeof observation !== 'string') return null;
+  if (!isIntegerBetween(quantity, 1, MAX_QUANTITY)) return null;
+  if (typeof observation !== 'string' || observation.length > OBSERVATION_MAX) return null;
 
   // Ingredientes retirados: só os do produto, cada um uma vez
   const ingredients = product.ingredients ?? [];

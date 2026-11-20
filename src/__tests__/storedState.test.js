@@ -103,6 +103,14 @@ describe('estado salvo no localStorage', () => {
       expect(saved(CART_KEY).items).toHaveLength(2);
     });
 
+    it('nome e imagem editados, com o preço intacto, voltam ao catálogo e são regravados', () => {
+      save(CART_KEY, { items: [{ ...BURGER, name: 'Grátis', image: '/images/outra' }] });
+      loadPinia();
+
+      expect(useCartStore().items[0]).toMatchObject({ name: BURGER.name, image: BURGER.image });
+      expect(saved(CART_KEY).items[0]).toMatchObject({ name: BURGER.name, image: BURGER.image });
+    });
+
     it('um carrinho que bate com o cardápio não é regravado', () => {
       const raw = JSON.stringify({ items: [BURGER] });
       localStorage.setItem(CART_KEY, raw);

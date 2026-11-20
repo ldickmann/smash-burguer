@@ -1285,7 +1285,8 @@ Entram porque a nova UI as expõe. Sem elas, os estados novos mostrariam informa
   - Sai o `finalPrice`.
 - **Carrinho conferido com o cardápio (nov/2026):** o carrinho salvo é editável no navegador, então, na carga (`afterHydrate`) e ao confirmar o pedido (§5.6), a action `syncWithCatalog` refaz cada linha a partir da store de produtos:
   - preço, nome e imagem vêm do catálogo, e o preço dos adicionais vem do catálogo da categoria;
-  - a linha sai quando não bate com o que a loja oferece: produto ou adicional que não existe, quantidade fora de 1 a 10 (1 a 5 nos adicionais), adicional repetido ou ingrediente retirado que o produto não tem;
+  - a linha sai quando não bate com o que a loja oferece: produto ou adicional que não existe, quantidade fora de 1 a 10 (1 a 5 nos adicionais), adicional repetido, ingrediente retirado que o produto não tem ou observação com mais de 140 caracteres;
+  - o que a conferência muda na carga é regravado na hora;
   - o modal de personalização e a conferência usam a mesma conta (`unitPriceOf`, em `src/utils/cartItems.js`).
 - **Chave do item** na lista: `${productId}-${category}-${index}`. Hoje há chave duplicada.
 

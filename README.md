@@ -185,7 +185,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 118 testes unitários, em 17 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o login do painel, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 120 testes unitários, em 17 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o login do painel, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
