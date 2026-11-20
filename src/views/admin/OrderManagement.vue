@@ -71,7 +71,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { formatPrice } from "@/utils/formatters";
 import { ORDER_STATUSES, STATUS_LABELS, useAdminOrdersStore } from "@/stores/adminOrders";
 import { useToastStore } from "@/stores/toast";
@@ -89,9 +90,15 @@ const STATUS_FILTERS = [
 
 const ordersStore = useAdminOrdersStore();
 const toast = useToastStore();
+const route = useRoute();
+const router = useRouter();
 
-// Variavel para filtrar o status dos pedidos
-const statusFilter = ref("");
+// O filtro fica no endereço (?status=pending), para os contadores da barra abrirem a
+// tela já filtrada. Valor fora da lista vale como "Todos"
+const statusFilter = computed({
+  get: () => (ORDER_STATUSES.includes(route.query.status) ? route.query.status : ""),
+  set: (status) => router.replace({ query: status ? { status } : {} }),
+});
 
 // Função para filtrar os pedidos de acordo com o status
 const filteredOrders = computed(() => {

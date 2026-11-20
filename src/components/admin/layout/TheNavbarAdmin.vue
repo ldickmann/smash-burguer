@@ -16,7 +16,7 @@
       <SearchBar @search="handleSearch" />
     </div>
     <div class="navbar-admin__right">
-      <NotificationBar :notifications="notifications" @notification-click="handleNotification" />
+      <NotificationBar :notifications="notifications" />
       <UserProfileBar :user-name="adminName" @menu-select="handleMenuSelect" @logout="handleLogout" />
     </div>
   </nav>
@@ -26,6 +26,7 @@
 import { ref, computed, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useAdminStore } from "@/stores/adminStore";
+import { useAdminOrdersStore } from "@/stores/adminOrders";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import SearchBar from "@/components/admin/layout/navbar/SearchBar.vue";
 import NotificationBar from "@/components/admin/layout/navbar/NotificationBar.vue";
@@ -52,12 +53,35 @@ const adminName = computed(() => {
   return fullName || "Administrador";
 });
 
-// Notificações (estado centralizado)
-const notifications = ref([
-  { id: 1, type: "messages", label: "Mensagens", icon: ["far", "envelope"], count: 3 },
-  { id: 2, type: "alerts", label: "Notificações", icon: ["fas", "bell"], count: 2 },
-  { id: 3, type: "tasks", label: "Tarefas", icon: ["fas", "tasks"], count: 1 },
-]);
+// Contadores da barra: pedidos pendentes (notificações) e em preparo (tarefas). Cada um
+// leva à tela Pedidos com o filtro do status
+const ordersStore = useAdminOrdersStore();
+
+const countLabel = (count, singular, plural) => {
+  if (count === 0) return `nenhum ${singular}`;
+  return `${count} ${count === 1 ? singular : plural}`;
+};
+
+const notifications = computed(() => {
+  const pending = ordersStore.countByStatus("pending");
+  const preparing = ordersStore.countByStatus("preparing");
+  return [
+    {
+      type: "alerts",
+      label: `Notificações, ${countLabel(pending, "pedido pendente", "pedidos pendentes")}`,
+      icon: ["fas", "bell"],
+      count: pending,
+      to: { path: "/admin/orders", query: { status: "pending" } },
+    },
+    {
+      type: "tasks",
+      label: `Tarefas, ${countLabel(preparing, "pedido em preparo", "pedidos em preparo")}`,
+      icon: ["fas", "tasks"],
+      count: preparing,
+      to: { path: "/admin/orders", query: { status: "preparing" } },
+    },
+  ];
+});
 
 // Injeção da função de toggle (fornecida pelo AdminLayout)
 const toggleSidebar = inject("toggleSidebar", () => {
@@ -69,9 +93,6 @@ const handleToggleSidebar = () => toggleSidebar(toggleRef.value);
 // Com chaves: o build só descarta console.log cujo valor não é usado (vite.config.js)
 const handleSearch = (query) => {
   console.log("Pesquisando:", query);
-};
-const handleNotification = (type) => {
-  console.log("Notificação clicada:", type);
 };
 const handleMenuSelect = (item) => {
   console.log("Item do menu selecionado:", item);

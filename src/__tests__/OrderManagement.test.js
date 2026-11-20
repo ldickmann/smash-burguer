@@ -1,21 +1,32 @@
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
+import { createRouter, createMemoryHistory } from 'vue-router';
 import OrderManagement from '../views/admin/OrderManagement.vue';
+import TheNavbarAdmin from '../components/admin/layout/TheNavbarAdmin.vue';
 import { useAdminOrdersStore } from '../stores/adminOrders';
 import { useToastStore } from '../stores/toast';
 
-const mountPage = () => {
+const Blank = { template: '<div />' };
+
+const mountWithRouter = async (component, path = '/admin/orders') => {
   const pinia = createPinia();
   setActivePinia(pinia);
-  const wrapper = mount(OrderManagement, {
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: ['/admin', '/admin/orders', '/admin/login'].map((p) => ({ path: p, component: Blank })),
+  });
+  await router.push(path);
+  const wrapper = mount(component, {
     global: {
-      plugins: [pinia],
+      plugins: [pinia, router],
       stubs: { 'font-awesome-icon': { template: '<svg />' } },
     },
   });
-  return { wrapper, store: useAdminOrdersStore(), toast: useToastStore() };
+  return { wrapper, router, store: useAdminOrdersStore(), toast: useToastStore() };
 };
+
+const mountPage = (path) => mountWithRouter(OrderManagement, path);
 
 const chips = (wrapper) => wrapper.findAll('.status-chip').map((chip) => chip.text());
 const updateButtons = (wrapper) => wrapper.findAll('button').filter((b) => b.text() === 'Atualizar status');
@@ -26,7 +37,7 @@ describe('OrderManagement', () => {
   });
 
   it('"Atualizar status" leva o pedido de Pendente a Concluído e para no último', async () => {
-    const { wrapper, toast } = mountPage();
+    const { wrapper, toast } = await mountPage();
     expect(chips(wrapper)).toEqual(['Pendente', 'Em preparo']);
 
     for (const label of ['Em preparo', 'A caminho', 'Concluído']) {
@@ -41,14 +52,66 @@ describe('OrderManagement', () => {
     expect(chips(wrapper)[1]).toBe('Em preparo');
   });
 
-  it('o pedido atualizado segue o filtro de status', async () => {
-    const { wrapper } = mountPage();
+  it('o filtro fica no endereço, e o pedido atualizado segue o filtro', async () => {
+    const { wrapper, router } = await mountPage();
     await wrapper.find('select#statusFilter').setValue('preparing');
+    await flushPromises();
+    expect(router.currentRoute.value.query).toEqual({ status: 'preparing' });
     expect(chips(wrapper)).toEqual(['Em preparo']);
 
     await updateButtons(wrapper)[0].trigger('click');
-
     expect(wrapper.find('.empty-state').exists()).toBe(true);
+
+    await wrapper.find('select#statusFilter').setValue('');
+    await flushPromises();
+    expect(router.currentRoute.value.query).toEqual({});
+    expect(chips(wrapper)).toEqual(['Pendente', 'A caminho']);
+  });
+
+  it('abre já filtrado pelo status do endereço; status desconhecido vale como "Todos"', async () => {
+    const pending = await mountPage('/admin/orders?status=pending');
+    expect(pending.wrapper.find('select#statusFilter').element.value).toBe('pending');
+    expect(chips(pending.wrapper)).toEqual(['Pendente']);
+
+    const unknown = await mountPage('/admin/orders?status=xyz');
+    expect(unknown.wrapper.find('select#statusFilter').element.value).toBe('');
+    expect(chips(unknown.wrapper)).toEqual(['Pendente', 'Em preparo']);
+  });
+});
+
+describe('contadores da barra do painel', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  const shortcuts = (wrapper) =>
+    wrapper.findAll('.navbar-notifications__item').map((item) => ({
+      label: item.find('a').attributes('aria-label'),
+      href: item.find('a').attributes('href'),
+      count: item.find('.navbar-notifications__count').exists()
+        ? item.find('.navbar-notifications__count').text()
+        : null,
+    }));
+
+  it('contam os pedidos pendentes e em preparo e levam à tela Pedidos filtrada', async () => {
+    const { wrapper } = await mountWithRouter(TheNavbarAdmin, '/admin');
+
+    expect(shortcuts(wrapper)).toEqual([
+      { label: 'Notificações, 1 pedido pendente', href: '/admin/orders?status=pending', count: '1' },
+      { label: 'Tarefas, 1 pedido em preparo', href: '/admin/orders?status=preparing', count: '1' },
+    ]);
+    expect(wrapper.text()).not.toContain('Mensagens');
+  });
+
+  it('acompanham o "Atualizar status": sem pendentes, o selo some', async () => {
+    const { wrapper, store } = await mountWithRouter(TheNavbarAdmin, '/admin');
+
+    store.advanceStatus(1);
+    await wrapper.vm.$nextTick();
+
+    const [alerts, tasks] = shortcuts(wrapper);
+    expect(alerts).toMatchObject({ label: 'Notificações, nenhum pedido pendente', count: null });
+    expect(tasks).toMatchObject({ label: 'Tarefas, 2 pedidos em preparo', count: '2' });
   });
 });
 
