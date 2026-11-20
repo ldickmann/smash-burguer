@@ -21,6 +21,8 @@ const mountPage = () => {
       stubs: {
         'font-awesome-icon': { template: '<svg />' },
         ModalProducts: ModalStub,
+        // O <dialog> nativo não existe no jsdom: o stub só mostra o conteúdo quando aberto
+        BaseDialog: { props: ['open'], template: '<div v-if="open" class="dialog-stub"><slot /><slot name="footer" /></div>' },
         ProductCard: {
           props: ['product'],
           template: '<article class="card-stub"><h2>{{ product.name }}</h2><slot name="actions" /></article>',
@@ -85,5 +87,26 @@ describe('ProductManagement', () => {
     expect(store.drinks.at(-1)).toMatchObject({ name: 'Mate', price: 6.5 });
     expect(wrapper.find('select#categorySelect').element.value).toBe('drinks');
     expect(names(wrapper)).toContain('Mate');
+  });
+
+  it('"Excluir" pede confirmação: cancelar mantém o produto, confirmar o tira da lista e da store', async () => {
+    const { wrapper, store } = mountPage();
+    await selectCategory(wrapper, 'drinks');
+    const total = store.drinks.length;
+
+    await buttonsByText(wrapper, 'Excluir')[1].trigger('click');
+    expect(wrapper.find('.dialog-stub').text()).toContain('“Coca Cola Lata” sai do cardápio.');
+    await buttonsByText(wrapper, 'Cancelar')[0].trigger('click');
+    expect(wrapper.find('.dialog-stub').exists()).toBe(false);
+    expect(store.drinks).toHaveLength(total);
+
+    await buttonsByText(wrapper, 'Excluir')[1].trigger('click');
+    await buttonsByText(wrapper, 'Excluir produto')[0].trigger('click');
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find('.dialog-stub').exists()).toBe(false);
+    expect(store.drinks).toHaveLength(total - 1);
+    expect(store.drinks.some((p) => p.name === 'Coca Cola Lata')).toBe(false);
+    expect(names(wrapper)).not.toContain('Coca Cola Lata');
   });
 });

@@ -18,3 +18,10 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+// Diálogo de exclusão: "Cancelar" secundário e "Excluir produto" danger
+.product-delete__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

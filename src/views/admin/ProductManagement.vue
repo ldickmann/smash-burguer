@@ -1,7 +1,7 @@
 <template>
   <section class="product-management">
     <div class="admin-page__header">
-      <h1 class="admin-page__title">Produtos</h1>
+      <h1 ref="titleRef" class="admin-page__title" tabindex="-1">Produtos</h1>
       <BaseButton icon-start="plus" @click="openAddModal">Novo produto</BaseButton>
     </div>
 
@@ -26,7 +26,7 @@
               variant="danger"
               size="sm"
               icon-start="trash-can"
-              @click="deleteProduct(product.id)"
+              @click="productToDelete = product"
             >
               Excluir
             </BaseButton>
@@ -53,14 +53,36 @@
       @submit="onAddSubmit"
       @cancel="showAddModal = false"
     />
+
+    <BaseDialog
+      :open="Boolean(productToDelete)"
+      title="Excluir produto?"
+      title-id="excluir-produto-titulo"
+      max-width="480px"
+      @close="productToDelete = null"
+    >
+      <p>
+        “{{ productToDelete?.name }}” sai do cardápio. Os produtos ainda não são salvos: ao
+        recarregar a página, o cardápio volta ao original.
+      </p>
+      <template #footer>
+        <div class="product-delete__actions">
+          <BaseButton variant="secondary" @click="productToDelete = null">Cancelar</BaseButton>
+          <BaseButton variant="danger" icon-start="trash-can" @click="confirmDelete">
+            Excluir produto
+          </BaseButton>
+        </div>
+      </template>
+    </BaseDialog>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { useProductsStore } from "@/stores/products.js";
 import { useToastStore } from "@/stores/toast";
 import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseDialog from "@/components/ui/BaseDialog.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ModalProducts from "@/components/admin/ModalProducts.vue";
@@ -81,6 +103,8 @@ const showAddModal = ref(false);
 const showEditModal = ref(false);
 const selectedProduct = ref({});
 const selectedCategory = ref("");
+const productToDelete = ref(null);
+const titleRef = ref(null);
 
 // Destaques: 4 hambúrgueres sorteados uma vez, quando a página abre. A lista guarda só os
 // ids, então trocar o filtro ou editar um produto não sorteia de novo
@@ -126,9 +150,15 @@ const onAddSubmit = (newProduct) => {
   toast.show({ message: "Produto criado." });
 };
 
-// Excluir continua sem efeito real (FLX-09, fora do escopo)
-const deleteProduct = (productId) => {
-  console.log("Produto excluído", productId);
+// O botão "Excluir" sai da tela com o produto: o foco vai para o título da página
+const confirmDelete = async () => {
+  const { category, id } = productToDelete.value;
+  const removed = productsStore.removeProduct(category, id);
+  productToDelete.value = null;
+  if (!removed) return;
+  toast.show({ message: "Produto excluído." });
+  await nextTick();
+  titleRef.value?.focus();
 };
 </script>
 
