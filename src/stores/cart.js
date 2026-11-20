@@ -66,6 +66,15 @@ export const useCartStore = defineStore('cart', {
   persist: {
     // Versão na chave: uma mudança futura no modelo do item não tenta ler dados antigos
     key: 'smash-burger:cart:v1',
+    // A imagem enviada pelo painel (data URL) não é copiada para cada linha salva: ao
+    // carregar, a conferência com o cardápio devolve a imagem do produto
+    serializer: {
+      serialize: (state) =>
+        JSON.stringify(state, (key, value) =>
+          key === 'image' && typeof value === 'string' && value.startsWith('data:') ? '' : value
+        ),
+      deserialize: JSON.parse,
+    },
     // O carrinho salvo é editável no navegador: formato trocado, preço, nome ou imagem
     // alterados não entram, e o que a conferência mudar é regravado na hora
     afterHydrate: ({ store }) => {

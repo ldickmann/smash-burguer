@@ -129,6 +129,34 @@ describe('ProfileView', () => {
     expect(save).toHaveBeenCalledTimes(1);
   });
 
+  it('com CEP único da cidade (sem rua), a rua fica editável e é obrigatória', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({ json: async () => ({ logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' }) })
+      )
+    );
+    const { wrapper } = await mountProfile();
+    expect(wrapper.find('#street').attributes('readonly')).toBeDefined();
+
+    await wrapper.find('#CEP').setValue('35588000');
+    await flushPromises();
+    expect(wrapper.find('#street').attributes('readonly')).toBeUndefined();
+    expect(wrapper.find('#neighborhood').attributes('readonly')).toBeUndefined();
+
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+    expect(wrapper.find('#street-erro').text()).toContain('Informe a rua e o número.');
+    expect(savedAccount()).toEqual(ACCOUNT);
+
+    await wrapper.find('#street').setValue('Rua das Flores, 10');
+    await wrapper.find('form').trigger('submit');
+    await vi.advanceTimersByTimeAsync(1000);
+    await flushPromises();
+
+    expect(savedAccount().address).toEqual({ street: 'Rua das Flores, 10', neighborhood: '', city: 'Serra Azul', state: 'MG' });
+  });
+
   it('"Excluir conta" pede confirmação e apaga a conta, a sessão e o carrinho', async () => {
     const { wrapper, router } = await mountProfile();
     useCartStore().addItem({ productId: 1, name: 'Smash Burger', unitPrice: 22.5 });

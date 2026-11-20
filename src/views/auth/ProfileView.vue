@@ -63,9 +63,22 @@
             required
             @blur="touch('CEP')"
           />
-          <!-- Preenchidos pelo CEP -->
-          <FormGroup id="street" v-model="userInfo.address.street" label="Rua" readonly />
-          <FormGroup id="neighborhood" v-model="userInfo.address.neighborhood" label="Bairro" readonly />
+          <!-- Preenchidos pelo CEP; com CEP único da cidade, rua e bairro ficam para a pessoa -->
+          <FormGroup
+            id="street"
+            v-model="userInfo.address.street"
+            :label="manual.street ? 'Rua e número' : 'Rua'"
+            :readonly="!manual.street"
+            :required="manual.street"
+            :error="streetError"
+            @blur="validateStreet(userInfo.address)"
+          />
+          <FormGroup
+            id="neighborhood"
+            v-model="userInfo.address.neighborhood"
+            label="Bairro"
+            :readonly="!manual.neighborhood"
+          />
           <div class="profile-page__row">
             <FormGroup id="city" v-model="userInfo.address.city" label="Cidade" readonly />
             <FormGroup id="state" v-model="userInfo.address.state" label="UF" readonly />
@@ -144,6 +157,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toast";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { useCepLookup } from "@/composables/useCepLookup";
+import { useManualAddress } from "@/composables/useManualAddress";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { formatItemCount, formatPrice } from "@/utils/formatters";
 import {
@@ -212,21 +226,28 @@ const formatDate = (date) =>
     new Date(date)
   );
 
+// Endereço salvo de um CEP sem rua: ela foi digitada, e continua editável
+const { manual, streetError, setFromLookup, validateStreet } = useManualAddress();
+if (addressCep.value && !userInfo.value.address.street) setFromLookup(userInfo.value.address);
+
 // Consulta o CEP e põe o endereço na tela, se o campo ainda tiver esse CEP quando a resposta chegar
 const lookupCep = async (value) => {
   const address = await cep.lookup(value);
   if (!address || userInfo.value.CEP !== value) return;
   userInfo.value.address = addressOf(address);
   addressCep.value = digitsOf(value);
+  setFromLookup(address);
 };
 
-// Novo CEP: o endereço anterior sai na hora e o novo vem da consulta (campos só leitura)
+// Novo CEP: o endereço anterior sai na hora e o novo vem da consulta (campos só leitura,
+// a não ser os que o CEP não trouxer)
 watch(
   () => userInfo.value.CEP,
   (value, previous) => {
     if (value === previous) return;
     userInfo.value.address = addressOf();
     addressCep.value = "";
+    setFromLookup(null);
     lookupCep(value);
   }
 );
@@ -235,7 +256,8 @@ const cepError = computed(() => errors.CEP || cep.error.value);
 
 const focusFirstError = async () => {
   await nextTick();
-  const field = firstInvalid() ?? (addressMatchesCep() ? null : "CEP");
+  const field =
+    firstInvalid() ?? (!addressMatchesCep() ? "CEP" : streetError.value ? "street" : null);
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
@@ -250,7 +272,9 @@ const handleUpdateProfile = async () => {
     if (!addressMatchesCep()) await lookupCep(userInfo.value.CEP);
 
     // A validação e a cópia dos dados (dentro do updateProfile) acontecem no mesmo instante
-    if (!validateAll() || !addressMatchesCep()) {
+    const isValid = validateAll();
+    const hasStreet = validateStreet(userInfo.value.address);
+    if (!isValid || !addressMatchesCep() || !hasStreet) {
       await focusFirstError();
       return;
     }

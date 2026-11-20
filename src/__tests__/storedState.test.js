@@ -72,6 +72,19 @@ describe('estado salvo no localStorage', () => {
   afterEach(() => vi.restoreAllMocks());
 
   describe('carrinho', () => {
+    it('a imagem enviada pelo painel (data URL) não é gravada em cada linha', () => {
+      loadPinia();
+      const cart = useCartStore();
+      const dataUrl = `data:image/png;base64,${'A'.repeat(4000)}`;
+
+      cart.addItem({ ...BURGER, image: dataUrl });
+      cart.$persist();
+
+      expect(localStorage.getItem(CART_KEY)).not.toContain('data:');
+      expect(saved(CART_KEY).items[0]).toMatchObject({ productId: BURGER.productId, image: '' });
+      expect(cart.items[0].image).toBe(dataUrl);
+    });
+
     it('com items que não é lista, começa vazio e as contas não quebram', () => {
       save(CART_KEY, { items: 'x' });
       loadPinia();

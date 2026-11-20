@@ -27,6 +27,13 @@ describe('guards do roteador', () => {
     expect(router.currentRoute.value.fullPath).toBe('/profile');
   });
 
+  it('sem sessão, o perfil leva ao login com o redirect de volta para ele', async () => {
+    await router.push('/profile');
+
+    expect(router.currentRoute.value.path).toBe('/login');
+    expect(router.currentRoute.value.query).toEqual({ redirect: '/profile' });
+  });
+
   it('sem sessão, o cadastro abre', async () => {
     await router.push('/register');
 
