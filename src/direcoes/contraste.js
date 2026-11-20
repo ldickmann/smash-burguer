@@ -122,4 +122,17 @@ export const PARES_POR_DIRECAO = {
     { frente: "esq-letra", fundo: "esq-chapa", minimo: 3, onde: "anel de foco na chapa" },
     { frente: "esq-tinta", fundo: "esq-inox-claro", minimo: 3, onde: "anel de foco no inox" },
   ],
+  neumorfismo: [
+    { frente: "neu-tinta", fundo: "neu-kraft", minimo: 4.5, onde: "texto principal" },
+    { frente: "neu-tinta-suave", fundo: "neu-kraft", minimo: 4.5, onde: "texto secundário" },
+    { frente: "neu-tinta-suave", fundo: "neu-sombra", minimo: 4.5, onde: "texto no ponto mais escuro da sombra" },
+    { frente: "neu-branco", fundo: "neu-ketchup", minimo: 4.5, onde: "Ver cardápio" },
+    { frente: "neu-branco", fundo: "neu-ketchup-claro", minimo: 4.5, onde: "Ver cardápio no hover" },
+    { frente: "neu-branco", fundo: "neu-alface", minimo: 4.5, onde: "face Adicionado" },
+    { frente: "neu-tinta", fundo: "neu-sombra", minimo: 4.5, onde: "Adicionar (lado escuro do convexo)" },
+    { frente: "neu-borda", fundo: "neu-kraft", minimo: 3, onde: "borda dos controles" },
+    { frente: "neu-ketchup", fundo: "neu-kraft", minimo: 3, onde: "ponto ativo da paginação" },
+    { frente: "neu-tinta", fundo: "neu-kraft", minimo: 3, onde: "anel de foco" },
+    { frente: "neu-sombra", fundo: "neu-kraft", minimo: 3, informativo: true, onde: "sombra escura (decorativa, não conta)" },
+  ],
 };

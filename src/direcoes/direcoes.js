@@ -4,6 +4,7 @@ export const DIRECOES = [
   { slug: "brasa", nome: "Brasa", apelido: "Linha de base", esquema: "dark" },
   { slug: "material", nome: "Material 3 Expressive", apelido: "Alface", esquema: "light" },
   { slug: "esqueumorfismo", nome: "Esqueumorfismo", apelido: "O passe da cozinha", esquema: "light" },
+  { slug: "neumorfismo", nome: "Neumorfismo", apelido: "Kraft prensado", esquema: "light" },
 ];
 
 export const caminhoDirecao = (slug) => `/direcoes/${slug}`;
