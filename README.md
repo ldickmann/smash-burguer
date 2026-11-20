@@ -179,12 +179,13 @@ Sem back-end, o estado fica no `localStorage`, nestas chaves:
 - **Sair:** apaga a sessão, o histórico de pedidos e o carrinho; o cadastro continua.
 - **Excluir conta** (no perfil): apaga também o cadastro.
 - **Uma conta por navegador:** criar outra apaga a anterior, e a tela de cadastro avisa quando já existe uma.
+- **Dados editados à mão:** ao carregar, o carrinho é conferido com o cardápio (preço, nome e imagem vêm do catálogo, e o item que não bate com ele sai), e a sessão e o painel são conferidos campo a campo. Ao confirmar o pedido, o carrinho é conferido de novo: se algum preço mudou, o pedido espera uma nova confirmação.
 
 Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 75 testes unitários, em 13 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho, a conta (login, sessão, perfil e exclusão), as telas de cadastro e de perfil, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 118 testes unitários, em 17 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, sessão, perfil e exclusão), o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o login do painel, a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy, a regra de `console.log` do build e o `createAdmin.html`. O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
