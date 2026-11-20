@@ -188,6 +188,8 @@ Todo push na `main` dispara o workflow [`deploy.yml`](./.github/workflows/deploy
 2. gera o build;
 3. publica a pasta `dist/` no GitHub Pages.
 
+O job que instala e gera o build só tem permissão de leitura; a escrita no Pages fica no job que publica.
+
 Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.config.js`.
 
 ## Documentação de design

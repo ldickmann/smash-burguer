@@ -32,6 +32,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Merge:** use sempre "Create a merge commit", sem squash nem rebase.
 - **`develop` em dia:** antes, confirme que a `develop` contém a `main` com `git merge-base --is-ancestor origin/main origin/develop`. Se não contiver, abra primeiro uma PR `main` → `develop`.
 - **Deploy:** o merge na `main` publica o site. Ele instala com `corepack yarn@3.8.7 install --immutable` no Node 22; se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
+  - Só o job `deploy` tem permissão de escrita (`pages: write` e `id-token: write`). O `build`, que roda código das dependências, só lê e não guarda o token no `.git/config`.
 - **Merges e PRs:** só com pedido explícito do usuário.
 - **Actions:** o workflow usa os majors que rodam em Node 24: `checkout@v7`, `setup-node@v7`, `configure-pages@v6`, `upload-pages-artifact@v5` e `deploy-pages@v5`.
 
