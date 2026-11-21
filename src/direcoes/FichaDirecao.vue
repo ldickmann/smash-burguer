@@ -25,6 +25,40 @@
         Abrir a Home<span class="visually-hidden"> em {{ direcao.nome }}</span>
       </RouterLink>
 
+      <section v-if="ficha.secoes?.length" class="ficha__secao" :aria-labelledby="`secoes-${direcao.slug}`">
+        <h3 :id="`secoes-${direcao.slug}`" class="ficha__titulo">Seções desta Home</h3>
+        <ol class="ficha__lista">
+          <li v-for="secao in ficha.secoes" :key="secao.id">
+            <strong>{{ secao.nome }}</strong>: {{ secao.papel }}
+          </li>
+        </ol>
+      </section>
+
+      <section v-if="ficha.mudou?.length" class="ficha__secao" :aria-labelledby="`mudou-${direcao.slug}`">
+        <h3 :id="`mudou-${direcao.slug}`" class="ficha__titulo">O que mudou da rodada 1</h3>
+        <ul class="ficha__lista">
+          <li v-for="item in ficha.mudou" :key="item">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section v-if="ficha.componentes?.length" class="ficha__secao" :aria-labelledby="`componentes-${direcao.slug}`">
+        <h3 :id="`componentes-${direcao.slug}`" class="ficha__titulo">Componentes próprios</h3>
+        <ul class="ficha__lista">
+          <li v-for="componente in ficha.componentes" :key="componente.nome">
+            <strong>{{ componente.nome }}</strong>: {{ componente.papel }}
+          </li>
+        </ul>
+      </section>
+
+      <section v-if="ficha.referencias?.length" class="ficha__secao" :aria-labelledby="`referencias-${direcao.slug}`">
+        <h3 :id="`referencias-${direcao.slug}`" class="ficha__titulo">Referências usadas</h3>
+        <ul class="ficha__lista">
+          <li v-for="referencia in ficha.referencias" :key="`${referencia.ref}-${referencia.padrao}`">
+            [{{ referencia.ref }}] {{ referencia.padrao }}
+          </li>
+        </ul>
+      </section>
+
       <section class="ficha__secao" :aria-labelledby="`contraste-${direcao.slug}`">
         <h3 :id="`contraste-${direcao.slug}`" class="ficha__titulo">Contraste medido</h3>
         <table class="ficha__tabela">

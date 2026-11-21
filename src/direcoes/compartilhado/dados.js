@@ -49,6 +49,8 @@ export const CONTATOS = [
   },
   {
     chave: "whatsapp",
+    // O rótulo sozinho, para mostrar rótulo e número separados (sem o "·")
+    rotulo: "WhatsApp",
     texto: `WhatsApp · ${TELEFONE}`,
     href: `https://wa.me/${TELEFONE.replace(/\D/g, "")}`,
     externo: true,
