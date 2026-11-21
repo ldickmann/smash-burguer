@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 372 testes
+npx vitest run                             # 373 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -86,7 +86,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Cada estilo é dono da própria pasta** (`src/direcoes/estilos/<estilo>/`): `Home<Estilo>.vue` só compõe (até 100 linhas), as seções ficam em `secoes/` (raiz `<section data-secao aria-labelledby>`), as peças em `componentes/`, as parciais em `scss/`, e `ficha.js`, `contraste.js` e `textos.js` (microcopy marcada `// provisório`) são puros. `fichas.js` e `contraste.js` da raiz só agregam.
   - `compartilhado/` é só lógica, sem visual: `MolduraDirecao` (sem estilo próprio), `usePersonalizar`, `useCartaoProduto` (com `atributosAdicionar`), `useCardapio`, `dados.js` e os outros composables.
   - O teste `src/__tests__/direcoes-isolamento.test.js` garante as fronteiras; cada estilo tem o teste de contrato da Home na própria `__tests__/`.
-  - A produção recebe cópias: o `src/__tests__/producao-isolamento.test.js` reprova qualquer import de `src/direcoes/` fora dela, salvo o `src/router/index.js`. Os textos da loja ficam em `src/utils/textosLoja.js`.
+  - A produção recebe cópias: o `src/__tests__/producao-isolamento.test.js` reprova qualquer import de `src/direcoes/` fora dela (inclusive `<style src>`), salvo o `@/direcoes/rotas` no `src/router/index.js`. Os textos da loja ficam em `src/utils/textosLoja.js`.
 - **Fora do build:** as rotas ficam dentro do ramo `import.meta.env.DEV` de `src/direcoes/rotas.js`; com a lista fora do ramo, o build gerava os chunks. Depois de mexer nelas, rode o build e confira que o `dist/` não tem `direcoes` nem as fontes do acervo (Archivo, Bebas, Courier Prime e Nunito).
 - **Tokens:** cada estilo redefine todos os tokens do projeto em `:root[data-direcao="<estilo>"]` (o modal Personalizar e o aviso continuam os reais) e tem os próprios, com prefixo (`--m3-*`, `--esq-*`, `--neu-*`).
   - Os `_tokens.scss` são importados pelo `<script>`, não no `<style scoped>`, que reescreveria o `:root`.
