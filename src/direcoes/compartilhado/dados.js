@@ -2,13 +2,14 @@
 // bloco). Nenhum texto de loja novo: as direções mudam só a apresentação. Módulo puro (sem Vue):
 // o Node também lê, no portão de conteúdo.
 
-// src/layouts/MainLayout.vue (title e props do TheFooter)
+// src/layouts/MainLayout.vue (title e props do TheFooter). Endereço, telefone e e-mail também saem
+// sozinhos, para uma Home mostrar o rótulo e o valor separados (sem juntar com "·")
 export const MARCA = "Smash Burger";
 export const DESCRICAO =
   "Sabor irresistível em cada mordida. Burgers suculentos, ingredientes frescos e um toque especial.";
-const ENDERECO = "Rua Beira da Praia - Navegantes, SC";
-const TELEFONE = "+55 47 5 6355 3265";
-const EMAIL = "contato@smashburger.com.br";
+export const ENDERECO = "Rua Beira da Praia - Navegantes, SC";
+export const TELEFONE = "+55 47 5 6355 3265";
+export const EMAIL = "contato@smashburger.com.br";
 export const HORARIO = "Terça a sexta, das 13h à 01h";
 
 // src/views/HomeView.vue (props do BannerComponent) e src/components/BannerComponent.vue (imagem)
