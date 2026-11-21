@@ -24,7 +24,7 @@ describe('textosLoja', () => {
     expect(textos.RODAPE).toMatchObject({ endereco: 'Endereço', horario: 'Horário' });
   });
 
-  it('os rótulos da Home que já existem na produção, sem a marca de provisório', () => {
+  it('só os rótulos da Home que já existem na produção (§8.2)', () => {
     expect(textos.TEXTOS).toEqual({ ingredientes: 'Ingredientes', email: 'E-mail', whatsapp: 'WhatsApp' });
   });
 });

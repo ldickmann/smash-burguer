@@ -1,8 +1,8 @@
 // Textos, contatos e rótulos reais da loja: a fonte única deles na produção (SPEC-material §4.1,
 // "Lógica que vem junto"). Cópia de src/direcoes/compartilhado/dados.js, que segue no acervo, sem o
 // carrossel (SECAO) e sem as redes sociais (REDES, §5.10). A origem de cada texto está no bloco.
-// Módulo puro (sem Vue). Nenhum texto de loja novo: os textos ainda provisórios da Home do material
-// entram na etapa 5, depois da revisão de UX copy (§8.2).
+// Módulo puro (sem Vue). Nenhum texto de loja novo: os textos da Home do material que ainda esperam
+// a revisão de UX copy (§8.2) entram na etapa 5.
 
 // src/layouts/MainLayout.vue (title e props do TheFooter). Endereço, telefone e e-mail também saem
 // sozinhos, para mostrar o rótulo e o valor separados (sem juntar com "·")
