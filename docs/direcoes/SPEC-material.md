@@ -25,11 +25,11 @@ Especificação para levar a direção visual **Material 3 Expressive** à loja 
 | Defeitos de fluxo | Entram só os três conhecidos da construção (§10). |
 | Stack | Nenhuma atualização. A única mudança de dependência é a das fontes (b). |
 | Fontes (decisão do usuário, 21/11/2026) | Só a Roboto Variable passa a `dependencies`. Courier Prime e Nunito continuam como `devDependencies`, porque o acervo usa as duas. Archivo e Bebas Neue saem quando a produção não as usar mais (b). |
-| Acervo (decisão do usuário, 21/11/2026) | A exploração continua só no `yarn dev`, fora do build, como acervo de ideias de UI/UX: `#/direcoes/esqueumorfismo` e `#/direcoes/neumorfismo` ficam, com fichas, desenhos e dossiês. A migração não mexe nessas Homes. `src/direcoes/estilos/material/` serve de referência durante a migração; o destino dela depois é a decisão em aberto (e). |
+| Acervo (decisão do usuário, 21/11/2026) | A exploração continua só no `yarn dev`, fora do build, como acervo de ideias de UI/UX: `#/direcoes/esqueumorfismo` e `#/direcoes/neumorfismo` ficam, com fichas, desenhos e dossiês. A migração não mexe nessas Homes. `src/direcoes/estilos/material/` serve de referência durante a migração; depois da migração, ela fica congelada no acervo (decisão e). |
 | Contraste | Todo par de papéis usado como texto, borda ou foco tem mínimo declarado e medido (§1.1, item 2; §2.2). |
 
 **Desvios do M3 que ficam** (ficha do material, `desvios`):
-- ícones do Font Awesome no lugar dos Material Symbols [71] (decisão em aberto c);
+- ícones do Font Awesome no lugar dos Material Symbols [71] (decisão c: fica o Font Awesome);
 - molas do Expressive [23] convertidas em `linear()`: é uma aproximação da física do Compose;
 - sem morph de forma: a prensa usa escala, giro e opacidade, e os botões trocam de forma por opacidade entre duas camadas, pela regra de animar só `transform` e `opacity` [72];
 - os guias de níveis de expressão e de linguagem do Expressive são do Wear OS [65][66]: na web, servem só de intenção;
@@ -39,7 +39,7 @@ Especificação para levar a direção visual **Material 3 Expressive** à loja 
 
 **Proibido nesta direção** (desenho, §11 e §12):
 - hover em todo card: o card não reage ao ponteiro, só os botões;
-- carrossel, busca no topo [62], FAB menu [56] e indicador de carregamento sem espera real [58];
+- busca no topo [62], FAB menu [56] e indicador de carregamento sem espera real [58] (o carrossel saiu desta lista em 21/11/2026: só na seção nova da §0.2, nas condições dela);
 - cor fora dos papéis: nenhuma cor nova sai de outro lugar que não a semente;
 - tirar rótulos de texto da navegação: na pesquisa do Google, tirar rótulos piorou a usabilidade [26];
 - opacidade como ênfase: a ênfase vem dos pares de cor e do peso, e a opacidade fica só no desabilitado [1] (as camadas de estado são a exceção documentada [12]);
@@ -48,7 +48,7 @@ Especificação para levar a direção visual **Material 3 Expressive** à loja 
 - redes sociais com links genéricos (`facebook.com`, `instagram.com`) [H25][H26];
 - animar `border-radius`, `clip-path`, largura, altura ou posição.
 
-**O que cai do SPEC da Brasa:** as proibições da §0 de lá (o fundo off-white, já que a `--m3-surface` é `#f7fbf1`, e o botão em pílula, já que no M3 os botões são `full` [7], passam a ser a regra); as quatro micro-interações 3D (§7.8); o tema único escuro (decisão em aberto d); Bebas Neue e Archivo na produção (b).
+**O que cai do SPEC da Brasa:** as proibições da §0 de lá (o fundo off-white, já que a `--m3-surface` é `#f7fbf1`, e o botão em pílula, já que no M3 os botões são `full` [7], passam a ser a regra); as quatro micro-interações 3D (§7.8); o tema único escuro (decisão d: só o esquema claro); Bebas Neue e Archivo na produção (b).
 
 **O que o acervo usa da produção** (conferido no código de `src/direcoes/`). A migração mantém isto, para as Homes do acervo continuarem como estão:
 - **módulos:** `AssinaturaEncaixe.vue`, `ModalAdditional.vue`, `useProductModal`, `useResponsiveImage`, `useScrollLock`, as stores `cart`, `products` e `userStore` e os utilitários `formatters` e `tokens`, com a mesma API;
@@ -57,55 +57,87 @@ Especificação para levar a direção visual **Material 3 Expressive** à loja 
 - **estilos globais da base:** o reset, os `h1`–`h3` de `_typography.scss` e os utilitários (`.container`, `.tabular`, `.visually-hidden`, `.skip-link`) valem também no acervo, onde ele não os sobrescreve;
 - **componentes reais nas Homes:** o modal Personalizar e o toast são os reais. Os `_tokens.scss` do acervo remapeiam os `--color-*` (33 linhas em cada) para pintá-los; quando esses componentes passarem a ler os `--m3-*` (decisão a), eles aparecem em M3 dentro das Homes do acervo. Este SPEC aceita o efeito: na exploração, só a lógica e o modal são reaproveitados (PESQUISA, "Decisões do usuário").
 
-### 0.1 Decisões em aberto
+### 0.1 Decisões (respondidas pelo usuário em 21/11/2026)
 
-Cada uma tem a recomendação deste SPEC. Até o usuário decidir, a ordem de execução (§12) começa pelas etapas que não dependem delas.
+Todas foram respondidas; em todas, o usuário seguiu a recomendação deste SPEC, salvo a (i), que ficou ligada às seções novas da §0.2. O texto de cada uma, abaixo, guarda as opções e o motivo.
 
-**Decisão em aberto (a): papéis de cor como tokens de base.**
+| Decisão | Resposta |
+|---|---|
+| (a) Tokens | Os papéis do M3 viram os tokens de base; os nomes atuais ficam como apelidos temporários e saem no fim (ficam só os seis que o índice do acervo lê). |
+| (b) Fontes | Só a Roboto Variable vai para `dependencies`. Courier Prime e Nunito ficam em `devDependencies`. Bebas Neue e Archivo saem da produção e passam a `devDependencies`, importadas onde o acervo as usa (`HomeEsqueumorfismo.vue` e `DirecoesIndice.vue`). |
+| (c) Ícones | Font Awesome. |
+| (d) Tema | Só o esquema claro, na loja e no painel. |
+| (e) Pasta do material | Depois da migração, `#/direcoes/material` fica congelada no acervo, sem sincronizar com a produção. |
+| (f) Modal | O `BurgerStack` fica, e o modal Personalizar ganha um desenho M3 antes de ser construído. |
+| (g) Rodapé | Fora da Home, o rodapé mostra também a lista de horário e contato; na Home, ela não se repete. |
+| (h) Assinatura | Fica `tom="escuro"`. |
+| (i) Pacotes sem uso | O `vue3-carousel` se decide junto com as seções novas (§0.2): fica se o carrossel novo usar o pacote; senão, sai na limpeza. |
+| (j) Nomes | Os componentes que substituem um base mantêm nome e API (`BaseButton`, `BaseDialog`…); os M3 sem par entram com o nome `M3*`. |
+
+**Decisão (a): papéis de cor como tokens de base.**
 - **Proposta:** os papéis do M3 (`--m3-primary`, `--m3-on-primary`, `--m3-surface-container`…) passam a ser os tokens de base em `:root`. Os nomes atuais (`--color-bg`, `--color-accent`…) viram apelidos durante a migração e saem no fim. A tabela de migração é o mapa que o `_tokens.scss` do material já faz em `:root[data-direcao="material"]` (§2.2, "Mapa dos tokens atuais"). O mesmo vale para os apelidos de tipografia (`--text-*`, `--font-*`, `--leading-*`), raios (`--radius-*`), elevação (`--elev-*`) e curvas (`--ease-*`).
 - **No fim, ficam definidos** em `base/_tokens.scss` só os seis apelidos que o índice do acervo lê (`--color-bg`, `--color-border-strong`, `--color-ink`, `--color-ink-muted`, `--font-display` e `--font-text`), apontando para os papéis, e nenhum arquivo de produção os usa (busca da §13.2). Já na etapa 1, o índice passa a mostrar essas cores e a fonte do M3.
 - **Recomendação:** aceitar. **Motivo:** com os apelidos, o app inteiro troca de pele na primeira etapa, sem mexer em componente; a Home mostrou isso no modal Personalizar e no toast reais, que já aparecem em M3 pelos apelidos. No fim, um nome só por papel evita dois vocabulários (o `--color-accent` da Brasa era "só ação", e o `primary` do M3 também pinta o disco do hero).
 
-**(b) Fontes: decidida pelo usuário em 21/11/2026, com um ponto em aberto.**
+**Decisão (b): fontes (decidida pelo usuário em 21/11/2026, inclusive o ponto que estava em aberto).**
 - **Decidido:** a `@fontsource-variable/roboto` 5.3.0 (hoje em `devDependencies`, importada só pelas rotas de `#/direcoes`) passa a `dependencies` e é importada uma vez, em `src/main.js`. Courier Prime e Nunito (`@fontsource/courier-prime` e `@fontsource-variable/nunito`) continuam como `devDependencies`, porque o acervo usa as duas. `@fontsource-variable/archivo` e `@fontsource/bebas-neue` saem quando a produção não as usar mais (com os apelidos de fonte, já na etapa 1).
 - **Execução:** mover a Roboto não é dependência nova (o `yarn.lock` e o `.yarn/cache` já a têm), mas muda o `package.json`: commitar `yarn.lock` e `.yarn/cache` juntos e atualizar README e TESTING (CLAUDE.md). A ficha mede 43 KB em woff2 no arquivo latino.
-- **Ponto em aberto:** o acervo também usa a Bebas Neue (`--esq-fonte-placa`, no esqueumorfismo) e a Archivo (`--dir-fonte`, no índice), que hoje chegam pelo `src/main.js` da produção. Tirar os imports do `main.js` faz o esqueumorfismo cair para "Arial Narrow" e o índice para `system-ui`.
+- **Ponto que estava em aberto (respondido: ver a tabela):** o acervo também usa a Bebas Neue (`--esq-fonte-placa`, no esqueumorfismo) e a Archivo (`--dir-fonte`, no índice), que hoje chegam pelo `src/main.js` da produção. Tirar os imports do `main.js` faz o esqueumorfismo cair para "Arial Narrow" e o índice para `system-ui`.
 - **Recomendação:** as duas saem de `dependencies` e entram como `devDependencies`, importadas onde o acervo as usa (`HomeEsqueumorfismo.vue` para a Bebas, `DirecoesIndice.vue` para a Archivo), como já é com Courier Prime e Nunito. **Motivo:** é a única mudança no acervo que a migração exige, e ela mantém os mockups como foram aprovados; a alternativa, aceitar as fontes de reserva, muda a cara do esqueumorfismo.
 
-**Decisão em aberto (c): ícones.**
+**Decisão (c): ícones.**
 - **Opções:** manter o Font Awesome 6.7.2 (desvio já registrado na ficha) ou adotar os Material Symbols [71].
 - **Custo dos Material Symbols, pelo dossiê [71]:** a fonte com todos os eixos pesa cerca de 7,9 MB e o conjunto completo, cerca de 295 KB; um subconjunto de três ícones pedido com `icon_names` cai para cerca de 1,7 KB, e o `display=block` evita mostrar o nome do ícone como texto antes de a fonte carregar. Servidos pelo Google Fonts, entram na CSP do `index.html` (`font-src` e `style-src`); servidos por pacote, são dependência nova, e o CLAUDE.md manda perguntar.
 - **Recomendação:** manter o Font Awesome. **Motivo:** a Home foi aprovada com ele, o plugin já registra os ícones da loja, a CSP não muda e não entra dependência. Os ícones novos da Home (`faHouse`, `faChevronDown`, `faChevronUp`, `faArrowUpRightFromSquare` e o `faClock` regular) passam a ser registrados em `src/plugins/fontawesome.js`.
 
-**Decisão em aberto (d): tema claro, escuro ou os dois.**
+**Decisão (d): tema claro, escuro ou os dois.**
 - **Situação:** a Brasa era só escura, e o painel era "tema único escuro" (`SPEC.md`, §0). A Home M3 é clara. O M3 tem esquema escuro com outros tons (primary 80, on-primary 20, primary-container 30, surface N6, containers 4/10/12/17/22, on-surface 90 [4]), mas os valores para a semente `#5DBB63` **não existem** no projeto.
 - **Opções:** (1) loja e painel no esquema claro; (2) o painel ganha um esquema escuro gerado da mesma semente; (3) os dois esquemas na loja e no painel, com `prefers-color-scheme`.
 - **Recomendação:** (1) agora. Um esquema escuro, se vier, fica para depois e sai do mesmo gerador (`@material/material-color-utilities` 0.4.0, TonalSpot, spec 2021, semente `#5DBB63`), rodado fora do projeto como foi o claro, com os pares da §2.2 medidos de novo. Nenhum valor escuro pode ser escrito à mão. **Motivo:** o esquema claro é o único medido (§2.2) e aprovado. Gerar o escuro só para o painel daria dois sistemas visuais a manter no mesmo app.
 
-**Decisão em aberto (e): a pasta do material depois da migração.**
+**Decisão (e): a pasta do material depois da migração.**
 - **Já decidido (usuário, 21/11/2026):** o acervo fica (§0, "Acervo"), e `src/direcoes/estilos/material/` serve de referência durante a migração.
 - **Opções para depois:** (1) manter `#/direcoes/material` no acervo, congelada como o mockup aprovado; (2) apagá-la quando a produção tiver o M3, tirando também a entrada do material do índice (`direcoes.js`, `fichas.js`, `contraste.js` e `rotas.js` de `src/direcoes/`) e os testes da pasta.
 - **Recomendação:** (1), sem sincronizar com a produção. **Motivo:** a produção recebe cópias (§4.1) e não depende da pasta; o índice continua comparando os três estilos sem ser editado; a Home de lá segue como referência das capturas da §13.9; o custo é só o `_tokens.scss` do material repetir a base, fora do build. Apagar mexeria no índice do acervo.
 
-**Decisão em aberto (f): montador do burger e modal Personalizar.**
+**Decisão (f): montador do burger e modal Personalizar.**
 - **Situação:** o desenho não cobre o modal. Na Home M3, ele é o real (`ModalAdditional`), com o layout da Brasa e as cores M3 pelos apelidos, inclusive o `BurgerStack`, a vista isométrica 3D da Brasa.
 - **Recomendação:** manter o `BurgerStack` e o fluxo do modal (o montador dá retorno real: mostra o que se tira e o que se acrescenta [FLX-02]) e desenhar o modal antes de construí-lo (§5.4). As cores das camadas continuam ilustração, fora dos tokens. **Motivo:** tirar o montador apagaria o único retorno visual da personalização. Redesenhá-lo à moda M3 é trabalho de desenho, não de migração.
 
-**Decisão em aberto (g): rodapé fora da Home.**
+**Decisão (g): rodapé fora da Home.**
 - **Situação:** o `M3Rodape` ficou com a marca, a descrição e os direitos, porque na Home os contatos estão na seção `onde`, logo acima (desenho, §6). Nas outras telas, o rodapé ficaria sem endereço, horário e contato.
 - **Recomendação:** nas outras rotas da loja, o rodapé mostra também a lista agrupada de horário e contato (`M3ItemSegmentado`, os mesmos itens de `itensOnde`). Na Home, ela não se repete. A pesquisa transversal pede contato e horário no rodapé [H30][H29][H26]. Marcar "a desenhar" até a captura. **Motivo:** o usuário vai ao fim da página procurar o contato [H30]; só a Home tem a seção `onde`.
 
-**Decisão em aberto (h): tom da assinatura de autoria.**
+**Decisão (h): tom da assinatura de autoria.**
 - **Situação:** o CLAUDE.md fixa `<AssinaturaEncaixe tom="escuro" />` no `MainLayout`, e a Home M3 foi aprovada assim (a `MolduraDirecao` usa `tom="escuro"`). O comentário do próprio componente diz `'claro'` sob rodapé claro e `'escuro'` sob rodapé escuro ou colorido; o `M3Rodape` é `surface-container`, claro.
 - **Recomendação:** manter `tom="escuro"`. **Motivo:** a faixa escura fecha a página e já passou pelos portões. O arquivo não pode ser editado (CLAUDE.md), e trocar o tom pede uma instrução do usuário que mude o CLAUDE.md.
 
-**Decisão em aberto (i): pacotes que ficam sem uso.**
+**Decisão (i): pacotes que ficam sem uso.**
 - **Situação:** sem carrossel na Home, o `vue3-carousel` fica sem uso. A §11.1 do `SPEC.md` mantinha pacotes sem uso instalados.
 - **Recomendação:** remover o `vue3-carousel` na limpeza (§12, etapa 11), com pedido explícito do usuário, commitando `yarn.lock` e `.yarn/cache` juntos. **Motivo:** dependência sem uso só soma alertas e peso no cache.
 
-**Decisão em aberto (j): nomes dos componentes.**
+**Decisão (j): nomes dos componentes.**
 - **Opções:** (1) os componentes que substituem um base atual mantêm o nome e a API dele (`BaseButton`, `BaseDialog`…) e ganham o visual M3; os componentes M3 sem par (`M3BotaoDividido`, `M3FolhaIngredientes`…) entram com o nome que têm; (2) traduzir todos para o padrão em inglês; (3) renomear todos para `M3*`.
 - **Recomendação:** (1). **Motivo:** o `BaseButton` é usado em 25 arquivos, e trocar a API não muda nada para quem usa a loja. Os componentes M3 já têm testes e passaram pelos portões com estes nomes.
+
+
+### 0.2 Pedidos novos e execução (usuário, 21/11/2026)
+
+**Duas seções novas na Home do Material.** Só nela: o acervo (esqueumorfismo e neumorfismo) não muda.
+- **O quê:** a Home passa de 4 para 6 seções de conteúdo (o teto do escopo da rodada 2), cada uma com desenho ou componentes diferentes do que a Home já tem, no estilo M3 Expressive.
+- **Preferência do usuário:** "Adicionais em chips" ("Monte o seu": os adicionais de lanche e de sobremesa com o preço, em chips [60], levando ao cardápio) e o carrossel multi-browse do M3 [34]. As duas estão no catálogo de seções candidatas de `docs/direcoes/pesquisa/material.md` como viáveis sem inventar.
+- **Quem confirma:** a sessão de desenho confirma as duas pelo dossiê e pelo juiz de distinção. Se uma não passar, troca por outra candidata viável do mesmo catálogo e registra o motivo no desenho.
+- **Condições do carrossel:** sem rotação automática, com Anterior e Próximo visíveis, a espiada do próximo item e os itens na ordem do `products.json` [34]. Não repete o que o feed de Hambúrgueres e a lista de bebidas e sobremesas já mostram; o desenho define o conteúdo. Ele passa pelos riscos de carrossel do dossiê transversal (`docs/direcoes/pesquisa/home-delivery.md`). Fora dessa seção, o carrossel continua proibido nesta direção.
+- **Conteúdo:** só o real, como no resto da Home; contagens e preços calculados (`useCardapio`, `formatPrice`).
+- **Quando:** nas sessões de implementação, na etapa 5a da §12.
+
+**Git.**
+- A `feature/direcoes-homes` vai para a `develop` por PR antes da implementação, com a `origin/develop` mergeada de novo antes.
+- Cada etapa da §12 sai de uma branch nova a partir da `develop`, com PR própria.
+- A PR main → develop só se confere e se abre quando for abrir a primeira PR (`git merge-base --is-ancestor origin/main origin/develop`).
+- Push, PR e merge só com o pedido do usuário (CLAUDE.md).
+
+**Execução.** O plano de execução é escrito numa sessão nova do Claude Code, em modo plan, a partir deste SPEC e do CLAUDE.md. Cada etapa da §12 é executada numa sessão própria, que termina com o build, o lint e os testes verdes, a conferência visual e o commit.
 
 ---
 
@@ -599,7 +631,7 @@ Props copiadas do código. A produção recebe **cópias** dos componentes, das 
 - **Substitui:** `TheFooter.vue` e `TheFooterSocialMediaLinks.vue` (as redes saem [H25][H26]).
 - **Conteúdo** (sem props, slots nem emits): `MARCA` (title-l 500), `DESCRICAO` (body-m, máx. 40ch) e `RODAPE.copyright` (body-s, separado por 1 px de `outline-variant`).
 - **Visual:** `surface-container`, cantos de cima em `forma-xl`.
-- **Fora da Home:** decisão em aberto (g). A linha de direitos muda pela §10.2.
+- **Fora da Home:** decisão (g): o rodapé mostra também a lista de horário e contato. A linha de direitos muda pela §10.2.
 
 #### Lógica que vem junto
 
@@ -981,7 +1013,7 @@ Os fluxos da §10 do `SPEC.md` continuam valendo sem mudança. Entram só os tr�
 ### 11.2 Funcionalidades
 
 - **Esquema escuro:** pela decisão (d). Também fica fora a cor dinâmica do M3 [1]: a semente é fixa.
-- **Componentes que a Home tirou** (desenho, §2 e §12): search bar [62], carrossel [34][75], FAB menu [56], loading indicator [58] (não há espera real), docked toolbar [59] e chips de adicionais [60].
+- **Componentes que a Home tirou** (desenho, §2 e §12): search bar [62], FAB menu [56], loading indicator [58] (não há espera real) e docked toolbar [59]. O carrossel [34][75] e os chips de adicionais [60] voltam como seções novas da Home (§0.2).
 - **Live Updates** de entrega [25]: rastreio e prazo não existem.
 - **O que já estava fora no `SPEC.md`** (§11.2 de lá): backend, pagamento real, taxa de entrega, rastreio, previsão de entrega, minicarrinho em gaveta e o gráfico do dashboard.
 
@@ -992,7 +1024,7 @@ As regras de senha, sessão, chaves de `localStorage` e CSP do CLAUDE.md não mu
 ### 11.4 Acervo de ideias
 
 - **A migração não mexe nas Homes do acervo** (`#/direcoes/esqueumorfismo` e `#/direcoes/neumorfismo`), nas fichas, nos desenhos nem nos dossiês. Elas seguem só no `yarn dev`, fora do build, com os portões delas e o teste de isolamento (`src/__tests__/direcoes-isolamento.test.js`).
-- **A única exceção prevista** é o import da Bebas Neue e da Archivo nas páginas do acervo que as usam, se o ponto em aberto de (b) for aceito.
+- **A única exceção prevista** é o import da Bebas Neue e da Archivo nas páginas do acervo que as usam, como decidido em (b).
 - **`src/direcoes/compartilhado/`** fica como está: a produção recebe cópias (§4.1).
 - **Efeitos aceitos** (§0, "O que o acervo usa da produção"): o modal e o toast reais em M3 dentro das Homes do acervo, e o índice com as cores e a fonte do M3.
 
@@ -1002,19 +1034,20 @@ As regras de senha, sessão, chaves de `localStorage` e CSP do CLAUDE.md não mu
 
 Cada etapa termina com `build`, `eslint .` e `vitest run` sem erros e uma conferência visual em 1440, 1024 e 390, comparando com `#/direcoes/material` enquanto ela existir. As telas "a desenhar" passam por desenho (como os de `docs/direcoes/desenho/`) antes da etapa delas.
 
-0. **Decisões:** o usuário responde as decisões em aberto (§0.1). As etapas 1 a 5 dependem só de (a), (c), (d) e do ponto em aberto de (b).
-1. **Tokens e fontes:** os `--m3-*` e os apelidos em `base/_tokens.scss`; `color-scheme: light` no reset; `theme-color` e manifest; Roboto em `dependencies` e no `main.js`; Archivo e Bebas saem do `main.js` e de `dependencies` pela decisão (b), com o ponto em aberto resolvido antes (o acervo usa as duas).
+0. **Decisões:** respondidas em 21/11/2026 (§0.1 e §0.2). O plano de execução por sessão sai desta ordem (§0.2, "Execução").
+1. **Tokens e fontes:** os `--m3-*` e os apelidos em `base/_tokens.scss`; `color-scheme: light` no reset; `theme-color` e manifest; Roboto em `dependencies` e no `main.js`; Archivo e Bebas saem do `main.js` e de `dependencies` e passam a `devDependencies`, importadas no `HomeEsqueumorfismo.vue` e no `DirecoesIndice.vue` (decisão b; o acervo usa as duas).
    - **Resultado esperado:** o app inteiro em M3 com a estrutura da Brasa, como o modal aparece na Home aprovada. Rodar o axe da §13.3: contraste e foco já valem aqui.
 2. **Base de estilo:** `base/_m3.scss` com os mixins; `_typography.scss` sem a `.display`; `_motion.scss` com a lista nova; anel de 3 px.
 3. **Primitivos:** `BaseButton` com o visual M3 (§4.1) e o teste; `M3Foto`, `M3BotaoDividido`, `M3FolhaIngredientes`, `M3ItemLista`, `M3ItemSegmentado`; composables e utilitários da §4.1.
 4. **Moldura:** `M3BarraSuperior`, `M3BarraFerramentas` e `M3Rodape` no `MainLayout`; `<main>` sem `padding-top`; reserva da barra; `CategoryTabs` com o `top` novo; `scrollBehavior` (§10.1); linha de direitos (§10.2).
 5. **Home:** as quatro seções em `src/components/home/`, a `M3FormaPrensa` e o `M3CartaoLanche`; a `HomeView` com o `provide`; o teste da Home; a microcopy revisada (§8.2); o prato do cookie (§10.3).
+5a. **Duas seções novas da Home** (§0.2): primeiro o desenho, no formato de `docs/direcoes/desenho/` e com o juiz de distinção; depois a construção, com o teste de contrato atualizado (6 seções), os portões e o crítico. Decidir aqui o `vue3-carousel` (decisão i).
 6. **Cardápio e modal** (depois do desenho): §5.3 e §5.4.
 7. **Carrinho, pagamento e confirmação** (depois do desenho): §5.5 a §5.7.
 8. **Login, cadastro e perfil** (depois da pesquisa de campos e do desenho): §5.8 e §5.9.
 9. **Admin** (depois do desenho): §5.11.
 10. **Componentes base restantes** (depois da pesquisa e do desenho): `AppToast`, `BaseDialog`, `EmptyState`, `QuantityStepper`.
-11. **Limpeza:** apagar os arquivos da §4.4 e os apelidos (decisão a); acertar os ícones do plugin; `vue3-carousel` (decisão i) e a pasta do material (decisão e), com o acervo ficando; README e TESTING; as buscas da §13.2.
+11. **Limpeza:** apagar os arquivos da §4.4 e os apelidos (decisão a); acertar os ícones do plugin; `vue3-carousel` (decisão i: sai se o carrossel novo não usar o pacote) e a pasta do material (decisão e), com o acervo ficando; README e TESTING; as buscas da §13.2.
 12. **Verificação ponta a ponta (§13).**
 
 ---
