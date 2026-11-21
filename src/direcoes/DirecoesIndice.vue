@@ -76,10 +76,13 @@
 
 <script setup>
 import "./_tokens.scss";
+// Fonte do índice e das fichas (--dir-fonte)
+import "@fontsource-variable/archivo";
 // Tokens e fonte de cada estilo, para a faixa e a amostra de cada ficha
 import "@fontsource-variable/roboto";
 import "./estilos/material/_tokens.scss";
 import "@fontsource/courier-prime/400.css";
+import "@fontsource/bebas-neue/400.css";
 import "./estilos/esqueumorfismo/_tokens.scss";
 import "@fontsource-variable/nunito";
 import "./estilos/neumorfismo/_tokens.scss";

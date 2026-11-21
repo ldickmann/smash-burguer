@@ -6,9 +6,8 @@ import App from './App.vue';
 import router from './router';
 import { migrateLegacyAccount } from '@/services/authServices';
 
-// Fontes self-hosted, importadas uma única vez (SPEC §2.3)
-import '@fontsource/bebas-neue/400.css';
-import '@fontsource-variable/archivo';
+// Roboto Variable self-hosted, importada uma única vez (SPEC-material §2.3)
+import '@fontsource-variable/roboto';
 import '@/assets/main.scss';
 
 // O cadastro antigo em `localStorage.user` passa para `smash-burger:account` (§10.3)
