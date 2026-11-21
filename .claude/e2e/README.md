@@ -47,7 +47,7 @@ npm init -y >/dev/null && npm i --ignore-scripts playwright@1.65.0 axe-core@4.10
 |---|---|
 | `axe-scan.mjs <loja\|admin\|todos> [1440,390] [reduce]` | axe WCAG 2.2 AA, rolagem horizontal, alvos de toque, fontes (reprova o `body` fora da Roboto Variable e o `h1` fora do peso 500), título e violações da CSP em 22 telas. Com `SCAN_OUT=pasta`, salva screenshots. |
 | `flow.mjs` | Fluxo de pedido completo, pela pílula da toolbar e pelo FAB do carrinho, guards e restauração de rolagem (§13.4). |
-| `keyboard.mjs` | Teclado: skip link, ordem do Tab no topo, anel de foco de 3 px (o link da assinatura tem o próprio, de 2 px), foco preso no modal, setas no pagamento e menus do painel (§13.5). Abaixo de `lg`, em todas as rotas da loja, o foco não fica coberto pela toolbar flutuante (SPEC-material §13.3, item 6). |
+| `keyboard.mjs` | Teclado: skip link, ordem do Tab no topo, anel de foco de 3 px (o link da assinatura tem o próprio, de 2 px), foco preso no modal, setas no pagamento e menus do painel (§13.5). Em 390 px, em todas as rotas da loja, o foco (com o anel, e o card no lugar do rádio escondido) não fica coberto pela toolbar flutuante nem encosta nela (SPEC-material §13.3, item 6). A altura dessas telas vem de `KB_ALTURA` (padrão 844). |
 | `micro-final.mjs` | Flip, tilt, montador do burger e o badge do FAB, com movimento normal e reduzido (§13.6). |
 | `check-admin.mjs` | Login admin, sidebar e gaveta, menu de perfil e telas (§13.8). |
 | `lacunas.mjs` | Correções da revisão contra o SPEC: movimento reduzido, modal, spinner, guards (inclusive o `redirect` de volta ao perfil) e admin. |
