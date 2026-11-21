@@ -19,6 +19,15 @@
   }
 }
 
+// Na loja, abaixo de md, a toolbar flutua no pé: o toast sobe acima dela, como o snackbar do M3 acima do
+// FAB, em vez de cobrir a navegação. O painel, sem toolbar, continua com o toast no pé. O seletor
+// inteiro fica no :global(), que no Vue torna global a regra toda (o .toast-region só existe aqui)
+@include below(md) {
+  :global(body:has(.m3-ferramentas) .toast-region) {
+    bottom: calc(var(--m3-barra-reserva) + env(safe-area-inset-bottom));
+  }
+}
+
 .toast-region__list {
   display: flex;
   flex-direction: column;
