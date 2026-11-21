@@ -105,6 +105,13 @@
     gap: var(--space-1);
   }
 
+  // Texto claro sobre a foto escurecida pelo scrim: com o esquema claro, a tinta padrão
+  // (on-surface) sumia no fundo escuro
+  .banner__title,
+  .banner__text {
+    color: var(--m3-inverse-on-surface);
+  }
+
   .banner__title {
     font-size: var(--text-page);
   }
