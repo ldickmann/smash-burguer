@@ -1,7 +1,7 @@
 <template>
   <section class="product-management">
     <div class="admin-page__header">
-      <h1 class="admin-page__title">Produtos</h1>
+      <h1 ref="titleRef" class="admin-page__title" tabindex="-1">Produtos</h1>
       <BaseButton icon-start="plus" @click="openAddModal">Novo produto</BaseButton>
     </div>
 
@@ -15,7 +15,20 @@
       :options="CATEGORY_FILTERS"
     />
 
-    <ul class="products-list" role="list">
+    <!-- Busca da barra do painel (?q=): o resultado é anunciado a leitores de tela -->
+    <p v-if="query" class="admin-page__search-result" role="status">
+      {{ searchSummary }}
+      <button type="button" class="link-inline" @click="clearSearch">Limpar busca</button>
+    </p>
+
+    <EmptyState
+      v-if="query && !filteredProducts.length"
+      icon="magnifying-glass"
+      title="Nenhum produto encontrado"
+      text="Confira o texto da busca ou escolha outra categoria."
+    />
+
+    <ul v-else class="products-list" role="list">
       <li v-for="product in filteredProducts" :key="`${product.category}-${product.id}`">
         <ProductCard :product="product" variant="admin" :heading-level="2">
           <template #actions>
@@ -26,7 +39,7 @@
               variant="danger"
               size="sm"
               icon-start="trash-can"
-              @click="deleteProduct(product.id)"
+              @click="productToDelete = product"
             >
               Excluir
             </BaseButton>
@@ -53,13 +66,39 @@
       @submit="onAddSubmit"
       @cancel="showAddModal = false"
     />
+
+    <BaseDialog
+      :open="Boolean(productToDelete)"
+      title="Excluir produto?"
+      title-id="excluir-produto-titulo"
+      max-width="480px"
+      @close="productToDelete = null"
+    >
+      <p>
+        “{{ productToDelete?.name }}” sai do cardápio salvo neste navegador. Para trazê-lo de
+        volta, use Configurações › Restaurar cardápio original.
+      </p>
+      <template #footer>
+        <div class="product-delete__actions">
+          <BaseButton variant="secondary" @click="productToDelete = null">Cancelar</BaseButton>
+          <BaseButton variant="danger" icon-start="trash-can" @click="confirmDelete">
+            Excluir produto
+          </BaseButton>
+        </div>
+      </template>
+    </BaseDialog>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useProductsStore } from "@/stores/products.js";
+import { ref, computed, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { CATEGORIES, useProductsStore } from "@/stores/products.js";
+import { useToastStore } from "@/stores/toast";
+import { matchesSearch, searchQueryOf } from "@/utils/search";
 import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseDialog from "@/components/ui/BaseDialog.vue";
+import EmptyState from "@/components/ui/EmptyState.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import ModalProducts from "@/components/admin/ModalProducts.vue";
@@ -71,39 +110,57 @@ const CATEGORY_FILTERS = [
   { value: "desserts", label: "Sobremesas" },
 ];
 
+const HIGHLIGHTS = 4;
+
 const productsStore = useProductsStore();
+const toast = useToastStore();
+const route = useRoute();
+const router = useRouter();
 
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const selectedProduct = ref({});
 const selectedCategory = ref("");
+const productToDelete = ref(null);
+const titleRef = ref(null);
 
-// Função para retornar N produtos aleatórios a partir de um array
-const getRandomProducts = (arr, count) => {
-  if (!arr || arr.length === 0) return [];
-  const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-};
+// Destaques: 4 hambúrgueres sorteados uma vez, quando a página abre. A lista guarda só os
+// ids, então trocar o filtro ou editar um produto não sorteia de novo
+const highlightIds = [...productsStore.foods]
+  .sort(() => 0.5 - Math.random())
+  .slice(0, HIGHLIGHTS)
+  .map((product) => product.id);
 
-// Computa a lista de produtos a serem renderizados
+// Busca pelo nome e pela descrição. Em "Destaques", ela olha o cardápio inteiro
+const query = computed(() => searchQueryOf(route.query.q));
+
 const filteredProducts = computed(() => {
+  if (query.value) {
+    const base = selectedCategory.value
+      ? productsStore[selectedCategory.value] ?? []
+      : CATEGORIES.flatMap((category) => productsStore[category]);
+    return base.filter((product) => matchesSearch(query.value, product.name, product.description));
+  }
   if (!selectedCategory.value) {
-    // Destaques: 4 produtos aleatórios da categoria "foods", quando abre a página
-    return getRandomProducts(productsStore.foods, 4);
+    return highlightIds
+      .map((id) => productsStore.foods.find((product) => product.id === id))
+      .filter(Boolean);
   }
   return productsStore[selectedCategory.value] ?? [];
 });
 
+const searchSummary = computed(() => {
+  const count = filteredProducts.value.length;
+  const found = count === 1 ? "1 produto" : `${count} produtos`;
+  return `${found} para “${query.value}”.`;
+});
+
+const clearSearch = () => {
+  router.replace({ query: { ...route.query, q: undefined } });
+};
+
 // Abre o modal de adicionar produto
 const openAddModal = () => {
-  selectedProduct.value = {
-    name: "",
-    price: "",
-    quantity: "",
-    description: "",
-    image: "",
-    category: "foods",
-  };
   showAddModal.value = true;
 };
 
@@ -113,27 +170,44 @@ const openEditModal = (product) => {
   showEditModal.value = true;
 };
 
-// Realiza a edição do produto
-const onEditSubmit = (updatedProduct) => {
-  const category = updatedProduct.category;
-  const index = productsStore.menuItems[category]?.findIndex(
-    (p) => p.id === updatedProduct.id
-  );
-  if (index !== -1) {
-    productsStore.menuItems[category].splice(index, 1, updatedProduct);
+// Se o botão que abriu o modal saiu da tela (o produto mudou de categoria com a lista
+// filtrada), o foco ficaria no <body> ou num <dialog> já fechado: vai para o título da página
+const focusTitleIfLost = async () => {
+  await nextTick();
+  const active = document.activeElement;
+  if (!active || active === document.body || active.closest("dialog:not([open])")) {
+    titleRef.value?.focus();
   }
+};
+
+// O produto é procurado na categoria de origem: o formulário pode ter trocado a categoria.
+// O espaço da imagem já foi conferido no modal
+const onEditSubmit = (changes) => {
+  const { category, id } = selectedProduct.value;
+  const updated = productsStore.updateProduct(category, id, changes);
   showEditModal.value = false;
+  if (updated) toast.show({ message: "Produto atualizado." });
+  focusTitleIfLost();
 };
 
-// Adiciona o novo produto via store
+// Depois de criar, o filtro mostra a categoria do produto novo
 const onAddSubmit = (newProduct) => {
-  productsStore.addProduct(newProduct);
+  const created = productsStore.addProduct(newProduct);
   showAddModal.value = false;
+  if (!created) return;
+  selectedCategory.value = created.category;
+  toast.show({ message: "Produto criado." });
 };
 
-// Excluir continua sem efeito real (FLX-09, fora do escopo)
-const deleteProduct = (productId) => {
-  console.log("Produto excluído", productId);
+// O botão "Excluir" sai da tela com o produto: o foco vai para o título da página
+const confirmDelete = async () => {
+  const { category, id } = productToDelete.value;
+  const removed = productsStore.removeProduct(category, id);
+  productToDelete.value = null;
+  if (!removed) return;
+  toast.show({ message: "Produto excluído." });
+  await nextTick();
+  titleRef.value?.focus();
 };
 </script>
 

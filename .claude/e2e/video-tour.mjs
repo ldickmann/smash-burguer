@@ -10,9 +10,9 @@ const MODE = process.argv[2] || 'celular';
 const OUT = './video';
 fs.mkdirSync(`${OUT}/${MODE}`, { recursive: true });
 
-// Conta fictícia já cadastrada e admin fictício (o createAdmin.html faz o mesmo papel)
-const USER = { firstName: 'Maria', lastName: 'Silva', email: 'maria@exemplo.com', password: 'senha123', dateOfBirth: '1990-05-10', phone: '47999999999', CEP: '88370000', address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' } };
-const ADMIN = { firstName: 'Ana', lastName: 'Costa', email: 'admin@exemplo.com', password: 'painel123', role: 'admin' };
+// Conta fictícia já cadastrada e admin fictício, criado à mão na chave `admin` como no site publicado
+const USER = { firstName: 'Maria', lastName: 'Silva', email: 'maria@example.com', password: 'senha123', dateOfBirth: '1990-05-10', phone: '47999999999', CEP: '88370000', address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' } };
+const ADMIN = { firstName: 'Ana', lastName: 'Costa', email: 'admin@example.com', password: 'painel123', role: 'admin' };
 
 // Indicador de toque/cursor e legenda: só para o vídeo, não fazem parte do site
 const OVERLAY = () => {

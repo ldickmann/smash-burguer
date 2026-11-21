@@ -54,6 +54,28 @@
   gap: var(--space-4);
 }
 
+// Excluir conta: no fim de "Seus dados", separado do formulário
+.profile-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.profile-delete__text {
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.profile-delete__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
 // Lista de pedidos
 .profile-orders {
   display: flex;

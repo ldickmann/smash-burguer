@@ -26,6 +26,22 @@ export default [
     },
   },
 
+  // O build só descarta console.log cujo valor não é usado (vite.config.js): numa arrow function, use chaves
+  {
+    name: 'app/console-log-em-arrow',
+    files: ['src/**/*.{js,vue}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "ArrowFunctionExpression > CallExpression.body[callee.object.name='console'][callee.property.name='log']",
+          message: 'O build só descarta console.log cujo valor não é usado: escreva a arrow function com chaves.',
+        },
+      ],
+    },
+  },
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],

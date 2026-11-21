@@ -1,5 +1,5 @@
 /* global process */
-// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque e fontes.
+// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque, fontes e violações da CSP.
 // uso: node axe-scan.mjs <grupo: loja|admin|todos> [viewports] [reduce]
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -15,7 +15,7 @@ const OUT = process.env.SCAN_OUT;
 if (OUT) fs.mkdirSync(OUT, { recursive: true });
 
 const USER = {
-  firstName: 'Maria', lastName: 'Silva', email: 'maria@exemplo.com', password: 'senha123',
+  firstName: 'Maria', lastName: 'Silva', email: 'maria@example.com', password: 'senha123',
   dateOfBirth: '1990-05-10', phone: '47999999999', CEP: '88370000',
   address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' },
 };
@@ -42,22 +42,25 @@ const SCENARIOS = {
     { name: 'login-erro', hash: '#/login', storage: { 'smash-burger:account': USER }, act: async (p) => { await p.fill('#email', USER.email); await p.fill('#password', 'errada123'); await p.getByRole('button', { name: 'Entrar', exact: true }).click(); await p.waitForTimeout(1600); } },
     { name: 'register', hash: '#/register' },
     { name: 'register-vazio', hash: '#/register', act: async (p) => { await p.getByRole('button', { name: 'Criar conta', exact: true }).click(); await p.waitForTimeout(600); } },
+    { name: 'register-conta-salva', hash: '#/register', storage: { 'smash-burger:account': USER } },
     { name: 'profile', hash: '#/profile', storage: LOGGED },
+    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); } },
     { name: '404', hash: '#/rota-inexistente' },
   ],
   admin: [
     { name: 'admin-login', hash: '#/admin/login' },
-    { name: 'admin', hash: '#/admin', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-produtos', hash: '#/admin/products', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-modal', hash: '#/admin/products', storage: { admin: { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
-    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { admin: { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin', hash: '#/admin', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-produtos', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-modal', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
+    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
   ],
 };
 const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENARIOS[GROUP];
 
 const browser = await chromium.launch();
 let total = 0;
+let cspTotal = 0;
 for (const w of VPS) {
   for (const sc of list) {
     const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 }, reducedMotion: REDUCE ? 'reduce' : 'no-preference' });
@@ -65,6 +68,9 @@ for (const w of VPS) {
     const storage = Object.fromEntries(Object.entries(sc.storage || {}).map(([k, v]) => [k, JSON.stringify(v)]));
     await ctx.addInitScript((s) => { if (sessionStorage.getItem('__s')) return; localStorage.clear(); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, v); sessionStorage.setItem('__s', '1'); }, storage);
     const page = await ctx.newPage();
+    // Violações da Content-Security-Policy do index.html: o Chromium as escreve no console
+    const csp = [];
+    page.on('console', (m) => { if (m.type() === 'error' && /Content Security Policy/i.test(m.text())) csp.push(m.text()); });
     await page.goto(BASE + sc.hash);
     await page.waitForLoadState('networkidle').catch(() => {});
     await page.waitForTimeout(300);
@@ -80,7 +86,8 @@ for (const w of VPS) {
         await page.screenshot({ path: `${OUT}/${tag}-full.png`, fullPage: true });
       }
     }
-    await page.addScriptTag({ content: AXE });
+    // Por evaluate, e não por <script> inline, que a CSP bloqueia
+    await page.evaluate(AXE);
     const res = await page.evaluate(async () => {
       const r = await window.axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] } });
       const vw = innerWidth;
@@ -117,12 +124,15 @@ for (const w of VPS) {
       };
     });
     total += res.violations.length;
-    const flag = res.violations.length || res.overflow || res.small.length ? '✗' : '✓';
-    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
+    cspTotal += csp.length;
+    const flag = res.violations.length || res.overflow || res.small.length || csp.length ? '✗' : '✓';
+    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} csp=${csp.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
     res.violations.forEach((v) => console.log('    axe:', v));
     res.small.forEach((v) => console.log('    alvo:', v));
+    csp.forEach((v) => console.log('    csp:', v));
     await ctx.close();
   }
 }
 console.log('TOTAL violações axe:', total);
+console.log('TOTAL violações CSP:', cspTotal);
 await browser.close();

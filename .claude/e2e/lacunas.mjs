@@ -1,7 +1,7 @@
 // Verificação das lacunas apontadas pela revisão (uma checagem por lacuna corrigida).
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
-const USER = { firstName: 'Maria', lastName: 'Silva', email: 'maria@exemplo.com', password: 'senha123', CEP: '88370000', address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' } };
+const USER = { firstName: 'Maria', lastName: 'Silva', email: 'maria@example.com', password: 'senha123', CEP: '88370000', address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' } };
 const ORDER = { id: 1001, date: '2026-10-17T22:15:00.000Z', status: 'Recebido', paymentMethod: 'PIX', total: 29.49, address: USER.address, items: [{ productId: 1, category: 'foods', name: 'Cheese Bacon', image: '/images/foods/cheese-bacon', unitPrice: 29.49, quantity: 1, removedIngredients: ['Tomate'], additionals: [{ name: 'Bacon', price: 3.5, quantity: 1 }], observation: '' }] };
 const SESSION = { user: USER, isAuthenticated: true, orderHistory: [ORDER], lastOrderId: 1001, nextOrderId: 1002 };
 let failures = 0;
@@ -85,13 +85,13 @@ console.log('=== §5.1 menu ao cruzar md');
   await ctx.close();
 }
 
-// 4. Guard genérico como no baseline: /profile sem sessão vai para /login (sem redirect)
+// 4. Guard genérico: /profile sem sessão vai para /login, com o redirect de volta para o perfil
 console.log('=== §10.6 guard do perfil');
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await ctx.newPage();
   await go(page, '#/profile');
-  check(page.url().endsWith('#/login'), '/profile sem sessão → /login', page.url());
+  check(page.url().endsWith('#/login?redirect=/profile'), '/profile sem sessão → /login?redirect=/profile', page.url());
   await go(page, '#/payment');
   check(page.url().includes('#/login?redirect=/payment') || page.url().includes('redirect=%2Fpayment'), '/payment sem sessão continua com ?redirect=/payment', page.url());
   await ctx.close();
@@ -126,7 +126,7 @@ for (const reduce of [false, true]) {
 }
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await seed(ctx, { admin: { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
+  await seed(ctx, { 'smash-burger:admin-session': { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
   const page = await ctx.newPage();
   await go(page, '#/admin');
   const kpis = await page.evaluate(() => [...document.querySelectorAll('.kpi__value')].map((k) => k.textContent.trim()));

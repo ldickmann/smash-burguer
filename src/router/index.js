@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { useCartStore } from '@/stores/cart';
 import { useToastStore } from '@/stores/toast';
+import { safeRedirect } from '@/handlers/authHandlers';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Layouts imports
@@ -55,7 +56,7 @@ const router = createRouter({
           path: 'register',
           name: 'register',
           component: () => import('../views/auth/RegisterView.vue'),
-          meta: { title: 'Criar conta' },
+          meta: { title: 'Criar conta', guestOnly: true },
         },
         {
           path: 'login',
@@ -68,14 +69,6 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/auth/ProfileView.vue'),
           meta: { requiresAuth: true, title: 'Sua conta' },
-        },
-
-        // Página para testes
-        {
-          path: 'playground',
-          name: 'playground',
-          component: () => import('../views/Playground.vue'),
-          meta: { title: 'Playground' },
         },
 
         // Rota 404 - Page Not Found - lazy loading, dentro do layout da loja
@@ -95,34 +88,49 @@ const router = createRouter({
       meta: { title: 'Painel administrativo' },
     },
 
-    // Rotas admin
+    // Rotas admin. O `meta` do registro pai vale para todas as filhas (o `to.meta` junta os
+    // registros casados), então uma rota nova do painel já nasce protegida
     {
       path: '/admin',
       component: AdminLayout,
+      meta: { requiresAdmin: true },
       children: [
         {
           path: '',
           name: 'admin-dashboard',
           component: () => import('../views/admin/AdminDashboard.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Painel' },
+          meta: { title: 'Painel' },
         },
         {
           path: 'products',
           name: 'product-management',
           component: () => import('../views/admin/ProductManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Produtos' },
+          meta: { title: 'Produtos' },
         },
         {
           path: 'orders',
           name: 'order-management',
           component: () => import('../views/admin/OrderManagement.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Pedidos' },
+          meta: { title: 'Pedidos' },
         },
         {
           path: 'reports',
           name: 'sales-reports',
           component: () => import('../views/admin/SalesReports.vue'),
-          meta: { requiresAuth: true, requiresAdmin: true, title: 'Relatórios' },
+          meta: { title: 'Relatórios' },
+        },
+        // Itens do menu de perfil
+        {
+          path: 'profile',
+          name: 'admin-profile',
+          component: () => import('../views/admin/AdminProfile.vue'),
+          meta: { title: 'Meu perfil' },
+        },
+        {
+          path: 'settings',
+          name: 'admin-settings',
+          component: () => import('../views/admin/AdminSettings.vue'),
+          meta: { title: 'Configurações' },
         },
       ],
     },
@@ -173,9 +181,16 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // Verifica rotas de usuários normais
+  // Cadastro com sessão aberta: a conta nova substituiria a da sessão. Vai para o destino
+  // do `?redirect=` (só caminhos internos) ou para o perfil
+  if (to.meta.guestOnly && userStore.isAuthenticated) {
+    next(safeRedirect(to.query.redirect) ?? '/profile');
+    return;
+  }
+
+  // Verifica rotas de usuários normais: depois do login, a pessoa volta para onde ia
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next('/login');
+    next({ path: '/login', query: { redirect: to.fullPath } });
     return;
   }
 
@@ -189,8 +204,9 @@ router.afterEach((to, from, failure) => {
 
   document.title = to.meta.title ? `${to.meta.title} · ${BRAND}` : `${BRAND} · Delivery`;
 
-  // Na primeira carga o foco fica onde o navegador deixou
-  if (!from.matched.length) return;
+  // Na primeira carga o foco fica onde o navegador deixou. Na mesma página, com só a query
+  // mudando (filtro de status, busca do painel), o foco fica onde a pessoa está digitando
+  if (!from.matched.length || to.path === from.path) return;
 
   nextTick(() => {
     const main = document.getElementById('conteudo');

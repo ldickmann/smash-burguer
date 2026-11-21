@@ -6,7 +6,8 @@
  */
 export const validateEmail = (email) => {
   if (!email) return { isValid: false, message: "O email é obrigatório" };
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  // Aceita "+" e "%" antes do @ (como em nome+loja@example.com) e domínios de topo longos
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return {
     isValid: emailRegex.test(email),
     message: emailRegex.test(email) ? "" : "Email inválido",
@@ -65,39 +66,37 @@ export const validateLastName = (lastName) => {
 };
 
 /**
- * Valida uma data de nascimento, garantindo que a data seja válida e lógica.
+ * Valida uma data de nascimento no formato do campo de data ("AAAA-MM-DD"): a data precisa
+ * existir no calendário (31/02 não passa), ser de 1900 em diante e não estar no futuro.
+ * Os componentes são lidos do texto, e não por `new Date(texto)`, que interpreta a data em
+ * UTC e, no fuso do Brasil, transforma 01/01/1900 em 31/12/1899.
  *
- * @param {string} birthDate - A data de nascimento em formato compatível com Date.
+ * O segundo argumento que o useFormValidation passa (o formulário) não é usado.
+ *
+ * @param {string} birthDate - A data de nascimento, como o `<input type="date">` entrega.
  * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
  */
 export const validateBirthDate = (birthDate) => {
+  const today = new Date();
   if (!birthDate) return { isValid: false, message: "A data de nascimento é obrigatória" };
 
-  const date = new Date(birthDate);
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(birthDate));
+  if (!match) return { isValid: false, message: "Data de nascimento inválida" };
 
-  // Varifica se a idade é válida
-  if (isNaN(date.getTime())) {
+  const [year, month, day] = match.slice(1).map(Number);
+  // Uma data que não existe "transborda" para o mês seguinte: 2000-02-31 vira 02/03
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
     return { isValid: false, message: "Data de nascimento inválida" };
   }
 
-  // Componentes da data
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  // Verifica se o ano é anterior a 1900
   if (year < 1900) {
-    return { isValid: false, message: "O ano deve ser superior a 1900" };
+    return { isValid: false, message: "O ano deve ser 1900 ou depois" };
   }
 
-  // Verifica se o mês é válido
-  if (month < 1 || month > 12) {
-    return { isValid: false, message: "Mês inválido" };
-  }
-
-  // Verifica se o dia é válido
-  if (day < 1 || day > 31) {
-    return { isValid: false, message: "Dia inválido" };
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  if (date > startOfToday) {
+    return { isValid: false, message: "A data de nascimento não pode estar no futuro" };
   }
 
   return {
@@ -148,6 +147,19 @@ export const validatePhone = (phone) => {
 };
 
 /**
+ * Confere só o formato do CEP (8 dígitos), sem consultar a API.
+ *
+ * @param {string} cep - O CEP, com ou sem máscara.
+ * @returns {Object} Objeto com isValid e mensagem de erro, se aplicável.
+ */
+export const validateCEPFormat = (cep) => {
+  const digits = String(cep ?? "").replace(/\D/g, "");
+  if (!digits) return { isValid: false, message: "O CEP é obrigatório" };
+  if (digits.length !== 8) return { isValid: false, message: "CEP inválido. Devem conter 8 dígitos" };
+  return { isValid: true, message: "" };
+};
+
+/**
  * Valida o CEP, realizando requisição à API ViaCEP para buscar o endereço correspondente.
  *
  * @param {string} cep - O CEP a ser validado (pode conter formatação).
@@ -171,8 +183,6 @@ export const validateCEP = async (cep) => {
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
     const data = await response.json();
-
-    console.log('Resposta da API:', data); // Debug
 
     if (data.erro) {
       return {

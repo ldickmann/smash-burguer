@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@3.8.7",
+  "packageManager": "yarn@3.8.7+sha512.bbe7e310ff7fd20dc63b111110f96fe18192234bb0d4f10441fa6b85d2b644c8923db8fbe6d7886257ace948440ab1f83325ad02af457a1806cdc97f03d2508e",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -29,12 +29,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@typescript-eslint/utils": "^8.24.0",
+    "@typescript-eslint/utils": "^8.73.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/coverage-v8": "^4.1.12",
     "@vitest/eslint-plugin": "1.1.25",
     "@vue/eslint-config-prettier": "^10.1.0",
-    "@vue/test-utils": "^2.4.6",
+    "@vue/test-utils": "^2.6.0",
     "esbuild": "0.28.1",
     "eslint": "^9.18.0",
     "eslint-plugin-vue": "^10.11.1",
@@ -43,7 +43,7 @@
     "prettier": "^3.4.2",
     "sass-embedded": "^1.83.4",
     "typescript": "^5.9.3",
-    "vite": "^6.4.3",
+    "vite": "^6.4.6",
     "vite-plugin-vue-devtools": "^8.2.1",
     "vitest": "^4.1.12",
     "vue-eslint-parser": "^10.4.1"

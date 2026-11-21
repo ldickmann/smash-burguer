@@ -6,7 +6,13 @@
     max-width="560px"
     @close="closeModal"
   >
-    <form id="produto-form" class="modal-product" novalidate @submit.prevent="handleSubmit">
+    <form
+      id="produto-form"
+      ref="formRef"
+      class="modal-product"
+      novalidate
+      @submit.prevent="handleSubmit"
+    >
       <FormGroup
         id="productType"
         v-model="localProduct.category"
@@ -19,7 +25,10 @@
         v-model="localProduct.name"
         label="Nome do produto"
         placeholder="Informe o nome"
+        :maxlength="NAME_MAX"
+        :error="errors.name"
         required
+        @blur="touch('name')"
       />
       <FormGroup
         id="price"
@@ -27,7 +36,10 @@
         label="Preço"
         inputmode="decimal"
         placeholder="Ex.: 25,90"
+        :maxlength="7"
+        :error="errors.price"
         required
+        @blur="touch('price')"
       />
       <FormGroup
         id="quantity"
@@ -35,48 +47,74 @@
         label="Quantidade"
         type="number"
         inputmode="numeric"
-        placeholder="Informe a quantidade"
-        required
+        placeholder="Opcional"
+        :error="errors.quantity"
+        @blur="touch('quantity')"
       />
       <FormGroup
         id="description"
         v-model="localProduct.description"
         label="Descrição"
         placeholder="Descrição do produto"
+        :maxlength="DESCRIPTION_MAX"
+        :error="errors.description"
+        @blur="touch('description')"
       />
 
       <!-- Seletor de arquivo com a cara de um botão secundário -->
-      <div class="file-picker">
+      <div class="file-picker" :class="{ 'has-error': imageError }">
         <span class="file-picker__label">Imagem</span>
         <div class="file-picker__row">
           <label for="image" class="file-picker__button">
             <input
               id="image"
               type="file"
-              accept="image/*"
+              :accept="IMAGE_TYPES.join(',')"
               class="visually-hidden"
               :required="mode === 'add'"
+              :aria-invalid="imageError ? 'true' : undefined"
+              :aria-describedby="imageDescribedBy"
               @change="uploadImage"
             />
             Escolher imagem
           </label>
-          <span class="file-picker__name">{{ fileName || "Nenhuma imagem escolhida" }}</span>
+          <span class="file-picker__name">{{ fileName || imageStatus }}</span>
         </div>
+        <p id="image-ajuda" class="file-picker__help">{{ IMAGE_HELP }}</p>
+        <p v-if="imageError" id="image-erro" class="file-picker__error">
+          <font-awesome-icon :icon="['fas', 'circle-exclamation']" aria-hidden="true" />
+          {{ imageError }}
+        </p>
       </div>
     </form>
 
     <template #footer>
       <div class="modal-product__actions">
         <BaseButton variant="secondary" @click="cancelAction">Cancelar</BaseButton>
-        <BaseButton type="submit" form="produto-form">Salvar</BaseButton>
+        <BaseButton type="submit" form="produto-form" :loading="readingImage">Salvar</BaseButton>
       </div>
     </template>
   </BaseDialog>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { useButtonHandlers } from "@/utils/buttonHandlers";
+import { computed, nextTick, ref, watch } from "vue";
+import { useFormValidation } from "@/composables/useFormValidation";
+import { useProductsStore } from "@/stores/products";
+import {
+  DESCRIPTION_MAX,
+  IMAGE_HELP,
+  IMAGE_TYPES,
+  NAME_MAX,
+  emptyProduct,
+  formatPriceInput,
+  readProductImage,
+  toProduct,
+  validateProductDescription,
+  validateProductName,
+  validateProductPrice,
+  validateProductQuantity,
+} from "@/utils/productForm";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import FormGroup from "@/components/FormGroup.vue";
@@ -98,32 +136,57 @@ const props = defineProps({
   },
   product: {
     type: Object,
-    default: () => ({
-      name: "",
-      price: "",
-      quantity: "",
-      description: "",
-      image: "",
-      category: "foods",
-    }),
+    default: emptyProduct,
   },
 });
 
 const emit = defineEmits(["close", "submit", "cancel"]);
 
-const { handleImageUpload } = useButtonHandlers();
+const productsStore = useProductsStore();
+const NO_SPACE =
+  "Não há espaço neste navegador para mais esta imagem. Use uma imagem menor ou exclua produtos com imagem enviada.";
 
-// Cria uma cópia local do produto para edição
-const localProduct = ref({ ...props.product });
+// Cópia local do produto, com o preço no formato do campo ("25,90")
+const toForm = (product) => ({
+  ...emptyProduct(),
+  ...product,
+  price: formatPriceInput(product.price) || String(product.price ?? ""),
+  quantity: String(product.quantity ?? ""),
+});
+
+const formRef = ref(null);
+const localProduct = ref(toForm(props.product));
+// Imagem com que o modal abriu: um arquivo recusado volta a ela
+const openedImage = ref(localProduct.value.image);
 const fileName = ref("");
+const imageError = ref("");
+const readingImage = ref(false);
+
+const { errors, touch, validateAll, firstInvalid } = useFormValidation(localProduct, {
+  name: validateProductName,
+  price: validateProductPrice,
+  quantity: validateProductQuantity,
+  description: validateProductDescription,
+});
 
 // Atualiza o localProduct caso a prop "product" seja alterada
 watch(
   () => props.product,
   (newProduct) => {
-    localProduct.value = { ...newProduct };
+    localProduct.value = toForm(newProduct);
+    openedImage.value = localProduct.value.image;
     fileName.value = "";
+    imageError.value = "";
   }
+);
+
+const imageStatus = computed(() => {
+  if (readingImage.value) return "Lendo a imagem…";
+  return localProduct.value.image ? "Imagem atual" : "Nenhuma imagem escolhida";
+});
+
+const imageDescribedBy = computed(() =>
+  imageError.value ? "image-erro image-ajuda" : "image-ajuda"
 );
 
 const closeModal = () => emit("close");
@@ -133,15 +196,80 @@ const cancelAction = () => {
   closeModal();
 };
 
-const handleSubmit = () => {
-  // A lógica de envio (ex.: chamada à API) será tratada no componente pai
-  emit("submit", localProduct.value);
-  closeModal();
-};
+// A leitura da imagem termina depois do clique em "Salvar" se o arquivo acabou de ser
+// escolhido: o envio espera por ela
+let pendingRead = Promise.resolve();
+let lastUpload = 0;
 
 const uploadImage = (event) => {
-  fileName.value = event.target.files[0]?.name ?? "";
-  handleImageUpload(event, localProduct);
+  const input = event.target;
+  const file = input.files?.[0];
+  if (!file) return;
+
+  const upload = ++lastUpload;
+  readingImage.value = true;
+  fileName.value = "";
+  pendingRead = readProductImage(file).then((result) => {
+    // Só vale a última escolha
+    if (upload !== lastUpload) return;
+    readingImage.value = false;
+    if (result.error) {
+      // O arquivo recusado não entra: volta a imagem com que o modal abriu
+      imageError.value = result.error;
+      localProduct.value.image = openedImage.value;
+      // Permite escolher o mesmo arquivo de novo depois de corrigi-lo
+      input.value = "";
+      return;
+    }
+    imageError.value = "";
+    fileName.value = file.name;
+    localProduct.value.image = result.dataUrl;
+  });
+};
+
+// Sem imagem, o produto não sai. Na edição, depois de um arquivo recusado, a imagem atual vale.
+// A imagem enviada precisa caber no espaço que o cardápio salvo tem no navegador: o erro fica
+// no campo, porque um aviso fora do modal ficaria atrás do fundo dele
+const validateImage = () => {
+  if (!localProduct.value.image) {
+    imageError.value = "Escolha uma imagem para o produto.";
+    return false;
+  }
+  const replaced = props.mode === "edit" ? props.product : null;
+  if (!productsStore.fitsUploadBudget(localProduct.value.image, replaced)) {
+    imageError.value = NO_SPACE;
+    return false;
+  }
+  return true;
+};
+
+const focusField = async (id) => {
+  await nextTick();
+  formRef.value?.querySelector(`#${id}`)?.focus();
+};
+
+// Um envio por vez: o Enter num campo durante a leitura da imagem não duplica o produto
+let submitting = false;
+
+const handleSubmit = async () => {
+  if (submitting) return;
+  submitting = true;
+  try {
+    await pendingRead;
+
+    const fieldsValid = validateAll();
+    const imageValid = validateImage();
+    if (!fieldsValid || !imageValid) {
+      focusField(fieldsValid ? "image" : firstInvalid());
+      return;
+    }
+
+    // Quem abriu o modal fecha depois de salvar; se não salvar (sem espaço para a imagem,
+    // por exemplo), o formulário continua aberto e preenchido
+    emit("submit", toProduct(localProduct.value));
+  } finally {
+    submitting = false;
+  }
 };
 </script>
 

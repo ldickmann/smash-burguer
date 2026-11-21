@@ -12,6 +12,15 @@
         <p>{{ submitError }}</p>
       </div>
 
+      <div v-if="hasAccount" id="aviso-conta-salva" class="auth-alert auth-alert--warning">
+        <font-awesome-icon
+          :icon="['fas', 'circle-exclamation']"
+          class="auth-alert__icon"
+          aria-hidden="true"
+        />
+        <p>Já existe uma conta salva neste navegador. Se você criar outra, a anterior será apagada.</p>
+      </div>
+
       <form ref="formRef" novalidate class="auth-form" @submit.prevent="handleRegister">
         <div class="auth-form__names">
           <FormGroup
@@ -104,7 +113,33 @@
           @blur="touch('CEP')"
         />
 
-        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+        <!-- CEP único da cidade: a consulta não traz rua nem bairro -->
+        <FormGroup
+          v-if="manual.street"
+          id="street"
+          v-model="form.address.street"
+          label="Rua e número"
+          autocomplete="address-line1"
+          :error="streetError"
+          required
+          @blur="validateStreet"
+        />
+        <FormGroup
+          v-if="manual.neighborhood"
+          id="neighborhood"
+          v-model="form.address.neighborhood"
+          label="Bairro"
+          autocomplete="address-level3"
+        />
+
+        <BaseButton
+          type="submit"
+          size="lg"
+          block
+          :loading="loading"
+          :aria-describedby="hasAccount ? 'aviso-conta-salva' : undefined"
+          class="auth-form__submit"
+        >
           {{ loading ? "Criando conta…" : "Criar conta" }}
         </BaseButton>
       </form>
@@ -125,6 +160,8 @@ import { useRoute } from "vue-router";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { useCepLookup } from "@/composables/useCepLookup";
+import { useManualAddress } from "@/composables/useManualAddress";
+import { hasSavedAccount } from "@/services/authServices";
 import {
   validateFirstName,
   validateLastName,
@@ -132,6 +169,7 @@ import {
   validatePassword,
   validateBirthDate,
   validatePhone,
+  validateCEPFormat,
 } from "@/utils/validators";
 import FormGroup from "@/components/FormGroup.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -151,12 +189,8 @@ const form = ref({
   address: null, // Armazena os dados do endereço retornados pela API viaCEP
 });
 
-const validateCEPFormat = (value) => {
-  const digits = String(value ?? "").replace(/\D/g, "");
-  if (!digits) return { isValid: false, message: "O CEP é obrigatório" };
-  if (digits.length !== 8) return { isValid: false, message: "CEP inválido. Devem conter 8 dígitos" };
-  return { isValid: true, message: "" };
-};
+// O app guarda uma conta só: criar outra apaga a que já está salva
+const hasAccount = hasSavedAccount();
 
 const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
   firstName: validateFirstName,
@@ -176,11 +210,24 @@ const redirectQuery = computed(() =>
   route.query.redirect ? { redirect: route.query.redirect } : {}
 );
 
-// O CEP é consultado assim que tiver 8 dígitos
+const { manual, streetError, setFromLookup, validateStreet } = useManualAddress(() => form.value.address);
+
+// Consulta o CEP e guarda uma cópia do endereço, se o campo ainda tiver esse CEP quando a
+// resposta chegar (a cópia não muda a resposta guardada pela consulta)
+const lookupCep = async (value) => {
+  const address = await cep.lookup(value);
+  if (form.value.CEP !== value) return;
+  form.value.address = address ? { ...address } : null;
+  setFromLookup(address);
+};
+
+// O CEP é consultado assim que tiver 8 dígitos; o endereço do CEP anterior sai na hora
 watch(
   () => form.value.CEP,
-  async (value) => {
-    form.value.address = await cep.lookup(value);
+  (value) => {
+    form.value.address = null;
+    setFromLookup(null);
+    lookupCep(value);
   }
 );
 
@@ -188,34 +235,48 @@ const cepError = computed(() => errors.CEP || cep.error.value);
 const cepHelper = computed(() => {
   if (cep.loading.value) return "Buscando endereço…";
   const address = form.value.address;
-  return address ? `${address.street}, ${address.neighborhood} — ${address.city}/${address.state}` : "";
+  if (!address) return "Consultamos o CEP no ViaCEP para preencher o endereço.";
+  const city = `${address.city}/${address.state}`;
+  return manual.value.street
+    ? `${city}. Este CEP vale para a cidade toda: informe a rua.`
+    : `${address.street}, ${address.neighborhood} — ${city}`;
 });
 
 const focusFirstError = async () => {
   await nextTick();
-  const field = firstInvalid() ?? (cepError.value ? "CEP" : null);
+  // Sem erro nos campos, o que falta é o endereço do CEP (consulta com erro ou ainda em
+  // andamento) ou a rua que o CEP não trouxe
+  const field =
+    firstInvalid() ?? (!form.value.address ? "CEP" : streetError.value ? "street" : null);
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
+// Envio em andamento, inclusive a espera pela consulta do CEP: um segundo envio é ignorado
+let submitting = false;
+
 const handleRegister = async () => {
-  submitError.value = "";
-  const isValid = validateAll();
+  if (submitting) return;
+  submitting = true;
+  try {
+    submitError.value = "";
 
-  // Garante o endereço antes de criar a conta
-  if (isValid && !form.value.address) {
-    form.value.address = await cep.lookup(form.value.CEP);
+    // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
+    if (!form.value.address) await lookupCep(form.value.CEP);
+    const isValid = validateAll();
+    const hasStreet = validateStreet();
+
+    if (!isValid || !form.value.address || !hasStreet) {
+      await focusFirstError();
+      return;
+    }
+
+    loading.value = true;
+    const result = await authRegister(form.value, route.query.redirect);
+    if (result?.error) submitError.value = result.error;
+  } finally {
+    loading.value = false;
+    submitting = false;
   }
-
-  if (!isValid || !form.value.address) {
-    await focusFirstError();
-    return;
-  }
-
-  loading.value = true;
-  const result = await authRegister(form.value, route.query.redirect);
-  loading.value = false;
-
-  if (result?.error) submitError.value = result.error;
 };
 </script>
 

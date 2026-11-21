@@ -1,10 +1,16 @@
 import { defineStore } from 'pinia';
+import { useProductsStore } from '@/stores/products';
+import { resolveCartItems } from '@/utils/cartItems';
+
+// Os preços são comparados em centavos, sem a imprecisão da soma em ponto flutuante
+const cents = (value) => Math.round(value * 100);
 
 /**
  * Item do carrinho:
  * { productId, category, name, image, unitPrice, quantity,
  *   removedIngredients: string[], additionals: { name, price, quantity }[], observation }
  * `unitPrice` = preço do produto + adicionais; o total da linha é unitPrice × quantity.
+ * O que vem do localStorage passa pelo cardápio (ver syncWithCatalog).
  */
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -41,7 +47,40 @@ export const useCartStore = defineStore('cart', {
     clearCart() {
       this.items = [];
     },
+    /**
+     * Refaz cada linha pelo cardápio: preço, nome e imagem vêm do catálogo, e a linha que
+     * não bate com ele (produto, adicional ou quantidade fora do que a loja oferece) sai.
+     * @returns {boolean} true se alguma linha saiu ou mudou de preço
+     */
+    syncWithCatalog() {
+      const previous = Array.isArray(this.items) ? this.items : null;
+      const items = resolveCartItems(previous, useProductsStore());
+      const changed =
+        !previous ||
+        items.length !== previous.length ||
+        items.some((item, index) => cents(item.unitPrice) !== cents(previous[index].unitPrice));
+      this.items = items;
+      return changed;
+    },
   },
-  // Versão na chave: uma mudança futura no modelo do item não tenta ler dados antigos
-  persist: { key: 'smash-burger:cart:v1' },
+  persist: {
+    // Versão na chave: uma mudança futura no modelo do item não tenta ler dados antigos
+    key: 'smash-burger:cart:v1',
+    // A imagem enviada pelo painel (data URL) não é copiada para cada linha salva: ao
+    // carregar, a conferência com o cardápio devolve a imagem do produto
+    serializer: {
+      serialize: (state) =>
+        JSON.stringify(state, (key, value) =>
+          key === 'image' && typeof value === 'string' && value.startsWith('data:') ? '' : value
+        ),
+      deserialize: JSON.parse,
+    },
+    // O carrinho salvo é editável no navegador: formato trocado, preço, nome ou imagem
+    // alterados não entram, e o que a conferência mudar é regravado na hora
+    afterHydrate: ({ store }) => {
+      const saved = JSON.stringify(store.items);
+      store.syncWithCatalog();
+      if (JSON.stringify(store.items) !== saved) store.$persist();
+    },
+  },
 });

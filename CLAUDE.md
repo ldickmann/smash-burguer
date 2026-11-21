@@ -12,13 +12,13 @@ Converse com o usuário em português. Commits também em português, no formato
 
 ## Comandos no ambiente cloud
 
-O projeto usa Yarn 3.8.7, fixado em `packageManager` no `package.json`; o `yarn.lock` está no formato do Yarn 3 e o `.yarn/cache` é versionado. O `repo.yarnpkg.com` é bloqueado no container, então:
+O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `package.json`; o `yarn.lock` está no formato do Yarn 3 e o `.yarn/cache` é versionado. O `repo.yarnpkg.com` é bloqueado no container, então:
 
 ```bash
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
-corepack yarn@3.8.7 install --immutable   # altera .yarn/install-state.gz; não commite só isso
+corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 35 testes
+npx vitest run                             # 239 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -30,10 +30,18 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 - **Fluxo:** branch de trabalho → PR para `develop` → PR `develop` → `main`.
 - **Merge:** use sempre "Create a merge commit", sem squash nem rebase.
+- **Regras das branches:** a `develop` exige PR (sem aprovação obrigatória) e não aceita force push nem exclusão; a `main` exige aprovação de code owner e está travada. Nas duas, o admin passa por cima.
 - **`develop` em dia:** antes, confirme que a `develop` contém a `main` com `git merge-base --is-ancestor origin/main origin/develop`. Se não contiver, abra primeiro uma PR `main` → `develop`.
-- **Deploy:** o merge na `main` publica o site. Ele instala com `corepack yarn@3.8.7 install --immutable` no Node 22; se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
+- **Deploy:** o merge na `main` publica o site. Se mudar dependências, commite o `yarn.lock` e o `.yarn/cache` juntos.
+  - O CI instala com `corepack yarn install --immutable --check-cache` no Node 22. A versão fica fora da linha de comando para o Corepack conferir o hash do `packageManager`; com `yarn@3.8.7` explícito, ele não confere.
+  - O `--check-cache` baixa de novo cada pacote e compara com o zip do `.yarn/cache`. É a única conferência dos binários de plataforma (`@esbuild/linux-x64` e outros), que não têm checksum no `yarn.lock`. Ao revisar uma PR que mexe no `.yarn/cache`, rode o mesmo install no container, que é Linux.
+  - Com isso, o deploy depende do registro do npm. Se ele estiver fora do ar, rode o workflow de novo mais tarde; se uma versão do `yarn.lock` for retirada do registro, o deploy falha até a dependência ser atualizada.
+  - Só o job `deploy` tem permissão de escrita (`pages: write` e `id-token: write`). O `build`, que roda código das dependências, só lê e não guarda o token no `.git/config`.
 - **Merges e PRs:** só com pedido explícito do usuário.
-- **Actions:** o workflow usa os majors que rodam em Node 24: `checkout@v7`, `setup-node@v7`, `configure-pages@v6`, `upload-pages-artifact@v5` e `deploy-pages@v5`.
+- **Actions:** fixadas pelo SHA completo do commit, com a versão em comentário: `checkout` v7.0.1, `setup-node` v7.1.0, `configure-pages` v6.0.0, `upload-pages-artifact` v5.0.0 e `deploy-pages` v5.0.1, todas em Node 24.
+  - O Dependabot (`.github/dependabot.yml`) abre uma PR por mês para a `develop`, trocando o SHA e o comentário juntos. Os commits dele saem em inglês (`ci(deps): bump …`): é a exceção à regra de commits em português.
+  - O repositório só aceita actions de autoria do GitHub (`actions/*`). Uma action de terceiros precisa ser liberada nas configurações antes.
+  - Para trocar à mão, pegue o SHA do commit com `gh api repos/actions/<nome>/commits/<versão> --jq .sha`, que resolve também tag anotada, e mude SHA e comentário juntos. Não volte a usar só a tag.
 
 ## Dependências
 
@@ -44,8 +52,10 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Vitest:** `vitest` e `@vitest/coverage-v8` andam sempre na mesma versão.
 - **`.yarnrc.yml`:** um `packageExtensions` declara o peer `vue` que falta no `vite-plugin-vue-devtools`.
 - **`resolutions`:** só pisos dentro da faixa que os pacotes pedem (hoje, só o `rollup`). Forçar outro major, como o `tar` 6 que existia, bloqueia as correções de segurança.
+- **Advisories que ficaram (nov/2026):** 3 moderate, de `glob` 13 e `minimatch` 10, que só o `js-beautify` 2, o `editorconfig` 3 e o `cacache` 20 puxam (ferramentas de desenvolvimento). Saem quando eles aceitarem o `glob` 14 e o `minimatch` 11; não force por `resolutions`.
 - **Alertas do Dependabot:**
   - para conferir, rode `corepack yarn@3.8.7 npm audit --all --recursive` e também `python3 -I .claude/lockfile-audit.py`, porque o primeiro deixa passar versões fixadas por transitivas;
+  - no script, a marca "versão não identificada" indica um advisory que ele não ligou a nenhuma versão do lockfile (a faixa não casou ou está num formato que ele não entende, como `^`, `~` ou hífen): confira à mão;
   - para corrigir uma transitiva, use `corepack yarn@3.8.7 up -R <pacote>`.
 
 ## Convenções do código (SPEC)
@@ -57,13 +67,16 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
   - só `transform` e `opacity`;
   - `transform` e durações acima de `--dur-fast` ficam só dentro de `motion-ok`;
   - a regra global de movimento reduzido fica em `base/_motion.scss`.
+- **CSP:** fica numa `<meta>` do `index.html`, porque o GitHub Pages não aceita cabeçalhos. Recurso novo de outra origem (script, `fetch`, imagem ou fonte) precisa entrar nela. O `'unsafe-inline'` de `style-src` fica: o Font Awesome e o servidor de desenvolvimento do Vite injetam `<style>`. No `yarn dev`, o Vite e o devtools põem scripts antes da `<meta>`; a ordem que vale é a do `dist/index.html`.
+- **`console.log`:** o build descarta as chamadas cujo valor não é usado (`esbuild.pure` no `vite.config.js`). Numa arrow function de expressão, como `(x) => console.log(x)`, use chaves; o `eslint .` acusa esse caso (`no-restricted-syntax`).
 - **Proibidos:** `!important`, `outline: none`, `transition: all`, hex ou rgba fora dos tokens, e `toFixed`. Preço sempre via `formatPrice`. As buscas da §13.2 do SPEC devem continuar com 0 resultados.
 - **Componentes base:** ficam em `src/components/ui/` (`BaseButton`, `BaseDialog`, `QuantityStepper`, `CategoryTabs`, `AppToast`, `EmptyState`).
 - **Assinatura de autoria:** `src/components/AssinaturaEncaixe.vue`, no `MainLayout`, logo depois do `<TheFooter>`, com `tom="escuro"`.
   - É cópia exata de um bloco com sha256 `3a9f9cc494d415f3a30c34519336b53b1db8c16955b89d09ddd22043543749fd`: não edite nem formate o arquivo. Se o CSS do projeto vazar para a faixa, corrija a regra do projeto.
   - Fica fora das convenções acima (`<style>` global, cores em hex, `!important`, animação própria e link de 40 px de altura). A §1.1 e a §13.2 do SPEC e o `axe-scan.mjs` já a excluem.
 - **Textos:** em português. A marca se escreve sempre "Smash Burger".
-- **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session` e `smash-burger:account`. O admin continua em `admin`.
+- **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session`, `smash-burger:account`, `smash-burger:admin-session` (sessão do painel), `smash-burger:catalog` (cardápio editado no painel) e `smash-burger:admin-orders` (pedidos do painel). O cadastro do admin criado à mão continua em `admin`. Todo estado persistido é conferido ao carregar (`afterHydrate`, com as funções de `src/utils/storedState.js`): o que vem do localStorage é editável no navegador.
+- **Senhas:** só por `hashPassword`/`verifyPassword` (`src/utils/password.js`, PBKDF2-SHA256 do WebCrypto). Não grave senha em texto, nem na sessão.
 - **Dependências novas:** pergunte ao usuário antes de adicionar.
 
 ## Verificação
@@ -76,9 +89,9 @@ O `README.md` (instalação, scripts, estrutura, dados no navegador, deploy, lim
 
 ## Problemas conhecidos (fora do escopo do redesign)
 
-- "Atualizar status" no admin lança TypeError (`[FLX-09]`).
-- No admin, "Excluir" só faz `console.log`, e produtos criados ou editados não são persistidos.
-- A sessão guarda a senha no localStorage, e o `createAdmin.html` está versionado com credenciais (AUDIT §11.3).
-- O `createAdmin.html` grava o admin na chave `admin`, a mesma que o `adminStore` persiste. Depois do primeiro login, entrar de novo exige rodar o `createAdmin.html` outra vez. O link que a página mostra (`/admin/login`) também está errado; o certo é `/smash-burguer/#/admin/login`.
-- Sair da conta apaga o histórico de pedidos.
+- Sem back-end, o login é conferido no navegador, e o cardápio e os pedidos editados no painel valem só no navegador onde foram editados; os pedidos iniciais são dados de exemplo (`src/stores/adminOrders.js`).
+- O hash das senhas precisa do WebCrypto, que só existe em HTTPS e em `localhost`: por HTTP num IP da rede, o cadastro e o login mostram um aviso.
+- **Admin de teste:** no `yarn dev`, o login do painel aceita o admin de `devTestAdmin()` (`src/services/adminAuthServices.js`), com credenciais fictícias e públicas, atrás de `import.meta.env.DEV`. O `build-config.test.js` confere que ele não vai para o build; não o tire de trás do `DEV`.
+- **Admin no site publicado:** só entra com o admin criado à mão na chave `admin` (README, "Acessar o painel administrativo"); a senha em texto vira hash no primeiro login.
+- **Regra da `main`:** exige aprovação de code owner e está travada (`lock_branch`); o usuário mergeia como admin. Não ligue "Do not allow bypassing".
 - O `.prettierrc.json` (sem ponto e vírgula, aspas simples) não bate com 120 dos 132 arquivos de `src/`. Não rode `yarn format` misturado com outras mudanças.

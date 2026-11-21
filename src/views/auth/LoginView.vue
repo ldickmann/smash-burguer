@@ -9,7 +9,7 @@
           class="auth-alert__icon"
           aria-hidden="true"
         />
-        <p>E-mail ou senha incorretos.</p>
+        <p>{{ authError }}</p>
       </div>
 
       <form ref="formRef" class="auth-form" novalidate @submit.prevent="handleLogin">
@@ -74,7 +74,8 @@ const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
 
 const formRef = ref(null);
 const loading = ref(false);
-const authError = ref(false);
+// Mensagem do erro de login ("" sem erro)
+const authError = ref("");
 
 // Mantém o destino ao trocar para o cadastro
 const redirectQuery = computed(() =>
@@ -86,7 +87,7 @@ const redirectQuery = computed(() =>
  * Credenciais erradas mostram o banner em vez de um alert().
  */
 const handleLogin = async () => {
-  authError.value = false;
+  authError.value = "";
 
   if (!validateAll()) {
     await nextTick();
@@ -98,7 +99,7 @@ const handleLogin = async () => {
   const result = await authLogin(form.value, route.query.redirect);
   loading.value = false;
 
-  if (result?.error) authError.value = true;
+  if (result?.error) authError.value = result.error;
 };
 </script>
 

@@ -14,12 +14,19 @@ dist-ssr
 coverage
 *.local
 
+# Variáveis de ambiente: o Vite carrega o .env e o .env.[modo]; os .local já
+# caem na regra acima
+.env
+.env.*
+!.env.example
+
+# Estado da última instalação do Yarn: muda a cada install e descreve a máquina
+.yarn/install-state.gz
+
 /cypress/videos/
 /cypress/screenshots/
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*
@@ -31,4 +38,3 @@ coverage
 *.tsbuildinfo
 
 /coverage
-createAdmin.html
