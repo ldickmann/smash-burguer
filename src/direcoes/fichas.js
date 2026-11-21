@@ -5,17 +5,9 @@
 import { FICHA as material } from "./estilos/material/ficha.js";
 import { FICHA as esqueumorfismo } from "./estilos/esqueumorfismo/ficha.js";
 import { FICHA as neumorfismo } from "./estilos/neumorfismo/ficha.js";
-import { FICHA as d3 } from "./estilos/3d/ficha.js";
-import { FICHA as flat } from "./estilos/flat/ficha.js";
-import { FICHA as minimalismo } from "./estilos/minimalismo/ficha.js";
-import { FICHA as escuro } from "./estilos/escuro/ficha.js";
 
 export const FICHAS = {
   material,
   esqueumorfismo,
   neumorfismo,
-  "3d": d3,
-  flat,
-  minimalismo,
-  escuro,
 };

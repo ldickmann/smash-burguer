@@ -8,7 +8,7 @@
         <p class="indice__marca">Smash Burger</p>
         <h1 class="indice__titulo">Direções visuais</h1>
         <p class="indice__intro">
-          A Home da loja refeita em sete estilos de interface. Abra cada uma
+          A Home da loja refeita em três estilos de interface. Abra cada uma
           em 1440 px, compare com as fichas abaixo e escolha a direção que vai para o sistema inteiro.
           Estas páginas só existem no servidor de desenvolvimento e não entram no build.
         </p>
@@ -81,13 +81,6 @@ import "@fontsource/courier-prime/400.css";
 import "./estilos/esqueumorfismo/_tokens.scss";
 import "@fontsource-variable/nunito";
 import "./estilos/neumorfismo/_tokens.scss";
-import "@fontsource-variable/fredoka";
-import "./estilos/3d/_tokens.scss";
-import "@fontsource-variable/open-sans";
-import "./estilos/flat/_tokens.scss";
-import "@fontsource-variable/archivo/wdth.css";
-import "./estilos/minimalismo/_tokens.scss";
-import "./estilos/escuro/_tokens.scss";
 import { ref } from "vue";
 import FichaDirecao from "./FichaDirecao.vue";
 import { DIRECOES, caminhoDirecao } from "./direcoes";

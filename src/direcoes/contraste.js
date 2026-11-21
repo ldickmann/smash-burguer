@@ -5,10 +5,6 @@
 import { PARES as material } from "./estilos/material/contraste.js";
 import { PARES as esqueumorfismo } from "./estilos/esqueumorfismo/contraste.js";
 import { PARES as neumorfismo } from "./estilos/neumorfismo/contraste.js";
-import { PARES as d3 } from "./estilos/3d/contraste.js";
-import { PARES as flat } from "./estilos/flat/contraste.js";
-import { PARES as minimalismo } from "./estilos/minimalismo/contraste.js";
-import { PARES as escuro } from "./estilos/escuro/contraste.js";
 
 // ---------- Fórmula ----------
 
@@ -97,8 +93,4 @@ export const PARES_POR_DIRECAO = {
   material,
   esqueumorfismo,
   neumorfismo,
-  "3d": d3,
-  flat,
-  minimalismo,
-  escuro,
 };

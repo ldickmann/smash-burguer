@@ -30,29 +30,5 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./estilos/neumorfismo/HomeNeumorfismo.vue"),
         meta: titulo("Neumorfismo"),
       },
-      {
-        path: "/direcoes/3d",
-        name: "direcao-3d",
-        component: () => import("./estilos/3d/Home3D.vue"),
-        meta: titulo("3D e gradientes suaves"),
-      },
-      {
-        path: "/direcoes/flat",
-        name: "direcao-flat",
-        component: () => import("./estilos/flat/HomeFlat.vue"),
-        meta: titulo("Flat"),
-      },
-      {
-        path: "/direcoes/minimalismo",
-        name: "direcao-minimalismo",
-        component: () => import("./estilos/minimalismo/HomeMinimalismo.vue"),
-        meta: titulo("Minimalismo"),
-      },
-      {
-        path: "/direcoes/escuro",
-        name: "direcao-escuro",
-        component: () => import("./estilos/escuro/HomeEscuro.vue"),
-        meta: titulo("Dark mode"),
-      },
     ]
   : [];
