@@ -12,6 +12,7 @@ cd /home/user/smash-burguer && corepack yarn@3.8.7 build
 nohup corepack yarn@3.8.7 preview --port 4173 --strictPort > /tmp/preview.log 2>&1 &
 
 E2E=/tmp/e2e   # ou uma pasta no scratchpad da sessão
+export REPO=/home/user/smash-burguer   # o tokens-contrast.mjs lê o repositório daqui
 mkdir -p $E2E/shots/final $E2E/shots/lacunas $E2E/video
 cp /home/user/smash-burguer/.claude/e2e/*.mjs $E2E/ && cd $E2E
 npm init -y >/dev/null && npm i playwright@1.56.1 axe-core@4.10.3
@@ -26,6 +27,7 @@ node node_modules/vite/bin/vite.js build
 node node_modules/vite/bin/vite.js preview --port 4173 --strictPort   # em segundo plano
 
 E2E=<pasta no scratchpad da sessão>
+export REPO="$PWD"   # a raiz do repositório, para o tokens-contrast.mjs
 mkdir -p $E2E/shots/final $E2E/shots/lacunas $E2E/shots/fase6 $E2E/video
 cp .claude/e2e/*.mjs $E2E/ && cd $E2E
 npm init -y >/dev/null && npm i --ignore-scripts playwright@1.65.0 axe-core@4.10.3

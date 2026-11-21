@@ -2,12 +2,18 @@
 // §13.7 do SPEC-material: contraste dos pares de tokens de base, por papel (§2.2).
 // Os pares e a fórmula vêm de src/utils/contraste.js, os mesmos do src/__tests__/contraste.test.js.
 // uso: REPO=<raiz do repositório> node tokens-contrast.mjs (sem REPO, usa a pasta atual)
+// Sai com 1 se algum par reprovar e com 2 se não achar o repositório.
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const REPO = process.env.REPO || process.cwd();
-const { PARES, lerTokens, medirPar, razao, lerCor } = await import(pathToFileURL(path.join(REPO, 'src/utils/contraste.js')).href);
+const CONTRASTE = path.join(REPO, 'src/utils/contraste.js');
+if (!fs.existsSync(CONTRASTE)) {
+  console.error(`Não achei ${CONTRASTE}. Rode da raiz do repositório ou informe a raiz em REPO=<pasta>.`);
+  process.exit(2);
+}
+const { PARES, lerTokens, medirPar, razao, lerCor } = await import(pathToFileURL(CONTRASTE).href);
 const { ler } = lerTokens(fs.readFileSync(path.join(REPO, 'src/assets/styles/base/_tokens.scss'), 'utf8'));
 const duasCasas = (valor) => (Math.floor(valor * 100) / 100).toFixed(2);
 
@@ -23,3 +29,4 @@ for (const par of PARES) {
 const desabilitado = razao(lerCor(ler('color-ink-disabled')), lerCor(ler('m3-surface-container-highest')));
 console.log(`\nInformativo (isento): color-ink-disabled / m3-surface-container-highest = ${duasCasas(desabilitado)}:1`);
 console.log(falhas ? `FALHAS: ${falhas}` : `TODOS OS ${PARES.length} PARES OK`);
+process.exitCode = falhas ? 1 : 0;
