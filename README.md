@@ -25,7 +25,7 @@ Front-end de delivery de hambúrgueres artesanais feito em Vue 3, com:
 
 ### Loja
 
-- **Cardápio** com abas Hambúrgueres, Bebidas e Sobremesas. Os produtos ficam em `src/json/products.json`, e a Home destaca os hambúrgueres no carrossel "Mais pedidos".
+- **Cardápio** com abas Hambúrgueres, Bebidas e Sobremesas. Os produtos ficam em `src/json/products.json`, e a Home mostra todos os hambúrgueres num feed, com o Smash Burger em destaque, e as bebidas e as sobremesas numa lista, cada produto com o botão de adicionar.
 - **Personalizar** abre um modal antes de o item entrar no carrinho:
   - nos hambúrgueres e na sobremesa, dá para tirar ingredientes e somar adicionais (até 5 de cada), com o preço recalculado na hora;
   - nos hambúrgueres, um montador 3D mostra as camadas do lanche;
@@ -65,7 +65,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 
 ### Interface
 
-- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. A regra base dos títulos (`h1` a `h3`) segue a escala tipográfica do M3, e o anel de foco tem 3 px; os títulos que as telas estilizam por conta própria passam ao M3 na etapa de cada tela. O `BaseButton` já desenha os botões do M3 (filled, tonal e de texto, com a troca de forma ao pressionar e o retorno "Adicionado"), e os componentes da Home do M3 (foto nas formas do catálogo, botão dividido, folha de ingredientes e itens de lista) já estão em `src/components/ui/`, à espera da etapa da Home. A moldura da loja já é a do M3, em todas as rotas: o cabeçalho com a marca; a toolbar com Início, Cardápio e Entrar (ou Perfil) numa pílula e o botão do carrinho com o contador, que no celular e no tablet flutua no canto de baixo e a partir de 1024 px fica no cabeçalho fixo; e o rodapé, que fora da Home mostra também horário, endereço, WhatsApp e e-mail. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
+- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. A regra base dos títulos (`h1` a `h3`) segue a escala tipográfica do M3, e o anel de foco tem 3 px; os títulos que as telas estilizam por conta própria passam ao M3 na etapa de cada tela. O `BaseButton` já desenha os botões do M3 (filled, tonal e de texto, com a troca de forma ao pressionar e o retorno "Adicionado"), e a Home de `#/` já é a do M3, igual à de referência: o hero com a "prensa" (o disco de 12 lobos que se achata uma vez na entrada, só com o movimento liberado), o feed "Hambúrgueres" com o Smash Burger em destaque e a folha de ingredientes no botão dividido de cada card, bebidas e sobremesas numa lista segmentada e o horário e contato. Os componentes dela ficam em `src/components/home/` e `src/components/ui/`. A moldura da loja já é a do M3, em todas as rotas: o cabeçalho com a marca; a toolbar com Início, Cardápio e Entrar (ou Perfil) numa pílula e o botão do carrinho com o contador, que no celular e no tablet flutua no canto de baixo e a partir de 1024 px fica no cabeçalho fixo; e o rodapé, que fora da Home mostra também horário, endereço, WhatsApp e e-mail. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
 - **Acessibilidade**, verificada com o axe-core (nenhuma violação WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px):
   - navegação completa por teclado, foco visível e link "Pular para o conteúdo";
   - diálogos que prendem e devolvem o foco;
@@ -84,7 +84,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 | [Pinia 3](https://pinia.vuejs.org/) + [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) | Estado do carrinho, da sessão e do painel, salvo no `localStorage` |
 | [Vite 6](https://vite.dev/) | Servidor de desenvolvimento e build |
 | [Sass](https://sass-lang.com/) | Estilos, tokens de design e mixins |
-| [vue3-carousel](https://github.com/ismail9k/vue3-carousel) | Carrossel da Home |
+| [vue3-carousel](https://github.com/ismail9k/vue3-carousel) | Carrossel da Home antiga (`CarouselBurguer.vue`), sem uso desde a Home do M3; a migração decide se ele sai |
 | [Font Awesome 6](https://fontawesome.com/) | Ícones |
 | [Fontsource](https://fontsource.org/) | Fonte Roboto servida pelo próprio site. Archivo, Bebas Neue, Courier Prime e Nunito são `devDependencies`: só as direções visuais as usam, no `yarn dev` |
 | [ViaCEP](https://viacep.com.br/) | Endereço a partir do CEP |
@@ -156,6 +156,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   │   ├── main.scss     # estilos globais: só a base
 │   │   └── styles/       # base/ (tokens, breakpoints, movimento), components/, layouts/, pages/
 │   ├── components/       # componentes da loja
+│   │   ├── home/         # seções da Home do M3 (hero, feed, bebidas e sobremesas, horário e contato)
 │   │   ├── ui/           # componentes base (BaseButton, BaseDialog, AppToast…) e os do M3 (M3Foto, M3BotaoDividido…)
 │   │   ├── layout/       # cabeçalho, toolbar e rodapé do M3 (a navbar e o rodapé da Brasa saem na limpeza)
 │   │   └── admin/        # componentes do painel
@@ -201,7 +202,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 405 testes unitários, em 55 arquivos: 346 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, a base de estilo (movimento reduzido, títulos, anel de foco e mixins do M3), o `BaseButton` (inclusive a folha de estilo compilada), os componentes e a lógica da Home do M3 copiados para a produção (foto, botão dividido, folha de ingredientes, itens de lista, cardápio, contatos, textos da loja, retorno "Adicionado", contador do carrinho e links), a moldura do M3 (toolbar, rodapé, layout da loja, abas do Cardápio e as folhas de estilo compiladas), o isolamento da produção em relação às direções visuais, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 425 testes unitários, em 58 arquivos: 366 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, a base de estilo (movimento reduzido, títulos, anel de foco e mixins do M3), o `BaseButton` (inclusive a folha de estilo compilada), os componentes e a lógica da Home do M3 copiados para a produção (foto, botão dividido, folha de ingredientes, itens de lista, cardápio, contatos, textos da loja, retorno "Adicionado", contador do carrinho e links), a moldura do M3 (toolbar, rodapé, layout da loja, abas do Cardápio e as folhas de estilo compiladas), a Home do M3 (as seções do desenho, o feed com o destaque, a folha de ingredientes, as listas, o horário e contato, o modal aberto pela Home, o contrato de que nenhuma seção usa o carrinho e o cookie do destaque), o isolamento da produção em relação às direções visuais, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
