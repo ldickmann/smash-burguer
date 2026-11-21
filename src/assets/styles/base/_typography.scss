@@ -1,33 +1,23 @@
-// Tipografia (SPEC §2.3). As fontes são importadas uma única vez, em src/main.js.
+// Tipografia (SPEC-material §2.3 e §3, item 9). A Roboto é importada uma única vez, em src/main.js.
+// Os títulos usam os papéis do M3. Os seletores de elemento também alcançam as Homes do acervo onde
+// elas não os sobrescrevem (conferido nas capturas do acervo, SPEC-material §13.10).
+@use "m3" as *;
 
-// Bebas Neue: só títulos de 28px ou mais, sempre 400 e sem negrito sintético
-.display,
+// Título da página: display fluido (de display-s a display-m), em Medium e sem negrito sintético
 h1 {
-  font-family: var(--font-display);
-  font-weight: 400;
+  font-family: var(--m3-fonte);
+  font-size: var(--text-page);
+  font-weight: 500;
   font-synthesis: none;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
   line-height: var(--leading-display);
 }
 
-h1 {
-  font-size: var(--text-page);
-}
-
-h2,
-h3 {
-  font-family: var(--font-text);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-}
-
 h2 {
-  font-size: var(--text-lg);
+  @include tipo(headline-s);
 }
 
 h3 {
-  font-size: var(--text-md);
+  @include tipo(title-m, 500);
 }
 
 // Links dentro de texto corrido
