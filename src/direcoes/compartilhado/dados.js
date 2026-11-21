@@ -1,7 +1,6 @@
-// Textos e contatos reais da loja, copiados dos componentes de produção (origem em cada bloco).
-// Nenhum texto de loja novo: as direções mudam só a apresentação.
-import { computed } from "vue";
-import { useUserStore } from "@/stores/userStore";
+// Textos, contatos e rótulos reais da loja, copiados dos componentes de produção (origem em cada
+// bloco). Nenhum texto de loja novo: as direções mudam só a apresentação. Módulo puro (sem Vue):
+// o Node também lê, no portão de conteúdo.
 
 // src/layouts/MainLayout.vue (title e props do TheFooter)
 export const MARCA = "Smash Burger";
@@ -69,15 +68,12 @@ export const REDES = [
   { nome: "Instagram", icone: ["fab", "instagram"], url: "https://instagram.com" },
 ].map((rede) => ({ ...rede, rotulo: `${MARCA} no ${rede.nome}${NOVA_ABA}` }));
 
-// src/components/layout/TheNavbar.vue: o terceiro link depende da sessão. "Início" e a marca
-// levam à Home do próprio estilo; o resto abre as telas reais.
-export function useLinksPrincipais(inicio) {
-  const userStore = useUserStore();
-  return computed(() => [
-    { to: inicio, rotulo: "Início" },
-    { to: "/menu", rotulo: "Cardápio" },
-    userStore.isAuthenticated
-      ? { to: "/profile", rotulo: "Perfil" }
-      : { to: "/login", rotulo: "Entrar" },
-  ]);
-}
+// src/views/MenuView.vue (props do BannerComponent)
+export const FRASE_CARDAPIO = "Escolha, personalize e peça.";
+
+// src/views/MenuView.vue (categories): rótulo de cada lista de products.json > menuItems
+export const CATEGORIAS = [
+  { chave: "foods", rotulo: "Hambúrgueres" },
+  { chave: "drinks", rotulo: "Bebidas" },
+  { chave: "desserts", rotulo: "Sobremesas" },
+];

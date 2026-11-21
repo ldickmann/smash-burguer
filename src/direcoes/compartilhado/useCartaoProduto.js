@@ -29,5 +29,12 @@ export function useCartaoProduto(produto, { sizes = TAMANHOS_CARD } = {}) {
   // Contexto que o useProductModal guarda ao abrir o modal e chama ao confirmar
   const contexto = { markAdded: marcarAdicionado };
 
-  return { imagem, preco, imagemFalhou, adicionado, marcarAdicionado, contexto };
+  // Ganchos do botão "Adicionar": o nome acessível e o estado do retorno, que os testes leem.
+  // Use com v-bind no botão; o data-adicionado só existe enquanto dura o retorno.
+  const atributosAdicionar = computed(() => ({
+    "aria-label": `Adicionar ${toValue(produto).name}`,
+    "data-adicionado": adicionado.value ? "true" : undefined,
+  }));
+
+  return { imagem, preco, imagemFalhou, adicionado, marcarAdicionado, contexto, atributosAdicionar };
 }

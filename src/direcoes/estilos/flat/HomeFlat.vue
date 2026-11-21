@@ -125,7 +125,7 @@
                         type="button"
                         class="fl-adicionar"
                         :class="{ 'is-adicionado': cartao.adicionado }"
-                        :aria-label="`Adicionar ${produto.name}`"
+                        v-bind="cartao.atributosAdicionar"
                         @click="personalizar(produto, cartao.contexto)"
                       >
                         <span class="fl-adicionar__trilho">
@@ -232,8 +232,8 @@ import {
   REDES,
   RODAPE,
   SECAO,
-  useLinksPrincipais,
-} from "../../compartilhado/conteudo";
+} from "../../compartilhado/dados";
+import { useLinksPrincipais } from "../../compartilhado/useLinksPrincipais";
 
 const INICIO = "/direcoes/flat";
 // Foto quadrada, mais estreita que a 4:3 do card real
@@ -258,4 +258,16 @@ const imagemHero = responsiveImage(HERO.imagem, {
 
 <style scoped lang="scss">
 @use "./home";
+
+// Layout da moldura: a MolduraDirecao não tem estilo próprio
+.moldura {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.moldura :deep(.moldura__conteudo) {
+  flex: 1;
+  min-width: 0;
+}
 </style>

@@ -1,6 +1,7 @@
-<!-- Moldura comum às Homes das direções. Só estrutura e lógica: o visual (navbar, conteúdo e
-     rodapé) vem dos slots de cada estilo. O modal Personalizar é o real (ModalAdditional), e o slot
-     padrão recebe `personalizar(produto, contexto)` para abri-lo. -->
+<!-- Moldura comum às Homes das direções. Só estrutura e lógica, sem estilo próprio: o layout
+     (.moldura e .moldura__conteudo) e o visual (navbar, conteúdo e rodapé) são de cada Home.
+     O modal Personalizar é o real (ModalAdditional). As seções o abrem com usePersonalizar();
+     o slot padrão ainda recebe `personalizar(produto, contexto)`, para as Homes da rodada 1. -->
 <template>
   <div class="moldura">
     <a href="#conteudo" class="skip-link" @click.prevent="focarConteudo">Pular para o conteúdo</a>
@@ -16,11 +17,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { provide, ref } from "vue";
 import AssinaturaEncaixe from "@/components/AssinaturaEncaixe.vue";
 import ModalAdditional from "@/components/ModalAdditional.vue";
 import { useProductModal } from "@/composables/useProductModal";
 import SeletorDirecao from "../SeletorDirecao.vue";
+import { CHAVE_PERSONALIZAR } from "./usePersonalizar";
 
 defineProps({
   estilo: {
@@ -32,19 +34,8 @@ defineProps({
 const conteudo = ref(null);
 const { isOpen, product, openModal, closeModal, confirm } = useProductModal();
 
+provide(CHAVE_PERSONALIZAR, openModal);
+
 // O link usa #conteudo, mas a rota é por hash: o foco é movido à mão (como no MainLayout)
 const focarConteudo = () => conteudo.value?.focus();
 </script>
-
-<style scoped lang="scss">
-.moldura {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-}
-
-.moldura__conteudo {
-  flex: 1;
-  min-width: 0;
-}
-</style>

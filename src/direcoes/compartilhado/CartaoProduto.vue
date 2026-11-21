@@ -7,6 +7,7 @@
     :imagemFalhou="imagemFalhou"
     :adicionado="adicionado"
     :contexto="contexto"
+    :atributosAdicionar="atributosAdicionar"
     :aoFalharImagem="aoFalharImagem"
   />
 </template>
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const { imagem, preco, imagemFalhou, adicionado, contexto } = useCartaoProduto(
+const { imagem, preco, imagemFalhou, adicionado, contexto, atributosAdicionar } = useCartaoProduto(
   () => props.produto,
   { sizes: props.tamanhos }
 );

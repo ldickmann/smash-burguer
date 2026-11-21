@@ -131,7 +131,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { HERO } from "./compartilhado/conteudo";
+import { HERO } from "./compartilhado/dados";
 import { caminhoDirecao } from "./direcoes";
 import { PARES_COMUNS, PARES_POR_DIRECAO, cortarDuasCasas, medirPar, passa } from "./contraste";
 

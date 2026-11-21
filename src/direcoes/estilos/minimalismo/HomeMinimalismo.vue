@@ -104,7 +104,7 @@
                     type="button"
                     class="mn-adicionar"
                     :class="{ 'is-adicionado': cartao.adicionado }"
-                    :aria-label="`Adicionar ${produto.name}`"
+                    v-bind="cartao.atributosAdicionar"
                     @click="personalizar(produto, cartao.contexto)"
                   >
                     <span class="mn-adicionar__face mn-adicionar__face--frente">Adicionar</span>
@@ -204,8 +204,8 @@ import {
   REDES,
   RODAPE,
   SECAO,
-  useLinksPrincipais,
-} from "../../compartilhado/conteudo";
+} from "../../compartilhado/dados";
+import { useLinksPrincipais } from "../../compartilhado/useLinksPrincipais";
 
 const INICIO = "/direcoes/minimalismo";
 
@@ -227,4 +227,16 @@ const imagemHero = responsiveImage(HERO.imagem, {
 
 <style scoped lang="scss">
 @use "./home";
+
+// Layout da moldura: a MolduraDirecao não tem estilo próprio
+.moldura {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.moldura :deep(.moldura__conteudo) {
+  flex: 1;
+  min-width: 0;
+}
 </style>

@@ -2,6 +2,14 @@
 // Usado pela ficha do índice, no navegador, e pelo script de verificação, no Node: por isso não
 // importa nada do Vue nem do DOM.
 
+import { PARES as material } from "./estilos/material/contraste.js";
+import { PARES as esqueumorfismo } from "./estilos/esqueumorfismo/contraste.js";
+import { PARES as neumorfismo } from "./estilos/neumorfismo/contraste.js";
+import { PARES as d3 } from "./estilos/3d/contraste.js";
+import { PARES as flat } from "./estilos/flat/contraste.js";
+import { PARES as minimalismo } from "./estilos/minimalismo/contraste.js";
+import { PARES as escuro } from "./estilos/escuro/contraste.js";
+
 // ---------- Fórmula ----------
 
 const canal = (valor) => {
@@ -84,93 +92,13 @@ export const PARES_COMUNS = [
   { frente: "color-focus", fundo: "color-surface-2", minimo: 3, onde: "anel de foco no modal" },
 ];
 
-// Pares da Home de cada direção (tokens próprios e os usados de outro jeito)
+// Pares da Home de cada direção: cada estilo é dono dos próprios, em estilos/<slug>/contraste.js
 export const PARES_POR_DIRECAO = {
-  material: [
-    { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal" },
-    { frente: "m3-on-surface-variant", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "descrição no card" },
-    { frente: "m3-on-primary", fundo: "m3-primary", minimo: 4.5, onde: "Ver cardápio e Adicionar" },
-    { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 4.5, onde: "setas e item do menu" },
-    { frente: "m3-on-primary", fundo: "m3-primary-pressed", minimo: 4.5, onde: "Adicionar pressionado" },
-    { frente: "m3-on-primary-container", fundo: "m3-primary-container", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "m3-primary", fundo: "m3-surface-container", minimo: 4.5, onde: "links do rodapé" },
-    { frente: "m3-on-error", fundo: "m3-error", minimo: 4.5, onde: "badge do carrinho" },
-    { frente: "m3-primary", fundo: "m3-surface", minimo: 3, onde: "indicador da aba ativa" },
-    { frente: "m3-outline", fundo: "m3-surface-container-low", minimo: 3, onde: "ponto da paginação" },
-    { frente: "m3-secondary", fundo: "m3-surface", minimo: 3, onde: "anel de foco" },
-    { frente: "m3-secondary", fundo: "m3-surface-container-highest", minimo: 3, onde: "anel de foco no card" },
-  ],
-  esqueumorfismo: [
-    { frente: "esq-tinta", fundo: "esq-papel", minimo: 4.5, onde: "texto da comanda e do cupom" },
-    { frente: "esq-tinta", fundo: "esq-grao-max", sobre: "esq-papel", minimo: 4.5, onde: "texto no ponto mais escuro do grão" },
-    { frente: "esq-tinta-clara", fundo: "esq-grao-max", sobre: "esq-papel", minimo: 4.5, onde: "descrição no ponto mais escuro do grão" },
-    { frente: "esq-letra", fundo: "esq-chapa", minimo: 4.5, onde: "título estampado na chapa" },
-    { frente: "esq-tinta", fundo: "esq-inox", minimo: 4.5, onde: "links gravados na coifa" },
-    { frente: "esq-tinta", fundo: "esq-inox-escuro", minimo: 4.5, onde: "link no ponto mais escuro do inox" },
-    { frente: "esq-letra", fundo: "esq-placa", minimo: 4.5, onde: "texto da placa" },
-    { frente: "color-accent-ink", fundo: "esq-ketchup-claro", minimo: 4.5, onde: "botão físico (ponto mais claro)" },
-    { frente: "esq-carimbo", fundo: "esq-papel", minimo: 3, onde: "carimbo Adicionado (texto grande)" },
-    { frente: "esq-led", fundo: "esq-led-apagado", minimo: 3, onde: "LED aceso contra o apagado" },
-    { frente: "esq-letra", fundo: "esq-chapa", minimo: 3, onde: "anel de foco na chapa" },
-    { frente: "esq-tinta", fundo: "esq-inox-claro", minimo: 3, onde: "anel de foco no inox" },
-  ],
-  neumorfismo: [
-    { frente: "neu-tinta", fundo: "neu-kraft", minimo: 4.5, onde: "texto principal" },
-    { frente: "neu-tinta-suave", fundo: "neu-kraft", minimo: 4.5, onde: "texto secundário" },
-    { frente: "neu-tinta-suave", fundo: "neu-sombra-sob-texto", sobre: "neu-kraft", minimo: 4.5, onde: "texto do rodapé junto à sombra interna" },
-    { frente: "neu-branco", fundo: "neu-ketchup", minimo: 4.5, onde: "Ver cardápio" },
-    { frente: "neu-branco", fundo: "neu-ketchup-claro", minimo: 4.5, onde: "Ver cardápio no hover" },
-    { frente: "neu-branco", fundo: "neu-alface", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "neu-tinta", fundo: "neu-sombra", minimo: 4.5, onde: "ícone das setas (lado escuro do convexo)" },
-    { frente: "neu-branco", fundo: "neu-ketchup-escuro", minimo: 4.5, onde: "Adicionar (lado escuro do convexo)" },
-    { frente: "neu-borda", fundo: "neu-kraft", minimo: 3, onde: "borda dos controles" },
-    { frente: "neu-ketchup", fundo: "neu-kraft", minimo: 3, onde: "ponto ativo da paginação" },
-    { frente: "neu-tinta", fundo: "neu-kraft", minimo: 3, onde: "anel de foco" },
-    { frente: "neu-sombra", fundo: "neu-kraft", minimo: 3, informativo: true, onde: "sombra escura (decorativa, não conta)" },
-  ],
-  "3d": [
-    { frente: "3d-carne", fundo: "3d-pao-claro", minimo: 4.5, onde: "texto no topo do degradê" },
-    { frente: "3d-carne", fundo: "3d-tomate-claro", minimo: 4.5, onde: "texto no ponto mais escuro do degradê" },
-    { frente: "3d-carne-suave", fundo: "3d-tomate-claro", minimo: 4.5, onde: "texto secundário no ponto mais escuro" },
-    { frente: "3d-carne-suave", fundo: "3d-maionese", minimo: 4.5, onde: "descrição no card" },
-    { frente: "3d-branco", fundo: "3d-ketchup-claro", minimo: 4.5, onde: "Ver cardápio (hover, o mais claro)" },
-    { frente: "3d-maionese", fundo: "3d-carne", minimo: 4.5, onde: "Adicionar" },
-    { frente: "3d-branco", fundo: "3d-alface", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "3d-carne-suave", fundo: "3d-alface-clara", minimo: 3, onde: "ponto da paginação no fim do degradê" },
-    { frente: "3d-carne", fundo: "3d-tomate-claro", minimo: 3, onde: "anel de foco" },
-  ],
-  flat: [
-    { frente: "flat-tinta", fundo: "flat-papel", minimo: 4.5, onde: "texto principal" },
-    { frente: "flat-tinta-suave", fundo: "flat-ladrilho", minimo: 4.5, onde: "descrição no ladrilho" },
-    { frente: "flat-papel", fundo: "flat-cebola", minimo: 4.5, onde: "texto no ladrilho roxo e Adicionar" },
-    { frente: "flat-cebola", fundo: "flat-lilas", minimo: 4.5, onde: "Ver cardápio no hover" },
-    { frente: "flat-papel", fundo: "flat-alface", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "flat-tinta", fundo: "flat-cheddar", minimo: 4.5, onde: "número do badge" },
-    { frente: "flat-papel", fundo: "flat-tinta", minimo: 4.5, onde: "rodapé" },
-    { frente: "flat-cinza", fundo: "flat-papel", minimo: 3, onde: "quadradinho da paginação" },
-    { frente: "flat-cebola", fundo: "flat-papel", minimo: 3, onde: "sublinhado do link atual" },
-    { frente: "flat-cheddar", fundo: "flat-cebola", minimo: 3, onde: "anel de foco no ladrilho roxo" },
-    { frente: "flat-tinta", fundo: "flat-papel", minimo: 3, onde: "anel de foco no branco" },
-  ],
-  minimalismo: [
-    { frente: "min-preto", fundo: "min-branco", minimo: 4.5, onde: "texto, título e Adicionado" },
-    { frente: "min-cinza-texto", fundo: "min-branco", minimo: 4.5, onde: "descrição e texto secundário" },
-    { frente: "min-branco", fundo: "min-preto", minimo: 4.5, onde: "Ver cardápio e Adicionar" },
-    { frente: "min-branco", fundo: "min-preto-hover", minimo: 4.5, onde: "botão no hover" },
-    { frente: "min-cinza-linha", fundo: "min-branco", minimo: 3, onde: "segmento da paginação" },
-    { frente: "min-preto", fundo: "min-branco", minimo: 3, onde: "sublinhado do link atual e anel de foco" },
-  ],
-  escuro: [
-    { frente: "esc-on-surface", fundo: "esc-surface", minimo: 4.5, onde: "texto principal" },
-    { frente: "esc-on-surface", fundo: "esc-surface", minimo: 7, informativo: true, onde: "texto pequeno, sugestão da Apple" },
-    { frente: "esc-on-surface-variant", fundo: "esc-surface-high", minimo: 4.5, onde: "descrição no card" },
-    { frente: "esc-on-surface-variant", fundo: "esc-surface-high", minimo: 7, informativo: true, onde: "descrição no card, sugestão da Apple" },
-    { frente: "esc-on-surface-variant", fundo: "esc-surface-lowest", minimo: 4.5, onde: "texto do rodapé" },
-    { frente: "esc-on-primary", fundo: "esc-primary", minimo: 4.5, onde: "Ver cardápio, Adicionar e badge" },
-    { frente: "esc-on-primary", fundo: "esc-primary-pressed", minimo: 4.5, onde: "Ver cardápio e Adicionar pressionados" },
-    { frente: "esc-on-tertiary-container", fundo: "esc-tertiary-container", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "esc-outline", fundo: "esc-surface-high", minimo: 3, onde: "contorno do card e das setas" },
-    { frente: "esc-primary", fundo: "esc-surface", minimo: 3, onde: "indicador ativo e anel de foco" },
-    { frente: "esc-primary", fundo: "esc-surface-high", minimo: 3, onde: "anel de foco no card" },
-  ],
+  material,
+  esqueumorfismo,
+  neumorfismo,
+  "3d": d3,
+  flat,
+  minimalismo,
+  escuro,
 };
