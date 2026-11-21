@@ -35,27 +35,44 @@ defineProps({
 
 defineEmits(["update:modelValue"]);
 
-// A borda inferior só aparece quando as abas estão grudadas abaixo da navbar
+// Mesmo valor do breakpoint lg do SCSS (§2.9). A partir dele o cabeçalho é sticky e as abas grudam
+// abaixo dele; antes, o cabeçalho rola com a página e elas grudam no topo (SPEC-material §5.1)
+const LG_QUERY = "(min-width: 1024px)";
+
+// A borda inferior só aparece quando as abas estão grudadas
 const sentinel = ref(null);
 const isStuck = ref(false);
 let observer;
+let lgMedia;
 
-onMounted(() => {
+// O observador é refeito quando a tela cruza lg, porque o topo onde as abas grudam muda
+const observe = () => {
+  observer?.disconnect();
   if (!("IntersectionObserver" in window) || !sentinel.value) return;
   const rootStyle = getComputedStyle(document.documentElement);
   // --navbar-h está em rem
   const navbarH =
     parseFloat(rootStyle.getPropertyValue("--navbar-h")) * parseFloat(rootStyle.fontSize);
+  const top = lgMedia?.matches ? navbarH : 0;
   observer = new IntersectionObserver(
     ([entry]) => {
-      isStuck.value = !entry.isIntersecting && entry.boundingClientRect.top < navbarH;
+      isStuck.value = !entry.isIntersecting && entry.boundingClientRect.top < top;
     },
-    { rootMargin: `-${navbarH}px 0px 0px 0px` }
+    { rootMargin: `${-top}px 0px 0px 0px` }
   );
   observer.observe(sentinel.value);
+};
+
+onMounted(() => {
+  lgMedia = window.matchMedia?.(LG_QUERY);
+  lgMedia?.addEventListener("change", observe);
+  observe();
 });
 
-onBeforeUnmount(() => observer?.disconnect());
+onBeforeUnmount(() => {
+  lgMedia?.removeEventListener("change", observe);
+  observer?.disconnect();
+});
 </script>
 
 <style scoped lang="scss">

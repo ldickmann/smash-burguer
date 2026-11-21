@@ -1,12 +1,19 @@
-// MainLayout (SPEC §4.2): rodapé sempre no fim e espaço da navbar fixa reservado.
+// MainLayout (SPEC-material §5.1): o cabeçalho fica no fluxo (sticky a partir de lg) e o rodapé sempre
+// no fim. Abaixo de lg, a toolbar flutua no pé: a página reserva o espaço dela, para não cobrir o fim
+// nem o foco (técnica C43).
+@use "../base/breakpoints" as *;
+
 .main-layout {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
+
+  @include below(lg) {
+    padding-bottom: var(--m3-barra-reserva);
+  }
 }
 
 .main-layout__main {
+  flex: 1;
   min-width: 0;
-  padding-top: var(--navbar-h);
 }
