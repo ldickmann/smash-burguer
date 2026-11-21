@@ -121,6 +121,21 @@ for (const w of [1440, 390]) {
   await page.goto(BASE + '#/');
   await page.waitForLoadState('networkidle');
   await tabAll(page, 'Home');
+
+  // Split da Home (SPEC-material §13.5): Enter e Espaço na metade de trás abrem e fecham a folha; Esc
+  // fecha e devolve o foco à metade de trás
+  const tras = page.getByRole('button', { name: 'Ingredientes de Cheese Bacon', exact: true });
+  await tras.focus();
+  const estado = () => page.evaluate(() => `${document.activeElement.getAttribute('aria-label')}:${document.activeElement.getAttribute('aria-expanded')}`);
+  const passos = [];
+  for (const tecla of ['Enter', 'Space', 'Space', 'Escape']) {
+    await page.keyboard.press(tecla);
+    await page.waitForTimeout(150);
+    passos.push(`${tecla}→${(await estado()).split(':')[1]}`);
+  }
+  const fim = await estado();
+  check(passos.join(' ') === 'Enter→true Space→false Space→true Escape→false' && fim === 'Ingredientes de Cheese Bacon:false', 'split da Home: Enter e Espaço alternam a folha, Esc fecha e o foco fica na metade de trás', `${passos.join(' ')} | ${fim}`);
+
   await page.goto(BASE + '#/menu');
   await page.waitForLoadState('networkidle');
   await tabAll(page, 'Cardápio', 30);

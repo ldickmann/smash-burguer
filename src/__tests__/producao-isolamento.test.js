@@ -35,7 +35,10 @@ export function especificadores(fonte) {
   return padroes.flatMap((padrao) => [...fonte.matchAll(padrao)].map((m) => m[1]));
 }
 
-const doAcervo = (especificador) => /(^|\/)direcoes(\/|$)/.test(especificador);
+// O desenho (docs/direcoes/desenho/*.json) é documentação, não o acervo: o teste da HomeView lê dele
+// o contrato das seções, como o teste da Home de referência
+const doAcervo = (especificador) =>
+  /(^|\/)direcoes(\/|$)/.test(especificador) && !/^(\.\.\/)+docs\/direcoes\/desenho\/[\w-]+\.json$/.test(especificador);
 
 describe('isolamento da produção', () => {
   it('o detector acha todas as formas de import do acervo', () => {
@@ -57,6 +60,14 @@ describe('isolamento da produção', () => {
     expect(achados).toEqual(Object.fromEntries(exemplos.map((e) => [e, 1])));
     // Citar o acervo num comentário ou num texto não é import
     expect(especificadores('// cópia de src/direcoes/compartilhado/dados.js').filter(doAcervo)).toEqual([]);
+    // O JSON do desenho, em docs/, não é o acervo; um caminho que sai de docs/ para o src/ continua sendo
+    expect(especificadores("import d from '../../docs/direcoes/desenho/material.json';").filter(doAcervo)).toEqual([]);
+    const fugas = [
+      "import d from '../../docs/direcoes/desenho/../../../src/direcoes/rotas.js';",
+      "import d from '../../docs/direcoes/desenho/material.js';",
+      "import d from '@/direcoes/desenho/material.json';",
+    ];
+    expect(fugas.map((e) => especificadores(e).filter(doAcervo).length)).toEqual([1, 1, 1]);
   });
 
   it('nenhum arquivo de src/ fora do acervo importa de src/direcoes/, salvo o router', () => {
