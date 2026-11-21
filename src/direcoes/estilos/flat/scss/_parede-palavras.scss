@@ -1,0 +1,59 @@
+// Parede de palavras: hierarquia só por tamanho e peso, sem linha nem caixa.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-parede {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.fl-parede__titulo {
+  color: var(--flat-tinta);
+  font-family: var(--flat-fonte);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.fl-parede__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+
+  @include up(md) {
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--space-5) var(--space-6);
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  }
+}
+
+.fl-parede__item {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+
+.fl-parede__nome {
+  color: var(--flat-tinta);
+  font-family: var(--flat-fonte);
+  font-size: var(--flat-palavra);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: var(--leading-tight);
+  text-transform: lowercase;
+
+  @include up(md) {
+    font-weight: 300;
+  }
+}
+
+.fl-parede__preco {
+  color: var(--flat-tinta);
+  font-size: 1rem;
+  font-weight: 600;
+}

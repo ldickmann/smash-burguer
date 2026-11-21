@@ -20,15 +20,43 @@
   --flat-lilas: #ece4f4;
   --flat-preto-hover: #333333;
 
+  // Rodada 2: hover e pressionado dos ladrilhos cheddar (texto tinta) e alface (texto papel)
+  --flat-cheddar-escuro: #d9a404;
+  --flat-cheddar-pressionado: #c49403;
+  --flat-alface-escura: #276a2a;
+  --flat-alface-pressionada: #1f5622;
+
   // ---------- Forma ----------
   --flat-raio-botao: 4px;
   --flat-sublinhado: 4px;
   --flat-z-fundo: -1;
 
+  // ---------- Rodada 2: mosaico, faixa do topo e medidas ----------
+  // Junta entre ladrilhos (a mesma da v1) e altura da célula abaixo de lg (perto da largura da coluna em 390)
+  --flat-junta: 8px;
+  --flat-celula: clamp(5rem, 21.4vw, 9rem);
+  // Quanto o recorte do hambúrguer passa da borda do ladrilho (cortado pelo overflow)
+  --flat-sangria: 1.25rem;
+  --flat-sangria-lg: 3rem;
+  // Faixa do topo: duas linhas abaixo de md (3,25rem + 2,75rem) e uma a partir de md
+  --flat-topo-altura: 6rem;
+  --flat-topo-altura-md: 4.5rem;
+  --flat-foto-linha: 5.5rem;
+  --flat-foto-linha-lg: 8rem;
+  --flat-quadrado: 2.75rem;
+  // Atraso entre os ladrilhos que entram na montagem
+  --flat-atraso-ladrilho: calc(var(--dur-stagger) * 2);
+
   // ---------- Tipografia ----------
   // Segoe UI, a fonte de interface do Windows; Open Sans, do mesmo desenhista, nos outros sistemas
   --flat-fonte: "Segoe UI", "Open Sans Variable", "Open Sans", system-ui, sans-serif;
   --flat-titulo: clamp(2.75rem, 1.6rem + 4.4vw, 5.25rem);
+  // Rodada 2: h2 (o clamp que a v1 tinha solto no "mais pedidos"), cabeçalhos do pivot, palavras
+  // dos adicionais e a linha do horário
+  --flat-titulo-secao: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);
+  --flat-titulo-pivot: clamp(1.625rem, 1.3rem + 1.2vw, 2.5rem);
+  --flat-palavra: clamp(1.375rem, 1.05rem + 1.3vw, 2.25rem);
+  --flat-horario: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
 
   // ---------- Tokens do projeto ----------
   --color-bg: var(--flat-papel);

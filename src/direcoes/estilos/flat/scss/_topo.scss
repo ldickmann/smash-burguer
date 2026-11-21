@@ -1,0 +1,102 @@
+// Faixa do topo: tinta, texto papel, anel e sublinhado em cheddar.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-topo {
+  --color-focus: var(--flat-cheddar);
+
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navbar);
+  background: var(--flat-tinta);
+  color: var(--flat-papel);
+}
+
+// Abaixo de md: "marca carrinho" e "nav nav"; a partir de md, uma linha só
+.fl-topo__interno {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 3.25rem 2.75rem;
+  grid-template-areas:
+    "marca carrinho"
+    "nav nav";
+  align-items: center;
+  min-height: var(--flat-topo-altura);
+
+  @include up(md) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: var(--flat-topo-altura-md);
+    grid-template-areas: "marca nav carrinho";
+    column-gap: var(--space-5);
+    min-height: var(--flat-topo-altura-md);
+  }
+}
+
+.fl-topo__marca {
+  grid-area: marca;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  color: var(--flat-papel);
+  font-family: var(--flat-fonte);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+
+  @include fl-foco;
+
+  @include up(md) {
+    font-size: 1.5rem;
+  }
+}
+
+.fl-topo__nav {
+  grid-area: nav;
+  align-self: stretch;
+
+  @include up(md) {
+    justify-self: end;
+  }
+}
+
+.fl-topo__lista {
+  display: flex;
+  gap: var(--space-5);
+  height: 100%;
+}
+
+// Link em caixa baixa visual; o atual leva sublinhado de 4 px em cheddar, não só cor [F1][F17]
+.fl-topo__link {
+  display: flex;
+  align-items: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  height: 100%;
+  color: var(--flat-papel);
+  font-size: 1.125rem;
+  font-weight: 400;
+  text-transform: lowercase;
+  transition: color var(--dur-fast);
+
+  @include fl-foco;
+
+  &[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-color: var(--flat-cheddar);
+    text-decoration-thickness: var(--flat-sublinhado);
+    text-decoration-skip-ink: none;
+    text-underline-offset: 8px;
+  }
+
+  @include hover-capable {
+    &:hover {
+      color: var(--flat-cheddar);
+    }
+  }
+}
+
+.fl-topo__carrinho {
+  grid-area: carrinho;
+}

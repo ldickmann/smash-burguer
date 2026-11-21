@@ -1,0 +1,39 @@
+// Seção do cardápio: h2 leve, a frase do cardápio e o pivot; a lista em 2 colunas a partir de md.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-cardapio {
+  @include fl-secao;
+}
+
+.fl-cardapio__titulo {
+  color: var(--flat-tinta);
+
+  @include fl-titulo-leve(var(--flat-titulo-secao));
+}
+
+.fl-cardapio__apoio {
+  margin-top: var(--space-3);
+  color: var(--flat-tinta);
+  font-size: 1.1875rem;
+}
+
+.fl-cardapio__pivot {
+  margin-top: var(--space-6);
+}
+
+.fl-lista {
+  display: grid;
+  row-gap: var(--space-5);
+
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-7);
+    row-gap: var(--space-6);
+  }
+}
+
+.fl-cardapio__vazio {
+  color: var(--flat-tinta);
+  font-size: var(--text-lg);
+}

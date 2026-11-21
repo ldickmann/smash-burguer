@@ -1,0 +1,89 @@
+// Pivot: abas em tipo de título leve; a selecionada em tinta com sublinhado cebola de 4 px.
+// Abaixo de md, as abas quebram linha (nada de rolagem lateral [F33][F56]).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-pivot__abas {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-6);
+  row-gap: var(--space-1);
+}
+
+.fl-pivot__aba {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  // Espaço para o sublinhado (offset de 8 px) ficar dentro da aba e do anel de foco
+  padding: 0 0 var(--space-3);
+  color: var(--flat-tinta-suave);
+  font-family: var(--flat-fonte);
+  font-size: var(--flat-titulo-pivot);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: var(--leading-tight);
+  text-transform: lowercase;
+  transition: color var(--dur-fast);
+
+  @include fl-foco;
+
+  @include up(md) {
+    font-weight: 300;
+  }
+
+  @include hover-capable {
+    &:hover {
+      color: var(--flat-tinta);
+    }
+  }
+
+  &:active {
+    color: var(--flat-tinta);
+  }
+
+  &[aria-selected="true"] {
+    color: var(--flat-tinta);
+    text-decoration: underline;
+    text-decoration-color: var(--flat-cebola);
+    text-decoration-thickness: var(--flat-sublinhado);
+    text-decoration-skip-ink: none;
+    text-underline-offset: 8px;
+
+    @media (forced-colors: active) {
+      text-decoration-color: Highlight;
+    }
+  }
+}
+
+// O display do painel fica com o v-show: a grade é do filho (a lista)
+.fl-pivot__painel {
+  margin-top: var(--space-6);
+}
+
+// Troca de página: o painel que entra desliza do lado da aba nova; o que sai some na hora
+.fl-painel-avanca-enter-active,
+.fl-painel-recua-enter-active {
+  transition: opacity var(--dur-fast);
+}
+
+.fl-painel-avanca-enter-from,
+.fl-painel-recua-enter-from {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .fl-painel-avanca-enter-active,
+  .fl-painel-recua-enter-active {
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .fl-painel-avanca-enter-from {
+    transform: translateX(var(--space-6));
+  }
+
+  .fl-painel-recua-enter-from {
+    transform: translateX(calc(-1 * var(--space-6)));
+  }
+}

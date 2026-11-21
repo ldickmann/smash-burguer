@@ -1,0 +1,77 @@
+// Linha de produto: foto quadrada à esquerda e o texto ao lado, no papel. O preço e o botão dividem a
+// última linha. A tipografia faz a hierarquia: nome e preço em 600, descrição em tinta suave.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-linha {
+  display: grid;
+  grid-template-columns: var(--flat-foto-linha) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    grid-template-columns: var(--flat-foto-linha-lg) minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+// Quadrado no ladrilho escuro enquanto a foto carrega (mesmo tamanho: sem salto)
+.fl-linha__foto {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--flat-ladrilho-escuro);
+
+  > picture {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.fl-linha__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fl-linha__reserva {
+  color: var(--flat-tinta-suave);
+  font-size: 2rem;
+}
+
+.fl-linha__corpo {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.fl-linha__nome {
+  color: var(--flat-tinta);
+  font-family: var(--flat-fonte);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
+.fl-linha__descricao {
+  color: var(--flat-tinta-suave);
+  font-size: 0.9375rem;
+  line-height: var(--leading-compact);
+
+  @include fl-linhas(2);
+}
+
+.fl-linha__acao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.fl-linha__preco {
+  color: var(--flat-tinta);
+  font-size: 1.25rem;
+  font-weight: 600;
+}

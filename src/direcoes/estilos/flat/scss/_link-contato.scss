@@ -1,0 +1,60 @@
+// Contato: quadrado cebola com o ícone em papel e o texto sublinhado de 1 px (2 px no hover).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-contato {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.25rem;
+  color: var(--flat-tinta);
+  font-size: 1.125rem;
+
+  @include fl-foco;
+
+  @include hover-capable {
+    &:hover {
+      .fl-contato__quadrado {
+        background: var(--flat-cebola-escura);
+      }
+
+      .fl-contato__texto {
+        text-decoration-thickness: 2px;
+      }
+    }
+  }
+
+  &:active .fl-contato__quadrado {
+    background: var(--flat-cebola-pressionada);
+  }
+}
+
+.fl-contato__quadrado {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--flat-quadrado);
+  height: var(--flat-quadrado);
+  background: var(--flat-cebola);
+  color: var(--flat-papel);
+  font-size: 1.125rem;
+  transition: background-color var(--dur-fast);
+
+  @media (forced-colors: active) {
+    border: 2px solid LinkText;
+  }
+}
+
+.fl-contato__texto {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.fl-contato__rotulo {
+  font-weight: 600;
+}
+
+.fl-contato__valor {
+  overflow-wrap: anywhere;
+}

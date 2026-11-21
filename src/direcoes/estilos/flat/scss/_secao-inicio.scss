@@ -1,0 +1,112 @@
+// Tela inicial: o título no papel, à esquerda, e o mosaico na largura toda. Tudo alinhado à esquerda.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.fl-inicio {
+  padding-top: var(--space-6);
+  // Os ladrilhos entram da direita: o deslize não abre rolagem lateral (o anel cabe no gutter)
+  overflow-x: clip;
+
+  @include fl-secao;
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
+}
+
+// A partir de lg, a linha do título usa as mesmas 10 colunas do mosaico: h1 de 1 a 6, apoio de 7 a 10
+.fl-inicio__cabeca {
+  display: grid;
+  gap: var(--space-5);
+
+  @include up(lg) {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    align-items: end;
+    column-gap: var(--flat-junta);
+  }
+}
+
+.fl-inicio__titulo {
+  color: var(--flat-tinta);
+
+  @include fl-titulo-leve(var(--flat-titulo));
+
+  @include up(lg) {
+    grid-column: 1 / span 6;
+  }
+}
+
+.fl-inicio__apoio {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+
+  @include up(lg) {
+    grid-column: 7 / span 4;
+    padding-bottom: var(--space-1);
+  }
+}
+
+.fl-inicio__texto {
+  max-width: 34ch;
+  color: var(--flat-tinta);
+  font-size: 1.1875rem;
+  line-height: var(--leading-body);
+}
+
+// ---------- Mosaico ----------
+// Abaixo de lg: 4 colunas, Hambúrgueres largo (4×2) e os outros médios (2×2).
+// A partir de lg: 10 colunas em 5:2, Hambúrgueres grande (4×4), Bebidas e Adicionais largos (4×2).
+
+.fl-mosaico {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: var(--flat-celula);
+  gap: var(--flat-junta);
+  margin-top: var(--space-6);
+
+  @include up(lg) {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      "h h h h b b b b s s"
+      "h h h h b b b b s s"
+      "h h h h a a a a l l"
+      "h h h h a a a a l l";
+    aspect-ratio: 5 / 2;
+  }
+}
+
+.fl-mosaico__item {
+  display: grid;
+  grid-column: span 2;
+  grid-row: span 2;
+  min-width: 0;
+  min-height: 0;
+}
+
+.fl-mosaico__item--foods {
+  grid-column: span 4;
+}
+
+@include up(lg) {
+  .fl-mosaico__item--foods {
+    grid-area: h;
+  }
+
+  .fl-mosaico__item--drinks {
+    grid-area: b;
+  }
+
+  .fl-mosaico__item--desserts {
+    grid-area: s;
+  }
+
+  .fl-mosaico__item--adicionais {
+    grid-area: a;
+  }
+
+  .fl-mosaico__item--loja {
+    grid-area: l;
+  }
+}
