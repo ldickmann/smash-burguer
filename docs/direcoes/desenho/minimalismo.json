@@ -1,0 +1,20 @@
+{
+  "estilo": "minimalismo",
+  "secoes": ["hero", "hamburgueres", "bebidas", "sobremesas", "atendimento"],
+  "h1MaxLinhas": { "1440": 2, "1024": 2, "390": 4 },
+  "estados": [
+    {
+      "nome": "foto de Bebidas aberta",
+      "passos": [{ "clicar": "[data-secao='bebidas'] [data-ver-foto]" }]
+    },
+    {
+      "nome": "nenhuma foto aberta",
+      "passos": [{ "clicar": "[data-secao='hamburgueres'] [data-ver-foto][aria-expanded='true']" }]
+    },
+    {
+      "nome": "foto da sobremesa pelo teclado",
+      "passos": [{ "focar": "[data-secao='sobremesas'] [data-ver-foto]", "tecla": "Enter" }]
+    }
+  ],
+  "justificativaEscopo": null
+}
