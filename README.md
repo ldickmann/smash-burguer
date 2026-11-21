@@ -65,7 +65,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 
 ### Interface
 
-- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. Os títulos seguem a escala tipográfica do M3, e o anel de foco tem 3 px. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
+- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. A regra base dos títulos (`h1` a `h3`) segue a escala tipográfica do M3, e o anel de foco tem 3 px; os títulos que as telas estilizam por conta própria passam ao M3 na etapa de cada tela. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
 - **Acessibilidade**, verificada com o axe-core (nenhuma violação WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px):
   - navegação completa por teclado, foco visível e link "Pular para o conteúdo";
   - diálogos que prendem e devolvem o foco;

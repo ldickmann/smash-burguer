@@ -60,7 +60,7 @@ const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENA
 
 // SPEC-material §2.3: o texto da loja e do painel é a Roboto Variable
 const FONTE_BODY = '"Roboto Variable"';
-// SPEC-material §13.3, item 5: o h1 em Medium (peso 500), sem a caixa alta da Brasa
+// SPEC-material §13.3, item 5: o h1 em Medium (peso 500); a caixa alta não é conferida aqui
 const PESO_H1 = '500';
 
 const browser = await chromium.launch();
