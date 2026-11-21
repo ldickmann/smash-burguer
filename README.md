@@ -65,7 +65,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 
 ### Interface
 
-- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. A regra base dos títulos (`h1` a `h3`) segue a escala tipográfica do M3, e o anel de foco tem 3 px; os títulos que as telas estilizam por conta própria passam ao M3 na etapa de cada tela. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
+- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. A regra base dos títulos (`h1` a `h3`) segue a escala tipográfica do M3, e o anel de foco tem 3 px; os títulos que as telas estilizam por conta própria passam ao M3 na etapa de cada tela. O `BaseButton` já desenha os botões do M3 (filled, tonal e de texto, com a troca de forma ao pressionar e o retorno "Adicionado"), e os componentes da Home do M3 (foto nas formas do catálogo, botão dividido, folha de ingredientes e itens de lista) já estão em `src/components/ui/`, à espera das etapas da moldura e da Home. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
 - **Acessibilidade**, verificada com o axe-core (nenhuma violação WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px):
   - navegação completa por teclado, foco visível e link "Pular para o conteúdo";
   - diálogos que prendem e devolvem o foco;
@@ -156,10 +156,10 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   │   ├── main.scss     # estilos globais: só a base
 │   │   └── styles/       # base/ (tokens, breakpoints, movimento), components/, layouts/, pages/
 │   ├── components/       # componentes da loja
-│   │   ├── ui/           # componentes base (BaseButton, BaseDialog, AppToast…)
+│   │   ├── ui/           # componentes base (BaseButton, BaseDialog, AppToast…) e os do M3 (M3Foto, M3BotaoDividido…)
 │   │   ├── layout/       # navbar e rodapé
 │   │   └── admin/        # componentes do painel
-│   ├── composables/      # lógica reutilizável (imagens, tilt, CEP, endereço sem rua, validação, saída do painel…)
+│   ├── composables/      # lógica reutilizável (imagens, tilt, CEP, endereço sem rua, validação, saída do painel, card e folha do M3, cardápio, contador do carrinho…)
 │   ├── direcoes/         # direções visuais (só no yarn dev): rotas, índice, compartilhado/ (só lógica) e estilos/<estilo>/ (Home, secoes/, componentes/, scss/, __tests__/)
 │   ├── handlers/         # fluxo de login e cadastro
 │   ├── json/             # cardápio (products.json)
@@ -168,7 +168,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   ├── router/           # rotas, guards, título da página e foco
 │   ├── services/         # autenticação simulada do cliente e do administrador
 │   ├── stores/           # Pinia: carrinho, sessão, produtos, admin, pedidos do painel e avisos
-│   ├── utils/            # preço, máscaras, validações, hash de senha, busca, formulário de produto e dados de exemplo do painel
+│   ├── utils/            # textos da loja (textosLoja.js), preço, máscaras, validações, hash de senha, busca, contraste, contatos, formulário de produto e dados de exemplo do painel
 │   └── views/            # páginas da loja, auth/ e admin/
 ├── AUDIT.md              # auditoria de UI/UX que deu origem ao redesign
 ├── SPEC.md               # especificação do redesign "Brasa"
@@ -201,7 +201,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 321 testes unitários, em 36 arquivos: 262 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, a base de estilo (movimento reduzido, títulos, anel de foco e mixins do M3), `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 372 testes unitários, em 50 arquivos: 313 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, a base de estilo (movimento reduzido, títulos, anel de foco e mixins do M3), o `BaseButton` (inclusive a folha de estilo compilada), os componentes e a lógica da Home do M3 copiados para a produção (foto, botão dividido, folha de ingredientes, itens de lista, cardápio, contatos, textos da loja, retorno "Adicionado", contador do carrinho e links), o isolamento da produção em relação às direções visuais, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
