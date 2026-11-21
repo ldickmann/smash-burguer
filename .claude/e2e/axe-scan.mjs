@@ -58,9 +58,13 @@ const SCENARIOS = {
 };
 const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENARIOS[GROUP];
 
+// SPEC-material §2.3: o texto da loja e do painel é a Roboto Variable
+const FONTE_BODY = '"Roboto Variable"';
+
 const browser = await chromium.launch();
 let total = 0;
 let cspTotal = 0;
+let fonteTotal = 0;
 for (const w of VPS) {
   for (const sc of list) {
     const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 }, reducedMotion: REDUCE ? 'reduce' : 'no-preference' });
@@ -125,14 +129,18 @@ for (const w of VPS) {
     });
     total += res.violations.length;
     cspTotal += csp.length;
-    const flag = res.violations.length || res.overflow || res.small.length || csp.length ? '✗' : '✓';
+    const fonteErrada = res.font !== FONTE_BODY;
+    if (fonteErrada) fonteTotal += 1;
+    const flag = res.violations.length || res.overflow || res.small.length || csp.length || fonteErrada ? '✗' : '✓';
     console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} csp=${csp.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
     res.violations.forEach((v) => console.log('    axe:', v));
     res.small.forEach((v) => console.log('    alvo:', v));
     csp.forEach((v) => console.log('    csp:', v));
+    if (fonteErrada) console.log(`    fonte: o body usa ${res.font}, e não ${FONTE_BODY}`);
     await ctx.close();
   }
 }
 console.log('TOTAL violações axe:', total);
 console.log('TOTAL violações CSP:', cspTotal);
+console.log('TOTAL telas com o body fora da Roboto:', fonteTotal);
 await browser.close();
