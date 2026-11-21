@@ -1,0 +1,188 @@
+// EscCartao: card horizontal contornado em N17. "No seu pedido" em três camadas que só mudam de
+// opacidade: o ::before (N22), o ::after (borda tertiary de 2 px) e a marca. Nada se transforma.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esc-cartao {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  height: 100%;
+  border: 1px solid var(--esc-outline);
+  border-radius: var(--esc-raio-md);
+  background: var(--esc-surface-high);
+  color: var(--esc-on-surface);
+
+  // O degrau de cima (N22)
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--esc-z-fundo);
+    border-radius: inherit;
+    background: var(--esc-surface-highest);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  // A borda tertiary cobre o contorno
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: var(--z-raised);
+    border: 2px solid var(--esc-tertiary);
+    border-radius: var(--esc-raio-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  &.is-no-pedido::before,
+  &.is-no-pedido::after {
+    opacity: 1;
+  }
+
+  @include up(sm) {
+    grid-template-columns: minmax(9rem, 40%) minmax(0, 1fr);
+  }
+}
+
+@include motion-ok {
+  .esc-cartao::before,
+  .esc-cartao::after {
+    transition-duration: var(--dur-base);
+  }
+}
+
+// A foto cobre a altura do card; o recorte dos cantos fica na mídia
+.esc-cartao__midia {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--esc-raio-md) 0 0 var(--esc-raio-md);
+}
+
+.esc-cartao__foto {
+  width: 100%;
+  height: 100%;
+}
+
+.esc-cartao__marca {
+  position: absolute;
+  inset: auto auto var(--space-2) var(--space-2);
+  z-index: var(--z-raised);
+}
+
+.esc-marca-enter-active,
+.esc-marca-leave-active {
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.esc-marca-enter-from,
+.esc-marca-leave-to {
+  opacity: 0;
+}
+
+.esc-cartao__corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-4);
+
+  @include up(xl) {
+    padding: var(--space-5);
+  }
+}
+
+.esc-cartao__nome {
+  color: var(--esc-on-surface);
+  font-family: var(--esc-fonte-texto);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+
+  @include up(sm) {
+    font-size: 1.3125rem;
+  }
+}
+
+.esc-cartao__descricao {
+  @include texto;
+  @include cortar-linhas(2);
+  color: var(--esc-on-surface-variant);
+  font-size: 0.9375rem;
+  line-height: var(--leading-compact);
+
+  @include up(sm) {
+    @include cortar-linhas(3);
+  }
+}
+
+.esc-cartao__preco {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+
+  @include up(sm) {
+    font-size: 1.3125rem;
+  }
+}
+
+// No celular: nome, preço, descrição e o botão na largura do corpo. A partir de sm: preço e botão
+// lado a lado, colados embaixo
+.esc-cartao__pe {
+  display: contents;
+
+  @include up(sm) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+}
+
+@include below(sm) {
+  .esc-cartao__preco {
+    order: 1;
+  }
+
+  .esc-cartao__descricao {
+    order: 2;
+  }
+
+  .esc-cartao__pe > :last-child {
+    order: 3;
+    margin-top: auto;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .esc-cartao {
+    border-width: 2px;
+  }
+
+  .esc-cartao::after {
+    inset: -2px;
+    border-width: 3px;
+  }
+}
+
+@media (forced-colors: active) {
+  .esc-cartao {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .esc-cartao::before {
+    display: none;
+  }
+
+  .esc-cartao::after {
+    border-color: Highlight;
+  }
+}

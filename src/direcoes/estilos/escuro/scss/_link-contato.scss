@@ -1,0 +1,62 @@
+// EscLinkContato: ícone em on-surface-variant, valor em primary sublinhado, alvo de 44 px
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esc-contato {
+  @include anel;
+  @include livre-da-barra;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-min);
+  padding-block: var(--space-1);
+  border-radius: var(--esc-raio-sm);
+  color: var(--esc-primary);
+  font-family: var(--esc-fonte-texto);
+  font-size: 1rem;
+  text-decoration: none;
+
+  @include hover-capable {
+    &:hover .esc-contato__valor {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  &:active {
+    color: var(--esc-primary-pressed);
+  }
+}
+
+.esc-contato__icone {
+  flex-shrink: 0;
+  width: 1rem;
+  color: var(--esc-on-surface-variant);
+}
+
+.esc-contato__corpo {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.esc-contato__rotulo {
+  @include texto;
+  color: var(--esc-on-surface-variant);
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
+.esc-contato__valor {
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+.esc-contato__externo {
+  flex-shrink: 0;
+  width: 0.75rem;
+  color: var(--esc-on-surface-variant);
+}

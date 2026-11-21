@@ -1,0 +1,125 @@
+// Vitrine: a caixa N12 é o degrau que sai da base N6 (a vitrine de balcão, contida no contêiner, com
+// raio; a faixa da junto é a outra forma do mesmo degrau, de ponta a ponta e sem raio). Dentro, o
+// cabeçalho com o h2, a legenda do "no seu pedido" e o link, e a lista em 1 coluna e em 2 a partir de lg
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// No celular, a caixa avança metade da margem lateral, para os cards perderem pouca largura
+.esc-vitrine__caixa {
+  margin-inline: calc(var(--gutter) / -2);
+  padding: var(--space-4) var(--space-3) var(--space-3);
+  border-radius: var(--esc-raio-lg);
+  background: var(--esc-surface-container);
+
+  @include up(md) {
+    margin-inline: 0;
+    padding: var(--space-5);
+  }
+
+  @include up(xl) {
+    padding: var(--space-6);
+  }
+}
+
+// Cabeçalho: o h2 e o link na primeira linha e a legenda embaixo; a partir de lg, os três numa linha
+// só, para os cards N17 aparecerem logo abaixo do palco
+.esc-vitrine__cabecalho {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "titulo link"
+    "legenda legenda";
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-4);
+  padding-inline: var(--space-2);
+
+  @include up(md) {
+    margin-bottom: var(--space-5);
+    padding-inline: 0;
+  }
+
+  @include up(lg) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "titulo legenda link";
+    column-gap: var(--space-6);
+  }
+}
+
+.esc-vitrine__titulo {
+  @include titulo-bebas;
+  grid-area: titulo;
+}
+
+// Legenda do "no seu pedido": a marca em tertiary (o papel que só marca o que já está no pedido) e a
+// frase que diz quando ela aparece
+.esc-vitrine__legenda {
+  @include texto;
+  grid-area: legenda;
+  color: var(--esc-on-surface-variant);
+  font-size: 0.9375rem;
+  line-height: 1.75rem;
+}
+
+// Em linha com a frase, que quebra logo depois dela no celular
+.esc-vitrine__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-right: var(--space-1);
+  vertical-align: top;
+  min-height: 1.75rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--esc-raio-sm);
+  background: var(--esc-tertiary-container);
+  color: var(--esc-on-tertiary-container);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.esc-vitrine__marca-icone {
+  font-size: 0.8125rem;
+}
+
+// O link repete o "Ver cardápio" do palco: neutro, em on-surface sublinhado; o primary fica só na ação
+// principal [81][85]
+.esc-vitrine__link {
+  @include link-texto(var(--esc-on-surface), var(--esc-on-surface-variant));
+  grid-area: link;
+  justify-self: end;
+}
+
+.esc-vitrine__lista {
+  display: grid;
+  gap: var(--space-2);
+
+  @include up(md) {
+    gap: var(--space-4);
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include up(xl) {
+    gap: var(--space-5);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .esc-vitrine__caixa {
+    border: 1px solid var(--esc-outline);
+  }
+}
+
+@media (forced-colors: active) {
+  .esc-vitrine__caixa {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+
+  .esc-vitrine__marca {
+    border: 1px solid CanvasText;
+  }
+}

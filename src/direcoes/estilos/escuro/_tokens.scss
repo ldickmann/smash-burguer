@@ -55,6 +55,42 @@
   --esc-peso-texto: 450;
   --esc-titulo: clamp(2.375rem, 1.6rem + 3.2vw, 4.1875rem);
 
+  // ---------- Rodada 2: "degraus de luz" (docs/direcoes/desenho/escuro.md, seção 7) ----------
+  // h2 em Bebas, de 38 a 50 px
+  --esc-titulo-secao: clamp(2.375rem, 1.9rem + 1.6vw, 3.125rem);
+
+  // Anel de foco em duas cores (técnica C40 [88]): clara por fora, escura por dentro, 9:1 entre elas
+  --esc-anel-claro: var(--esc-primary);
+  --esc-anel-escuro: var(--esc-surface-lowest);
+  --esc-anel-largura: 2px;
+
+  // Sublinhado do link atual da barra em on-surface: o primary fica só na ação principal [81]
+  --esc-sublinhado-atual: inset 0 -2px 0 var(--esc-on-surface);
+
+  // Palco: a foto larga do Smash Burger se apaga na página, sem nada pintado por cima [46][47]. A partir
+  // de sm (foto até 72rem, linhas 95 a 550 da foto de 960 x 683): as laterais somem nos 10% de cada
+  // lado, o topo nos 3% de cima, e o começo do pão de baixo e a tábua clara, que brilharia no escuro,
+  // de 82% a 92%; os 8% de baixo ficam em alfa 0 para o bloco de texto subir. Abaixo de sm (recorte 4:3
+  // de ponta a ponta da tela): só a vertical, com os 12% de baixo em alfa 0
+  --esc-palco-mascara-vertical: linear-gradient(to bottom, transparent, #000 3%, #000 82%, transparent 92%);
+  --esc-palco-mascara:
+    linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
+    var(--esc-palco-mascara-vertical);
+  --esc-palco-mascara-estreita: linear-gradient(to bottom, transparent, #000 4%, #000 76%, transparent 88%);
+  // O fundo azul-marinho da foto vira cinza de croma 0 no tom da base (filtro SVG #esc-palco-neutro, em
+  // EscSecaoPalco.vue, que só troca os pixels azulados): em volta do lanche não sobra névoa fria
+  --esc-palco-filtro: url(#esc-palco-neutro);
+
+  // Fotos dos produtos: a vitrine quase sem mudança; os acompanhamentos (fundos claros) mais baixos,
+  // e apagados na faixa pelo lado do texto
+  --esc-foto-filtro: brightness(0.94);
+  --esc-foto-filtro-baixo: brightness(0.74) saturate(0.88);
+  --esc-linha-mascara: linear-gradient(to right, #000 60%, transparent 100%);
+
+  // Faixa das 24 horas: o trecho aberto aceso, o trilho apagado
+  --esc-faixa-acesa: var(--esc-on-surface);
+  --esc-faixa-apagada: var(--esc-surface-highest);
+
   // ---------- Tokens do projeto ----------
   --color-bg: var(--esc-surface);
   --color-surface-sunken: var(--esc-surface-lowest);

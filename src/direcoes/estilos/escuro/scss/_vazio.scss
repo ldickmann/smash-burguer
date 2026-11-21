@@ -1,0 +1,41 @@
+// EscVazio: painel N12 com raio de 16 px; plano, sem painel
+@use "./base" as *;
+
+.esc-vazio {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  max-width: 40rem;
+  padding: var(--space-6);
+  border-radius: var(--esc-raio-lg);
+  background: var(--esc-surface-container);
+}
+
+.esc-vazio--plano {
+  padding: 0;
+  background: none;
+}
+
+.esc-vazio__titulo {
+  color: var(--esc-on-surface);
+  font-family: var(--esc-fonte-texto);
+  font-size: 1.3125rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.esc-vazio__texto {
+  @include texto;
+  color: var(--esc-on-surface-variant);
+  font-size: 1rem;
+}
+
+@media (forced-colors: active) {
+  .esc-vazio {
+    border: 1px solid CanvasText;
+  }
+
+  .esc-vazio--plano {
+    border: 0;
+  }
+}

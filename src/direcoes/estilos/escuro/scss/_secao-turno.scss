@@ -1,0 +1,25 @@
+// Turno: título, o horário em Archivo 600 e a faixa das horas, alinhados à esquerda
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esc-turno__titulo {
+  @include titulo-bebas;
+  margin-bottom: var(--space-3);
+}
+
+.esc-turno__horario {
+  max-width: 24ch;
+  color: var(--esc-on-surface);
+  font-family: var(--esc-fonte-texto);
+  font-size: 1.3125rem;
+  font-weight: 600;
+  line-height: var(--leading-tight);
+
+  @include up(lg) {
+    font-size: 1.75rem;
+  }
+}
+
+.esc-turno__faixa {
+  margin-top: var(--space-5);
+}

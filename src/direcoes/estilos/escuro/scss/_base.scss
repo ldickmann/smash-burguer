@@ -1,0 +1,108 @@
+// Mixins do Dark mode (rodada 2). Só var(--…): os valores ficam em ../_tokens.scss, que entra pelo
+// <script> da Home. Nada brilha e nada faz sombra: a elevação é por degrau tonal.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// Anel de foco em duas cores (técnica C40 [88]): faixa escura de 0 a 2 px, clara de 2 a 4 px. A clara
+// contrasta com a página; a escura, com o botão preenchido. Em cores forçadas, fica só a outline.
+@mixin anel {
+  &:focus-visible {
+    outline: solid var(--esc-anel-claro);
+    outline-width: var(--esc-anel-largura);
+    outline-offset: var(--esc-anel-largura);
+    box-shadow: 0 0 0 calc(var(--esc-anel-largura) * 2) var(--esc-anel-escuro);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      box-shadow: none;
+    }
+  }
+}
+
+// O foco por Tab não para embaixo da barra fixa (a partir de md)
+@mixin livre-da-barra {
+  @include up(md) {
+    scroll-margin-top: calc(var(--navbar-h) + var(--space-4));
+  }
+}
+
+// Camada de estado sobre a cor de conteúdo: 0,08 no hover, 0,1 no foco e no pressionado [82]
+@mixin camada-de-estado {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--esc-z-fundo);
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  @include hover-capable {
+    &:hover::before {
+      opacity: 0.08;
+    }
+  }
+
+  &:focus-visible::before,
+  &:active::before {
+    opacity: 0.1;
+  }
+}
+
+// Link de texto sublinhado (nunca só a cor [85][94]), com alvo de 44 px. Em primary por padrão; o link
+// que repete uma ação (o "Ver cardápio" da vitrine) vai em secondary, sem a cor de pressionado do primary
+@mixin link-texto($cor: var(--esc-primary), $cor-pressionado: var(--esc-primary-pressed)) {
+  @include anel;
+  @include livre-da-barra;
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  border-radius: var(--esc-raio-sm);
+  color: $cor;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+
+  @include hover-capable {
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  &:active {
+    color: $cor-pressionado;
+    text-decoration-thickness: 2px;
+  }
+}
+
+// Títulos em Bebas Neue (só a partir de 28 px: fonte fina some no escuro [46])
+@mixin titulo-bebas($tamanho: var(--esc-titulo-secao)) {
+  color: var(--esc-on-surface);
+  font-family: var(--esc-fonte-display);
+  font-size: $tamanho;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: var(--leading-display);
+}
+
+// Texto corrido em Archivo 450
+@mixin texto {
+  font-family: var(--esc-fonte-texto);
+  font-weight: var(--esc-peso-texto);
+}
+
+// Corte de linhas com reticências
+@mixin cortar-linhas($linhas) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $linhas;
+  line-clamp: $linhas;
+}

@@ -1,0 +1,110 @@
+// EscBotaoAdicionar: duas faces empilhadas na mesma célula; o botão recorta o deslize
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esc-adicionar {
+  @include anel;
+  @include livre-da-barra;
+  display: inline-grid;
+  flex-shrink: 0;
+  min-height: var(--target-min);
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--esc-raio-sm);
+  font-family: var(--esc-fonte-texto);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.esc-adicionar--largo {
+  @include below(sm) {
+    width: 100%;
+  }
+}
+
+.esc-adicionar__face {
+  display: flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding-inline: var(--space-5);
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.esc-adicionar--primaria .esc-adicionar__face--frente {
+  background: var(--esc-primary);
+  color: var(--esc-on-primary);
+}
+
+.esc-adicionar--tonal .esc-adicionar__face--frente {
+  background: var(--esc-secondary-container);
+  color: var(--esc-on-secondary-container);
+}
+
+@include hover-capable {
+  .esc-adicionar--primaria:hover .esc-adicionar__face--frente {
+    background: var(--esc-primary-hover);
+  }
+
+  .esc-adicionar--tonal:hover .esc-adicionar__face--frente {
+    background: var(--esc-secondary-container-hover);
+  }
+}
+
+.esc-adicionar--primaria:active .esc-adicionar__face--frente {
+  background: var(--esc-primary-pressed);
+}
+
+.esc-adicionar--tonal:active .esc-adicionar__face--frente {
+  background: var(--esc-secondary-container-pressed);
+}
+
+// Face de retorno em tertiary-container: o mesmo papel do "No seu pedido"
+.esc-adicionar__face--verso {
+  background: var(--esc-tertiary-container);
+  color: var(--esc-on-tertiary-container);
+  opacity: 0;
+}
+
+.esc-adicionar.is-adicionado {
+  .esc-adicionar__face--frente {
+    opacity: 0;
+  }
+
+  .esc-adicionar__face--verso {
+    opacity: 1;
+  }
+}
+
+// Deslize vertical curto: a frente sobe e sai, o retorno entra por baixo
+@include motion-ok {
+  .esc-adicionar__face {
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      opacity var(--dur-base) var(--ease-out);
+  }
+
+  .esc-adicionar__face--verso {
+    transform: translateY(100%);
+  }
+
+  .esc-adicionar.is-adicionado {
+    .esc-adicionar__face--frente {
+      transform: translateY(-100%);
+    }
+
+    .esc-adicionar__face--verso {
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .esc-adicionar {
+    border: 1px solid ButtonText;
+  }
+}

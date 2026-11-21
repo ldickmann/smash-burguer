@@ -1,0 +1,31 @@
+// EscMarcaPedido: fundo sólido próprio (não é texto sobre foto sem garantia)
+.esc-marca-pedido {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 1.75rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--esc-raio-sm);
+  background: var(--esc-tertiary-container);
+  color: var(--esc-on-tertiary-container);
+  font-family: var(--esc-fonte-texto);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.esc-marca-pedido--compacta {
+  gap: var(--space-1);
+  min-height: 1.5rem;
+  padding-block: 0;
+}
+
+.esc-marca-pedido__icone {
+  font-size: 0.8125rem;
+}
+
+@media (forced-colors: active) {
+  .esc-marca-pedido {
+    border: 1px solid CanvasText;
+  }
+}

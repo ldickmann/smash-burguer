@@ -1,0 +1,46 @@
+// EscFoto: a foto cobre a caixa; a reserva (carregando ou falhou) é um degrau N22 na mesma proporção
+.esc-foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--esc-surface-highest);
+}
+
+.esc-foto__picture {
+  position: absolute;
+  inset: 0;
+}
+
+.esc-foto__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: var(--esc-foto-filtro);
+}
+
+.esc-foto--atenuada .esc-foto__img {
+  filter: var(--esc-foto-filtro-baixo);
+}
+
+// A foto se apaga na faixa: a caixa perde o fundo de reserva, e o img a borda do lado do texto
+.esc-foto--dissolvida {
+  background: none;
+
+  .esc-foto__img {
+    mask-image: var(--esc-linha-mascara);
+  }
+}
+
+.esc-foto__reserva {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  background: var(--esc-surface-highest);
+  color: var(--esc-on-surface-variant);
+  font-size: 2rem;
+}
+
+@media (prefers-contrast: more) {
+  .esc-foto--dissolvida .esc-foto__img {
+    mask-image: none;
+  }
+}
