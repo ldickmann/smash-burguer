@@ -88,26 +88,6 @@
         </p>
       </section>
 
-      <section v-if="ficha.diferencas" class="ficha__secao" :aria-labelledby="`dif-${direcao.slug}`">
-        <h3 :id="`dif-${direcao.slug}`" class="ficha__titulo">Diferenças da Brasa, a Home de produção</h3>
-        <table class="ficha__tabela ficha__tabela--quebra">
-          <thead>
-            <tr>
-              <th scope="col">O quê</th>
-              <th scope="col">Na produção</th>
-              <th scope="col">Aqui</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="dif in ficha.diferencas" :key="dif.tema">
-              <th scope="row">{{ dif.tema }}</th>
-              <td>{{ dif.brasa }}</td>
-              <td>{{ dif.aqui }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
       <section class="ficha__secao" :aria-labelledby="`tipo-${direcao.slug}`">
         <h3 :id="`tipo-${direcao.slug}`" class="ficha__titulo">Tipografia</h3>
         <p>{{ ficha.tipografia }}</p>
