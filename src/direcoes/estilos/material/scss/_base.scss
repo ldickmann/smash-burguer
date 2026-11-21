@@ -1,0 +1,112 @@
+// Mixins do Material 3 Expressive (scoped em cada componente). Só var(--…): os valores ficam em
+// ../_tokens.scss. Não gera CSS sozinho: cada parcial faz `@use "./base" as *;`.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// Camada de estado sobre a cor de conteúdo (currentColor): 8% no hover e 10% no pressionado [12]
+@mixin camada-de-estado {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--m3-z-fundo);
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  @include hover-capable {
+    &:hover::before {
+      opacity: 0.08;
+    }
+  }
+
+  &:active::before {
+    opacity: 0.1;
+  }
+}
+
+// Anel de foco por dentro: para o anel não invadir o vão de 2 px nem sair de uma barra
+@mixin anel-interno {
+  &:focus-visible {
+    outline-offset: calc(-1 * var(--focus-width));
+  }
+}
+
+// Troca de forma do Expressive por opacidade entre duas camadas: ::before tem a forma de repouso e
+// ::after a do pressionado. O fundo vem de --m3-botao-fundo (hover e pressionado trocam o valor).
+// O anel de foco segue o border-radius do próprio botão, que acompanha a forma atual: apertado, o
+// anel passa a contornar os cantos menores, e o ::after nunca sai dele. A forma de repouso (mais
+// redonda) cabe dentro da apertada, então a troca por opacidade também não vaza.
+@mixin troca-de-forma($repouso, $pressionado) {
+  --m3-botao-forma-repouso: #{$repouso};
+  --m3-botao-forma-pressionada: #{$pressionado};
+
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--m3-botao-forma-repouso);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--m3-z-fundo);
+    background: var(--m3-botao-fundo);
+    transition:
+      background-color var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  &::before {
+    border-radius: var(--m3-botao-forma-repouso);
+  }
+
+  &::after {
+    border-radius: var(--m3-botao-forma-pressionada);
+    opacity: 0;
+  }
+
+  &:active {
+    border-radius: var(--m3-botao-forma-pressionada);
+
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+// Reserva das superfícies que dependem de sombra ou de fundo: borda visível nos modos de contraste
+@mixin reserva-de-sombra {
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--m3-outline);
+  }
+}
+
+// Títulos na escala do M3
+@mixin tipo($papel, $peso: 400) {
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-#{$papel});
+  font-weight: $peso;
+  line-height: var(--m3-#{$papel}-linha);
+}
+
+// Corte em n linhas (o portão de layout aceita line-clamp)
+@mixin linhas($n) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $n;
+  line-clamp: $n;
+}

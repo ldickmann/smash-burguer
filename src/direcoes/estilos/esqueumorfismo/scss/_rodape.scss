@@ -1,0 +1,176 @@
+// EsqRodape: a parede de chapa e a placa de inox com quatro rebites (dois na placa, dois no span)
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-rodape {
+  padding-block: var(--space-8) var(--space-6);
+  background: var(--esq-chapa-tempera), var(--esq-chapa);
+  color: var(--esq-letra);
+}
+
+// Um rebite em cada canto: o mixin desenha o par de cima ou o de baixo
+@mixin rebites($lado) {
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    #{$lado}: var(--space-3);
+    width: var(--space-3);
+    height: var(--space-3);
+    border-radius: var(--radius-round);
+    background: var(--esq-rebite);
+    box-shadow: var(--elev-1);
+  }
+
+  &::before {
+    left: var(--space-3);
+  }
+
+  &::after {
+    right: var(--space-3);
+  }
+}
+
+.esq-rodape__placa {
+  @include inox-escovado;
+  @include rebites(top);
+
+  position: relative;
+  display: grid;
+  gap: var(--space-5) var(--space-6);
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-5);
+  border: 2px solid var(--esq-inox-borda);
+  border-radius: var(--radius-md);
+  text-align: center;
+
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: var(--space-7) var(--space-7) var(--space-6);
+    text-align: left;
+  }
+
+  // O horário cabe numa linha (coluna do tamanho do texto) e o e-mail não quebra no meio
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.25fr);
+  }
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+}
+
+.esq-rodape__rebites {
+  @include rebites(bottom);
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.esq-rodape__bloco {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.esq-rodape__bloco--marca {
+  @include up(md) {
+    grid-column: 1 / -1;
+  }
+
+  @include up(lg) {
+    grid-column: auto;
+  }
+}
+
+.esq-rodape__marca {
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-placa);
+  font-size: 2.375rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado);
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+.esq-rodape__descricao,
+.esq-rodape__texto {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.esq-rodape__titulo {
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.625rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado);
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+.esq-rodape__contatos {
+  display: grid;
+  justify-items: center;
+
+  @include up(md) {
+    justify-items: start;
+  }
+}
+
+.esq-rodape__contato {
+  display: grid;
+  justify-items: inherit;
+}
+
+.esq-rodape__rotulo {
+  margin-top: var(--space-2);
+  color: var(--esq-tinta);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.esq-rodape__link {
+  @include anel-foco;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  color: var(--esq-tinta);
+  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  overflow-wrap: break-word;
+
+  @include hover-capable {
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+}
+
+.esq-rodape__icone {
+  flex-shrink: 0;
+  width: 1rem;
+}
+
+// Na parede, fora da placa
+.esq-rodape__direitos {
+  margin-top: var(--space-6);
+  color: var(--esq-letra-suave);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-align: center;
+}

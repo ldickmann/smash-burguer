@@ -1,0 +1,265 @@
+// EsqCoifa: inox escovado, fixo. Abaixo de md, duas linhas ("marca marca" / "nav carrinho") e o
+// sticky com top negativo: a linha da marca sai ao rolar, a da nav e do carrinho fica [H14][H17].
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-coifa {
+  --color-focus: var(--esq-tinta);
+
+  position: sticky;
+  top: calc(-1 * var(--esq-coifa-marca));
+  z-index: var(--z-navbar);
+  border-bottom: 3px solid var(--esq-inox-borda);
+  background: var(--esq-escovado), var(--esq-inox);
+  box-shadow: var(--esq-sombra-coifa);
+
+  @include up(md) {
+    top: 0;
+  }
+
+  @media (forced-colors: active) {
+    border-bottom-color: CanvasText;
+  }
+}
+
+.esq-coifa__interno {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: var(--esq-coifa-marca) 3rem;
+  grid-template-areas:
+    "marca marca"
+    "nav carrinho";
+  align-items: center;
+  column-gap: var(--space-2);
+
+  @include up(md) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: var(--esq-altura-coifa);
+    grid-template-areas: "marca nav carrinho";
+    column-gap: var(--space-4);
+  }
+}
+
+// A placa de metal com dois rebites e a marca gravada: o único objeto em placa da página
+.esq-coifa__marca {
+  @include anel-foco;
+
+  position: relative;
+  display: inline-flex;
+  grid-area: marca;
+  align-items: center;
+  justify-self: start;
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-6) 0;
+  border-radius: var(--radius-sm);
+  background: var(--esq-placa-metal) var(--esq-placa);
+  box-shadow: var(--esq-sombra-placa);
+  color: var(--esq-letra);
+
+  // Rebites
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: var(--space-2);
+    height: var(--space-2);
+    margin-top: calc(-1 * var(--space-1));
+    border-radius: var(--radius-round);
+    background: var(--esq-rebite);
+  }
+
+  &::before {
+    left: var(--space-2);
+  }
+
+  &::after {
+    right: var(--space-2);
+  }
+
+  @media (forced-colors: active) {
+    border: 2px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 2px solid var(--esq-tinta);
+  }
+}
+
+.esq-coifa__marca-texto {
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.625rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado-escuro);
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+.esq-coifa__nav {
+  grid-area: nav;
+  min-width: 0;
+
+  @include up(md) {
+    justify-self: end;
+  }
+}
+
+.esq-coifa__links {
+  display: flex;
+  gap: var(--space-1);
+
+  @include up(md) {
+    gap: var(--space-2);
+  }
+}
+
+// Links gravados no inox
+.esq-coifa__link {
+  @include anel-foco;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-2) 0;
+  border-radius: var(--radius-sm);
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.125rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado);
+  text-underline-offset: 6px;
+
+  @include up(sm) {
+    font-size: 1.25rem;
+  }
+
+  @include up(md) {
+    font-size: 1.5rem;
+  }
+
+  @include hover-capable {
+    &:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+  }
+
+  &[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+// Carrinho com o contador de tambor numa janelinha escura
+.esq-coifa__carrinho {
+  @include anel-foco;
+
+  display: inline-flex;
+  grid-area: carrinho;
+  align-items: center;
+  justify-self: end;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  border: 1px solid var(--esq-inox-borda);
+  border-radius: var(--radius-md);
+  background: var(--esq-escovado-claro), var(--esq-inox-claro);
+  box-shadow: var(--esq-bisel-inox);
+  color: var(--esq-tinta);
+
+  @media (forced-colors: active) {
+    border: 2px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 2px solid var(--esq-tinta);
+  }
+}
+
+.esq-coifa__icone {
+  font-size: 1.25rem;
+}
+
+.esq-tambor {
+  display: inline-flex;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--esq-placa-escura);
+  box-shadow: var(--esq-sombra-janela);
+  color: var(--esq-letra);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.esq-tambor__janela {
+  position: relative;
+  display: inline-block;
+  width: 0.75em;
+  height: 1.1em;
+  overflow: hidden;
+  text-align: center;
+}
+
+.esq-tambor__digito {
+  display: block;
+  line-height: 1.1;
+}
+
+// O dígito do tambor rola com movimento; sem, troca por opacidade
+.esq-tambor-sobe-leave-active,
+.esq-tambor-desce-leave-active,
+.esq-tambor-nenhum-leave-active {
+  position: absolute;
+  inset: 0;
+}
+
+.esq-tambor-sobe-enter-active,
+.esq-tambor-sobe-leave-active,
+.esq-tambor-desce-enter-active,
+.esq-tambor-desce-leave-active,
+.esq-tambor-nenhum-enter-active,
+.esq-tambor-nenhum-leave-active {
+  transition: opacity var(--dur-fast);
+}
+
+.esq-tambor-sobe-enter-from,
+.esq-tambor-sobe-leave-to,
+.esq-tambor-desce-enter-from,
+.esq-tambor-desce-leave-to,
+.esq-tambor-nenhum-enter-from,
+.esq-tambor-nenhum-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .esq-tambor-sobe-enter-active,
+  .esq-tambor-sobe-leave-active,
+  .esq-tambor-desce-enter-active,
+  .esq-tambor-desce-leave-active {
+    transition:
+      transform var(--dur-base) var(--ease-in-out),
+      opacity var(--dur-base);
+  }
+
+  .esq-tambor-sobe-enter-from,
+  .esq-tambor-desce-leave-to {
+    transform: translateY(100%);
+  }
+
+  .esq-tambor-sobe-leave-to,
+  .esq-tambor-desce-enter-from {
+    transform: translateY(-100%);
+  }
+}

@@ -1,0 +1,218 @@
+// Material 3 Expressive, "Alface" (só desenvolvimento, #/direcoes/material).
+// Cores: esquema TonalSpot claro gerado pelo @material/material-color-utilities 0.4.0 (spec 2021)
+// a partir da semente #5DBB63, a alface do BurgerStack; hover e pressionado já compostos com a
+// camada de estado (8% e 10% da cor "on"). Molas do Expressive convertidas em linear() por script
+// (aproximação). O segundo seletor vale para as amostras do índice.
+
+:root[data-direcao="material"],
+[data-direcao="material"] {
+  // ---------- Papéis de cor do M3 ----------
+  --m3-primary: #3a693b;
+  --m3-on-primary: #ffffff;
+  --m3-primary-hover: #4a754b;
+  --m3-primary-pressed: #4e784f;
+  --m3-primary-container: #bbf0b6;
+  --m3-on-primary-container: #225025;
+  --m3-secondary: #52634f;
+  --m3-on-secondary: #ffffff;
+  --m3-secondary-container: #d5e8cf;
+  --m3-secondary-container-hover: #c9dbc3;
+  --m3-secondary-container-pressed: #c6d8c0;
+  --m3-on-secondary-container: #3b4b39;
+  --m3-tertiary: #39656b;
+  --m3-tertiary-container: #bcebf1;
+  --m3-on-tertiary-container: #1f4d53;
+  --m3-error: #ba1a1a;
+  --m3-on-error: #ffffff;
+  --m3-error-container: #ffdad6;
+  --m3-on-error-container: #93000a;
+  --m3-surface: #f7fbf1;
+  --m3-surface-container-lowest: #ffffff;
+  --m3-surface-container-low: #f1f5ec;
+  --m3-surface-container: #ebefe6;
+  --m3-surface-container-high: #e6e9e0;
+  --m3-surface-container-highest: #e0e4db;
+  --m3-on-surface: #181d17;
+  --m3-on-surface-variant: #424940;
+  --m3-outline: #72796f;
+  --m3-outline-variant: #c2c9bd;
+  --m3-inverse-surface: #2d322c;
+  --m3-inverse-on-surface: #eef2e9;
+  --m3-scrim: rgba(0, 0, 0, 0.32);
+  // Camadas de estado (cor "on" com esta opacidade)
+  --m3-camada-hover: rgba(24, 29, 23, 0.08);
+  --m3-camada-pressionada: rgba(24, 29, 23, 0.1);
+  --m3-camada-primary-hover: rgba(58, 105, 59, 0.08);
+  --m3-camada-primary-pressionada: rgba(58, 105, 59, 0.1);
+  // Cores personalizadas harmonizadas com a semente
+  --m3-sucesso: #196d25;
+  --m3-sucesso-container: #a2f79d;
+  --m3-aviso: #7d5700;
+  --m3-aviso-container: #ffdeaa;
+  --m3-info: #00639a;
+  --m3-info-container: #cee5ff;
+
+  // ---------- Forma ----------
+  --m3-forma-xs: 4px;
+  --m3-forma-s: 8px;
+  --m3-forma-m: 12px;
+  --m3-forma-l: 16px;
+  --m3-forma-xl: 28px;
+  --m3-forma-full: 999px;
+  // Cookie de 12 lobos: r(θ) = 0,465 + 0,035·cos(12θ), 120 pontos (geometria própria)
+  --m3-forma-cookie: polygon(50% 0%, 52.58% 0.74%, 54.97% 2.68%, 57.11% 5.14%, 59.08% 7.29%, 61.13% 8.47%, 63.49% 8.47%, 66.28% 7.6%, 69.35% 6.53%, 72.4% 6.05%, 75% 6.7%, 76.87% 8.63%, 77.97% 11.51%, 78.58% 14.7%, 79.22% 17.55%, 80.41% 19.59%, 82.45% 20.78%, 85.3% 21.42%, 88.49% 22.03%, 91.37% 23.13%, 93.3% 25%, 93.95% 27.6%, 93.47% 30.65%, 92.4% 33.72%, 91.53% 36.51%, 91.53% 38.87%, 92.71% 40.92%, 94.86% 42.89%, 97.32% 45.03%, 99.26% 47.42%, 100% 50%, 99.26% 52.58%, 97.32% 54.97%, 94.86% 57.11%, 92.71% 59.08%, 91.53% 61.13%, 91.53% 63.49%, 92.4% 66.28%, 93.47% 69.35%, 93.95% 72.4%, 93.3% 75%, 91.37% 76.87%, 88.49% 77.97%, 85.3% 78.58%, 82.45% 79.22%, 80.41% 80.41%, 79.22% 82.45%, 78.58% 85.3%, 77.97% 88.49%, 76.87% 91.37%, 75% 93.3%, 72.4% 93.95%, 69.35% 93.47%, 66.28% 92.4%, 63.49% 91.53%, 61.13% 91.53%, 59.08% 92.71%, 57.11% 94.86%, 54.97% 97.32%, 52.58% 99.26%, 50% 100%, 47.42% 99.26%, 45.03% 97.32%, 42.89% 94.86%, 40.92% 92.71%, 38.87% 91.53%, 36.51% 91.53%, 33.72% 92.4%, 30.65% 93.47%, 27.6% 93.95%, 25% 93.3%, 23.13% 91.37%, 22.03% 88.49%, 21.42% 85.3%, 20.78% 82.45%, 19.59% 80.41%, 17.55% 79.22%, 14.7% 78.58%, 11.51% 77.97%, 8.63% 76.87%, 6.7% 75%, 6.05% 72.4%, 6.53% 69.35%, 7.6% 66.28%, 8.47% 63.49%, 8.47% 61.13%, 7.29% 59.08%, 5.14% 57.11%, 2.68% 54.97%, 0.74% 52.58%, 0% 50%, 0.74% 47.42%, 2.68% 45.03%, 5.14% 42.89%, 7.29% 40.92%, 8.47% 38.87%, 8.47% 36.51%, 7.6% 33.72%, 6.53% 30.65%, 6.05% 27.6%, 6.7% 25%, 8.63% 23.13%, 11.51% 22.03%, 14.7% 21.42%, 17.55% 20.78%, 19.59% 19.59%, 20.78% 17.55%, 21.42% 14.7%, 22.03% 11.51%, 23.13% 8.63%, 25% 6.7%, 27.6% 6.05%, 30.65% 6.53%, 33.72% 7.6%, 36.51% 8.47%, 38.87% 8.47%, 40.92% 7.29%, 42.89% 5.14%, 45.03% 2.68%, 47.42% 0.74%);
+
+  // Rodada 2: extra-extra-large (48) no contêiner do hero e large-increased (20) nos cantos de
+  // fora das listas segmentadas [6][7][8]
+  --m3-forma-xxl: 48px;
+  --m3-forma-l-aumentada: 20px;
+  // Flor de 8 lobos (miniatura da sobremesa): r(θ) = 0,44 + 0,06·cos(8θ), 96 pontos (geometria própria)
+  --m3-forma-flor: polygon(50% 0%, 53.22% 0.91%, 56.13% 3.4%, 58.58% 6.85%, 60.61% 10.4%, 62.47% 13.26%, 64.54% 14.89%, 67.16% 15.2%, 70.5% 14.49%, 74.45% 13.42%, 78.61% 12.71%, 82.44% 13.01%, 85.36% 14.64%, 86.99% 17.56%, 87.29% 21.39%, 86.58% 25.55%, 85.51% 29.5%, 84.8% 32.84%, 85.11% 35.46%, 86.74% 37.53%, 89.6% 39.39%, 93.15% 41.42%, 96.6% 43.87%, 99.09% 46.78%, 100% 50%, 99.09% 53.22%, 96.6% 56.13%, 93.15% 58.58%, 89.6% 60.61%, 86.74% 62.47%, 85.11% 64.54%, 84.8% 67.16%, 85.51% 70.5%, 86.58% 74.45%, 87.29% 78.61%, 86.99% 82.44%, 85.36% 85.36%, 82.44% 86.99%, 78.61% 87.29%, 74.45% 86.58%, 70.5% 85.51%, 67.16% 84.8%, 64.54% 85.11%, 62.47% 86.74%, 60.61% 89.6%, 58.58% 93.15%, 56.13% 96.6%, 53.22% 99.09%, 50% 100%, 46.78% 99.09%, 43.87% 96.6%, 41.42% 93.15%, 39.39% 89.6%, 37.53% 86.74%, 35.46% 85.11%, 32.84% 84.8%, 29.5% 85.51%, 25.55% 86.58%, 21.39% 87.29%, 17.56% 86.99%, 14.64% 85.36%, 13.01% 82.44%, 12.71% 78.61%, 13.42% 74.45%, 14.49% 70.5%, 15.2% 67.16%, 14.89% 64.54%, 13.26% 62.47%, 10.4% 60.61%, 6.85% 58.58%, 3.4% 56.13%, 0.91% 53.22%, 0% 50%, 0.91% 46.78%, 3.4% 43.87%, 6.85% 41.42%, 10.4% 39.39%, 13.26% 37.53%, 14.89% 35.46%, 15.2% 32.84%, 14.49% 29.5%, 13.42% 25.55%, 12.71% 21.39%, 13.01% 17.56%, 14.64% 14.64%, 17.56% 13.01%, 21.39% 12.71%, 25.55% 13.42%, 29.5% 14.49%, 32.84% 15.2%, 35.46% 14.89%, 37.53% 13.26%, 39.39% 10.4%, 41.42% 6.85%, 43.87% 3.4%, 46.78% 0.91%);
+  // Vão entre os itens de uma lista segmentada e entre as metades do split button
+  --m3-vao-segmento: 2px;
+
+  // Camadas de fundo (contêiner, camada de estado e sombra) atrás do conteúdo do botão
+  --m3-z-fundo: -1;
+
+  // ---------- Elevação (níveis 1 a 3, aproximados) ----------
+  --m3-elevacao-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --m3-elevacao-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --m3-elevacao-3: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
+
+  // ---------- Tipografia: escala do M3 (tamanho / entrelinha) ----------
+  --m3-fonte: "Roboto Variable", "Roboto", system-ui, sans-serif;
+  --m3-display-l: 3.5625rem;
+  --m3-display-l-linha: 4rem;
+  --m3-display-m: 2.8125rem;
+  --m3-display-m-linha: 3.25rem;
+  --m3-display-s: 2.25rem;
+  --m3-display-s-linha: 2.75rem;
+  --m3-headline-m: 1.75rem;
+  --m3-headline-m-linha: 2.25rem;
+  --m3-headline-s: 1.5rem;
+  --m3-headline-s-linha: 2rem;
+  --m3-title-l: 1.375rem;
+  --m3-title-l-linha: 1.75rem;
+  --m3-title-m: 1rem;
+  --m3-title-m-linha: 1.5rem;
+  --m3-body-l: 1rem;
+  --m3-body-l-linha: 1.5rem;
+  --m3-body-m: 0.875rem;
+  --m3-body-m-linha: 1.25rem;
+  --m3-body-s: 0.75rem;
+  --m3-body-s-linha: 1rem;
+  --m3-label-l: 0.875rem;
+  --m3-label-l-linha: 1.25rem;
+  // label-medium 12/16 [1]: rótulos da toolbar abaixo de md
+  --m3-label-m: 0.75rem;
+  --m3-label-m-linha: 1rem;
+  --m3-label-s: 0.6875rem;
+  --m3-label-s-linha: 1rem;
+
+  // ---------- Movimento ----------
+  --m3-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --m3-ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  // Molas do Expressive (amortecimento / rigidez) em linear(); duração até 0,1% do alvo
+  --m3-mola-espacial-rapida: linear(0, 0.044, 0.154, 0.3, 0.458, 0.611, 0.748, 0.862, 0.952, 1.017, 1.06, 1.085, 1.094, 1.093, 1.084, 1.071, 1.056, 1.042, 1.028, 1.016, 1.007, 1, 0.995, 0.993, 0.991, 0.991, 0.992, 0.993, 0.994, 0.996, 0.997, 0.998, 1);
+  --m3-dur-mola-espacial-rapida: 360ms;
+  --m3-mola-espacial: linear(0, 0.031, 0.108, 0.209, 0.321, 0.434, 0.54, 0.636, 0.719, 0.79, 0.848, 0.895, 0.932, 0.959, 0.98, 0.994, 1.004, 1.01, 1.014, 1.015, 1.015, 1.014, 1.013, 1.011, 1.009, 1.008, 1.006, 1.005, 1.004, 1.003, 1.002, 1.001, 1);
+  --m3-dur-mola-espacial: 440ms;
+  --m3-mola-espacial-lenta: linear(0, 0.03, 0.106, 0.206, 0.317, 0.428, 0.533, 0.629, 0.713, 0.784, 0.843, 0.89, 0.927, 0.956, 0.977, 0.992, 1.003, 1.009, 1.013, 1.015, 1.015, 1.014, 1.013, 1.012, 1.01, 1.008, 1.007, 1.005, 1.004, 1.003, 1.002, 1.002, 1);
+  --m3-dur-mola-espacial-lenta: 600ms;
+  --m3-mola-efeitos-rapida: linear(0, 0.181, 0.456, 0.672, 0.813, 0.897, 0.945, 0.971, 0.985, 0.992, 0.996, 0.998, 1);
+  --m3-dur-mola-efeitos-rapida: 150ms;
+  // A prensa do hero: o disco começa a entrar logo depois de a bola ser achatada
+  --m3-atraso-prensa: 120ms;
+
+  // ---------- Layout ----------
+  // Pé da página abaixo de lg: altura da toolbar flutuante (64 px), o afastamento e um respiro
+  --m3-barra-reserva: 6rem;
+
+  // ---------- Tokens do projeto, remapeados para os papéis do M3 ----------
+  --color-bg: var(--m3-surface);
+  --color-surface-sunken: var(--m3-surface-container);
+  --color-surface-1: var(--m3-surface-container-low);
+  --color-surface-2: var(--m3-surface-container);
+  --color-surface-3: var(--m3-surface-container-high);
+  --color-surface-4: var(--m3-surface-container-highest);
+  --color-input: var(--m3-surface-container-highest);
+  --color-overlay: var(--m3-scrim);
+
+  --color-ink: var(--m3-on-surface);
+  --color-ink-muted: var(--m3-on-surface-variant);
+  --color-ink-subtle: var(--m3-on-surface-variant);
+  // on-surface a 38% sobre surface, já composto (desabilitado: isento de contraste)
+  --color-ink-disabled: #a2a79e;
+
+  --color-border-strong: var(--m3-outline);
+  --color-border: var(--m3-outline-variant);
+  --color-border-subtle: var(--m3-outline-variant);
+
+  --color-accent: var(--m3-primary);
+  --color-accent-hover: var(--m3-primary-hover);
+  --color-accent-pressed: var(--m3-primary-pressed);
+  --color-accent-ink: var(--m3-on-primary);
+  --color-accent-soft: var(--m3-primary-container);
+  --color-focus: var(--m3-secondary);
+
+  --color-success: var(--m3-sucesso);
+  --color-danger: var(--m3-error);
+  --color-danger-solid: var(--m3-error);
+  --color-danger-solid-ink: var(--m3-on-error);
+  --color-warning: var(--m3-aviso);
+  --color-info: var(--m3-info);
+
+  --color-danger-soft: var(--m3-error-container);
+  --color-warning-soft: var(--m3-aviso-container);
+  --color-info-soft: var(--m3-info-container);
+  --color-success-soft: var(--m3-sucesso-container);
+  --color-hover-ghost: var(--m3-camada-hover);
+  --color-sheen: rgba(255, 255, 255, 0.16);
+  --gradient-scrim: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+  --glow-hero: none;
+
+  --focus-width: 3px;
+  --focus-offset: 2px;
+
+  --font-display: var(--m3-fonte);
+  --font-text: var(--m3-fonte);
+  --text-xs: var(--m3-body-s);
+  --text-sm: var(--m3-body-m);
+  --text-md: var(--m3-body-l);
+  --text-lg: var(--m3-title-l);
+  --text-xl: var(--m3-headline-m);
+  --text-2xl: 2rem;
+  --text-3xl: var(--m3-display-m);
+  --text-4xl: var(--m3-display-l);
+  --text-hero: clamp(2.25rem, 1.4rem + 3.4vw, 3.5625rem);
+  --text-page: clamp(2.25rem, 1.8rem + 1.6vw, 2.8125rem);
+  --leading-display: 1.12;
+  --leading-tight: 1.27;
+  --leading-body: 1.5;
+  --leading-compact: 1.43;
+
+  --radius-sm: var(--m3-forma-s);
+  --radius-md: var(--m3-forma-m);
+  --radius-lg: var(--m3-forma-xl);
+
+  --elev-0: none;
+  --elev-1: var(--m3-elevacao-1);
+  --elev-2: var(--m3-elevacao-2);
+  --elev-3: var(--m3-elevacao-3);
+  --glow-accent: none;
+  --underline-active: inset 0 -3px 0 var(--m3-primary);
+
+  --dur-instant: 50ms;
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-hold: 1200ms;
+  --dur-stagger: 40ms;
+  --dur-spin: 800ms;
+  --ease-out: var(--m3-ease-emphasized-decelerate);
+  --ease-in-out: var(--m3-ease-standard);
+  --ease-spring: var(--m3-mola-espacial-rapida);
+
+  // Amostra do título na ficha do índice
+  --ficha-titulo-peso: 500;
+}

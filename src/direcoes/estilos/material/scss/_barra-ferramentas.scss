@@ -1,0 +1,161 @@
+// M3BarraFerramentas: pílula em surface-container com o item atual em secondary-container [83] e o
+// FAB em primary-container com canto 16 [81]. Abaixo de lg flutua (elevação 3); a partir de lg fica
+// no cabeçalho, sem elevação. Abaixo de md, ícone sobre o rótulo; a partir de md, lado a lado.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-ferramentas {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  z-index: var(--z-navbar);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  @include up(lg) {
+    position: static;
+    gap: var(--space-3);
+  }
+}
+
+.m3-pilula {
+  @include reserva-de-sombra;
+
+  display: flex;
+  gap: var(--m3-vao-segmento);
+  padding: var(--space-1);
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-surface-container);
+  box-shadow: var(--m3-elevacao-3);
+
+  @include up(lg) {
+    padding: var(--m3-vao-segmento);
+    box-shadow: none;
+  }
+}
+
+.m3-pilula__item {
+  @include camada-de-estado;
+  @include anel-interno;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 4rem;
+  min-height: 3.5rem;
+  padding-inline: var(--space-2);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface-variant);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-label-m);
+  font-weight: 500;
+  line-height: var(--m3-label-m-linha);
+  letter-spacing: 0.03125rem;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &[aria-current="page"] {
+    background: var(--m3-secondary-container);
+    color: var(--m3-on-secondary-container);
+  }
+
+  @media (forced-colors: active) {
+    &[aria-current="page"] {
+      border: 2px solid Highlight;
+    }
+  }
+
+  @include up(md) {
+    flex-direction: row;
+    gap: var(--space-2);
+    min-height: 3rem;
+    padding-inline: var(--space-4);
+    font-size: var(--m3-label-l);
+    line-height: var(--m3-label-l-linha);
+    letter-spacing: 0.00625rem;
+  }
+
+  @include up(lg) {
+    min-height: var(--target-min);
+  }
+}
+
+.m3-pilula__icone {
+  font-size: 1.5rem;
+
+  @include up(md) {
+    font-size: 1.25rem;
+  }
+
+  @include up(lg) {
+    font-size: 1.125rem;
+  }
+}
+
+.m3-fab {
+  @include camada-de-estado;
+  @include reserva-de-sombra;
+
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-primary-container);
+  box-shadow: var(--m3-elevacao-3);
+  color: var(--m3-on-primary-container);
+  font-size: 1.5rem;
+
+  @include up(lg) {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--m3-forma-m);
+    box-shadow: none;
+    font-size: 1.25rem;
+  }
+}
+
+// Badge grande do M3 [35]: 16 px, cor de erro
+.m3-badge {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  display: grid;
+  place-items: center;
+  min-width: 1rem;
+  height: 1rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-error);
+  color: var(--m3-on-error);
+  font-family: var(--m3-fonte);
+  font-size: var(--m3-label-s);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.m3-badge-enter-active,
+.m3-badge-leave-active {
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-badge-enter-from,
+.m3-badge-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .m3-badge-enter-active {
+    transition:
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida),
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  .m3-badge-enter-from {
+    transform: scale(0);
+  }
+}

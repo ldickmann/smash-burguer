@@ -1,0 +1,140 @@
+// Seção comandas: o trilho de inox por fileira (um trecho por li, que se emenda no vizinho) e as
+// comandas penduradas, presas pelo prendedor. 1 coluna, 2 a partir de md e 3 a partir de xl.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// Meio vão entre as colunas: o trecho de trilho de cada li vai até ele
+$vao: var(--space-5);
+$meio-vao: calc(var(--space-5) / 2);
+$trilho: 1.125rem;
+
+.esq-comandas__titulo {
+  @include titulo-gravado;
+
+  margin-bottom: var(--space-5);
+}
+
+.esq-comandas__lista,
+.esq-comandas__vazio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6) $vao;
+
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-7);
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// A comanda órfã: sozinha na última fileira, ocupa o trilho todo e se deita (foto ao lado das
+// linhas), para não sobrar vazio à direita dela. Em 2 colunas, a última de posição ímpar; em 3, a
+// de posição 3n+1.
+@mixin comanda-larga {
+  grid-column: 1 / -1;
+
+  :deep(.esq-comanda__papel) {
+    @include up(lg) {
+      grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "nome nome"
+        "foto linhas"
+        "foto total";
+      column-gap: var(--space-5);
+    }
+  }
+}
+
+.esq-comandas__lista > .esq-comandas__gancho:last-child {
+  @include up(md) {
+    @include below(xl) {
+      &:nth-child(odd) {
+        @include comanda-larga;
+      }
+    }
+  }
+
+  @include up(xl) {
+    &:nth-child(3n + 1) {
+      @include comanda-larga;
+    }
+  }
+}
+
+// O gancho: o trecho do trilho (::before) e o prendedor de inox (::after) sobre o alto do papel
+.esq-comandas__gancho {
+  position: relative;
+  padding-top: calc(#{$trilho} / 2);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: calc(-1 * #{$meio-vao});
+    left: calc(-1 * #{$meio-vao});
+    z-index: var(--esq-z-trilho);
+    height: $trilho;
+    background: var(--esq-trilho);
+    box-shadow: var(--esq-sombra-trilho);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--space-1));
+    left: 50%;
+    z-index: var(--esq-z-prendedor);
+    width: 3.5rem;
+    height: 1.75rem;
+    margin-left: -1.75rem;
+    border: 1px solid var(--esq-inox-borda);
+    border-radius: var(--radius-sm);
+    background: var(--esq-escovado), var(--esq-inox);
+    box-shadow: var(--esq-bisel-inox), var(--esq-sombra-trilho);
+  }
+
+  @media (forced-colors: active) {
+    &::before {
+      height: 0;
+      border-top: 3px solid CanvasText;
+      box-shadow: none;
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+}
+
+// Papel pendurado: giro estático de ±0,75°, só com movimento e sem transição
+@include motion-ok {
+  .esq-comandas__gancho:nth-child(odd) > .esq-comanda {
+    transform: rotate(-0.75deg);
+  }
+
+  .esq-comandas__gancho:nth-child(even) > .esq-comanda {
+    transform: rotate(0.75deg);
+  }
+}
+
+// A comanda em branco do trilho vazio
+.esq-comandas__branco {
+  @include papel-termico;
+
+  display: grid;
+  align-content: center;
+  min-height: 10rem;
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  color: var(--esq-tinta-clara);
+  font-size: 1rem;
+  line-height: 1.4;
+  mask: var(--esq-picote-baixo);
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}

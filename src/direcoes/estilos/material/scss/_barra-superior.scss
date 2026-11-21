@@ -1,0 +1,36 @@
+// M3BarraSuperior: 64 px em surface; a partir de lg, sticky e opaca, com a toolbar à direita.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-cabecalho {
+  background: var(--m3-surface);
+  color: var(--m3-on-surface);
+
+  @include up(lg) {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-navbar);
+  }
+}
+
+.m3-cabecalho__interno {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--navbar-h);
+}
+
+.m3-marca {
+  @include camada-de-estado;
+  @include tipo(title-l, 500);
+
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: var(--m3-forma-s);
+  color: var(--m3-on-surface);
+  text-decoration: none;
+}

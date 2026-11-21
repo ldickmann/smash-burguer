@@ -60,7 +60,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 ## Convenções do código (SPEC)
 
-- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue` e a assinatura de autoria (abaixo).
+- **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue`, a assinatura de autoria e os `_tokens.scss` das direções visuais (seções abaixo).
 - **Breakpoints e mixins:** mobile-first, em `base/_breakpoints.scss` (`up()`, `below()`, `hover-capable`, `motion-ok`, `motion-reduced`).
 - **Estilos:** cada componente faz `@use` da própria parcial dentro de `<style scoped>`. O `main.scss` importa só a base.
 - **Animações:**
@@ -78,6 +78,20 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **Chaves de localStorage:** `smash-burger:cart:v1`, `smash-burger:session`, `smash-burger:account`, `smash-burger:admin-session` (sessão do painel), `smash-burger:catalog` (cardápio editado no painel) e `smash-burger:admin-orders` (pedidos do painel). O cadastro do admin criado à mão continua em `admin`. Todo estado persistido é conferido ao carregar (`afterHydrate`, com as funções de `src/utils/storedState.js`): o que vem do localStorage é editável no navegador.
 - **Senhas:** só por `hashPassword`/`verifyPassword` (`src/utils/password.js`, PBKDF2-SHA256 do WebCrypto). Não grave senha em texto, nem na sessão.
 - **Dependências novas:** pergunte ao usuário antes de adicionar.
+
+## Direções visuais (exploração, só no `yarn dev`)
+
+- **Onde:** `#/direcoes` (índice com uma ficha por estilo) e `#/direcoes/<estilo>` (`material`, `esqueumorfismo`, `neumorfismo`; 3D, flat, minimalismo e dark mode saíram em 21/11/2026 e ficam no histórico do Git). A Brasa saiu da exploração na rodada 2 (`#/direcoes/brasa` cai no NotFound); a Home de produção continua em `#/`. Código em `src/direcoes/`; pesquisa em `docs/direcoes/PESQUISA.md` e `docs/direcoes/pesquisa/`; desenhos das Homes em `docs/direcoes/desenho/<estilo>.md` e `.json`.
+- **Escolha e acervo (21/11/2026):** o Material 3 Expressive foi escolhido para o sistema inteiro, com o SPEC em `docs/direcoes/SPEC-material.md`. O esqueumorfismo e o neumorfismo ficam como mockups, no acervo de ideias de UI/UX: não os apague nem os leve à produção. O índice mostra a situação de cada um (campo `situacao` de `src/direcoes/direcoes.js`).
+- **Cada estilo é dono da própria pasta** (`src/direcoes/estilos/<estilo>/`): `Home<Estilo>.vue` só compõe (até 100 linhas), as seções ficam em `secoes/` (raiz `<section data-secao aria-labelledby>`), as peças em `componentes/`, as parciais em `scss/`, e `ficha.js`, `contraste.js` e `textos.js` (microcopy marcada `// provisório`) são puros. `fichas.js` e `contraste.js` da raiz só agregam.
+  - `compartilhado/` é só lógica, sem visual: `MolduraDirecao` (sem estilo próprio), `usePersonalizar`, `useCartaoProduto` (com `atributosAdicionar`), `useCardapio`, `dados.js` e os outros composables.
+  - O teste `src/__tests__/direcoes-isolamento.test.js` garante as fronteiras; cada estilo tem o teste de contrato da Home na própria `__tests__/`.
+- **Fora do build:** as rotas ficam dentro do ramo `import.meta.env.DEV` de `src/direcoes/rotas.js`; com a lista fora do ramo, o build gerava os chunks. Depois de mexer nelas, rode o build e confira que o `dist/` não tem `direcoes` nem as fontes novas.
+- **Tokens:** cada estilo redefine todos os tokens do projeto em `:root[data-direcao="<estilo>"]` (o modal Personalizar e o aviso continuam os reais) e tem os próprios, com prefixo (`--m3-*`, `--esq-*`, `--neu-*`).
+  - Os `_tokens.scss` são importados pelo `<script>`, não no `<style scoped>`, que reescreveria o `:root`.
+  - São os únicos arquivos da exploração com hex, rgba e durações (exceção na §13.2 do SPEC).
+- **Fontes:** Roboto, Courier Prime e Nunito são `devDependencies`, só das direções. A do estilo escolhido passa a `dependencies` quando ele for levado ao sistema; as outras saem.
+- **Capturas:** `?captura=1` esconde o alternador. O botão do Vue DevTools aparece no `yarn dev`; remova-o antes de capturar.
 
 ## Verificação
 

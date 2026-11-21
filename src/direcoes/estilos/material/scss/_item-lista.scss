@@ -1,0 +1,88 @@
+// M3ItemLista: bloco em surface-container-lowest dentro da lista segmentada. Cantos de fora de 20
+// (large-increased) e de dentro de 4, conforme a posição; vão de 2 px entre os itens [66].
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-item {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
+  // Celular: o texto ganha a largura toda ao lado da foto; o preço desce para debaixo do nome, na
+  // mesma linha do botão
+  display: grid;
+  grid-template-areas:
+    "foto texto texto"
+    "foto preco acao";
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-height: 5.5rem;
+  padding: var(--space-3);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima) var(--m3-item-canto-baixo)
+    var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
+
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  }
+
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+  }
+
+  @include up(md) {
+    grid-template-areas: "foto texto preco acao";
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto auto;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+.m3-item__foto {
+  grid-area: foto;
+  width: 3.5rem;
+}
+
+.m3-item__texto {
+  display: grid;
+  grid-area: texto;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.m3-item__titulo {
+  @include tipo(body-l);
+  @include linhas(2);
+
+  color: var(--m3-on-surface);
+}
+
+.m3-item__descricao {
+  @include tipo(body-m);
+  @include linhas(2);
+
+  color: var(--m3-on-surface-variant);
+
+  @include up(md) {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+}
+
+.m3-item__apoio {
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+}
+
+.m3-item__preco {
+  @include tipo(title-m, 500);
+
+  grid-area: preco;
+  color: var(--m3-on-surface);
+}
+
+.m3-item__acao {
+  grid-area: acao;
+}

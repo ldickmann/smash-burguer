@@ -1,0 +1,145 @@
+// Seção chapa (hero): a superfície curada com o h1 estampado e o lanche recortado, e a frente de inox
+// com a calha de gordura logo abaixo da borda. A partir de lg, duas colunas (desenho, 5.1): o h1 sozinho
+// à esquerda, centrado na altura do lanche, e o lanche à direita, sobre as marcas da espátula. O texto
+// e o botão ficam na frente de inox, não ao lado do título, e é isso que separa a chapa do hero da v1.
+// Abaixo de lg, uma coluna: o h1 e o lanche centralizado, apoiado na beira. O trilho aparece na dobra.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-chapa__superficie {
+  --color-focus: var(--esq-letra);
+
+  overflow: hidden;
+  padding-top: var(--space-6);
+  background: var(--esq-chapa-brilho), var(--esq-chapa-marcas), var(--esq-chapa-tempera), var(--esq-chapa);
+  color: var(--esq-letra);
+
+  @include up(lg) {
+    padding-block: var(--space-7) var(--space-6);
+    // As marcas da espátula em volta do lanche, que passa para a direita
+    background: var(--esq-chapa-brilho), var(--esq-chapa-riscos), var(--esq-chapa-tempera), var(--esq-chapa);
+  }
+
+  @media (forced-colors: active) {
+    background: Canvas;
+  }
+}
+
+.esq-chapa__grade {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) 23.75rem;
+    align-items: center;
+    column-gap: var(--space-6);
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1fr) 27.5rem;
+    column-gap: var(--space-7);
+  }
+}
+
+.esq-chapa__titulo {
+  color: var(--esq-letra);
+  font-family: var(--esq-fonte-placa);
+  font-size: var(--esq-titulo);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: var(--leading-display);
+  text-shadow: var(--esq-estampado);
+  text-wrap: balance;
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+// O lanche recortado na beira da chapa, com o calor atrás e a sombra de contato embaixo
+.esq-chapa__lanche {
+  position: relative;
+  isolation: isolate;
+  justify-self: center;
+  width: 15rem;
+  // A imagem tem uma margem transparente embaixo: o pão encosta na borda da frente
+  margin-bottom: calc(-1 * var(--space-2));
+
+  @include up(md) {
+    width: 20rem;
+  }
+
+  // Ao lado do título, o lanche ocupa a coluna (380 px em lg, 440 px em xl) e fica sobre a chapa
+  @include up(lg) {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: var(--esq-z-fundo);
+    border-radius: var(--radius-round);
+  }
+
+  &::before {
+    inset: -5% -10%;
+    background: var(--esq-calor);
+  }
+
+  &::after {
+    right: 10%;
+    bottom: 5%;
+    left: 10%;
+    height: 12%;
+    background: var(--esq-contato);
+  }
+}
+
+.esq-chapa__img {
+  width: 100%;
+  height: auto;
+}
+
+// A frente de inox da chapa: a borda, a calha logo abaixo e o texto com a ação
+.esq-chapa__frente {
+  @include inox-escovado;
+
+  position: relative;
+  border-top: 3px solid var(--esq-inox-borda);
+  box-shadow: var(--esq-calha), var(--esq-bisel-inox);
+
+  @media (forced-colors: active) {
+    border-top-color: CanvasText;
+    background: Canvas;
+  }
+
+  @media (prefers-contrast: more) {
+    box-shadow: none;
+    border-top: 6px solid var(--esq-tinta);
+  }
+}
+
+.esq-chapa__balcao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-block: var(--space-6) var(--space-5);
+
+  @include up(md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+}
+
+.esq-chapa__texto {
+  max-width: 36rem;
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-impressa);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}

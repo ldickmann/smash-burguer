@@ -1,0 +1,15 @@
+{
+  "estilo": "esqueumorfismo",
+  "secoes": ["chapa", "comandas", "expositor", "cupom"],
+  "h1MaxLinhas": { "1440": 2, "1024": 3, "390": 3 },
+  "estados": [
+    {
+      "nome": "cupom com itens (a impressora imprime a primeira linha)",
+      "passos": [
+        { "clicar": "[data-secao='comandas'] .esq-comandas__lista > li:first-child [aria-label^='Adicionar']" },
+        { "clicar": "dialog[open] .dialog__footer button" }
+      ]
+    }
+  ],
+  "justificativaEscopo": null
+}

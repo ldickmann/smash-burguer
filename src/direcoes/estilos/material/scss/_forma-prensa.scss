@@ -1,0 +1,100 @@
+// M3FormaPrensa: o disco (e a bola da entrada) atrás do conteúdo, centrado nele por padrão. Quem usa
+// a prensa define o tamanho (--m3-prensa-disco) e pode mover o centro (--m3-prensa-centro-x e -y,
+// medidos da caixa da prensa) e repintar o conteúdo (--m3-prensa-fundo, -tinta e -foco) quando o
+// disco não fica atrás dele. O corte pela borda é de quem a contém.
+@use "@/assets/styles/base/breakpoints" as *;
+
+.m3-prensa {
+  position: relative;
+  isolation: isolate;
+}
+
+.m3-prensa__disco,
+.m3-prensa__bola {
+  position: absolute;
+  top: var(--m3-prensa-centro-y, 50%);
+  left: var(--m3-prensa-centro-x, 50%);
+  z-index: var(--m3-z-fundo);
+  aspect-ratio: 1;
+  background: var(--m3-primary);
+}
+
+.m3-prensa__disco {
+  width: var(--m3-prensa-disco, 34rem);
+  margin: calc(var(--m3-prensa-disco, 34rem) / -2) 0 0 calc(var(--m3-prensa-disco, 34rem) / -2);
+  clip-path: var(--m3-forma-cookie);
+}
+
+// A bola (a carne antes da prensa) é o círculo de dentro do disco e só existe na animação
+.m3-prensa__bola {
+  display: none;
+  width: calc(var(--m3-prensa-disco, 34rem) * 0.86);
+  margin: calc(var(--m3-prensa-disco, 34rem) * -0.43) 0 0 calc(var(--m3-prensa-disco, 34rem) * -0.43);
+  border-radius: var(--m3-forma-full);
+}
+
+// O conteúdo fica sobre o disco, em on-primary. O fundo em pílula, da cor do disco e inscrito nele,
+// não aparece: só declara o fundo real do texto e do anel de foco (que passa a on-primary) e segura a
+// leitura durante a troca de forma da entrada.
+.m3-prensa__conteudo {
+  --color-focus: var(--m3-prensa-foco, var(--m3-on-primary));
+
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-prensa-fundo, var(--m3-primary));
+  color: var(--m3-prensa-tinta, var(--m3-on-primary));
+}
+
+// A prensa: uma vez, ao montar, só com o movimento liberado. A bola é achatada e só some depois que o
+// disco já apareceu (opacidade rápida), para o fundo do conteúdo não aparecer sozinho; a forma do disco
+// assenta com a mola lenta.
+@include motion-ok {
+  .m3-prensa__bola {
+    display: block;
+    animation: m3-prensa-bola var(--m3-dur-mola-espacial-rapida) var(--m3-ease-standard) both;
+  }
+
+  .m3-prensa__disco {
+    animation:
+      m3-prensa-surge var(--m3-dur-mola-efeitos-rapida) var(--m3-ease-standard) var(--m3-atraso-prensa) both,
+      m3-prensa-disco var(--m3-dur-mola-espacial-lenta) var(--m3-mola-espacial-lenta) var(--m3-atraso-prensa) both;
+  }
+
+  @keyframes m3-prensa-bola {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+
+    70% {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(1.12, 0.5);
+    }
+  }
+
+  @keyframes m3-prensa-surge {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes m3-prensa-disco {
+    from {
+      transform: scale(0.82, 0.62) rotate(-12deg);
+    }
+
+    to {
+      transform: none;
+    }
+  }
+}

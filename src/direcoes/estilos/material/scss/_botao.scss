@@ -1,0 +1,129 @@
+// M3Botao: filled, tonal e de texto, com a troca de forma do Expressive [54][70] e a face "Adicionado".
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// A variante define três fundos (repouso, hover e pressionado) e o --m3-botao-fundo, que as camadas
+// pintam, troca entre eles. Quem usa o botão repinta a variante trocando os três (o hero faz isso
+// abaixo de md), sem disputar com :hover e :active.
+.m3-botao {
+  --m3-botao-fundo-repouso: transparent;
+  --m3-botao-fundo-hover: transparent;
+  --m3-botao-fundo-pressionado: transparent;
+  --m3-botao-fundo: var(--m3-botao-fundo-repouso);
+
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--m3-forma-full);
+  font-family: var(--m3-fonte);
+  font-weight: 500;
+  letter-spacing: 0.00625rem;
+  white-space: nowrap;
+  text-decoration: none;
+
+  @include hover-capable {
+    &:hover {
+      --m3-botao-fundo: var(--m3-botao-fundo-hover);
+    }
+  }
+
+  &:active {
+    --m3-botao-fundo: var(--m3-botao-fundo-pressionado);
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
+  }
+}
+
+// Tamanhos [19]: S de 40 dp com 44 px de alvo; M de 56
+.m3-botao--s {
+  min-height: var(--target-min);
+  padding-inline: var(--space-4);
+  font-size: var(--m3-label-l);
+  line-height: var(--m3-label-l-linha);
+}
+
+.m3-botao--m {
+  min-height: 3.5rem;
+  padding-inline: var(--space-5);
+  font-size: var(--m3-title-m);
+  line-height: var(--m3-title-m-linha);
+}
+
+// Filled e tonal: contêiner redondo; apertado, cantos menores (M usa o canto maior)
+.m3-botao--filled,
+.m3-botao--tonal {
+  @include troca-de-forma(var(--m3-forma-full), var(--m3-forma-m));
+}
+
+.m3-botao--filled {
+  --m3-botao-fundo-repouso: var(--m3-primary);
+  --m3-botao-fundo-hover: var(--m3-primary-hover);
+  --m3-botao-fundo-pressionado: var(--m3-primary-pressed);
+
+  color: var(--m3-on-primary);
+
+  &.m3-botao--m {
+    --m3-botao-forma-pressionada: var(--m3-forma-l);
+  }
+}
+
+.m3-botao--tonal {
+  --m3-botao-fundo-repouso: var(--m3-secondary-container);
+  --m3-botao-fundo-hover: var(--m3-secondary-container-hover);
+  --m3-botao-fundo-pressionado: var(--m3-secondary-container-pressed);
+  --m3-botao-forma-pressionada: var(--m3-forma-s);
+
+  color: var(--m3-on-secondary-container);
+}
+
+// Text button: só a tinta primary e a camada de estado
+.m3-botao--texto {
+  @include camada-de-estado;
+
+  padding-inline: var(--space-3);
+  color: var(--m3-primary);
+}
+
+// Retorno: primary-container com o check e "Adicionado"
+.m3-botao.is-retorno {
+  --m3-botao-fundo-repouso: var(--m3-primary-container);
+  --m3-botao-fundo-hover: var(--m3-primary-container);
+  --m3-botao-fundo-pressionado: var(--m3-primary-container);
+
+  color: var(--m3-on-primary-container);
+}
+
+.m3-botao__face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-botao__face--verso {
+  opacity: 0;
+}
+
+.m3-botao.is-retorno {
+  .m3-botao__face--frente {
+    opacity: 0;
+  }
+
+  .m3-botao__face--verso {
+    opacity: 1;
+  }
+}
+
+@include motion-ok {
+  .m3-botao__check {
+    transform: scale(0);
+    transition: transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .m3-botao.is-retorno .m3-botao__check {
+    transform: none;
+  }
+}

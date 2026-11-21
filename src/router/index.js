@@ -5,6 +5,7 @@ import { useCartStore } from '@/stores/cart';
 import { useToastStore } from '@/stores/toast';
 import { safeRedirect } from '@/handlers/authHandlers';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { rotasDirecoes } from '@/direcoes/rotas';
 
 // Layouts imports
 import MainLayout from '@/layouts/MainLayout.vue';
@@ -16,6 +17,9 @@ const BRAND = 'Smash Burger';
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
+    // Exploração de direções visuais (#/direcoes): só no servidor de desenvolvimento
+    ...(import.meta.env.DEV ? rotasDirecoes : []),
+
     {
       path: '/',
       component: MainLayout,

@@ -1,0 +1,28 @@
+// EsqFoto: o quadro reserva a proporção (fundo da dobra do papel enquanto carrega)
+.esq-foto {
+  position: relative;
+  aspect-ratio: var(--esq-foto-proporcao);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--esq-papel-dobra);
+}
+
+.esq-foto__picture {
+  position: absolute;
+  inset: 0;
+}
+
+.esq-foto__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.esq-foto__reserva {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--esq-tinta-clara);
+  font-size: 2.25rem;
+}

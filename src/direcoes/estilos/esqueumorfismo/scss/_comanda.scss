@@ -1,0 +1,129 @@
+// EsqComanda: o ticket de papel com o picote embaixo. A sombra segue o recorte (drop-shadow no
+// article, máscara no papel). Em pé a partir de lg; deitada abaixo. O giro estático fica na seção.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-comanda {
+  position: relative;
+  height: 100%;
+  filter: var(--esq-filtro-comanda);
+  transform-origin: 50% 0;
+
+  @media (forced-colors: active) {
+    filter: none;
+  }
+}
+
+.esq-comanda__papel {
+  @include papel-termico;
+
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  grid-template-areas:
+    "nome nome"
+    "foto linhas"
+    "total total";
+  align-items: start;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  mask: var(--esq-picote-baixo);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      "nome"
+      "foto"
+      "linhas"
+      "total";
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--esq-tinta);
+  }
+}
+
+.esq-comanda__nome {
+  grid-area: nome;
+  padding-bottom: var(--space-2);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.esq-comanda__papel > .esq-comanda__foto {
+  grid-area: foto;
+  aspect-ratio: 1 / 1;
+
+  @include up(lg) {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+// As linhas do ticket: o traço em ::before, com recuo pendurado
+.esq-comanda__linhas,
+.esq-comanda__descricao {
+  grid-area: linhas;
+  color: var(--esq-tinta-clara);
+  font-size: 1rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+// No celular, a comanda deitada mostra as primeiras linhas do ticket, da altura da foto, e as
+// reticências: as sete comandas numa coluna só alongavam a página. O leitor de tela lê a lista toda,
+// e o Personalizar mostra todos os ingredientes.
+.esq-comanda__linhas {
+  @include below(md) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
+}
+
+// Na Courier, o traço e o espaço somam 2 ch: o recuo pendurado alinha a segunda linha ao texto
+.esq-comanda__linha {
+  padding-left: 2ch;
+  text-indent: -2ch;
+
+  &::before {
+    content: "- " / "";
+  }
+}
+
+.esq-comanda__total {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: total;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 2px dashed var(--esq-tinta-clara);
+}
+
+.esq-comanda__preco {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+// O carimbo cai sobre as linhas, nunca sobre a foto; na comanda deitada, a coluna é mais estreita
+.esq-comanda__papel > .esq-comanda__carimbo {
+  grid-area: linhas;
+
+  @include below(lg) {
+    font-size: 2rem;
+  }
+}

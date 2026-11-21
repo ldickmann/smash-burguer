@@ -1,0 +1,81 @@
+// Contato: uma coluna no celular; a partir de lg, o horário à esquerda e o endereço e o contato
+// empilhados à direita; a partir de xl, três colunas.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-contato {
+  display: grid;
+  gap: var(--space-5);
+
+  @include up(lg) {
+    gap: var(--space-6);
+  }
+}
+
+.neu-contato__titulo {
+  @include titulo(var(--neu-titulo-secao));
+}
+
+.neu-contato__grupos {
+  display: grid;
+  gap: var(--space-6);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-7);
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-6);
+  }
+}
+
+.neu-contato__grupo {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.neu-contato__grupo--horario {
+  @include up(lg) {
+    grid-row: span 2;
+  }
+
+  @include up(xl) {
+    grid-row: auto;
+  }
+}
+
+.neu-contato__subtitulo {
+  @include titulo(var(--neu-titulo-grupo));
+}
+
+.neu-contato__horario {
+  color: var(--neu-tinta);
+  font-weight: 600;
+}
+
+.neu-contato__lista {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+// Os links na largura do grupo, quebrando em duas linhas se precisar (canto de moldura, não pílula)
+.neu-contato__controle {
+  width: 100%;
+}
+
+.neu-contato__rotulo {
+  color: var(--neu-tinta-suave);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.neu-contato__valor {
+  color: var(--neu-tinta);
+  font-weight: 700;
+}

@@ -1,0 +1,120 @@
+// Mixins do neumorfismo (scoped em cada componente). Só var(--…): os valores ficam em
+// ../_tokens.scss. Não gera CSS sozinho: cada parcial faz `@use "./base" as *;`.
+// Gramática do relevo: contêiner elevado sem borda, poço de leitura, controle em relevo com borda,
+// ação em cor chapada e selecionado afundado com borda de estado.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// Elevado e afundado em camadas ::before e ::after, que trocam por opacidade: a sombra não
+// interpola entre externa e interna, e animar sombra pesa (técnica do pseudo-elemento)
+@mixin relevo($elevado: var(--neu-elevado-pequeno), $afundado: var(--neu-afundado)) {
+  position: relative;
+  isolation: isolate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--neu-z-fundo);
+    border-radius: inherit;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  &::before {
+    box-shadow: $elevado;
+  }
+
+  &::after {
+    box-shadow: $afundado;
+    opacity: 0;
+  }
+}
+
+// O relevo afundado à vista: pressionado e selecionado
+@mixin afundar {
+  &::before {
+    opacity: 0;
+  }
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+// Só a camada afundada (a ação chapada não tem relevo em repouso)
+@mixin camada-afundada($afundado) {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--neu-z-fundo);
+    border-radius: inherit;
+    box-shadow: $afundado;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+}
+
+// Anel de foco próprio, nunca a sombra interna
+@mixin foco {
+  &:focus-visible {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: var(--focus-offset);
+  }
+}
+
+// Com movimento, o que se aperta desce 1 px
+@mixin descer {
+  @include motion-ok {
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+// Contêiner e poço que só existem pela sombra: borda visível nos modos de contraste
+@mixin reserva-sombra($forcada: 1px) {
+  @media (forced-colors: active) {
+    border: $forcada solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: var(--neu-borda-largura) solid var(--neu-borda);
+  }
+}
+
+// Poço de leitura: sombra interna, sem borda
+@mixin poco($sombra: var(--neu-afundado-pequeno)) {
+  box-shadow: $sombra;
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+// Sulco de uma linha, prensado no kraft
+@mixin sulco {
+  display: block;
+  border-radius: var(--neu-raio-pilula);
+  box-shadow: var(--neu-sulco);
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+// Títulos na escala do estilo
+@mixin titulo($tamanho, $peso: 800) {
+  color: var(--neu-tinta);
+  font-family: var(--neu-fonte);
+  font-size: $tamanho;
+  font-weight: $peso;
+  letter-spacing: -0.01em;
+  line-height: var(--leading-tight);
+  text-transform: none;
+}

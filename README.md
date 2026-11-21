@@ -73,6 +73,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
   - botões com área de toque de 44 px.
 - **Micro-interações 3D só com CSS:** o botão "Adicionar" gira, o contador do carrinho anima e o card inclina com o mouse. Com `prefers-reduced-motion`, viram transições de opacidade.
 - **Imagens:** WebP responsivas com `<picture>` e `srcset`. A Home carrega menos de 1 MB no celular.
+- **Direções visuais (exploração):** no `yarn dev`, `#/direcoes` mostra três Homes novas, uma por estilo de interface (Material 3 Expressive, esqueumorfismo e neumorfismo), cada uma com as próprias seções e componentes, e uma ficha por estilo. O Material 3 Expressive foi o escolhido para o sistema inteiro ([docs/direcoes/SPEC-material.md](./docs/direcoes/SPEC-material.md)); o esqueumorfismo e o neumorfismo ficam como acervo de ideias de UI/UX. Essas páginas não entram no build. A pesquisa, com as fontes, está em [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md).
 
 ## Tecnologias
 
@@ -85,7 +86,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 | [Sass](https://sass-lang.com/) | Estilos, tokens de design e mixins |
 | [vue3-carousel](https://github.com/ismail9k/vue3-carousel) | Carrossel da Home |
 | [Font Awesome 6](https://fontawesome.com/) | Ícones |
-| [Fontsource](https://fontsource.org/) | Fontes Archivo e Bebas Neue servidas pelo próprio site |
+| [Fontsource](https://fontsource.org/) | Fontes Archivo e Bebas Neue servidas pelo próprio site. Roboto, Courier Prime e Nunito são `devDependencies`: só as direções visuais as usam, no `yarn dev` |
 | [ViaCEP](https://viacep.com.br/) | Endereço a partir do CEP |
 | [Vitest 4](https://vitest.dev/) + [Vue Test Utils](https://test-utils.vuejs.org/) + [jsdom](https://github.com/jsdom/jsdom) | Testes unitários |
 | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) | Lint e formatação |
@@ -127,7 +128,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 
 | Comando | O que faz |
 |---|---|
-| `yarn dev` | Servidor de desenvolvimento em <http://localhost:5173/smash-burguer/>. O Vue DevTools fica em `/smash-burguer/__devtools__/`. |
+| `yarn dev` | Servidor de desenvolvimento em <http://localhost:5173/smash-burguer/>. O Vue DevTools fica em `/smash-burguer/__devtools__/`, e as direções visuais em `#/direcoes`. |
 | `yarn build` | Build de produção em `dist/` |
 | `yarn preview` | Serve o build em <http://localhost:4173/smash-burguer/> |
 | `yarn test:unit` | Vitest em modo observação. Para rodar uma vez: `yarn test:unit --run` |
@@ -145,7 +146,9 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 ├── .github/
 │   ├── workflows/        # deploy no GitHub Pages
 │   └── dependabot.yml    # PR mensal com as versões novas das actions
-├── docs/screenshots/     # imagens deste README
+├── docs/
+│   ├── direcoes/         # direções visuais: PESQUISA.md, pesquisa/<estilo>.md (dossiês) e desenho/<estilo>.md (+ .json)
+│   └── screenshots/      # imagens deste README
 ├── public/images/        # fotos do cardápio, fundos, ícones e manifest
 ├── src/
 │   ├── __tests__/        # testes unitários (Vitest)
@@ -157,6 +160,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   │   ├── layout/       # navbar e rodapé
 │   │   └── admin/        # componentes do painel
 │   ├── composables/      # lógica reutilizável (imagens, tilt, CEP, endereço sem rua, validação, saída do painel…)
+│   ├── direcoes/         # direções visuais (só no yarn dev): rotas, índice, compartilhado/ (só lógica) e estilos/<estilo>/ (Home, secoes/, componentes/, scss/, __tests__/)
 │   ├── handlers/         # fluxo de login e cadastro
 │   ├── json/             # cardápio (products.json)
 │   ├── layouts/          # MainLayout (loja) e AdminLayout (painel)
@@ -219,6 +223,7 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
 
 - [AUDIT.md](./AUDIT.md): auditoria de UI/UX da versão anterior, com os achados numerados (ex.: `[FLX-09]`).
 - [SPEC.md](./SPEC.md): especificação do redesign "Brasa": tokens, componentes, telas, micro-interações e critérios de aceite.
+- [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md): pesquisa dos estilos das direções visuais (sete na rodada 1, três na rodada 2), com as fontes, as decisões e o que não abriu; os dossiês da rodada 2 ficam em `docs/direcoes/pesquisa/` e os desenhos das Homes novas em `docs/direcoes/desenho/`.
 
 ## Limitações conhecidas
 

@@ -1,0 +1,128 @@
+// EsqImpressora: o papel (picote em cima, sombra que segue o recorte) desce até o meio da fenda,
+// que passa por cima da ponta dele; a carcaça clara tem o LED e o botão.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-impressora {
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+}
+
+// O invólucro leva a sombra; a máscara do picote fica no papel [E34]
+.esq-impressora__saida {
+  position: relative;
+  z-index: var(--esq-z-papel);
+  margin-inline: var(--space-3);
+  // A ponta do papel entra até o meio da fenda (borda de 2 px + --space-2 + metade da fenda)
+  margin-bottom: calc(-1 * var(--space-4));
+  filter: var(--esq-filtro-papel);
+
+  @media (forced-colors: active) {
+    filter: none;
+  }
+}
+
+.esq-impressora__papel {
+  @include papel-termico($curva: false);
+
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-5) var(--space-6);
+  mask: var(--esq-picote-cima);
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--esq-tinta);
+  }
+}
+
+.esq-impressora__corpo {
+  --color-focus: var(--esq-tinta);
+
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  border: 2px solid var(--esq-inox-borda);
+  border-radius: var(--radius-lg);
+  background: var(--esq-impressora) var(--esq-impressora-escuro);
+  box-shadow: var(--esq-bisel-inox), var(--esq-sombra-impressora);
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border-color: var(--esq-tinta);
+  }
+}
+
+// A fenda, uma faixa escura e funda por onde o papel sai
+.esq-impressora__fenda {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--esq-z-fenda);
+  height: 0.625rem;
+  border-radius: var(--radius-sm);
+  background: var(--esq-placa-escura);
+  box-shadow: var(--esq-fenda);
+}
+
+// O LED: apagado no aro escuro; aceso, a camada âmbar com o brilho
+.esq-impressora__led {
+  position: relative;
+  flex-shrink: 0;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 3px solid var(--esq-led-aro);
+  border-radius: var(--radius-round);
+  background: var(--esq-led-apagado);
+  box-shadow: var(--esq-sombra-led);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--esq-led);
+    box-shadow: var(--esq-brilho-led);
+    opacity: 0;
+    transition: opacity var(--dur-fast);
+  }
+
+  &.is-aceso::after {
+    opacity: 1;
+  }
+
+  @media (forced-colors: active) {
+    visibility: hidden;
+  }
+}
+
+@include motion-ok {
+  .esq-impressora__led.is-aceso.is-piscando::after {
+    animation: esq-led-pisca var(--esq-dur-led) var(--ease-in-out) 1;
+  }
+}
+
+@keyframes esq-led-pisca {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.esq-impressora__acao {
+  display: flex;
+  margin-left: auto;
+  // O aro e a lateral do botão passam 8 px da caixa embaixo
+  padding-bottom: var(--space-2);
+}

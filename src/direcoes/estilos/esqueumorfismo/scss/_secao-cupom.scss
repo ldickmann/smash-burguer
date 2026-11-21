@@ -1,0 +1,130 @@
+// Seção cupom: o conteúdo do papel térmico (o slot da EsqImpressora). Marca e título centralizados,
+// como num cupom de verdade; as linhas com a quantidade, o nome e o preço unitário; os detalhes
+// recuados, uma linha cada, com reticências (o leitor de tela lê tudo, e o carrinho mostra tudo).
+@use "@/assets/styles/base/breakpoints" as *;
+
+.esq-cupom {
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
+
+  @include up(lg) {
+    max-width: none;
+  }
+}
+
+.esq-cupom__marca {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.esq-cupom__titulo {
+  padding-bottom: var(--space-3);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+  font-family: var(--esq-fonte-impressa);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.esq-cupom__vazio,
+.esq-cupom__ocultos {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.esq-cupom__ocultos {
+  color: var(--esq-tinta-clara);
+}
+
+.esq-cupom__linhas {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px dashed var(--esq-tinta-clara);
+}
+
+.esq-cupom__linha {
+  display: grid;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.esq-cupom__item {
+  font-weight: 700;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.esq-cupom__unitario {
+  text-align: right;
+}
+
+// Modificadores do ticket: recuados e numa linha só
+.esq-cupom__detalhe {
+  display: -webkit-box;
+  overflow: hidden;
+  padding-left: 1ch;
+  color: var(--esq-tinta-clara);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.esq-cupom__total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+
+  dt {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: var(--space-2);
+
+    // O pontilhado que liga o rótulo ao valor
+    &::after {
+      content: "";
+      flex: 1;
+      border-bottom: 2px dotted var(--esq-tinta-clara);
+    }
+  }
+}
+
+// A linha nova sai da fenda: com movimento, sobe em passos (o motor da impressora) e as outras
+// avançam; sem, só aparece. A que sai da janela some na hora.
+.esq-imprime-enter-active {
+  transition: opacity var(--dur-fast);
+}
+
+.esq-imprime-enter-from {
+  opacity: 0;
+}
+
+.esq-imprime-leave-active {
+  transition: none;
+}
+
+@include motion-ok {
+  .esq-imprime-enter-active {
+    transition:
+      transform var(--esq-dur-impressao) var(--esq-ease-impressao),
+      opacity var(--esq-dur-impressao) var(--esq-ease-impressao);
+  }
+
+  .esq-imprime-enter-from {
+    transform: translateY(var(--space-4));
+  }
+
+  .esq-imprime-move {
+    transition: transform var(--esq-dur-impressao) var(--esq-ease-impressao);
+  }
+}

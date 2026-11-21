@@ -1,0 +1,57 @@
+// NeuControle: relevo com borda (controle secundário). Convexo em repouso; no hover, o convexo
+// mais claro (direto, sem animar); pressionado, o degradê sai e a camada afundada entra.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-controle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: var(--target-min);
+  min-height: 3rem;
+  padding: var(--space-2) var(--space-5) var(--space-2) var(--space-4);
+  border: var(--neu-borda-largura) solid var(--neu-borda);
+  border-radius: var(--neu-raio-moldura);
+  background: var(--neu-convexo);
+  color: var(--neu-tinta);
+  font-weight: 600;
+  line-height: var(--leading-compact);
+  text-align: left;
+
+  @include relevo(var(--neu-elevado-pequeno), var(--neu-afundado-pequeno));
+  @include foco;
+  @include descer;
+
+  @include hover-capable {
+    &:hover {
+      background: var(--neu-convexo-hover);
+    }
+  }
+
+  &:active {
+    background: var(--neu-kraft);
+
+    @include afundar;
+  }
+}
+
+.neu-controle--redondo {
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border-radius: var(--radius-round);
+  font-size: 1.125rem;
+}
+
+.neu-controle__icone {
+  flex-shrink: 0;
+  width: 1.125rem;
+  color: var(--neu-tinta);
+}
+
+.neu-controle__texto {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

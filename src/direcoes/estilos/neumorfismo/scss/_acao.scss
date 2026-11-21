@@ -1,0 +1,80 @@
+// NeuAcao: a ação em cor chapada. Hover e pressionado trocam a cor direto (cor não anima); o
+// afundado entra por uma camada que troca por opacidade, e com movimento a ação desce 1 px.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-acao {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding-inline: var(--space-5);
+  border: var(--neu-borda-largura) solid var(--neu-ketchup-escuro);
+  border-radius: var(--neu-raio-pilula);
+  background: var(--neu-ketchup);
+  color: var(--neu-branco);
+  font-family: var(--neu-fonte);
+  font-size: var(--text-md);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+
+  @include camada-afundada(var(--neu-afundado-cor));
+  @include foco;
+  @include descer;
+
+  @include hover-capable {
+    &:hover {
+      background: var(--neu-ketchup-claro);
+    }
+  }
+
+  &:active {
+    background: var(--neu-ketchup-escuro);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &.is-adicionado {
+    border-color: var(--neu-alface);
+    background: var(--neu-alface);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  @media (forced-colors: active) {
+    border-color: ButtonText;
+  }
+}
+
+.neu-acao--g {
+  min-height: 3.5rem;
+  padding-inline: var(--space-4);
+  font-size: 1.125rem;
+
+  @include up(md) {
+    padding-inline: var(--space-5);
+  }
+}
+
+// As duas faces ocupam a mesma célula: a largura é a da maior, e a troca é só por opacidade
+.neu-acao__face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  gap: var(--space-2);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.neu-acao__face--verso,
+.is-adicionado .neu-acao__face--frente {
+  opacity: 0;
+}
+
+.is-adicionado .neu-acao__face--verso {
+  opacity: 1;
+}

@@ -1,0 +1,12 @@
+{
+  "estilo": "material",
+  "secoes": ["hero", "lanches", "bebidas-e-sobremesas", "onde"],
+  "h1MaxLinhas": { "1440": 2, "1024": 3, "390": 3 },
+  "estados": [
+    {
+      "nome": "ingredientes abertos",
+      "passos": [{ "clicar": "[data-secao='lanches'] button[aria-expanded]" }]
+    }
+  ],
+  "justificativaEscopo": null
+}

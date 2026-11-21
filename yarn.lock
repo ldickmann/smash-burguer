@@ -972,10 +972,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/nunito@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/nunito@npm:5.3.0"
+  checksum: 4037dced940a5f7adafbba14632eae0a50c12ad0f5c0d2176d77cf9a6d5c1c99e84c7dcb9951a78615152831cf92b571eb46fff47d437b0c370ddfeb2bd48132
+  languageName: node
+  linkType: hard
+
+"@fontsource-variable/roboto@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource-variable/roboto@npm:5.3.0"
+  checksum: 4998c782b240391cb706da88fc52e755850c1745b91166efb121ed2fd9fec52138700414b1d63ce8cb93e6c8e75113ae154d32d4ec996a90666ea81d48f3cd2d
+  languageName: node
+  linkType: hard
+
 "@fontsource/bebas-neue@npm:^5.1.1":
   version: 5.2.7
   resolution: "@fontsource/bebas-neue@npm:5.2.7"
   checksum: a5a55525aadddb0d8172e16ec510ea85bf63213e36f8ed08fe4533d363702f352f8c584a38c4114f09d7e5184fcfab27d1083b5e4c419c2c7677f1b3f28b8462
+  languageName: node
+  linkType: hard
+
+"@fontsource/courier-prime@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/courier-prime@npm:5.3.0"
+  checksum: 6af4c0b4b6d38eecdbbc2ff1178c4fc84a05f6f1cb9eab4db02a8ee0a915bf68437556a71f7415e88f2414f621000cb11bc721146e8b058deec99cff1755e609
   languageName: node
   linkType: hard
 
@@ -4874,7 +4895,10 @@ __metadata:
   dependencies:
     "@eslint/js": ^9.18.0
     "@fontsource-variable/archivo": ^5.3.0
+    "@fontsource-variable/nunito": ^5.3.0
+    "@fontsource-variable/roboto": ^5.3.0
     "@fontsource/bebas-neue": ^5.1.1
+    "@fontsource/courier-prime": ^5.3.0
     "@fortawesome/fontawesome-svg-core": ^6.7.2
     "@fortawesome/free-brands-svg-icons": ^6.7.2
     "@fortawesome/free-regular-svg-icons": ^6.7.2

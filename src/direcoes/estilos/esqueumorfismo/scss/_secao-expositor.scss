@@ -1,0 +1,112 @@
+// Seção expositor: moldura de inox, interior escuro com a luz fria e as prateleiras. Lado a lado a
+// partir de xl (largura proporcional ao número de itens, com a divisória de inox); empilhadas abaixo.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+$vao-prateleiras: var(--space-7);
+
+.esq-expositor__titulo {
+  @include titulo-gravado;
+
+  margin-bottom: var(--space-5);
+}
+
+.esq-expositor__moldura {
+  @include inox-escovado;
+
+  padding: var(--space-3);
+  border: 3px solid var(--esq-inox-borda);
+  border-radius: var(--radius-md);
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+}
+
+.esq-expositor__interior {
+  --color-focus: var(--esq-letra);
+
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  border-radius: var(--radius-sm);
+  background: var(--esq-luz-fria), var(--esq-placa-escura);
+  box-shadow: var(--esq-sombra-janela);
+  color: var(--esq-letra);
+
+  @include up(md) {
+    padding-inline: var(--space-5);
+  }
+
+  @include up(xl) {
+    display: flex;
+    align-items: stretch;
+    gap: $vao-prateleiras;
+  }
+
+  @media (prefers-contrast: more) {
+    background: var(--esq-placa-escura);
+  }
+}
+
+.esq-prateleira {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+
+  @include up(xl) {
+    flex: var(--esq-itens) 1 0%;
+
+    // A divisória vertical de inox, no meio do vão entre as prateleiras
+    & + & {
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(-1 * (#{$vao-prateleiras} / 2) - 3px);
+        width: 6px;
+        background: var(--esq-divisoria);
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    & + &::before {
+      border-left: 3px solid CanvasText;
+    }
+  }
+}
+
+.esq-prateleira__titulo {
+  margin-bottom: var(--space-4);
+  color: var(--esq-letra);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.esq-prateleira__lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5) var(--space-4);
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(var(--esq-itens), minmax(0, 1fr));
+  }
+}
+
+.esq-prateleira__vazia {
+  align-self: start;
+  max-width: 20rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}

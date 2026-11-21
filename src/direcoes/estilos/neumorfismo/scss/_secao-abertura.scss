@@ -1,0 +1,144 @@
+// Abertura: o h1 em cima e o palco embaixo. O palco é um grid com isolation: a cova (afundada, no
+// kraft da página), o recorte, o lábio (só a metade de baixo, clara) e o texto, nessa ordem de
+// pintura. No celular a cova fica só na área do lanche; a partir de md, na linha toda.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-abertura {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    gap: var(--space-5);
+  }
+}
+
+.neu-abertura__titulo {
+  max-width: 18ch;
+  color: var(--neu-tinta);
+  font-family: var(--neu-fonte);
+  font-size: var(--neu-titulo);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: var(--leading-display);
+  text-transform: none;
+  text-wrap: balance;
+}
+
+.neu-abertura__palco {
+  --neu-recorte: 12rem;
+
+  display: grid;
+  grid-template-areas:
+    "lanche"
+    "texto";
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--space-4);
+  isolation: isolate;
+
+  @include up(md) {
+    --neu-recorte: 13rem;
+
+    grid-template-areas: ". lanche . texto .";
+    grid-template-columns:
+      var(--space-6) var(--neu-recorte) var(--space-6)
+      minmax(0, 1fr) var(--space-6);
+    row-gap: 0;
+  }
+
+  @include up(lg) {
+    --neu-recorte: 22rem;
+  }
+
+  @include up(xl) {
+    --neu-recorte: 27rem;
+  }
+}
+
+// A cova e o lábio: o mesmo lugar e o mesmo raio
+.neu-cova,
+.neu-cova__labio {
+  grid-area: lanche;
+  border-radius: var(--neu-raio-card);
+
+  @include up(md) {
+    grid-area: 1 / 1 / 2 / -1;
+    border-radius: var(--neu-raio-painel);
+  }
+}
+
+.neu-cova {
+  background: var(--neu-kraft);
+  box-shadow: var(--neu-afundado-grande);
+
+  @include reserva-sombra;
+}
+
+.neu-cova__lanche {
+  grid-area: lanche;
+  z-index: var(--neu-z-recorte);
+  align-self: end;
+  justify-self: center;
+  width: var(--neu-recorte);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-3);
+  filter: var(--neu-sombra-recorte);
+
+  @include up(md) {
+    margin-top: var(--space-5);
+  }
+}
+
+.neu-cova__img {
+  width: 100%;
+  height: auto;
+}
+
+// Só a metade da frente: o lábio claro passa por cima da base do lanche. A máscara esmaece a borda
+// de cima do lábio (um corte seco desenhava um degrau nas laterais da cova)
+.neu-cova__labio {
+  z-index: var(--neu-z-labio);
+  box-shadow: var(--neu-labio);
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent 50%, var(--neu-tinta) 80%);
+
+  @media (forced-colors: active) {
+    display: none;
+  }
+}
+
+.neu-cova__texto {
+  grid-area: texto;
+  z-index: var(--neu-z-labio);
+  display: grid;
+  justify-items: start;
+  gap: var(--space-5);
+
+  @include up(md) {
+    align-self: end;
+    max-width: 34ch;
+    margin-block: var(--space-6);
+  }
+}
+
+.neu-cova__frase {
+  color: var(--neu-tinta-suave);
+  font-size: 1.1875rem;
+  line-height: var(--leading-body);
+}
+
+// A partir de lg, com o lanche maior, a frase cresce e o texto desce para o meio da cova: equilibra a
+// sobra à direita sem sair do fundo afundado
+@include up(lg) {
+  .neu-cova__texto {
+    align-self: center;
+    max-width: 34rem;
+  }
+
+  .neu-cova__frase {
+    color: var(--neu-tinta);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+  }
+}

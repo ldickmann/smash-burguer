@@ -1,0 +1,204 @@
+// Hero: contêiner primary-container (canto 28 no celular e 48 a partir de md). O palco cobre o
+// contêiner inteiro e corta o disco pela borda, com o mesmo canto; o lanche fica fora do palco, por
+// cima dele, e quebra a borda de baixo. A partir de md, o texto fica dentro do disco. Abaixo de md,
+// o texto fica no contêiner e o disco vem depois do botão, quase inteiro (o contêiner corta só a
+// parte de baixo), com o lanche em cima: os 12 lobos continuam à mostra no celular.
+// Posição só por grade, inset e margin: nada de transform (P14).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// Medidas da mídia abaixo de md: o disco, quanto dele fica à mostra abaixo do centro (o resto o
+// contêiner corta) e o lanche, centrado no disco e um pouco abaixo do centro dele. O lanche vaza
+// pela borda de baixo, e a seção reserva o que vaza. --m3-hero-proporcao (altura / largura da foto)
+// vem do componente, dos dados reais da imagem.
+.m3-hero {
+  --m3-hero-disco: 19rem;
+  --m3-hero-corte: 5.5rem;
+  --m3-hero-lanche: 15rem;
+  --m3-hero-lanche-desvio: var(--space-5);
+  --m3-hero-vazamento: calc(
+    var(--m3-hero-lanche) * var(--m3-hero-proporcao, 1) / 2 - var(--m3-hero-corte) + var(--m3-hero-lanche-desvio)
+  );
+
+  padding-bottom: var(--m3-hero-vazamento);
+
+  @include up(md) {
+    --m3-hero-vazamento: var(--space-7);
+  }
+
+  @include up(lg) {
+    --m3-hero-vazamento: var(--space-8);
+  }
+
+  @include up(xl) {
+    --m3-hero-vazamento: 5rem;
+  }
+}
+
+// Palco e lanche dividem a grade: no celular, a mesma célula (o lanche embaixo, no centro); a partir
+// de md, o palco nas duas colunas e o lanche na da direita, sobre a borda de lobos do disco
+.m3-hero__caixa {
+  --m3-hero-canto: var(--m3-forma-xl);
+
+  display: grid;
+  border-radius: var(--m3-hero-canto);
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+
+  @include up(md) {
+    --m3-hero-canto: var(--m3-forma-xxl);
+
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 26rem;
+  }
+
+  @include up(lg) {
+    min-height: 32rem;
+  }
+
+  @include up(xl) {
+    min-height: 36rem;
+  }
+}
+
+// No celular, o pé do palco reserva o vão e a parte do disco à mostra (meio disco mais o corte). A
+// partir de md, o disco, centrado no texto e maior que ele, sai em cima, à esquerda e embaixo, e o
+// palco corta; os lobos da direita ficam à mostra.
+.m3-hero__palco {
+  display: grid;
+  grid-area: 1 / 1;
+  overflow: clip;
+  padding: var(--space-5) var(--space-5) calc(var(--space-4) + var(--m3-hero-disco) / 2 + var(--m3-hero-corte));
+  border-radius: inherit;
+
+  @include up(md) {
+    grid-column: 1 / -1;
+    align-content: center;
+    justify-items: start;
+    padding: var(--space-6);
+  }
+
+  @include up(xl) {
+    padding-left: var(--space-7);
+  }
+}
+
+// Disco. No celular, ele sai de trás do texto e fica centrado embaixo dele, depois do vão; o texto
+// fica no contêiner, com a tinta e o anel de foco do contêiner. A partir de md, o disco volta para
+// trás do texto, cresce com a largura, e o texto fica sempre dentro do círculo interno (43% do
+// diâmetro), em on-primary.
+.m3-hero__prensa {
+  --m3-prensa-disco: var(--m3-hero-disco);
+  --m3-prensa-centro-x: 50%;
+  --m3-prensa-centro-y: calc(100% + var(--space-4) + var(--m3-hero-disco) / 2);
+  --m3-prensa-fundo: transparent;
+  --m3-prensa-tinta: var(--m3-on-primary-container);
+  --m3-prensa-foco: var(--m3-secondary);
+
+  @include up(md) {
+    --m3-prensa-disco: 34rem;
+    --m3-prensa-centro-y: 50%;
+    --m3-prensa-fundo: var(--m3-primary);
+    --m3-prensa-tinta: var(--m3-on-primary);
+    --m3-prensa-foco: var(--m3-on-primary);
+  }
+
+  @include up(lg) {
+    --m3-prensa-disco: 38rem;
+  }
+
+  @include up(xl) {
+    --m3-prensa-disco: 46rem;
+  }
+}
+
+.m3-hero__titulo {
+  @include tipo(display-s, 500);
+
+  // Quebra em "Smash na chapa, / entregue quente" em todas as larguras
+  max-width: 15ch;
+  color: var(--m3-on-primary-container);
+  font-synthesis: none;
+  letter-spacing: 0;
+  text-transform: none;
+
+  @include up(md) {
+    color: var(--m3-on-primary);
+  }
+
+  @include up(lg) {
+    font-size: var(--m3-display-m);
+    line-height: var(--m3-display-m-linha);
+  }
+
+  @include up(xl) {
+    font-size: var(--m3-display-l);
+    line-height: var(--m3-display-l-linha);
+    letter-spacing: -0.015625rem;
+  }
+}
+
+.m3-hero__descricao {
+  @include tipo(body-l);
+
+  max-width: 36ch;
+  color: var(--m3-on-primary-container);
+  letter-spacing: 0.03125rem;
+
+  @include up(md) {
+    color: var(--m3-on-primary);
+  }
+}
+
+.m3-hero__acao {
+  margin-top: var(--space-2);
+}
+
+// Abaixo de md, o botão fica sobre o primary-container, onde o tonal quase some: vira filled, como
+// no desenho (primary; apertado, cantos large). A partir de md, dentro do disco, segue tonal.
+.m3-hero .m3-hero__acao {
+  @include below(md) {
+    --m3-botao-fundo-repouso: var(--m3-primary);
+    --m3-botao-fundo-hover: var(--m3-primary-hover);
+    --m3-botao-fundo-pressionado: var(--m3-primary-pressed);
+    --m3-botao-forma-pressionada: var(--m3-forma-l);
+
+    color: var(--m3-on-primary);
+  }
+}
+
+// O lanche: no celular, sobre o disco e quebrando a borda de baixo; a partir de md, fora do disco,
+// embaixo à direita, por cima dos lobos e quebrando a borda de baixo
+.m3-hero__foto {
+  position: relative;
+  z-index: var(--z-raised);
+  display: block;
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: center;
+  width: var(--m3-hero-lanche);
+  margin: 0 0 calc(-1 * var(--m3-hero-vazamento));
+
+  @include up(md) {
+    grid-area: 1 / 2;
+    justify-self: end;
+    width: 20rem;
+    margin-right: var(--space-5);
+  }
+
+  @include up(lg) {
+    width: 28rem;
+    margin-right: var(--space-6);
+  }
+
+  @include up(xl) {
+    width: 34rem;
+    margin-right: var(--space-7);
+  }
+}
+
+.m3-hero__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
