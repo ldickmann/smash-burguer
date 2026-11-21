@@ -90,7 +90,7 @@ No total, a cobertura é de 10% das linhas. Os testes se concentram nos arquivos
 
 Os números mudaram com o Vitest 4, e não com os testes, que continuam os mesmos. O provider V8 agora remapeia a cobertura pela AST do código, um cálculo mais preciso, e deixa de contar linhas sem código executável.
 
-As telas de cadastro, de perfil e de pagamento, o login do painel, as guards do cadastro, do perfil, do painel e da confirmação, a conferência do estado salvo, o hash de senha, as máscaras e as validações, e as telas do painel (produtos, pedidos, busca, detalhes, Meu perfil e Configurações, com o formulário de produto e os contadores da barra) ganharam testes em novembro de 2026, depois desta medição. As outras telas da loja, o utilitário `formatters` e o modal de personalização ainda não têm testes.
+As telas de cadastro, de perfil e de pagamento, o login do painel, as guards do cadastro, do perfil, do painel e da confirmação, a conferência do estado salvo, o hash de senha, as máscaras e as validações, e as telas do painel (produtos, pedidos, busca, detalhes, Meu perfil e Configurações, com o formulário de produto e os contadores da barra) e a Home do Material 3 ganharam testes em novembro de 2026, depois desta medição. As outras telas da loja, o utilitário `formatters` e o modal de personalização ainda não têm testes.
 
 ## Verificação no navegador
 

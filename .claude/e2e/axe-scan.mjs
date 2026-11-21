@@ -41,6 +41,9 @@ const SCENARIOS = {
         await p.reload();
         await p.waitForLoadState('networkidle').catch(() => {});
         await p.waitForTimeout(300);
+        // Sem esta conferência, uma mudança na persistência do catálogo faria o axe medir a Home cheia
+        const vazio = await p.evaluate(() => ({ produtos: document.querySelectorAll('[data-secao] article, [data-secao] .m3-item').length, avisos: [...document.querySelectorAll('[data-secao]')].filter((s) => s.textContent.includes('Nada nesta categoria por enquanto')).length }));
+        if (vazio.produtos > 0 || vazio.avisos !== 2) throw new Error(`home-vazio: o cardápio não ficou vazio depois de recarregar (${JSON.stringify(vazio)})`);
       },
     },
     { name: 'menu', hash: '#/menu' },
