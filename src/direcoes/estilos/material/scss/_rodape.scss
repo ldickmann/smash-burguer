@@ -1,0 +1,36 @@
+// M3Rodape: surface-container com os cantos de cima de 28; a linha de direitos embaixo, separada por
+// 1 px de outline-variant.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-rodape {
+  padding-block: var(--space-7) var(--space-5);
+  border-radius: var(--m3-forma-xl) var(--m3-forma-xl) 0 0;
+  background: var(--m3-surface-container);
+  color: var(--m3-on-surface);
+}
+
+.m3-rodape__interno {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.m3-rodape__nome {
+  @include tipo(title-l, 500);
+}
+
+.m3-rodape__descricao {
+  @include tipo(body-m);
+
+  max-width: 40ch;
+  color: var(--m3-on-surface-variant);
+}
+
+.m3-rodape__copy {
+  @include tipo(body-s);
+
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--m3-outline-variant);
+  color: var(--m3-on-surface-variant);
+}

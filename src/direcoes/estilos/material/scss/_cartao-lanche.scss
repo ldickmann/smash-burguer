@@ -1,0 +1,158 @@
+// M3CartaoLanche: filled card em surface-container-highest, canto 12, recuo de 8 px na foto [63].
+// O destaque troca a forma da foto (cookie) e o tamanho, e fica na horizontal a partir de md [64].
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-cartao {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--space-2);
+  border-radius: var(--m3-forma-m);
+  background: var(--m3-surface-container-highest);
+  color: var(--m3-on-surface);
+  text-align: left;
+
+  // Folha aberta: o card passa por cima da linha de baixo
+  &.is-aberto {
+    z-index: var(--z-raised);
+  }
+}
+
+.m3-cartao__corpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-1) var(--space-1);
+
+  @include up(md) {
+    padding: var(--space-4) var(--space-2) var(--space-2);
+  }
+}
+
+.m3-cartao__nome {
+  @include tipo(title-m);
+  @include linhas(2);
+
+  color: var(--m3-on-surface);
+
+  @include up(md) {
+    font-size: var(--m3-title-l);
+    line-height: var(--m3-title-l-linha);
+  }
+}
+
+// A descrição some abaixo de md: a folha de ingredientes faz esse papel
+.m3-cartao__descricao {
+  @include tipo(body-m);
+  @include linhas(2);
+
+  display: none;
+  color: var(--m3-on-surface-variant);
+  letter-spacing: 0.015625rem;
+
+  @include up(md) {
+    display: -webkit-box;
+  }
+}
+
+.m3-cartao__preco {
+  @include tipo(title-m, 500);
+
+  margin-top: auto;
+  padding-top: var(--space-2);
+  color: var(--m3-on-surface);
+}
+
+.m3-cartao__acoes {
+  position: relative;
+  padding-top: var(--space-2);
+}
+
+// Abaixo de md, o split ocupa a largura do card (cabe "Adicionado" nos 2 cards por linha)
+.m3-cartao__dividido {
+  width: 100%;
+
+  @include up(md) {
+    width: auto;
+  }
+}
+
+// ---------- Destaque ----------
+
+.m3-cartao--destaque {
+  .m3-cartao__foto {
+    align-self: center;
+    max-width: 15rem;
+  }
+
+  .m3-cartao__corpo {
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-2) var(--space-2);
+  }
+
+  .m3-cartao__nome {
+    @include tipo(headline-s, 500);
+
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+  }
+
+  .m3-cartao__descricao {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+  }
+
+  .m3-cartao__preco {
+    margin-top: 0;
+    font-size: var(--m3-title-l);
+    line-height: var(--m3-title-l-linha);
+  }
+
+  .m3-cartao__dividido {
+    width: auto;
+  }
+
+  @include up(md) {
+    display: grid;
+    grid-template-columns: minmax(0, 45%) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-4);
+
+    .m3-cartao__foto {
+      max-width: none;
+    }
+
+    .m3-cartao__corpo {
+      padding: var(--space-4) var(--space-4) var(--space-4) 0;
+    }
+  }
+
+  @include up(lg) {
+    grid-template-columns: 18rem minmax(0, 1fr);
+  }
+
+  // Em xl, o destaque divide a linha com dois cards altos (foto 4:3 e texto): a foto cookie cresce
+  // até quase a altura do card, e o nome e a descrição sobem um degrau na escala, para o texto
+  // ocupar a altura da foto sem sobrar faixa vazia em cima nem embaixo do split
+  @include up(xl) {
+    grid-template-columns: minmax(0, 56%) minmax(0, 1fr);
+
+    .m3-cartao__nome {
+      font-size: var(--m3-headline-m);
+      line-height: var(--m3-headline-m-linha);
+    }
+
+    .m3-cartao__descricao {
+      font-size: var(--m3-body-l);
+      line-height: var(--m3-body-l-linha);
+      letter-spacing: 0.03125rem;
+    }
+  }
+}

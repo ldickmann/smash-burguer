@@ -1034,3 +1034,15 @@ Não encontrei site ou app de comida publicado em M3 Expressive (dossiê, "Não 
 - **Escopo:** as quatro seções e os 11 componentes.
 - **Conteúdo:** nada novo; a revisão só tirou texto.
 - **`material.json`:** sem mudança. As seções, os tetos do `h1` e o estado "ingredientes abertos" continuam os mesmos.
+
+## 14. Notas da construção (W4, 21/11/2026)
+
+A Home foi aprovada pelo crítico na rodada 3 (notas 4, 4, 4, 4, 5 e 4; a v1 somava 16 e a Home nova soma 25). Os portões passaram em todas as rodadas. O que a construção mudou deste desenho, e por quê:
+
+- **Hero parado (rodada 2):** na rodada 1 a prensa só existia na animação, e a tela parada repetia a composição da v1 (texto à esquerda, lanche à direita). A partir de md, o título, o texto e o "Ver cardápio" ficam **dentro do disco de 12 lobos**, que é grande, fica atrás do texto e é cortado pelo contêiner em cima, à esquerda e embaixo. O lanche fica fora do disco e quebra a borda de baixo. O "Ver cardápio" dentro do disco é tonal (o filled sumiria sobre o primary), e o anel de foco ali é on-primary (6,4:1).
+- **Hero em 390 (rodada 3):** o texto sai do disco e fica no primary-container; o disco vem depois do botão, centrado, com 19 rem e cortado só embaixo, com cerca de dois terços da volta de lobos à mostra; o lanche (15 rem) fica sobre o disco e vaza pela borda. O "Ver cardápio" volta a filled.
+- **Estado pressionado:** no `:active`, o próprio botão passa à forma apertada, e o anel de foco acompanha os cantos menores (antes o anel seguia a forma de repouso e os cantos vazavam).
+- **Medidas:** a prensa e o recorte foram redimensionados por largura, olhando as capturas; o h1 tem `max-width` de 15ch para quebrar sempre em "Smash na chapa, / entregue quente"; no destaque em xl, a foto vai a 56% do card; a faixa de Bebidas e sobremesas e Onde e quando usa `align-items: start`.
+- **Onde:** o WhatsApp mostra o rótulo e o `TELEFONE` separados, sem o "·" (o `dados.js` passou a exportar `ENDERECO`, `TELEFONE` e `EMAIL`); o ícone de link externo aparece em todas as larguras.
+- **Tokens novos além dos previstos:** `--m3-atraso-prensa` (atraso do disco, porque nenhuma duração é escrita direto) e propriedades locais para repintar o conteúdo da prensa.
+- **Menores que ficaram:** a linha de direitos do rodapé ainda junta textos com "·" (é o texto real do `RODAPE.copyright`); no cookie do destaque, o prato claro da foto encosta no fundo do card nos lobos de baixo.
