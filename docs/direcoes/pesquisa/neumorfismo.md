@@ -267,3 +267,17 @@ O verificador não tentou de novo estes endereços; os motivos são os do pesqui
 - **A38:** o número do contador fica abaixo do círculo do ícone, não dentro dele.
 - **A46:** a página mostra só dois botões rotulados (padrão e pílula ativa).
 - **A49:** o XD gratuito é inferido pelo endereço do link do Dribbble.
+
+## Referências visuais (galerias)
+
+Coletadas no Chrome em 20 e 21/11/2026, numa aba própria, recusando os cookies não essenciais. Só as páginas que abriram; 7 exemplos. Servem só de exemplo do padrão abstrato: nenhuma imagem, layout ou código foi copiado. As descrições são paráfrases.
+
+| URL | Galeria | Publicado ou conceito | Domínio | Padrões vistos |
+|---|---|---|---|---|
+| https://dribbble.com/shots/14238057-Neumorphism-Food-App-Design | Dribbble | Conceito (shot) | Comida: app de pedidos (burger, pizza, bebida) | Fundo e superfícies na mesma cor fria e clara; cartões e botões "saindo" do fundo, com sombra dupla (clara em cima, escura embaixo); categorias como ladrilhos quadrados em relevo, e o ativo afundado; quantidade em… |
+| https://dribbble.com/shots/9934278-Neumorphism-Style-Food-Ordering-UI | Dribbble | Conceito (shot) | Comida: pedido de pratos (salada, carne) | Prato fotografado de cima dentro de uma "cuba" circular afundada; vagas de complemento como quadrados rebaixados com "+"; paleta cinza-azulada quase monocromática; cor de destaque só no preço e no CTA (verde forte);… |
+| https://dribbble.com/shots/14444054-Digital-Menu-App-Neumorphic | Dribbble | Conceito (shot) | Restaurante: cardápio digital (hambúrguer, pizza, drinques) | Categorias como pílulas verticais em relevo, com ícone de traço fino e contador; a ativa preenchida com um tom quente de caramelo, a única cor da tela; preço dentro de uma pílula rebaixada no cartão; cartões em relevo… |
+| https://dribbble.com/shots/10085875-Neumorphism-Dashboard | Dribbble | Conceito (shot) | Painel de análise (fãs e receita) | Item ativo do menu como pílula em relevo; indicadores com ícone em botão redondo saliente; barras do gráfico como trilhos rebaixados com o valor preenchido em escuro; rosca dentro de um anel em relevo; quase sem cor,… |
+| https://www.uistore.design/items/neumorphic-ui-elements-for-sketch/ | UI Store Design | Conceito (kit de componentes gratuito, de 2020) | Biblioteca de componentes de interface | Par "em relevo × afundado" como linguagem de estado: botão saliente, campo de texto rebaixado; rádio como poço com ponto; alternador com trilho azul e botão claro saliente; controles deslizantes como canaletas fundas… |
+| https://dribbble.com/shots/10124514-Luminarious-molecular-cuisine-dashboard-neomorphism | Dribbble | Conceito (shot) | Comida: painel de cozinha e plano de refeições | Neumorfismo misturado com outros recursos: cartões de prato em relevo leve com foto de prato em círculo; atalhos como quadrados arredondados em relevo com ícone colorido; vagas vazias tracejadas para "adicionar"; aba… |
+| https://dribbble.com/shots/27120014-Neumorphism-Design-Agency-Website-Website-UI-UX-design | Dribbble | Conceito (shot) | Site de agência de design (landing page) | Menu como pílula flutuante em relevo, centralizada; título que mistura sans-serif e serifa itálica; botão principal claro em relevo e secundário com contorno fino; cartão grande de projetos em relevo suave; lista de… |
