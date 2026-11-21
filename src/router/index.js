@@ -140,10 +140,15 @@ const router = createRouter({
     },
   ],
 
-  // Topo em rota nova, posição salva no voltar/avançar, âncora quando houver
+  // Topo em rota nova, posição salva no voltar/avançar, âncora quando houver. O window.scrollTo do
+  // vue-router não aplica o scroll-padding-top do html: a âncora desconta o valor computado dele, para
+  // a seção não parar debaixo do cabeçalho sticky (SPEC-material §10.1)
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
-    if (to.hash) return { el: to.hash };
+    if (to.hash) {
+      const top = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
+      return Number.isFinite(top) ? { el: to.hash, top } : { el: to.hash };
+    }
     return { top: 0 };
   },
 });

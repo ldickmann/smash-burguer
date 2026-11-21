@@ -1,4 +1,5 @@
 // Reset (SPEC §3, item 4).
+@use "breakpoints" as *;
 
 *,
 *::before,
@@ -13,6 +14,12 @@ html {
   scroll-padding-top: calc(var(--navbar-h) + var(--space-4));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+
+  // Abaixo de lg, a toolbar flutua no pé: a rolagem do foco e das âncoras não para debaixo dela
+  // (SPEC-material §5.1)
+  @include below(lg) {
+    scroll-padding-bottom: var(--m3-barra-reserva);
+  }
 }
 
 body {

@@ -46,14 +46,14 @@ npm init -y >/dev/null && npm i --ignore-scripts playwright@1.65.0 axe-core@4.10
 | Script | O que verifica |
 |---|---|
 | `axe-scan.mjs <loja\|admin\|todos> [1440,390] [reduce]` | axe WCAG 2.2 AA, rolagem horizontal, alvos de toque, fontes (reprova o `body` fora da Roboto Variable e o `h1` fora do peso 500), título e violações da CSP em 22 telas. Com `SCAN_OUT=pasta`, salva screenshots. |
-| `flow.mjs` | Fluxo de pedido completo, guards e restauração de rolagem (§13.4). |
-| `keyboard.mjs` | Teclado: skip link, anel de foco, foco preso no modal, setas no pagamento, menus (§13.5). |
-| `micro-final.mjs` | Flip, odômetro, tilt e montador do burger, com movimento normal e reduzido (§13.6). |
+| `flow.mjs` | Fluxo de pedido completo, pela pílula da toolbar e pelo FAB do carrinho, guards e restauração de rolagem (§13.4). |
+| `keyboard.mjs` | Teclado: skip link, ordem do Tab no topo, anel de foco de 3 px (o link da assinatura tem o próprio, de 2 px), foco preso no modal, setas no pagamento e menus do painel (§13.5). Em 390 px, em todas as rotas da loja, o foco (com o anel, e o card no lugar do rádio escondido) não fica coberto pela toolbar flutuante nem encosta nela (SPEC-material §13.3, item 6). A altura dessas telas vem de `KB_ALTURA` (padrão 844). |
+| `micro-final.mjs` | Flip, tilt, montador do burger e o badge do FAB, com movimento normal e reduzido (§13.6). |
 | `check-admin.mjs` | Login admin, sidebar e gaveta, menu de perfil e telas (§13.8). |
 | `lacunas.mjs` | Correções da revisão contra o SPEC: movimento reduzido, modal, spinner, guards (inclusive o `redirect` de volta ao perfil) e admin. |
 | `perf.mjs` | Peso da Home em 390 px e LCP (§13.7). |
 | `tokens-contrast.mjs` | Contraste dos pares de `src/utils/contraste.js` sobre `src/assets/styles/base/_tokens.scss` (não precisa do navegador). A raiz do repositório vem de `REPO=<pasta>`; sem ela, o script usa a pasta atual. |
-| `video-tour.mjs <celular\|desktop>` | Grava um passeio pelo site em MP4, para mostrar ao usuário (usa `ffmpeg`). |
+| `video-tour.mjs <celular\|desktop>` | Grava um passeio pelo site em MP4, para mostrar ao usuário (usa `ffmpeg`). Ainda usa o menu mobile e o badge da Brasa, que saíram na etapa 4 do Material 3: é atualizado na etapa 12. |
 
 Todos imprimem `✓`/`✗` por checagem e terminam com `OK` ou `FALHAS: n`.
 

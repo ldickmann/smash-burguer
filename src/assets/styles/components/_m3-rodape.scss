@@ -1,0 +1,71 @@
+// M3Rodape (cópia de scss/_rodape.scss do material): surface-container com os cantos de cima de 28; a
+// linha de direitos embaixo, separada por 1 px de outline-variant. Fora da Home, a lista de horário e
+// contato entra abaixo da descrição e, a partir de lg, ao lado dela (decisão g).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-rodape {
+  padding-block: var(--space-7) var(--space-5);
+  border-radius: var(--m3-forma-xl) var(--m3-forma-xl) 0 0;
+  background: var(--m3-surface-container);
+  color: var(--m3-on-surface);
+}
+
+.m3-rodape__interno {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.m3-rodape--contatos .m3-rodape__interno {
+  @include up(lg) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--space-8);
+  }
+}
+
+.m3-rodape__marca {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.m3-rodape__nome {
+  @include tipo(title-l, 500);
+}
+
+.m3-rodape__descricao {
+  @include tipo(body-m);
+
+  max-width: 40ch;
+  color: var(--m3-on-surface-variant);
+}
+
+.m3-rodape__contatos {
+  display: grid;
+  gap: var(--m3-vao-segmento);
+  margin-top: var(--space-5);
+
+  @include up(lg) {
+    margin-top: 0;
+  }
+}
+
+// Direitos em três itens (§10.2): empilhados abaixo de md e lado a lado a partir dele, sem separador
+// de texto
+.m3-rodape__direitos {
+  @include tipo(body-s);
+
+  display: grid;
+  grid-column: 1 / -1;
+  gap: var(--space-1);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--m3-outline-variant);
+  color: var(--m3-on-surface-variant);
+
+  @include up(md) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-5);
+  }
+}

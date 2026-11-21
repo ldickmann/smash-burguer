@@ -1,4 +1,5 @@
-// CategoryTabs (SPEC §4.1): controle segmentado fixo abaixo da navbar.
+// CategoryTabs (SPEC §4.1): controle segmentado que gruda ao rolar. Abaixo de lg o cabeçalho rola com a
+// página, e as abas grudam no topo; a partir de lg, abaixo do cabeçalho sticky (SPEC-material §5.1).
 @use "../../base/breakpoints" as *;
 
 .category-tabs__sentinel {
@@ -7,7 +8,7 @@
 
 .category-tabs {
   position: sticky;
-  top: var(--navbar-h);
+  top: 0;
   z-index: var(--z-sticky);
   padding-block: var(--space-5);
   border-bottom: 1px solid transparent;
@@ -15,6 +16,10 @@
 
   &.is-stuck {
     border-bottom-color: var(--color-border);
+  }
+
+  @include up(lg) {
+    top: var(--navbar-h);
   }
 }
 

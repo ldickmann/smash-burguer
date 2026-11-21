@@ -1,4 +1,5 @@
-// §13.6 Micro-interações: flip, odômetro, tilt e montador, normal e com movimento reduzido.
+// §13.6 Micro-interações: flip, tilt, montador e o badge do FAB (SPEC-material §7.5), normal e com
+// movimento reduzido. O odômetro saiu com o CartBadge (SPEC-material §7.8).
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 let failures = 0;
@@ -63,29 +64,34 @@ for (const reduce of [false, true]) {
   const end = await page.evaluate(() => getComputedStyle(document.querySelector('.add-btn__inner')).transform);
   check(end === 'none', 'flip: volta a none depois de ~1,7 s', end);
 
-  // Odômetro 9 → 10
-  await page.evaluate(() => {
-    const cart = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart');
-    cart.clearCart();
-    cart.addItem({ name: 'Coca', unitPrice: 1, quantity: 9 });
-  });
+  // Badge do FAB (SPEC-material §7.5): de 0 para 1 entra com escala (normal) ou só opacidade (reduzido)
+  // A store do carrinho pela instância do Pinia no #app
+  const cart = (acao) => page.evaluate((a) => {
+    const store = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart');
+    if (a === 'limpar') store.clearCart();
+    else store.addItem({ name: 'Coca', unitPrice: 1, quantity: a });
+  }, acao);
+  await cart('limpar');
   await page.waitForTimeout(500);
-  await page.evaluate(() => {
-    const cart = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart');
-    cart.addItem({ name: 'Coca', unitPrice: 1, quantity: 1 });
+  const empty = await page.evaluate(() => !document.querySelector('.m3-fab .m3-badge'));
+  await cart(1);
+  await page.waitForTimeout(40);
+  const badge = await page.evaluate(() => {
+    const b = document.querySelector('.m3-fab .m3-badge');
+    return b && { entering: /m3-badge-enter-active/.test(b.className), t: getComputedStyle(b).transform };
   });
-  await page.waitForTimeout(90);
-  const odo = await page.evaluate(() => ({
-    animating: [...document.querySelectorAll('.odo__digit')].filter((d) => /enter-active|leave-active/.test(d.className)).map((d) => `${d.textContent}:${getComputedStyle(d).transform === 'none' ? 'none' : 'matrix'}`),
-    windows: [...document.querySelectorAll('.odo__window')].filter((w) => w.querySelector('[class*="enter-active"]')).length,
-  }));
-  await page.screenshot({ path: `./shots/final/micro-odometro-${tag}.png`, clip: { x: 1000, y: 0, width: 440, height: 64 } });
+  await page.screenshot({ path: `./shots/final/micro-badge-${tag}.png`, clip: await page.locator('.m3-fab').boundingBox() });
+  check(empty && badge?.entering, 'badge: some com o carrinho vazio e entra pela transição ao chegar o 1º item', JSON.stringify({ empty, badge }));
+  if (reduce) check(badge?.t === 'none', 'badge: transform none com movimento reduzido', badge?.t);
+  else check(badge && badge.t !== 'none', 'badge: escala na entrada com movimento', badge?.t);
   await page.waitForTimeout(500);
-  const label = await page.evaluate(() => document.querySelector('.cart-badge').getAttribute('aria-label'));
-  check(odo.windows === 2, 'odômetro: de 9 para 10, dois dígitos animam', odo.animating.join(' '));
-  check(label === 'Carrinho, 10 itens', 'texto final do link "Carrinho, 10 itens"', label);
-  if (reduce) check(odo.animating.every((a) => a.endsWith(':none')), 'odômetro: crossfade sem rotação com movimento reduzido');
-  results[`odo-${tag}`] = label;
+  const settled = await page.evaluate(() => getComputedStyle(document.querySelector('.m3-fab .m3-badge')).transform);
+  check(settled === 'none', 'badge: termina sem transform', settled);
+  await cart(9);
+  await page.waitForTimeout(300);
+  const label = await page.evaluate(() => { const f = document.querySelector('a.m3-fab'); return `${f.getAttribute('aria-label')} | ${f.querySelector('.m3-badge').textContent.trim()}`; });
+  check(label === 'Carrinho, 10 itens | 10', 'nome final do FAB "Carrinho, 10 itens" e badge "10"', label);
+  results[`badge-${tag}`] = label;
   await ctx.close();
 }
 
@@ -98,6 +104,6 @@ const touch = await tp.locator('.product-card').first().evaluate((el) => ({ t: g
 check(touch.t === 'none' && touch.listener === 'nenhum', 'tilt com toque emulado: nenhum transform e nenhum listener', JSON.stringify(touch));
 await tctx.close();
 
-check(results['montador-normal'] === results['montador-reduzido'] && results['odo-normal'] === results['odo-reduzido'], 'movimento reduzido: conteúdo e resultado iguais (legenda, contagem, rótulo)', `${results['montador-reduzido']} | ${results['odo-reduzido']}`);
+check(results['montador-normal'] === results['montador-reduzido'] && results['badge-normal'] === results['badge-reduzido'], 'movimento reduzido: conteúdo e resultado iguais (legenda, contagem, rótulo)', `${results['montador-reduzido']} | ${results['badge-reduzido']}`);
 await browser.close();
 console.log(failures ? `FALHAS: ${failures}` : 'MICRO-INTERAÇÕES OK');

@@ -83,3 +83,38 @@ describe('guards do roteador', () => {
     expect(router.currentRoute.value.name).toBe('NotFound');
   });
 });
+
+// SPEC-material §10.1: o window.scrollTo do vue-router não aplica o scroll-padding-top do html, então a
+// âncora desconta o valor computado dele (sem repetir no JS o calc dos tokens)
+describe('scrollBehavior', () => {
+  const rolar = (to, saved = null) => router.options.scrollBehavior(to, {}, saved);
+  const paddingTop = (valor) =>
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((el) => {
+      expect(el).toBe(document.documentElement);
+      return { scrollPaddingTop: valor };
+    });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it('com âncora, para a seção abaixo do scroll-padding-top do html', () => {
+    paddingTop('80px');
+    expect(rolar({ hash: '#lanches' })).toEqual({ el: '#lanches', top: 80 });
+  });
+
+  it('com scroll-padding-top sem valor numérico, só a âncora', () => {
+    paddingTop('auto');
+    expect(rolar({ hash: '#lanches' })).toEqual({ el: '#lanches' });
+  });
+
+  it('sem âncora, vai ao topo', () => {
+    paddingTop('80px');
+    expect(rolar({ hash: '' })).toEqual({ top: 0 });
+  });
+
+  it('no voltar e no avançar, a posição salva vence, com ou sem âncora', () => {
+    paddingTop('80px');
+    const salva = { left: 0, top: 420 };
+    expect(rolar({ hash: '' }, salva)).toBe(salva);
+    expect(rolar({ hash: '#lanches' }, salva)).toBe(salva);
+  });
+});
