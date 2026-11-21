@@ -65,7 +65,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 
 ### Interface
 
-- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
+- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. Os títulos seguem a escala tipográfica do M3, e o anel de foco tem 3 px. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
 - **Acessibilidade**, verificada com o axe-core (nenhuma violação WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px):
   - navegação completa por teclado, foco visível e link "Pular para o conteúdo";
   - diálogos que prendem e devolvem o foco;
@@ -201,7 +201,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 315 testes unitários, em 35 arquivos: 256 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 321 testes unitários, em 36 arquivos: 262 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, a base de estilo (movimento reduzido, títulos, anel de foco e mixins do M3), `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
