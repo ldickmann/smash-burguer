@@ -1,45 +1,31 @@
+// Máscaras dos campos de celular e CEP. Elas são progressivas: a formatação acompanha a
+// digitação desde os primeiros dígitos, sem sumir no meio do caminho.
+
+/** Dígitos que cada máscara aceita: o campo não guarda mais do que mostra. */
+export const MASK_DIGITS = { phone: 11, cep: 8 };
+
+const digitsOf = (value, max) => String(value ?? "").replace(/\D/g, "").slice(0, max);
+
 /**
- * Aplica máscara para número de telefone
+ * Celular: "(11", "(11) 9999", "(11) 99999-9", "(11) 99999-9999".
  * @param {string} value - Valor a ser mascarado
  * @returns {string} - Valor com máscara
  */
 export const maskPhone = (value) => {
-  if (!value) return "";
-
-  // Remove caracteres não numéricos
-  const numbers = value.replace(/\D/g, "");
-
-  // Aplica limite de 11 caracteres
-  const cleaned = numbers.slice(0, 11);
-
-  // Aplica máscara
-  if (cleaned.length > 6) {
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  } else if (cleaned.length > 2) {
-    return cleaned.replace(/(\d{2})(\d{0,5})/, "($1) $2");
-  } else if (cleaned.length > 0) {
-    return cleaned.replace(/^(\d{2})/, "($1");
-  }
-  return cleaned;
+  const digits = digitsOf(value, MASK_DIGITS.phone);
+  if (!digits) return "";
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 };
 
 /**
- * Aplica máscara para CEP
+ * CEP: "01001", "01001-0", "01001-000".
  * @param {string} value - Valor a ser mascarado
  * @returns {string} - Valor com máscara
  */
 export const maskCEP = (value) => {
-  if (!value) return "";
-
-  // Remove caracteres não numéricos
-  const numbers = value.replace(/\D/g, "");
-
-  // Aplica limite de 8 caracteres
-  const cleaned = numbers.slice(0, 8);
-
-  // Aplica a máscara no formato '00000-000'
-  if (cleaned.length > 6) {
-    return cleaned.replace(/^(\d{5})(\d{3})/, "$1-$2");
-  }
-  return cleaned;
+  const digits = digitsOf(value, MASK_DIGITS.cep);
+  if (digits.length <= 5) return digits;
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
 };

@@ -15,10 +15,10 @@
           class="auth-alert__icon"
           aria-hidden="true"
         />
-        <p>E-mail ou senha incorretos.</p>
+        <p>{{ authError }}</p>
       </div>
 
-      <form novalidate class="auth-form" @submit.prevent="handleLogin">
+      <form ref="formRef" novalidate class="auth-form" @submit.prevent="handleLogin">
         <FormGroup
           id="email"
           v-model="credentials.email"
@@ -46,6 +46,14 @@
         </BaseButton>
       </form>
 
+      <!-- Só no `yarn dev`: no build, devTestAdmin() devolve null -->
+      <div v-if="testAdmin" class="admin-login__dev">
+        <p>Desenvolvimento: o admin de teste entra sem cadastro.</p>
+        <BaseButton variant="secondary" size="sm" @click="fillTestAdmin">
+          Usar admin de teste
+        </BaseButton>
+      </div>
+
       <p class="auth-panel__footer">
         <RouterLink to="/" class="link-inline">Voltar à loja</RouterLink>
       </p>
@@ -54,8 +62,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useAdminStore } from "@/stores/adminStore";
+import { devTestAdmin } from "@/services/adminAuthServices";
+import { NO_WEBCRYPTO } from "@/utils/password";
+import { NO_WEBCRYPTO_MESSAGE } from "@/handlers/authHandlers";
 import { useRouter } from "vue-router";
 import { validateEmail, validatePassword } from "@/utils/validators";
 import { useFormValidation } from "@/composables/useFormValidation";
@@ -83,19 +94,32 @@ const { errors, touch, validateAll } = useFormValidation(credentials, {
 });
 
 const loading = ref(false);
-const authError = ref(false);
+// Mensagem do erro de login ("" sem erro)
+const authError = ref("");
+const formRef = ref(null);
+
+// Preenche o formulário com o admin de teste e leva o foco ao "Entrar"
+const testAdmin = devTestAdmin();
+const fillTestAdmin = async () => {
+  credentials.value = { email: testAdmin.email, password: testAdmin.password };
+  authError.value = "";
+  await nextTick();
+  formRef.value?.querySelector('button[type="submit"]')?.focus();
+};
 
 // Um único handler, no submit
 const handleLogin = async () => {
-  authError.value = false;
+  authError.value = "";
   if (!validateAll()) return;
 
   loading.value = true;
   try {
     await adminStore.login(credentials.value);
     router.push("/admin");
-  } catch {
-    authError.value = true;
+  } catch (error) {
+    authError.value = String(error?.message).includes(NO_WEBCRYPTO)
+      ? NO_WEBCRYPTO_MESSAGE
+      : "E-mail ou senha incorretos.";
   } finally {
     loading.value = false;
   }

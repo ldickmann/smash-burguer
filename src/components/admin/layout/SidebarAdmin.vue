@@ -31,8 +31,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAdminStore } from "@/stores/adminStore";
+import { useAdminLogout } from "@/composables/useAdminLogout";
 import BaseButton from "@/components/ui/BaseButton.vue";
 
 defineProps({
@@ -70,14 +69,7 @@ const menuItems = [
   },
 ];
 
-// Composables
-const router = useRouter();
-const adminStore = useAdminStore();
-
-const handleLogout = () => {
-  adminStore.logout();
-  router.push("/admin/login");
-};
+const handleLogout = useAdminLogout();
 
 defineExpose({
   focusFirst: () => navRef.value?.querySelector("a")?.focus(),

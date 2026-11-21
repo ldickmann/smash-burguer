@@ -9,7 +9,7 @@ const browser = await chromium.launch();
 for (const w of [1440, 390]) {
   console.log(`=== ${w}`);
   const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 } });
-  // Admin semeado como o createAdmin.html faz
+  // Admin criado à mão na chave `admin`, como no site publicado
   await ctx.addInitScript((a) => { if (!sessionStorage.getItem('s')) { localStorage.clear(); localStorage.setItem('admin', JSON.stringify(a)); sessionStorage.setItem('s', '1'); } }, ADMIN);
   const page = await ctx.newPage();
   const errors = [];

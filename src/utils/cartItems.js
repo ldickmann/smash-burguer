@@ -2,13 +2,12 @@
 // ao carregar a página e ao fechar o pedido cada linha é refeita a partir do catálogo:
 // preço, nome e imagem vêm dele, e a linha que não bate com ele sai do carrinho.
 import { isPlainObject } from '@/utils/storedState';
+import { CATEGORIES } from '@/stores/products';
 
 // Os mesmos limites do modal de personalização e do carrinho
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_QUANTITY = 5;
 export const OBSERVATION_MAX = 140;
-
-const CATEGORIES = ['foods', 'drinks', 'desserts'];
 
 /**
  * Preço de uma unidade: o produto mais os adicionais. O modal de personalização usa a

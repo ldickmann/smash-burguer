@@ -113,6 +113,25 @@
           @blur="touch('CEP')"
         />
 
+        <!-- CEP único da cidade: a consulta não traz rua nem bairro -->
+        <FormGroup
+          v-if="manual.street"
+          id="street"
+          v-model="form.address.street"
+          label="Rua e número"
+          autocomplete="address-line1"
+          :error="streetError"
+          required
+          @blur="validateStreet"
+        />
+        <FormGroup
+          v-if="manual.neighborhood"
+          id="neighborhood"
+          v-model="form.address.neighborhood"
+          label="Bairro"
+          autocomplete="address-level3"
+        />
+
         <BaseButton
           type="submit"
           size="lg"
@@ -141,6 +160,7 @@ import { useRoute } from "vue-router";
 import { useAuthHandlers } from "@/handlers/authHandlers";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { useCepLookup } from "@/composables/useCepLookup";
+import { useManualAddress } from "@/composables/useManualAddress";
 import { hasSavedAccount } from "@/services/authServices";
 import {
   validateFirstName,
@@ -190,10 +210,15 @@ const redirectQuery = computed(() =>
   route.query.redirect ? { redirect: route.query.redirect } : {}
 );
 
-// Consulta o CEP e guarda o endereço, se o campo ainda tiver esse CEP quando a resposta chegar
+const { manual, streetError, setFromLookup, validateStreet } = useManualAddress(() => form.value.address);
+
+// Consulta o CEP e guarda uma cópia do endereço, se o campo ainda tiver esse CEP quando a
+// resposta chegar (a cópia não muda a resposta guardada pela consulta)
 const lookupCep = async (value) => {
   const address = await cep.lookup(value);
-  if (form.value.CEP === value) form.value.address = address;
+  if (form.value.CEP !== value) return;
+  form.value.address = address ? { ...address } : null;
+  setFromLookup(address);
 };
 
 // O CEP é consultado assim que tiver 8 dígitos; o endereço do CEP anterior sai na hora
@@ -201,6 +226,7 @@ watch(
   () => form.value.CEP,
   (value) => {
     form.value.address = null;
+    setFromLookup(null);
     lookupCep(value);
   }
 );
@@ -209,15 +235,19 @@ const cepError = computed(() => errors.CEP || cep.error.value);
 const cepHelper = computed(() => {
   if (cep.loading.value) return "Buscando endereço…";
   const address = form.value.address;
-  return address
-    ? `${address.street}, ${address.neighborhood} — ${address.city}/${address.state}`
-    : "Consultamos o CEP no ViaCEP para preencher o endereço.";
+  if (!address) return "Consultamos o CEP no ViaCEP para preencher o endereço.";
+  const city = `${address.city}/${address.state}`;
+  return manual.value.street
+    ? `${city}. Este CEP vale para a cidade toda: informe a rua.`
+    : `${address.street}, ${address.neighborhood} — ${city}`;
 });
 
 const focusFirstError = async () => {
   await nextTick();
-  // Sem erro nos campos, o que falta é o endereço do CEP (consulta com erro ou ainda em andamento)
-  const field = firstInvalid() ?? (form.value.address ? null : "CEP");
+  // Sem erro nos campos, o que falta é o endereço do CEP (consulta com erro ou ainda em
+  // andamento) ou a rua que o CEP não trouxe
+  const field =
+    firstInvalid() ?? (!form.value.address ? "CEP" : streetError.value ? "street" : null);
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
@@ -233,8 +263,9 @@ const handleRegister = async () => {
     // Uma consulta do CEP em andamento termina antes da validação (e a que falhou é refeita)
     if (!form.value.address) await lookupCep(form.value.CEP);
     const isValid = validateAll();
+    const hasStreet = validateStreet();
 
-    if (!isValid || !form.value.address) {
+    if (!isValid || !form.value.address || !hasStreet) {
       await focusFirstError();
       return;
     }

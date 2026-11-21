@@ -27,6 +27,33 @@ describe('guards do roteador', () => {
     expect(router.currentRoute.value.fullPath).toBe('/profile');
   });
 
+  it('sem sessão, o perfil leva ao login com o redirect de volta para ele', async () => {
+    await router.push('/profile');
+
+    expect(router.currentRoute.value.path).toBe('/login');
+    expect(router.currentRoute.value.query).toEqual({ redirect: '/profile' });
+  });
+
+  it('o foco por rota age na troca de página, e não quando só a query muda', async () => {
+    const main = document.createElement('main');
+    main.id = 'conteudo';
+    main.tabIndex = -1;
+    const search = document.createElement('input');
+    document.body.append(main, search);
+
+    await router.push('/menu');
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement).toBe(main);
+
+    search.focus();
+    await router.replace('/menu?q=coca');
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement).toBe(search);
+
+    main.remove();
+    search.remove();
+  });
+
   it('sem sessão, o cadastro abre', async () => {
     await router.push('/register');
 
@@ -39,7 +66,7 @@ describe('guards do roteador', () => {
     expect(parent.meta.requiresAdmin).toBe(true);
 
     const panel = parent.children.map((child) => router.resolve({ name: child.name }).path);
-    expect(panel).toEqual(['/admin', '/admin/products', '/admin/orders', '/admin/reports']);
+    expect(panel).toEqual(['/admin', '/admin/products', '/admin/orders', '/admin/reports', '/admin/profile', '/admin/settings']);
 
     // Sem sessão do painel, cada rota leva ao login do admin
     for (const path of panel) {
