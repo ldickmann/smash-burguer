@@ -268,3 +268,32 @@ Base das oito Homes da exploração de direções visuais: os sete estilos e a B
 - **Pesquisador 2:** m3.material.io/styles/color/roles (só o título); m3.material.io/theme-builder (404); kit M3 no Figma (403); HIG de dark mode em HTML (só o título; foi lido o JSON da mesma página); m2.material.io/design/color/dark-theme (só o título); material-foundation.github.io/material-theme-builder (app em JavaScript); blog do material.io (só o título); web.archive.org (a ferramenta não acessa); Dribbble (2 vazias), contra.com (404) e Behance (403).
 - **Pesquisador 3:** uxdesign.cc e medium.com (403); axesslab.com/neumorphism (403, não usado); HIG e Liquid Glass sem `.md` (só o título); techradar.com (o corpo do texto não carregou); bloomberg.com e mdpi.com (403); news.airbnb.com sem `en-uk` (404); ifip.hal.science (anti-robô); PDF de Burmistrov et al. (ilegível); m3.material.io/styles/elevation/overview e neumorphism.io (só o título); Figma (4 arquivos), Behance e designshack.net (403); Dribbble (3 páginas vazias).
 - **Execução:** learn.microsoft.com/en-us/previous-versions/windows/apps/hh700394(v=win.10) e jj130676(v=win.10) (404).
+
+## Rodada 2: uma Home nova por estilo (21/11/2026)
+
+Na rodada 2, a Brasa saiu, e cada estilo ganhou uma Home nova, com as seções que o próprio estilo pede e componentes próprios. A pesquisa veio antes do desenho, e o desenho antes da construção.
+
+### Método
+
+- **Pesquisa em texto:** um pesquisador por estilo (WebSearch e WebFetch), partindo desta página, e um verificador que reabriu cada URL e tentou derrubar cada afirmação (na dúvida, derrubou). Cobertura exigida: 5 afirmações confirmadas de pesquisa, autor do estilo ou referência técnica, 3 padrões com 2 exemplos ou mais e 70% das afirmações reconfirmadas. Os oito dossiês fecharam a cobertura sem complemento.
+- **Galerias:** um agente por estilo, em série, no Chrome, com até 15 páginas, recusando cookies não essenciais e desistindo em login, CAPTCHA ou anti-robô. Cada exemplo está marcado como publicado ou conceito; nada foi copiado.
+- **Desenho:** um designer por estilo e um juiz de distinção que leu os sete juntos (repetição, padrão genérico, conteúdo inventado, infidelidade ao estilo, inviabilidade, contrato e acessibilidade). Na primeira leitura, 1 reprovado e 5 com ajustes; depois da revisão, os sete aprovados.
+- **Construção:** um laço por estilo, com o construtor rodando os portões no próprio contexto, portões independentes (escopo, lint e testes, buscas, identidade, contraste, desenho, contrato, axe, layout, alvos, console, fluxo do Adicionar, teclado, movimento, conteúdo, peso e capturas) e um crítico novo a cada rodada, com rubrica calibrada na Home da rodada 1 do Material 3 (soma 16 de 30).
+
+### Dossiês
+
+No fim da rodada 2, o usuário seguiu só com Material 3 Expressive, esqueumorfismo e neumorfismo; as Homes, os desenhos e os dossiês dos outros quatro foram apagados (ficam no histórico do Git). Os sete desenhos passaram pelo juiz de distinção, e as sete Homes chegaram a ser construídas antes do corte.
+
+| Estilo | Dossiê | Afirmações confirmadas / derrubadas | Exemplos de galeria |
+|---|---|---|---|
+| Material 3 Expressive | [pesquisa/material.md](./pesquisa/material.md) | 38 / 13 | 8 |
+| Esqueumorfismo | [pesquisa/esqueumorfismo.md](./pesquisa/esqueumorfismo.md) | 30 / 1 | 8 |
+| Neumorfismo | [pesquisa/neumorfismo.md](./pesquisa/neumorfismo.md) | 45 / 4 | 7 |
+| Home de delivery (transversal) | [pesquisa/home-delivery.md](./pesquisa/home-delivery.md) | 37 / 15 | — |
+
+Os desenhos das Homes novas, com a tese, os wireframes, as seções, os componentes e as notas da construção, estão em [desenho/](./desenho/).
+
+### O que não abriu na rodada 2
+
+- **Por fetch:** a lista de cada dossiê, na seção "Não abriu". Continuam bloqueados para leitura automática o Figma Community, a Behance, o Dribbble (página vazia ou 202), o m3.material.io e o medium.com.
+- **No Chrome:** a busca global do CodePen (pede login); godly.website (redireciona para recent.design, fora das galerias liberadas); as buscas por URL do landingfolio.com (categoria restaurante vazia), do onepagelove.com (tag inexistente), do minimal.gallery e do siteinspire.com (parâmetro ignorado), substituídas pela navegação do próprio site.

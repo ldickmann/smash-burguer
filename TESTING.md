@@ -2,7 +2,7 @@
 
 O projeto tem duas camadas de verificação:
 
-- **Testes unitários** em `src/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 239 testes em 25 arquivos.
+- **Testes unitários** em `src/__tests__/` e, nas direções visuais, em `src/direcoes/**/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 312 testes em 34 arquivos.
 - **Verificação no navegador**, com os scripts Playwright + axe-core de `.claude/e2e/`: acessibilidade, fluxo de pedido, teclado e micro-interações. Eles rodam à mão contra o build e ainda não fazem parte do CI.
 
 ## Como rodar os testes unitários
@@ -85,17 +85,19 @@ Na entrega do redesign, na atualização de dependências (ambas em outubro de 2
 
 ### Direções visuais
 
-As Homes de `#/direcoes` existem só no `yarn dev` e foram verificadas contra o servidor de desenvolvimento (porta 5173), com Playwright e axe-core numa pasta fora do projeto, por scripts adaptados do `axe-scan.mjs` e do `tokens-contrast.mjs` (não versionados):
+As Homes de `#/direcoes` existem só no `yarn dev`. Na suíte do projeto entram:
 
-- **axe-core (WCAG 2.2 AA):** o índice e as três Homes, em 1440 e 390 px, com e sem movimento reduzido, e o modal Personalizar aberto em cada Home. Também mede rolagem horizontal e alvos de toque de 44 px.
-- **Layout:** em 1440, 1024 e 390 px, captura de página inteira e checagem automática de rolagem horizontal, de controle coberto por outro e de texto cortado.
-- **Fluxo do "Adicionar":** modal, confirmação, retorno visual, contador do carrinho, anúncio para leitor de tela e foco de volta no botão (pelo teclado).
-- **Contraste:** os pares de `src/direcoes/contraste.js`, medidos também na ficha de cada estilo, no navegador.
-- **Build:** a busca por `direcoes`, `data-direcao`, "Direções visuais" e pelos nomes das fontes novas no `dist/` tem de dar zero resultados.
+- **Isolamento** (`src/__tests__/direcoes-isolamento.test.js`): lê o código cru de `src/direcoes/` e reprova import de um estilo em outro, estilo importando de `@/components` ou `@/views`, `compartilhado/` com `<style>`, `.scss` ou import de `estilos/`, `<style>` sem `scoped` num estilo e `_tokens.scss` em `@use` ou `@import`, com um caso negativo para cada regra.
+- **Lógica comum** (`src/direcoes/compartilhado/__tests__/`): `useCardapio` (listas reais, quantidade e menor preço calculados, reserva de produto excluído), a moldura com `usePersonalizar`, o `atributosAdicionar` e o `dados.js`. O `montarHome.js` dessa pasta monta uma Home com Pinia nova, router em memória e o cardápio real ou vazio.
+- **Contrato de cada Home** (`src/direcoes/estilos/<estilo>/__tests__/`): um `h1` só, as seções do `docs/direcoes/desenho/<estilo>.json` na ordem, botões "Adicionar <nome>" só de produtos reais e a Home montando com o cardápio vazio, além dos testes dos widgets do estilo.
+
+Fora da suíte, num scratchpad fora do projeto (não versionado), ficaram os portões de cada Home, com Playwright 1.65.0 e axe-core 4.10.3, contra um servidor de desenvolvimento por estilo: escopo, lint e testes da pasta, buscas da §13.2, identidade, contraste dos pares, desenho, contrato, axe (WCAG 2.2 AA em 1440 e 390, com e sem movimento reduzido, com o modal, o menu e os widgets no outro estado), layout em 1440, 1024 e 390, alvos de 44 px, console, fluxo do "Adicionar", teclado, movimento reduzido, conteúdo (nada fora das frases reais e da microcopy marcada como provisória), peso das imagens e capturas. Cada portão tem um caso negativo no autoteste.
+
+- **Build:** a busca por `direcoes`, `data-direcao`, "Direções visuais", "provisório", os prefixos de token dos estilos e os nomes das fontes novas no `dist/` tem de dar zero resultados.
 
 ## Escrevendo novos testes
 
-- **Onde ficam:** em `src/__tests__/` com o sufixo `.test.js`. É nessa pasta que o ESLint aplica as regras do plugin do Vitest.
+- **Onde ficam:** em `src/__tests__/` com o sufixo `.test.js`; nas direções visuais, junto do código, em `src/direcoes/compartilhado/__tests__/` e `src/direcoes/estilos/<estilo>/__tests__/`. O ESLint aplica as regras do plugin do Vitest a toda pasta `__tests__/` de `src/`.
 - **Componentes:** monte com o `mount` do Vue Test Utils.
 - **Stores:**
   - crie uma Pinia nova a cada teste, com `setActivePinia(createPinia())` no `beforeEach`;

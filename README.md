@@ -73,7 +73,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
   - botões com área de toque de 44 px.
 - **Micro-interações 3D só com CSS:** o botão "Adicionar" gira, o contador do carrinho anima e o card inclina com o mouse. Com `prefers-reduced-motion`, viram transições de opacidade.
 - **Imagens:** WebP responsivas com `<picture>` e `srcset`. A Home carrega menos de 1 MB no celular.
-- **Direções visuais (exploração):** no `yarn dev`, `#/direcoes` mostra a Home em três estilos de interface (Material 3 Expressive, esqueumorfismo e neumorfismo), com uma ficha por estilo para comparar e escolher a próxima direção. Essas páginas não entram no build. A pesquisa, com as fontes, está em [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md).
+- **Direções visuais (exploração):** no `yarn dev`, `#/direcoes` mostra três Homes novas, uma por estilo de interface (Material 3 Expressive, esqueumorfismo e neumorfismo), cada uma com as próprias seções e componentes, e uma ficha por estilo para comparar e escolher a próxima direção. Essas páginas não entram no build. A pesquisa, com as fontes, está em [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md).
 
 ## Tecnologias
 
@@ -147,7 +147,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   ├── workflows/        # deploy no GitHub Pages
 │   └── dependabot.yml    # PR mensal com as versões novas das actions
 ├── docs/
-│   ├── direcoes/         # pesquisa dos estilos das direções visuais
+│   ├── direcoes/         # direções visuais: PESQUISA.md, pesquisa/<estilo>.md (dossiês) e desenho/<estilo>.md (+ .json)
 │   └── screenshots/      # imagens deste README
 ├── public/images/        # fotos do cardápio, fundos, ícones e manifest
 ├── src/
@@ -160,7 +160,7 @@ O hash das senhas usa o WebCrypto, que o navegador só oferece em HTTPS e em `lo
 │   │   ├── layout/       # navbar e rodapé
 │   │   └── admin/        # componentes do painel
 │   ├── composables/      # lógica reutilizável (imagens, tilt, CEP, endereço sem rua, validação, saída do painel…)
-│   ├── direcoes/         # direções visuais (só no yarn dev): rotas, índice e a Home de cada estilo
+│   ├── direcoes/         # direções visuais (só no yarn dev): rotas, índice, compartilhado/ (só lógica) e estilos/<estilo>/ (Home, secoes/, componentes/, scss/, __tests__/)
 │   ├── handlers/         # fluxo de login e cadastro
 │   ├── json/             # cardápio (products.json)
 │   ├── layouts/          # MainLayout (loja) e AdminLayout (painel)
@@ -223,7 +223,7 @@ Para publicar um fork com outro nome de repositório, ajuste o `base` no `vite.c
 
 - [AUDIT.md](./AUDIT.md): auditoria de UI/UX da versão anterior, com os achados numerados (ex.: `[FLX-09]`).
 - [SPEC.md](./SPEC.md): especificação do redesign "Brasa": tokens, componentes, telas, micro-interações e critérios de aceite.
-- [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md): pesquisa dos estilos das direções visuais (sete na rodada 1; três seguem), com as fontes, as decisões e o que não abriu.
+- [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md): pesquisa dos estilos das direções visuais (sete na rodada 1, três na rodada 2), com as fontes, as decisões e o que não abriu; os dossiês da rodada 2 ficam em `docs/direcoes/pesquisa/` e os desenhos das Homes novas em `docs/direcoes/desenho/`.
 
 ## Limitações conhecidas
 

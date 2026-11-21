@@ -81,7 +81,10 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 
 ## Direções visuais (exploração, só no `yarn dev`)
 
-- **Onde:** `#/direcoes` (índice com uma ficha por estilo) e `#/direcoes/<estilo>` (`material`, `esqueumorfismo`, `neumorfismo`; 3D, flat, minimalismo e dark mode saíram em 21/11/2026). Código em `src/direcoes/`; pesquisa em `docs/direcoes/PESQUISA.md`.
+- **Onde:** `#/direcoes` (índice com uma ficha por estilo) e `#/direcoes/<estilo>` (`material`, `esqueumorfismo`, `neumorfismo`, `3d`, `flat`, `minimalismo`, `escuro`). A Brasa saiu da exploração na rodada 2 (`#/direcoes/brasa` cai no NotFound); a Home de produção continua em `#/`. Código em `src/direcoes/`; pesquisa em `docs/direcoes/PESQUISA.md` e `docs/direcoes/pesquisa/`; desenhos das Homes em `docs/direcoes/desenho/<estilo>.md` e `.json`.
+- **Cada estilo é dono da própria pasta** (`src/direcoes/estilos/<estilo>/`): `Home<Estilo>.vue` só compõe (até 100 linhas), as seções ficam em `secoes/` (raiz `<section data-secao aria-labelledby>`), as peças em `componentes/`, as parciais em `scss/`, e `ficha.js`, `contraste.js` e `textos.js` (microcopy marcada `// provisório`) são puros. `fichas.js` e `contraste.js` da raiz só agregam.
+  - `compartilhado/` é só lógica, sem visual: `MolduraDirecao` (sem estilo próprio), `usePersonalizar`, `useCartaoProduto` (com `atributosAdicionar`), `useCardapio`, `dados.js` e os outros composables.
+  - O teste `src/__tests__/direcoes-isolamento.test.js` garante as fronteiras; cada estilo tem o teste de contrato da Home na própria `__tests__/`.
 - **Fora do build:** as rotas ficam dentro do ramo `import.meta.env.DEV` de `src/direcoes/rotas.js`; com a lista fora do ramo, o build gerava os chunks. Depois de mexer nelas, rode o build e confira que o `dist/` não tem `direcoes` nem as fontes novas.
 - **Tokens:** cada estilo redefine todos os tokens do projeto em `:root[data-direcao="<estilo>"]` (o modal Personalizar e o aviso continuam os reais) e tem os próprios, com prefixo (`--m3-*`, `--esq-*`, `--neu-*`).
   - Os `_tokens.scss` são importados pelo `<script>`, não no `<style scoped>`, que reescreveria o `:root`.
