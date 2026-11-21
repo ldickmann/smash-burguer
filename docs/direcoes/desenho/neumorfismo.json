@@ -1,0 +1,19 @@
+{
+  "estilo": "neumorfismo",
+  "secoes": ["abertura", "painel", "acompanhamentos", "contato"],
+  "h1MaxLinhas": { "1440": 2, "1024": 3, "390": 4 },
+  "estados": [
+    {
+      "nome": "painel com o segundo lanche no visor",
+      "passos": [{ "clicar": "[data-secao='painel'] .neu-teclado__teclas > label:nth-child(2)" }]
+    },
+    {
+      "nome": "teclado do painel pelo teclado",
+      "passos": [
+        { "focar": "[data-secao='painel'] .neu-teclado__teclas input[type='radio']:checked" },
+        { "tecla": "ArrowDown" }
+      ]
+    }
+  ],
+  "justificativaEscopo": null
+}
