@@ -50,12 +50,22 @@
   }
 }
 
-.m3-rodape__copy {
+// Direitos em três itens (§10.2): empilhados abaixo de md e lado a lado a partir dele, sem separador
+// de texto
+.m3-rodape__direitos {
   @include tipo(body-s);
 
+  display: grid;
   grid-column: 1 / -1;
+  gap: var(--space-1);
   margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: 1px solid var(--m3-outline-variant);
   color: var(--m3-on-surface-variant);
+
+  @include up(md) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-5);
+  }
 }

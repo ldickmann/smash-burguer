@@ -1,7 +1,7 @@
 <!-- O <footer> da loja (cópia de produção do M3Rodape da Home, SPEC-material §4.1 e §5.10): marca,
-     descrição e direitos; as redes saíram (os links eram genéricos). Na Home, os contatos ficam na
-     seção "onde", logo acima; nas outras rotas, a prop `contatos` mostra a mesma lista agrupada de
-     horário e contato (decisão g). -->
+     descrição e direitos, estes em três itens, sem "·" (§10.2); as redes saíram (os links eram
+     genéricos). Na Home, os contatos ficam na seção "onde", logo acima; nas outras rotas, a prop
+     `contatos` mostra a mesma lista agrupada de horário e contato (decisão g). -->
 <template>
   <footer class="m3-rodape" :class="{ 'm3-rodape--contatos': contatos }">
     <div class="m3-rodape__interno container">
@@ -20,7 +20,9 @@
           :icone="item.icone"
         />
       </ul>
-      <p class="m3-rodape__copy">{{ RODAPE.copyright }}</p>
+      <ul class="m3-rodape__direitos" role="list">
+        <li v-for="parte in DIREITOS" :key="parte">{{ parte }}</li>
+      </ul>
     </div>
   </footer>
 </template>
@@ -28,7 +30,7 @@
 <script setup>
 import M3ItemSegmentado from "@/components/ui/M3ItemSegmentado.vue";
 import { itensOnde } from "@/utils/contatos";
-import { DESCRICAO, MARCA, RODAPE, TEXTOS } from "@/utils/textosLoja";
+import { DESCRICAO, DIREITOS, MARCA, TEXTOS } from "@/utils/textosLoja";
 
 defineProps({
   contatos: {

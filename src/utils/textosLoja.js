@@ -32,8 +32,12 @@ export const IMAGEM_HERO = { widths: [480, 960], fallbackWidth: 960, fallbackExt
 export const RODAPE = {
   endereco: "Endereço",
   horario: "Horário",
-  copyright: `© 2026 ${MARCA} · Sabiá Operações — Desenvolvido por Lucas Elias Dickmann`,
 };
+
+// Linha de direitos do TheFooter.vue ("© 2026 Smash Burger · Sabiá Operações — Desenvolvido por…"),
+// nas três partes do texto de hoje, sem os separadores: o M3Rodape mostra cada uma num item
+// (SPEC-material §10.2)
+export const DIREITOS = [`© 2026 ${MARCA}`, "Sabiá Operações", "Desenvolvido por Lucas Elias Dickmann"];
 
 // src/components/layout/TheFooterContactInfo.vue. Ícones por nome, registrados em
 // src/plugins/fontawesome.js
