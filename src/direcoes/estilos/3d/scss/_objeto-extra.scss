@@ -1,0 +1,82 @@
+// D3ObjetoExtra: abaixo de md, uma linha (o objeto à esquerda, o nome no meio e o preço à direita);
+// a partir de md, empilhado e centralizado sob o objeto. A camada fica maior que na pilha (a espessura
+// cresce com a fonte), para ler como objeto e não como fatia.
+@use "@/assets/styles/base/breakpoints" as *;
+
+.d3-objeto {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.5rem;
+  color: var(--3d-carne);
+
+  @include up(md) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    align-content: start;
+    gap: var(--space-1);
+    text-align: center;
+  }
+}
+
+.d3-objeto__forma {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  width: 3rem;
+  height: 2.5rem;
+  font-size: 1.35rem;
+
+  @include up(md) {
+    width: 4rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-2);
+    font-size: 1.85rem;
+  }
+
+  @include up(xl) {
+    width: 4.5rem;
+    height: 3.75rem;
+    font-size: 2.05rem;
+  }
+
+  // A camada fica acima da sombra de contato
+  > :first-child {
+    z-index: var(--z-raised);
+    margin-bottom: 0.1em;
+  }
+}
+
+.d3-objeto__contato {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -0.15em;
+  height: 0.4em;
+  border-radius: var(--radius-round);
+  background: var(--3d-contato);
+}
+
+.d3-objeto__nome {
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+
+  @include up(md) {
+    font-size: var(--text-sm);
+  }
+}
+
+.d3-objeto__preco {
+  color: var(--3d-carne-suave);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .d3-objeto__contato {
+    display: none;
+  }
+}

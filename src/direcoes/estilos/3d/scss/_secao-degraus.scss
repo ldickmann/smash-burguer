@@ -1,0 +1,93 @@
+// Degraus: uma coluna até lg (a escada é o recuo de cada laje); a partir de lg, as três lajes lado a
+// lado, a do meio mais larga, com os pés alinhados e os topos subindo um passo de laje em laje.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.d3-degraus__titulo {
+  @include titulo-secao;
+  margin-bottom: var(--space-5);
+}
+
+.d3-degraus__lista {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: var(--space-5);
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr) minmax(0, 1fr);
+  }
+}
+
+// A laje estica até a altura da linha, menos o próprio passo
+.d3-degraus__passo {
+  display: grid;
+  min-width: 0;
+}
+
+// Os dois links na largura da laje
+.d3-degraus__link {
+  justify-self: stretch;
+}
+
+// O selo da contagem, preso ao canto do ícone do carrinho; o número troca sem animação
+.d3-degraus__selo {
+  position: absolute;
+  top: calc(-1 * var(--space-2));
+  left: calc(var(--space-5) + var(--space-3));
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--3d-raio-pilula);
+  background: var(--3d-ketchup);
+  box-shadow: var(--3d-inflado-dentro);
+  color: var(--3d-branco);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+.d3-selo-enter-active,
+.d3-selo-leave-active {
+  transition: opacity var(--dur-fast);
+}
+
+.d3-selo-enter-from,
+.d3-selo-leave-to {
+  opacity: 0;
+}
+
+// Os adicionais: linhas no celular; de md a lg, cinco colunas; em lg, 3 + 2; a partir de xl, cinco
+.d3-degraus__extras {
+  display: grid;
+  gap: var(--space-2);
+
+  @include up(md) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--space-5);
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.d3-degraus__vazio {
+  color: var(--3d-carne-suave);
+  font-size: var(--text-md);
+}

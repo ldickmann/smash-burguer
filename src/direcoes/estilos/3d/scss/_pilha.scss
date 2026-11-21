@@ -1,0 +1,112 @@
+// D3Pilha: a caixa tem a altura das linhas do eixo (e não muda ao juntar), a cena é preserve-3d e
+// cada camada fica na própria linha (separada) ou encaixada sobre a de baixo (junta). Abaixo de md,
+// sem eixo, valem as linhas do par lado a lado (--linhas-par e --a-par): as que nenhum dos dois tem
+// saem, e o vão que sobra é o de um ingrediente que o vizinho tem.
+// O passo e o tamanho da pilha vêm da grade da fileira (--pilha-passo e --pilha-fonte), que o eixo
+// também usa. Com movimento reduzido, a posição sai de `bottom`, sem transform; com movimento, a
+// camada desce por translateY com a mola e um atraso por posição (as de baixo assentam primeiro).
+@use "@/assets/styles/base/breakpoints" as *;
+
+.d3-pilha {
+  --passo: var(--pilha-passo, var(--3d-pilha-passo-celular));
+  --domo: 0.45em;
+  --linhas-caixa: var(--linhas);
+
+  position: relative;
+  width: 7.5em;
+  height: calc(var(--linhas-caixa) * var(--passo) + var(--domo));
+  margin-bottom: 0.5em;
+  font-size: var(--pilha-fonte, 0.8rem);
+  perspective: var(--3d-perspectiva-pilha);
+  perspective-origin: 50% 60%;
+
+  @include below(md) {
+    --linhas-caixa: var(--linhas-par, var(--linhas));
+  }
+}
+
+.d3-pilha__cena {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.d3-pilha__cena .d3-camada {
+  --linha: var(--a);
+  --separada: calc(var(--linha) * var(--passo) + (var(--passo) - var(--alto)) / 2);
+  --juntada: calc(var(--j) * 1em);
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--separada);
+  margin-inline: auto;
+
+  @include below(md) {
+    --linha: var(--a-par, var(--a));
+  }
+}
+
+// O domo passa da própria linha para cima, no espaço do --domo
+.d3-pilha__cena .d3-camada--pao-topo {
+  --separada: calc(var(--linha) * var(--passo) + 0.05em);
+}
+
+// Sombra de contato no chão, sob o pão de baixo
+.d3-pilha__contato {
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: -0.45em;
+  height: 0.9em;
+  border-radius: var(--radius-round);
+  background: var(--3d-contato);
+}
+
+// ---------- Junta: reduzido, pela posição ----------
+
+@include motion-reduced {
+  .d3-pilha.is-junta .d3-camada {
+    bottom: var(--juntada);
+  }
+}
+
+// ---------- Junta e inclinação: com movimento ----------
+
+@include motion-ok {
+  .d3-pilha__cena .d3-camada {
+    --ty: 0px;
+    --tz: 0px;
+
+    transform: translateY(var(--ty)) translateZ(var(--tz));
+    transition: transform var(--3d-dur-mola) var(--3d-mola);
+    transition-delay: calc(var(--b) * var(--dur-stagger) / 2);
+  }
+
+  .d3-pilha.is-junta .d3-camada {
+    --ty: calc(var(--separada) - var(--juntada));
+  }
+
+  // Inclinação só com mouse: a cena gira pelo --rx e --ry do palco, e as camadas de cima ficam mais perto
+  @include hover-capable {
+    .d3-pilha__cena {
+      transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition: transform var(--dur-fast) linear;
+    }
+
+    // Ao sair do palco (o useTilt põe a classe nele), volta ao repouso devagar
+    .is-tilt-resetting .d3-pilha__cena {
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+
+    .d3-pilha__cena .d3-camada {
+      --tz: calc(var(--linha) * var(--3d-profundidade-camada));
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .d3-pilha__contato {
+    display: none;
+  }
+}

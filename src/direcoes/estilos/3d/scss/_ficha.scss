@@ -1,0 +1,108 @@
+// D3Ficha: na fileira, uma coluna com o preço e o botão presos ao pé; na bandeja, a ficha divide as
+// cinco linhas do item (foto, nome, detalhe, preço e botão) com os vizinhos (subgrid), e a foto
+// encosta no pé da própria linha: é o chão comum.
+@use "@/assets/styles/base/breakpoints" as *;
+
+.d3-ficha {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  color: var(--3d-carne);
+}
+
+.d3-ficha__nome {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--3d-carne);
+  font-family: var(--3d-fonte);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+
+  @include up(xl) {
+    font-size: 1.1875rem;
+  }
+}
+
+.d3-ficha__descricao {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin-top: var(--space-1);
+  color: var(--3d-carne-suave);
+  font-size: var(--text-sm);
+  line-height: var(--leading-compact);
+}
+
+.d3-ficha__detalhe {
+  color: var(--3d-carne-suave);
+  font-size: var(--text-sm);
+}
+
+.d3-ficha__preco {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  color: var(--3d-carne);
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.d3-ficha__acao {
+  margin-top: var(--space-2);
+}
+
+// No celular, o botão ocupa a largura da coluna
+@include below(md) {
+  .d3-ficha__acao {
+    align-self: stretch;
+  }
+}
+
+// ---------- Com foto: as cinco linhas da bandeja ----------
+
+.d3-ficha--foto {
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  align-items: start;
+
+  .d3-ficha__foto {
+    grid-row: 1;
+    align-self: end;
+    width: 100%;
+  }
+
+  .d3-ficha__nome {
+    grid-row: 2;
+    margin-top: var(--space-3);
+  }
+
+  .d3-ficha__detalhe {
+    grid-row: 3;
+  }
+
+  .d3-ficha__preco {
+    grid-row: 4;
+    margin-top: 0;
+    padding-top: var(--space-1);
+  }
+
+  .d3-ficha__acao {
+    grid-row: 5;
+    justify-self: start;
+  }
+}
+
+@include below(md) {
+  .d3-ficha--foto .d3-ficha__acao {
+    justify-self: stretch;
+  }
+}

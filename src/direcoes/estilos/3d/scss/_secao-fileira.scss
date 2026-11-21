@@ -1,0 +1,150 @@
+// Fileira: o palco de argila com o eixo de ingredientes (só a partir de lg e com até seis lanches) e
+// as pilhas lado a lado. A grade define o passo das linhas e o tamanho das pilhas (--pilha-passo e
+// --pilha-fonte), que a pilha e o eixo leem; o eixo começa depois do domo do pão (0,6 em da pilha).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.d3-palco {
+  @include superficie;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+
+  @include up(md) {
+    padding: var(--space-6);
+  }
+}
+
+.d3-palco__cabecalho {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+
+  @include up(md) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+  }
+}
+
+.d3-palco__titulo {
+  @include titulo-secao;
+}
+
+// No celular, o alternador fica abaixo do h2, à direita
+.d3-palco__alternar {
+  align-self: flex-end;
+
+  @include up(md) {
+    align-self: auto;
+  }
+}
+
+.d3-palco__vazio {
+  color: var(--3d-carne-suave);
+  font-size: var(--text-md);
+}
+
+// ---------- Grade ----------
+
+.d3-fileira__grade {
+  --pilha-passo: var(--3d-pilha-passo-celular);
+  --pilha-fonte: 0.8rem;
+
+  display: grid;
+
+  @include up(md) {
+    --pilha-passo: var(--3d-pilha-passo-medio);
+    --pilha-fonte: 0.8667rem;
+  }
+
+  @include up(lg) {
+    --pilha-passo: var(--3d-pilha-passo);
+  }
+
+  @include up(xl) {
+    --pilha-fonte: 1rem;
+  }
+}
+
+.d3-fileira__grade.com-eixo {
+  @include up(lg) {
+    grid-template-columns: 8rem minmax(0, 1fr);
+    column-gap: var(--space-4);
+  }
+
+  @include up(xl) {
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+  }
+}
+
+// O eixo: um rótulo por linha, alinhado à direita, colado às pilhas
+.d3-fileira__eixo {
+  display: none;
+
+  @include up(lg) {
+    display: grid;
+    grid-auto-rows: var(--pilha-passo);
+    align-content: start;
+    padding-top: calc(0.45 * var(--pilha-fonte));
+  }
+}
+
+.d3-fileira__linha {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--3d-carne-suave);
+  font-size: var(--text-xs);
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+
+  @include up(xl) {
+    font-size: var(--text-sm);
+  }
+}
+
+// Junta, as linhas não batem mais: o eixo some
+.is-junta .d3-fileira__eixo {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .d3-fileira__eixo {
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+}
+
+// No celular, o vão entre as linhas da grade é maior que o das colunas: o "Adicionar" de um par fica
+// longe do pão do par de baixo, e cada pilha se lê com a própria ficha
+.d3-fileira__lanches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-7) var(--space-4);
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--space-6);
+  }
+
+  // Mais de seis lanches (painel): sem eixo, a grade se refaz sozinha
+  @include up(lg) {
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  }
+}
+
+.com-eixo .d3-fileira__lanches {
+  @include up(lg) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.d3-fileira__lanche {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 0;
+}

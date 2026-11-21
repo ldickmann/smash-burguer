@@ -1,0 +1,97 @@
+// D3Inflado: volume por dentro, reflexo especular e sombra no chão (a de repouso e a apertada
+// trocam por opacidade). Ketchup e carne são inflados coloridos; maionese é argila clara.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.d3-inflado {
+  --botao-cor: var(--3d-ketchup);
+  --botao-cor-hover: var(--3d-ketchup-claro);
+  --botao-tinta: var(--3d-branco);
+  --botao-dentro: var(--3d-inflado-dentro);
+  --botao-fora: var(--3d-inflado-fora);
+  --botao-apertado: var(--3d-inflado-fora-apertado);
+
+  @include sombras(var(--botao-fora), var(--botao-apertado));
+  @include borda-forcada;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--3d-raio-pilula);
+  background: var(--3d-especular), var(--botao-cor);
+  box-shadow: var(--botao-dentro);
+  color: var(--botao-tinta);
+  font-family: var(--3d-fonte);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast);
+
+  @include hover-capable {
+    &:hover {
+      background: var(--3d-especular), var(--botao-cor-hover);
+    }
+  }
+
+  &:active {
+    @include sombra-outra;
+  }
+
+  @include achatar;
+}
+
+.d3-inflado--carne {
+  --botao-cor: var(--3d-carne);
+  --botao-cor-hover: var(--3d-carne-clara);
+  --botao-tinta: var(--3d-maionese);
+}
+
+// Argila clara: as sombras internas e a externa ficam todas na camada de repouso
+.d3-inflado--maionese {
+  --botao-cor: var(--3d-maionese);
+  --botao-cor-hover: var(--3d-branco);
+  --botao-tinta: var(--3d-carne);
+  --botao-dentro: none;
+  --botao-fora: var(--3d-argila-pequena);
+  --botao-apertado: var(--3d-argila-afundada);
+}
+
+.d3-inflado--grande {
+  min-height: 3.75rem;
+  padding-inline: var(--space-7);
+  font-size: var(--text-lg);
+}
+
+.d3-inflado__icone {
+  flex-shrink: 0;
+  font-size: 1.05em;
+}
+
+// Alternador ligado: afundado em pão claro, com o anel de 2 px em carne e o check [D23]
+.d3-inflado.is-ligado {
+  --botao-cor: var(--3d-pao-claro);
+  --botao-cor-hover: var(--3d-pao-claro);
+  --botao-tinta: var(--3d-carne);
+  --botao-dentro: none;
+  --botao-apertado: var(--3d-argila-afundada), var(--3d-anel-alternado);
+
+  @include sombra-outra;
+
+  @media (forced-colors: active) {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  // Fica achatado enquanto vale, como o botão que afunda ao apertar [D42]
+  @include motion-ok {
+    transform: scale(1.04, 0.92);
+
+    &:active {
+      transform: scale(1.06, 0.88);
+    }
+  }
+}

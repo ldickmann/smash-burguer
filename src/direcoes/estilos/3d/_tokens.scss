@@ -62,6 +62,42 @@
   --3d-dur-achatar: 90ms;
   --3d-dur-virar: 320ms;
 
+  // ---------- Rodada 2: as camadas do lanche (ilustração, cores do BurgerStack.vue) ----------
+  --3d-camada-pao: #d9a05b;
+  --3d-camada-pao-brilho: radial-gradient(ellipse 46% 38% at 34% 30%, rgba(255, 236, 204, 0.75), rgba(255, 236, 204, 0) 70%);
+  --3d-camada-maionese: #f1e6c8;
+  --3d-camada-ketchup: #c1272d;
+  --3d-camada-carne: #5a2e1a;
+  --3d-camada-soja: #7a5b3a;
+  --3d-camada-frango: #c98a4b;
+  --3d-camada-queijo: #f2b705;
+  --3d-camada-cheddar: #e8891b;
+  --3d-camada-bacon: #b5452c;
+  --3d-camada-bacon-gordura: #f3c9a8;
+  --3d-camada-cebola: #c9a3c8;
+  --3d-camada-cebola-caramelizada: #c47a3d;
+  --3d-camada-picles: #8db255;
+  --3d-camada-tomate: #e5383b;
+  --3d-camada-tomate-polpa: #f4877a;
+  --3d-camada-alface: #5dbb63;
+  --3d-camada-ovo: #fff6e5;
+  --3d-camada-gema: #f6b21b;
+  // Volume de cada camada (em em: acompanha o tamanho da pilha): luz em cima à esquerda, escuro embaixo à direita
+  --3d-camada-volume: inset 0.12em 0.16em 0.2em rgba(255, 255, 255, 0.5), inset -0.14em -0.22em 0.32em rgba(40, 20, 10, 0.3);
+  // Véu que escurece a própria cor da camada para fazer a espessura (sem color-mix)
+  --3d-camada-lado: rgba(40, 20, 10, 0.34);
+  // Espessura das formas recortadas (anéis, discos, tiras): a sombra da própria forma, logo abaixo
+  --3d-camada-espessura: drop-shadow(0 0.16em 0 rgba(40, 20, 10, 0.4));
+
+  // ---------- Rodada 2: a pilha, a escada e o alternador ----------
+  --3d-pilha-passo: 1.75rem;
+  --3d-pilha-passo-medio: 1.5rem;
+  --3d-pilha-passo-celular: 1.375rem;
+  --3d-profundidade-camada: 0.22em;
+  --3d-perspectiva-pilha: 560px;
+  --3d-anel-alternado: inset 0 0 0 2px #3b2418;
+  --3d-degrau-passo: 2.5rem;
+
   // ---------- Tokens do projeto ----------
   --color-bg: var(--3d-pao-claro);
   --color-surface-sunken: var(--3d-maionese);
