@@ -32,7 +32,8 @@ const regraDe = (css, seletor) => regras(css).find(([seletores]) => seletores.in
 describe('base de estilo do M3', () => {
   it('movimento reduzido cobre as classes do M3', () => {
     const css = compilarArquivo('_motion.scss');
-    const reduzido = css.split('@media (prefers-reduced-motion: reduce)')[1] ?? '';
+    // Só o bloco do @media: na saída do Sass, ele fecha com a chave na coluna 0
+    const reduzido = css.split('@media (prefers-reduced-motion: reduce) {')[1]?.split('\n}')[0] ?? '';
     const classes = ['.m3-prensa__disco', '.m3-dividido__seta--baixo', '.m3-folha', '.m3-dividido__check', '.m3-badge'];
     const semTransformNone = classes.filter((classe) => !regraDe(reduzido, classe).includes('transform: none'));
     expect(semTransformNone).toEqual([]);
