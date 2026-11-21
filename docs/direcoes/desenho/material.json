@@ -1,6 +1,6 @@
 {
   "estilo": "material",
-  "secoes": ["hero", "lanches", "bebidas-e-sobremesas", "onde"],
+  "secoes": ["hero", "lanches", "monte-o-seu", "bebidas-e-sobremesas", "onde"],
   "h1MaxLinhas": { "1440": 2, "1024": 3, "390": 3 },
   "estados": [
     {

@@ -71,7 +71,7 @@ Todas foram respondidas; em todas, o usuário seguiu a recomendação deste SPEC
 | (f) Modal | O `BurgerStack` fica, e o modal Personalizar ganha um desenho M3 antes de ser construído. |
 | (g) Rodapé | Fora da Home, o rodapé mostra também a lista de horário e contato; na Home, ela não se repete. |
 | (h) Assinatura | Fica `tom="escuro"`. |
-| (i) Pacotes sem uso | O `vue3-carousel` se decide junto com as seções novas (§0.2): fica se o carrossel novo usar o pacote; senão, sai na limpeza. |
+| (i) Pacotes sem uso | O `vue3-carousel` se decide junto com as seções novas (§0.2): fica se o carrossel novo usar o pacote; senão, sai na limpeza. **Resultado (etapa 5a):** o carrossel não entrou na Home, e o pacote sai na limpeza. |
 | (j) Nomes | Os componentes que substituem um base mantêm nome e API (`BaseButton`, `BaseDialog`…); os M3 sem par entram com o nome `M3*`. |
 
 **Decisão (a): papéis de cor como tokens de base.**
@@ -130,6 +130,10 @@ Todas foram respondidas; em todas, o usuário seguiu a recomendação deste SPEC
 - **Condições do carrossel:** sem rotação automática, com Anterior e Próximo visíveis, a espiada do próximo item e os itens na ordem do `products.json` [34]. Não repete o que o feed de Hambúrgueres e a lista de bebidas e sobremesas já mostram; o desenho define o conteúdo. Ele passa pelos riscos de carrossel do dossiê transversal (`docs/direcoes/pesquisa/home-delivery.md`). Fora dessa seção, o carrossel continua proibido nesta direção.
 - **Conteúdo:** só o real, como no resto da Home; contagens e preços calculados (`useCardapio`, `formatPrice`).
 - **Quando:** nas sessões de implementação, na etapa 5a da §12.
+- **Resultado do desenho (decisão do usuário, 21/11/2026, etapa 5a):** entrou só a seção `monte-o-seu` (desenho, §5.5).
+  - Nenhum conteúdo real passou no teste do carrossel: as 11 fotos de produto já estão na Home (desenho, §5.6).
+  - Nenhuma outra candidata viável do catálogo é nova na Home.
+  - O usuário escolheu ficar com **5 seções**. O carrossel volta só quando houver fotos reais que não sejam de produto, com a técnica da §5.6 do desenho, feita à mão.
 
 **Git.**
 - A `feature/direcoes-homes` vai para a `develop` por PR antes da implementação, com a `origin/develop` mergeada de novo antes.
@@ -1013,7 +1017,7 @@ Os fluxos da §10 do `SPEC.md` continuam valendo sem mudança. Entram só os tr�
 ### 11.2 Funcionalidades
 
 - **Esquema escuro:** pela decisão (d). Também fica fora a cor dinâmica do M3 [1]: a semente é fixa.
-- **Componentes que a Home tirou** (desenho, §2 e §12): search bar [62], FAB menu [56], loading indicator [58] (não há espera real) e docked toolbar [59]. O carrossel [34][75] e os chips de adicionais [60] voltam como seções novas da Home (§0.2).
+- **Componentes que a Home tirou** (desenho, §2 e §12): search bar [62], FAB menu [56], loading indicator [58] (não há espera real) e docked toolbar [59]. Os chips de adicionais [60] voltam como seção nova da Home (§0.2). O carrossel [34][75] fica de fora até haver fotos reais que não sejam de produto (§0.2, "Resultado do desenho").
 - **Live Updates** de entrega [25]: rastreio e prazo não existem.
 - **O que já estava fora no `SPEC.md`** (§11.2 de lá): backend, pagamento real, taxa de entrega, rastreio, previsão de entrega, minicarrinho em gaveta e o gráfico do dashboard.
 
@@ -1041,13 +1045,13 @@ Cada etapa termina com `build`, `eslint .` e `vitest run` sem erros e uma confer
 3. **Primitivos:** `BaseButton` com o visual M3 (§4.1) e o teste; `M3Foto`, `M3BotaoDividido`, `M3FolhaIngredientes`, `M3ItemLista`, `M3ItemSegmentado`; composables e utilitários da §4.1.
 4. **Moldura:** `M3BarraSuperior`, `M3BarraFerramentas` e `M3Rodape` no `MainLayout`; `<main>` sem `padding-top`; reserva da barra; `CategoryTabs` com o `top` novo; `scrollBehavior` (§10.1); linha de direitos (§10.2).
 5. **Home:** as quatro seções em `src/components/home/`, a `M3FormaPrensa` e o `M3CartaoLanche`; a `HomeView` com o `provide`; o teste da Home; a microcopy revisada (§8.2); o prato do cookie (§10.3).
-5a. **Duas seções novas da Home** (§0.2): primeiro o desenho, no formato de `docs/direcoes/desenho/` e com o juiz de distinção; depois a construção, com o teste de contrato atualizado (6 seções), os portões e o crítico. Decidir aqui o `vue3-carousel` (decisão i).
+5a. **Duas seções novas da Home** (§0.2): primeiro o desenho, no formato de `docs/direcoes/desenho/` e com o juiz de distinção; depois a construção, com o teste de contrato atualizado, os portões e o crítico. Decidido no desenho: 5 seções, só a `monte-o-seu` entra (§0.2), e o `vue3-carousel` sai na limpeza (decisão i).
 6. **Cardápio e modal** (depois do desenho): §5.3 e §5.4.
 7. **Carrinho, pagamento e confirmação** (depois do desenho): §5.5 a §5.7.
 8. **Login, cadastro e perfil** (depois da pesquisa de campos e do desenho): §5.8 e §5.9.
 9. **Admin** (depois do desenho): §5.11.
 10. **Componentes base restantes** (depois da pesquisa e do desenho): `AppToast`, `BaseDialog`, `EmptyState`, `QuantityStepper`.
-11. **Limpeza:** apagar os arquivos da §4.4 e os apelidos (decisão a); acertar os ícones do plugin; `vue3-carousel` (decisão i: sai se o carrossel novo não usar o pacote) e a pasta do material (decisão e), com o acervo ficando; README e TESTING; as buscas da §13.2.
+11. **Limpeza:** apagar os arquivos da §4.4 e os apelidos (decisão a); acertar os ícones do plugin; `vue3-carousel` (decisão i: sai, porque a Home ficou sem carrossel na etapa 5a) e a pasta do material (decisão e), com o acervo ficando; README e TESTING; as buscas da §13.2.
 12. **Verificação ponta a ponta (§13).**
 
 ---
