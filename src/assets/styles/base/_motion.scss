@@ -28,12 +28,14 @@
     transform: none;
   }
 
-  // Micro-interações do M3 (SPEC-material §3, item 6, e §7): prensa, chevron, folha, check e badge
+  // Micro-interações do M3 (SPEC-material §3, item 6, e §7): prensa, chevron, folha, checks e badge.
+  // O .btn__check é o check do retorno do BaseButton (o .m3-botao__check da Home)
   .m3-prensa__disco,
   .m3-dividido__seta--baixo,
   .m3-folha,
   .m3-dividido__check,
-  .m3-badge {
+  .m3-badge,
+  .btn__check {
     transform: none;
   }
 }

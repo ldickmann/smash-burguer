@@ -106,4 +106,47 @@ describe('BaseButton', () => {
     expect(button.classes()).toContain('extra');
     expect(button.attributes('data-test')).toBe('x');
   });
+
+  it('retorno mostra "Adicionado" sem mudar o nome acessível', async () => {
+    const semRetorno = mountButton({ slots: { default: 'Adicionar' } });
+    expect(semRetorno.find('.btn__face--verso').exists()).toBe(false);
+
+    const wrapper = mountButton({
+      props: { variant: 'secondary', retorno: false },
+      attrs: { 'aria-label': 'Adicionar Coca-Cola' },
+      slots: { default: 'Adicionar' },
+    });
+    const button = wrapper.find('button');
+    const verso = button.find('.btn__face--verso');
+
+    // A face de trás já está no DOM (a troca é por opacidade), escondida do leitor de tela
+    expect(verso.exists()).toBe(true);
+    expect(verso.attributes('aria-hidden')).toBe('true');
+    expect(verso.text()).toBe('Adicionado');
+    expect(verso.find('.btn__check').exists()).toBe(true);
+    expect(button.classes()).not.toContain('is-retorno');
+
+    await wrapper.setProps({ retorno: true });
+    expect(button.classes()).toContain('is-retorno');
+    expect(button.attributes('aria-label')).toBe('Adicionar Coca-Cola');
+    expect(button.find('.btn__face--frente').attributes('aria-hidden')).toBeUndefined();
+    expect(button.find('.btn__label').text()).toBe('Adicionar');
+  });
+
+  it('variantes geram as classes do mapa M3; danger, iconOnly e pressed ficam com a forma de hoje', () => {
+    const classesDe = (props) => mountButton({ props, slots: { default: 'Ok' } }).find('button').classes();
+
+    expect(classesDe({ variant: 'primary' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--filled']));
+    expect(classesDe({ variant: 'secondary' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--tonal']));
+    expect(classesDe({ variant: 'ghost' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--texto']));
+    // O loading só troca o conteúdo pelo spinner: o botão continua no mapa
+    expect(classesDe({ loading: true })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--filled']));
+
+    const aDesenhar = [{ variant: 'danger' }, { iconOnly: true, label: 'Fechar', iconStart: 'xmark' }, { pressed: false }];
+    for (const props of aDesenhar) {
+      const classes = classesDe(props);
+      expect(classes).toContain('btn--legado');
+      expect(classes.filter((classe) => classe.startsWith('m3-botao'))).toEqual([]);
+    }
+  });
 });

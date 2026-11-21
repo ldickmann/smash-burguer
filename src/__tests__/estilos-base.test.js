@@ -34,7 +34,8 @@ describe('base de estilo do M3', () => {
     const css = compilarArquivo('_motion.scss');
     // Só o bloco do @media: na saída do Sass, ele fecha com a chave na coluna 0
     const reduzido = css.split('@media (prefers-reduced-motion: reduce) {')[1]?.split('\n}')[0] ?? '';
-    const classes = ['.m3-prensa__disco', '.m3-dividido__seta--baixo', '.m3-folha', '.m3-dividido__check', '.m3-badge'];
+    // O check do BaseButton (.btn__check) é o .m3-botao__check da §3, item 6, com o bloco do BaseButton
+    const classes = ['.m3-prensa__disco', '.m3-dividido__seta--baixo', '.m3-folha', '.m3-dividido__check', '.m3-badge', '.btn__check'];
     const semTransformNone = classes.filter((classe) => !regraDe(reduzido, classe).includes('transform: none'));
     expect(semTransformNone).toEqual([]);
   });
