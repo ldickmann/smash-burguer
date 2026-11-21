@@ -1,0 +1,26 @@
+{
+  "estilo": "escuro",
+  "secoes": ["palco", "vitrine", "junto", "turno"],
+  "h1MaxLinhas": { "1440": 2, "1024": 3, "390": 4 },
+  "estados": [
+    {
+      "nome": "primeiro lanche no seu pedido (card em N22, borda tertiary, marca e Adicionado)",
+      "passos": [
+        { "clicar": "[data-secao='vitrine'] .esc-vitrine__lista > li:first-child button[aria-label^='Adicionar']" },
+        { "clicar": "dialog[open] .dialog__footer button" }
+      ]
+    },
+    {
+      "nome": "primeira bebida no seu pedido (linha da faixa em N17, borda tertiary, marca compacta e Adicionado tonal)",
+      "passos": [
+        { "clicar": "[data-secao='junto'] [data-grupo='drinks'] .esc-junto__lista > li:first-child button[aria-label^='Adicionar']" },
+        { "clicar": "dialog[open] .dialog__footer button" }
+      ]
+    },
+    {
+      "nome": "barra rolada (linha inferior visível)",
+      "passos": [{ "focar": "footer a[href^='mailto:']" }]
+    }
+  ],
+  "justificativaEscopo": null
+}
