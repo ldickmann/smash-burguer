@@ -2,7 +2,7 @@
 
 O projeto tem duas camadas de verificação:
 
-- **Testes unitários** em `src/__tests__/` e, nas direções visuais, em `src/direcoes/**/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 312 testes em 34 arquivos.
+- **Testes unitários** em `src/__tests__/` e, nas direções visuais, em `src/direcoes/**/__tests__/`, com Vitest, Vue Test Utils e jsdom. São 315 testes em 35 arquivos.
 - **Verificação no navegador**, com os scripts Playwright + axe-core de `.claude/e2e/`: acessibilidade, fluxo de pedido, teclado e micro-interações. Eles rodam à mão contra o build e ainda não fazem parte do CI.
 
 ## Como rodar os testes unitários
@@ -23,6 +23,7 @@ Desde o Vitest 4, o relatório só lista os arquivos que os testes importam, a m
 
 | Arquivo | Testes | O que verifica |
 |---|---|---|
+| `contraste.test.js` | 3 | Tokens de base (`src/assets/styles/base/_tokens.scss`), lidos crus e com as cadeias de `var()` resolvidas: cada par de `src/utils/contraste.js` (68, em quatro grupos: Home, outras telas, comuns ao acervo e telas ainda na estrutura da Brasa) passa do mínimo declarado; os 59 tokens `--m3-*` das tabelas da §2 do `SPEC-material.md` têm o valor de lá; os apelidos `--color-accent`, `--color-bg` e `--color-focus` apontam para `primary`, `surface` e `secondary`. Roda no ambiente `node` e lê os arquivos pelo `node:fs`, porque no Vitest um `.scss` importado com `?raw` chega vazio |
 | `BaseButton.test.js` | 13 | Variantes; `type="submit"`; `loading` com `aria-busy`, spinner e clique bloqueado; `disabled` real; `aria-pressed`; botão só de ícone com `aria-label`; versão link (`to`); repasse de `class` e `data-*` |
 | `AppToast.test.js` | 7 | `role="status"` ou `role="alert"` conforme a variante; fecha sozinho depois do tempo; pausa no hover e no foco; ação "Desfazer"; botão "Fechar aviso"; no máximo 3 avisos |
 | `BannerComponent.test.js` | 5 | Título como único `h1`; variante `hero` com `<picture>`, carregamento imediato e `fetchpriority="high"`; variante `page` com imagem `lazy`; slot de ações; nenhum estilo inline na imagem |
@@ -74,7 +75,8 @@ Os scripts de [`.claude/e2e/`](./.claude/e2e/README.md) abrem o build num Chromi
 
 | Script | Verifica |
 |---|---|
-| `axe-scan.mjs` | Regras WCAG 2.2 AA (axe-core), rolagem horizontal, alvos de toque, fontes, título e violações da Content-Security-Policy em 22 telas e estados, em 1440 e 390 px, com e sem movimento reduzido. O axe entra por `page.evaluate`, porque a CSP bloqueia `<script>` inline |
+| `axe-scan.mjs` | Regras WCAG 2.2 AA (axe-core), rolagem horizontal, alvos de toque, fontes (o `body` na Roboto Variable), título e violações da Content-Security-Policy em 22 telas e estados, em 1440 e 390 px, com e sem movimento reduzido. O axe entra por `page.evaluate`, porque a CSP bloqueia `<script>` inline |
+| `tokens-contrast.mjs` | Contraste dos 68 pares de `src/utils/contraste.js` sobre os tokens de base, sem navegador. A raiz do repositório vem de `REPO` (ou da pasta atual) |
 | `flow.mjs` | Pedido completo: cadastro com CEP, personalização, carrinho, login (com senha errada e certa), pagamento e confirmação. Também sair e entrar de novo, "Desfazer" no carrinho, guards das rotas e volta ao topo ao trocar de página |
 | `keyboard.mjs` | Navegação só por teclado: skip link, anel de foco, foco preso no modal, setas no pagamento e menus |
 | `micro-final.mjs` | Flip do botão, contador do carrinho, inclinação do card e montador do burger, com e sem movimento reduzido |
@@ -93,7 +95,7 @@ As Homes de `#/direcoes` existem só no `yarn dev`. Na suíte do projeto entram:
 
 Fora da suíte, num scratchpad fora do projeto (não versionado), ficaram os portões de cada Home, com Playwright 1.65.0 e axe-core 4.10.3, contra um servidor de desenvolvimento por estilo: escopo, lint e testes da pasta, buscas da §13.2, identidade, contraste dos pares, desenho, contrato, axe (WCAG 2.2 AA em 1440 e 390, com e sem movimento reduzido, com o modal, o menu e os widgets no outro estado), layout em 1440, 1024 e 390, alvos de 44 px, console, fluxo do "Adicionar", teclado, movimento reduzido, conteúdo (nada fora das frases reais e da microcopy marcada como provisória), peso das imagens e capturas. Cada portão tem um caso negativo no autoteste.
 
-- **Build:** a busca por `direcoes`, `data-direcao`, "Direções visuais", "provisório", os prefixos de token dos estilos e os nomes das fontes novas no `dist/` tem de dar zero resultados.
+- **Build:** a busca por `direcoes`, `data-direcao`, "Direções visuais", "provisório", os prefixos de token `--esq-` e `--neu-` e as fontes só do acervo ("Courier Prime", "Nunito", "Archivo" e "Bebas") no `dist/` tem de dar zero resultados. O prefixo `--m3-` e a Roboto passam a existir no build, porque são da produção (SPEC-material §13.2).
 
 ## Escrevendo novos testes
 

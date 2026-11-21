@@ -27,6 +27,7 @@
 <script setup>
 import "@fontsource/courier-prime/400.css";
 import "@fontsource/courier-prime/700.css";
+import "@fontsource/bebas-neue/400.css";
 import "./_tokens.scss";
 import MolduraDirecao from "../../compartilhado/MolduraDirecao.vue";
 import { useEstiloAtivo } from "../../compartilhado/useEstiloAtivo";

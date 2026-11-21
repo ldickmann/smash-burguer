@@ -21,6 +21,8 @@
 
 <script setup>
 import "./_tokens.scss";
+// Fonte do alternador (--dir-fonte): a Home aberta direto pela URL não passa pelo índice
+import "@fontsource-variable/archivo";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { DIRECOES, caminhoDirecao } from "./direcoes";

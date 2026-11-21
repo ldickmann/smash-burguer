@@ -65,7 +65,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 
 ### Interface
 
-- **Design system "Brasa":** tema escuro com tokens de cor, tipografia, espaçamento e movimento em SCSS, nas fontes Archivo e Bebas Neue. A especificação está em [SPEC.md](./SPEC.md).
+- **Design system em migração para o Material 3 Expressive:** os tokens de cor, tipografia, forma, elevação e movimento já são os papéis do M3, no esquema claro gerado da semente verde-alface `#5DBB63` e na fonte Roboto. Os nomes antigos ficam como apelidos até o fim da migração. As telas ainda têm a estrutura do design system "Brasa" ([SPEC.md](./SPEC.md)) e passam ao M3 etapa por etapa, conforme o [SPEC-material.md](./docs/direcoes/SPEC-material.md).
 - **Acessibilidade**, verificada com o axe-core (nenhuma violação WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px):
   - navegação completa por teclado, foco visível e link "Pular para o conteúdo";
   - diálogos que prendem e devolvem o foco;
@@ -86,7 +86,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
 | [Sass](https://sass-lang.com/) | Estilos, tokens de design e mixins |
 | [vue3-carousel](https://github.com/ismail9k/vue3-carousel) | Carrossel da Home |
 | [Font Awesome 6](https://fontawesome.com/) | Ícones |
-| [Fontsource](https://fontsource.org/) | Fontes Archivo e Bebas Neue servidas pelo próprio site. Roboto, Courier Prime e Nunito são `devDependencies`: só as direções visuais as usam, no `yarn dev` |
+| [Fontsource](https://fontsource.org/) | Fonte Roboto servida pelo próprio site. Archivo, Bebas Neue, Courier Prime e Nunito são `devDependencies`: só as direções visuais as usam, no `yarn dev` |
 | [ViaCEP](https://viacep.com.br/) | Endereço a partir do CEP |
 | [Vitest 4](https://vitest.dev/) + [Vue Test Utils](https://test-utils.vuejs.org/) + [jsdom](https://github.com/jsdom/jsdom) | Testes unitários |
 | [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/) | Lint e formatação |
@@ -201,7 +201,7 @@ Para recomeçar do zero, apague os dados do site nas ferramentas do navegador.
 
 ## Testes
 
-Há 239 testes unitários, em 25 arquivos, cobrindo `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
+Há 315 testes unitários, em 35 arquivos: 256 em `src/__tests__/` e 59 nas direções visuais. Eles cobrem os pares de contraste dos tokens, `BaseButton`, `AppToast`, `BannerComponent`, o carrinho e a conferência dele com o cardápio, a conta (login, senha em hash, sessão, histórico, perfil e exclusão), as máscaras e as validações, o estado salvo no `localStorage`, as telas de cadastro, de perfil e de pagamento, o painel (login e admin de teste, produtos, formulário e imagem do produto, pedidos, contadores, busca, detalhes, perfil, configurações e dados salvos), a consulta de CEP, as rotas, o script de auditoria do lockfile, as proteções do CI e do repositório, a Content-Security-Policy e o que o build descarta (`console.log` e o admin de teste). O que cada um cobre, como rodar e a verificação no navegador estão em [TESTING.md](./TESTING.md).
 
 ## Deploy
 
