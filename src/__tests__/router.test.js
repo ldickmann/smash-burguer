@@ -94,7 +94,18 @@ describe('scrollBehavior', () => {
       return { scrollPaddingTop: valor };
     });
 
-  afterEach(() => vi.restoreAllMocks());
+  // A âncora existe na página (a Home tem os ids dos títulos das seções)
+  let secao;
+  beforeEach(() => {
+    secao = document.createElement('h2');
+    secao.id = 'lanches';
+    document.body.append(secao);
+  });
+
+  afterEach(() => {
+    secao.remove();
+    vi.restoreAllMocks();
+  });
 
   it('com âncora, para a seção abaixo do scroll-padding-top do html', () => {
     paddingTop('80px');
@@ -104,6 +115,12 @@ describe('scrollBehavior', () => {
   it('com scroll-padding-top sem valor numérico, só a âncora', () => {
     paddingTop('auto');
     expect(rolar({ hash: '#lanches' })).toEqual({ el: '#lanches' });
+  });
+
+  it('com uma âncora que não existe na página, vai ao topo', () => {
+    // Sem a guarda, o vue-router não acha o elemento e a página fica na rolagem da rota anterior
+    paddingTop('80px');
+    expect(rolar({ hash: '#mais-pedidos' })).toEqual({ top: 0 });
   });
 
   it('sem âncora, vai ao topo', () => {
