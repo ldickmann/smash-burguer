@@ -7,22 +7,30 @@
     :style="lockedWidth ? { minWidth: lockedWidth } : undefined"
     @click="handleClick"
   >
-    <svg v-if="loading" class="btn__spinner" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-      <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="28 10" />
-    </svg>
-    <font-awesome-icon
-      v-else-if="iconStart"
-      :icon="iconStart"
-      class="btn__icon"
-      aria-hidden="true"
-    />
-    <span v-if="!iconOnly" class="btn__label"><slot /></span>
-    <font-awesome-icon
-      v-if="iconEnd && !iconOnly"
-      :icon="iconEnd"
-      class="btn__icon"
-      aria-hidden="true"
-    />
+    <span class="btn__face btn__face--frente">
+      <svg v-if="loading" class="btn__spinner" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="28 10" />
+      </svg>
+      <font-awesome-icon
+        v-else-if="iconStart"
+        :icon="iconStart"
+        class="btn__icon"
+        aria-hidden="true"
+      />
+      <span v-if="!iconOnly" class="btn__label"><slot /></span>
+      <font-awesome-icon
+        v-if="iconEnd && !iconOnly"
+        :icon="iconEnd"
+        class="btn__icon"
+        aria-hidden="true"
+      />
+    </span>
+    <!-- Retorno "Adicionado" (SPEC-material §7.6): a face fica no DOM enquanto a prop é usada, para a
+         troca ser por opacidade; aria-hidden, para o nome acessível não mudar -->
+    <span v-if="retorno !== undefined" class="btn__face btn__face--verso" aria-hidden="true">
+      <font-awesome-icon :icon="['fas', 'check']" class="btn__check" />
+      Adicionado
+    </span>
   </component>
 </template>
 
@@ -53,6 +61,8 @@ const props = defineProps({
   },
   // Botão alternável: vira aria-pressed (só quando informado)
   pressed: { type: Boolean, default: undefined },
+  // Face "Adicionado" com o check, do M3Botao da Home (só existe quando informada)
+  retorno: { type: Boolean, default: undefined },
   iconStart: { type: [String, Array], default: "" },
   iconEnd: { type: [String, Array], default: "" },
   // Botão quadrado só com ícone: `label` vira o aria-label (obrigatório)
@@ -102,14 +112,21 @@ const elementAttrs = computed(() => {
   return result;
 });
 
+// Mapa do SPEC-material §4.1: primary vira filled, secondary vira tonal e ghost vira texto.
+// danger, iconOnly e pressed ficam com a forma de hoje (.btn--legado) até o desenho deles (§4.2)
+const VARIANTE_M3 = { primary: "filled", secondary: "tonal", ghost: "texto" };
+const legado = computed(() => props.variant === "danger" || props.iconOnly || props.pressed !== undefined);
+
 const classes = computed(() => [
   "btn",
   `btn--${props.variant}`,
   `btn--${props.size}`,
+  legado.value ? "btn--legado" : ["m3-botao", `m3-botao--${VARIANTE_M3[props.variant]}`],
   {
     "btn--block": props.block,
     "btn--icon-only": props.iconOnly,
     "is-loading": props.loading,
+    "is-retorno": props.retorno === true,
   },
 ]);
 

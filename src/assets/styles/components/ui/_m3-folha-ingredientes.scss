@@ -1,0 +1,62 @@
+// M3FolhaIngredientes (cópia de scss/_folha-ingredientes.scss do material): superfície
+// surface-container-high, canto 16 e elevação 2 [10], logo abaixo da fileira de botões do card.
+// Entra de cima com a mola espacial rápida; sai só por opacidade.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-folha {
+  @include reserva-de-sombra;
+
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  inset-inline: 0;
+  z-index: var(--z-raised);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-surface-container-high);
+  box-shadow: var(--m3-elevacao-2);
+  color: var(--m3-on-surface-variant);
+  text-align: left;
+}
+
+.m3-folha__titulo {
+  @include tipo(label-l, 500);
+
+  margin-bottom: var(--space-1);
+  color: var(--m3-on-surface);
+}
+
+.m3-folha__lista {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.m3-folha__item {
+  @include tipo(body-m);
+}
+
+.m3-folha-enter-active,
+.m3-folha-leave-active {
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-folha-enter-from,
+.m3-folha-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .m3-folha {
+    transform-origin: top;
+  }
+
+  .m3-folha-enter-active {
+    transition:
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .m3-folha-enter-from {
+    transform: scale(0.94);
+  }
+}

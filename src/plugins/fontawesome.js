@@ -36,8 +36,12 @@ import {
   faArrowRight,
   faChevronLeft,
   faChevronRight,
+  faHouse,
+  faChevronDown,
+  faChevronUp,
+  faArrowUpRightFromSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faClock, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 library.add(
@@ -76,7 +80,13 @@ library.add(
   faMoneyBill,
   faArrowRight,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  // Ícones da Home do M3 (SPEC-material, decisão c): usados por nome nas cópias de produção
+  faHouse,
+  faChevronDown,
+  faChevronUp,
+  faArrowUpRightFromSquare,
+  faClock
 );
 
 export { FontAwesomeIcon };

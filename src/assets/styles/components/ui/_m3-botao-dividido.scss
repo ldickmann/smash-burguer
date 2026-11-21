@@ -1,0 +1,199 @@
+// M3BotaoDividido (cópia de scss/_botao-dividido.scss do material): split button [55]. Frente com
+// os cantos de fora redondos e os de dentro de 4; atrás, 44 × 44 com o canto de dentro de 4, que
+// vira pílula inteira ao expandir.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-dividido {
+  display: inline-flex;
+  gap: var(--m3-vao-segmento);
+  max-width: 100%;
+}
+
+.m3-dividido__frente,
+.m3-dividido__tras {
+  --m3-botao-fundo: var(--m3-primary);
+
+  display: inline-grid;
+  place-items: center;
+  color: var(--m3-on-primary);
+  font-family: var(--m3-fonte);
+  font-weight: 500;
+  letter-spacing: var(--m3-label-l-tracking);
+  white-space: nowrap;
+
+  @include hover-capable {
+    &:hover {
+      --m3-botao-fundo: var(--m3-primary-hover);
+    }
+  }
+
+  &:active {
+    --m3-botao-fundo: var(--m3-primary-pressed);
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid ButtonText;
+  }
+}
+
+.m3-dividido__frente {
+  @include troca-de-forma(
+    var(--m3-forma-full) var(--m3-forma-xs) var(--m3-forma-xs) var(--m3-forma-full),
+    var(--m3-forma-m) var(--m3-forma-xs) var(--m3-forma-xs) var(--m3-forma-m)
+  );
+
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.m3-dividido__tras {
+  @include troca-de-forma(
+    var(--m3-forma-xs) var(--m3-forma-full) var(--m3-forma-full) var(--m3-forma-xs),
+    var(--m3-forma-full)
+  );
+
+  flex: none;
+}
+
+// Sem a metade de trás: a frente fica redonda nos quatro cantos
+.m3-dividido.is-unico .m3-dividido__frente {
+  --m3-botao-forma-repouso: var(--m3-forma-full);
+  --m3-botao-forma-pressionada: var(--m3-forma-m);
+}
+
+// Expandida: a metade de trás vira pílula inteira
+.m3-dividido.is-expandido .m3-dividido__tras {
+  border-radius: var(--m3-forma-full);
+
+  &::before {
+    opacity: 0;
+  }
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+// Retorno: as duas metades em primary-container
+.m3-dividido.is-adicionado {
+  .m3-dividido__frente,
+  .m3-dividido__tras {
+    --m3-botao-fundo: var(--m3-primary-container);
+
+    color: var(--m3-on-primary-container);
+  }
+}
+
+// Tamanhos: S (44 px) e M (56 px)
+.m3-dividido--s {
+  .m3-dividido__frente {
+    min-height: var(--target-min);
+    padding-inline: var(--space-4) var(--space-3);
+    font-size: var(--m3-label-l);
+    line-height: var(--m3-label-l-linha);
+  }
+
+  .m3-dividido__tras {
+    width: var(--target-min);
+    height: var(--target-min);
+    font-size: var(--m3-label-l);
+  }
+
+  &.is-unico .m3-dividido__frente {
+    padding-inline: var(--space-4);
+  }
+}
+
+.m3-dividido--m {
+  .m3-dividido__frente {
+    min-height: 3.5rem;
+    padding-inline: var(--space-5) var(--space-4);
+    font-size: var(--m3-title-m);
+    line-height: var(--m3-title-m-linha);
+  }
+
+  .m3-dividido__tras {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: var(--m3-title-m);
+  }
+
+  &.is-unico .m3-dividido__frente {
+    padding-inline: var(--space-5);
+  }
+}
+
+// Faces "Adicionar" e "Adicionado", trocadas por opacidade
+.m3-dividido__face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-dividido__face--verso {
+  opacity: 0;
+}
+
+.m3-dividido.is-adicionado {
+  .m3-dividido__face--frente {
+    opacity: 0;
+  }
+
+  .m3-dividido__face--verso {
+    opacity: 1;
+  }
+}
+
+// Chevron: com movimento reduzido, os dois ícones trocam por opacidade
+.m3-dividido__chevron {
+  display: inline-grid;
+  place-items: center;
+}
+
+.m3-dividido__seta {
+  grid-area: 1 / 1;
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.m3-dividido__seta--cima {
+  opacity: 0;
+}
+
+.m3-dividido.is-expandido {
+  .m3-dividido__seta--baixo {
+    opacity: 0;
+  }
+
+  .m3-dividido__seta--cima {
+    opacity: 1;
+  }
+}
+
+// Com movimento: um chevron só, que gira 180° com a mola; o check entra com a mola
+@include motion-ok {
+  .m3-dividido__seta--cima {
+    display: none;
+  }
+
+  .m3-dividido__seta--baixo {
+    transition: transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .m3-dividido.is-expandido .m3-dividido__seta--baixo {
+    opacity: 1;
+    transform: rotate(180deg);
+  }
+
+  .m3-dividido__check {
+    transform: scale(0);
+    transition: transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .m3-dividido.is-adicionado .m3-dividido__check {
+    transform: none;
+  }
+}
