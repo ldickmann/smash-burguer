@@ -1,0 +1,26 @@
+// MnSumario: em linha no celular (quebra em duas), lista vertical a partir de 1024 px
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.mn-sumario__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+
+  @include up(lg) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.mn-sumario__link {
+  @include mn-link-nav;
+
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+
+  @include up(lg) {
+    font-size: var(--text-xl);
+  }
+}

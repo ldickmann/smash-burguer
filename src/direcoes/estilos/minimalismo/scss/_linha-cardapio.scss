@@ -1,0 +1,64 @@
+// MnLinhaCardapio: uma coluna no celular (a foto abaixo dos botões). A partir de 1024 px, o texto
+// flutua à esquerda, nas colunas 1 a 7 (1 a 6 em 1440), e a foto aberta flutua à direita, nas
+// colunas 8 a 12. A linha mede só o texto (o ::after limpa só a flutuação da esquerda): a foto, mais
+// alta, desce ao lado das linhas seguintes e da nota dos adicionais, nas colunas que já ficam vazias,
+// sem abrir vão na lista. A seção (flow-root) cresce até o fim da foto, sem invadir a próxima.
+// Sem hover na linha, sem régua: o espaço agrupa.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.mn-linha {
+  @include up(lg) {
+    &::after {
+      content: "";
+      display: block;
+      clear: left;
+    }
+
+    // O mesmo espaço do row-gap da lista no celular
+    & + & {
+      padding-top: var(--space-7);
+    }
+  }
+}
+
+.mn-linha__texto {
+  min-width: 0;
+
+  @include up(lg) {
+    float: left;
+    width: mn-colunas(7);
+  }
+
+  @include up(xl) {
+    width: mn-colunas(6);
+  }
+}
+
+.mn-linha__descricao {
+  max-width: var(--min-medida);
+  margin-top: var(--space-2);
+  color: var(--min-cinza-texto);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.mn-linha__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-4);
+}
+
+// Colunas 8 a 12: o vão de uma coluna (--space-5) separa a foto do texto, e o texto da linha de
+// baixo cabe ao lado dela com essa folga
+.mn-linha__foto {
+  margin-top: var(--space-4);
+
+  @include up(lg) {
+    float: right;
+    width: mn-colunas(5);
+    margin-top: 0;
+  }
+}

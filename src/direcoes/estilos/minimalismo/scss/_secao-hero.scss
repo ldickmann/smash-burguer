@@ -1,0 +1,82 @@
+// Hero: uma coluna no celular; a partir de 1024 px, o h1 nas 12 colunas e, abaixo, o apoio à esquerda
+// (colunas 1 a 6, 1 a 5 a partir de 1280) e o sumário nas colunas 8 a 12, alinhados pelo topo
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// Só o espaço de cima: o de baixo é o da seção seguinte, para o cardápio começar acima da dobra
+.mn-hero {
+  padding-top: var(--space-5);
+
+  @include up(lg) {
+    padding-top: var(--space-7);
+  }
+}
+
+.mn-hero__grade {
+  @include mn-largura;
+
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(md) {
+    gap: var(--space-5);
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--space-7) var(--space-5);
+  }
+}
+
+// Archivo Expanded (largura 125) em 800: a tipografia dramática faz o papel da imagem [M1][M34]
+.mn-hero__titulo {
+  grid-column: 1 / -1;
+  color: var(--min-preto);
+  font-family: var(--min-fonte);
+  font-size: var(--min-titulo);
+  font-stretch: var(--min-largura-expandida);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: var(--min-titulo-linha);
+  // O h1 do projeto é em caixa alta (Bebas Neue): aqui o título fica como foi escrito
+  text-transform: none;
+  text-wrap: balance;
+}
+
+.mn-hero__apoio {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+
+  @include up(md) {
+    gap: var(--space-5);
+  }
+
+  @include up(lg) {
+    grid-column: 1 / 7;
+    gap: var(--space-6);
+  }
+
+  @include up(xl) {
+    grid-column: 1 / 6;
+  }
+}
+
+.mn-hero__texto {
+  max-width: 34ch;
+  color: var(--min-cinza-texto);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+
+  @include up(lg) {
+    font-size: var(--text-lg);
+    line-height: var(--leading-compact);
+  }
+}
+
+.mn-hero__sumario {
+  @include up(lg) {
+    grid-column: 8 / -1;
+  }
+}

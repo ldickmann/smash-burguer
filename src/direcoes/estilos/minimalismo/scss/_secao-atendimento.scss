@@ -1,0 +1,64 @@
+// Atendimento: no celular, o rótulo acima do valor; a partir de 1024 px, a lista na grade de 12
+// colunas, com o rótulo nas colunas 1 a 3 e o valor da 4 em diante. Texto preto ou cinza texto, nunca
+// cinza claro [M22].
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.mn-atendimento {
+  padding-top: var(--space-7);
+
+  @include up(lg) {
+    padding-top: var(--space-8);
+  }
+}
+
+.mn-atendimento__interno {
+  @include mn-largura;
+}
+
+.mn-atendimento__titulo {
+  @include mn-titulo-secao;
+  @include mn-foco;
+}
+
+.mn-atendimento__lista {
+  margin-top: var(--space-6);
+
+  @include mn-grade;
+
+  @include up(lg) {
+    align-items: baseline;
+    row-gap: var(--space-6);
+  }
+}
+
+.mn-atendimento__rotulo {
+  color: var(--min-cinza-texto);
+  font-size: var(--text-md);
+
+  @include up(lg) {
+    grid-column: 1 / 4;
+  }
+}
+
+.mn-atendimento__valor {
+  margin-bottom: var(--space-5);
+  color: var(--min-preto);
+  font-size: var(--text-lg);
+  line-height: var(--leading-compact);
+  overflow-wrap: anywhere;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @include up(lg) {
+    grid-column: 4 / -1;
+    margin-bottom: 0;
+    font-size: var(--text-xl);
+  }
+}
+
+.mn-atendimento__link {
+  @include mn-link-sublinhado;
+}

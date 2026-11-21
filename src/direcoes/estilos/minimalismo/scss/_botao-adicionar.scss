@@ -1,0 +1,64 @@
+// MnBotaoAdicionar: duas faces na mesma célula; a troca é só por opacidade, em --dur-fast.
+// A borda preta de 2 px continua visível em forced-colors.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.mn-adicionar {
+  display: inline-grid;
+  flex: none;
+  border: var(--min-borda-botao) solid var(--min-preto);
+  font-size: var(--text-md);
+  font-weight: 600;
+
+  @include mn-foco;
+}
+
+.mn-adicionar__face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: calc(var(--target-min) + var(--space-1));
+  padding-inline: var(--space-5);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: var(--min-borda-botao);
+  text-underline-offset: 4px;
+  transition:
+    opacity var(--dur-fast),
+    background-color var(--dur-fast);
+}
+
+.mn-adicionar__face--frente {
+  background: var(--min-preto);
+  color: var(--min-branco);
+}
+
+@include hover-capable {
+  .mn-adicionar:hover .mn-adicionar__face--frente {
+    background: var(--min-preto-hover);
+  }
+}
+
+// Pressionado: volta ao preto e ganha sublinhado branco de 2 px no texto (não só cor)
+.mn-adicionar:active .mn-adicionar__face--frente {
+  background: var(--color-accent-pressed);
+  text-decoration-color: var(--min-branco);
+}
+
+.mn-adicionar__face--verso {
+  background: var(--min-branco);
+  color: var(--min-preto);
+  opacity: 0;
+}
+
+.mn-adicionar.is-adicionado {
+  .mn-adicionar__face--frente {
+    opacity: 0;
+  }
+
+  .mn-adicionar__face--verso {
+    opacity: 1;
+  }
+}

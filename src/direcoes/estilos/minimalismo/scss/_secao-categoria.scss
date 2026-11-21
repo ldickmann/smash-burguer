@@ -1,0 +1,64 @@
+// Categoria: as seções seguidas parecem uma lista só, separadas pelo h2. A partir de 1024 px, o
+// interno é um contexto de bloco próprio (flow-root), com as larguras da grade de 12 colunas: o texto
+// das linhas e a nota dos adicionais ficam nas colunas da esquerda, e a foto aberta flutua nas colunas
+// 8 a 12 (ver _linha-cardapio.scss). O flow-root contém a foto: se ela passa da nota, a seção cresce.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// Só o espaço de cima: entre duas seções fica um --space-8 (--space-7 no celular), não dois
+.mn-categoria {
+  padding-top: var(--space-7);
+
+  @include up(lg) {
+    padding-top: var(--space-8);
+  }
+}
+
+.mn-categoria__interno {
+  @include mn-largura;
+
+  @include up(lg) {
+    display: flow-root;
+  }
+}
+
+.mn-categoria__titulo {
+  @include mn-titulo-secao;
+
+  // Alvo do sumário (tabindex="-1"): o anel aparece só quando o foco chega pelo teclado
+  @include mn-foco;
+}
+
+// No celular, uma grade de uma coluna; a partir de 1024 px, blocos (as linhas flutuam)
+.mn-categoria__lista {
+  display: grid;
+  row-gap: var(--space-7);
+  margin-top: var(--space-5);
+
+  @include up(md) {
+    margin-top: var(--space-6);
+  }
+
+  @include up(lg) {
+    display: block;
+  }
+}
+
+.mn-categoria__vazia {
+  margin-top: var(--space-6);
+  color: var(--min-cinza-texto);
+  font-size: var(--text-lg);
+}
+
+// Colunas 1 a 7 (1 a 6 em 1440), as mesmas do texto das linhas
+.mn-categoria__nota {
+  margin-top: var(--space-8);
+
+  @include up(lg) {
+    width: mn-colunas(7);
+  }
+
+  @include up(xl) {
+    width: mn-colunas(6);
+  }
+}
