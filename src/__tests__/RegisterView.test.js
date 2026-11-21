@@ -105,12 +105,50 @@ describe('RegisterView', () => {
     respondSecond();
     await flushPromises();
     await vi.advanceTimersByTimeAsync(1000);
-    await flushPromises();
+    // O hash da senha é calculado de verdade (WebCrypto), fora do relógio falso
+    await vi.waitFor(() => expect(localStorage.getItem(ACCOUNT_KEY)).not.toBeNull());
 
     expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toMatchObject({
       CEP: '01001000',
       address: { street: 'Praça da Sé', city: 'São Paulo' },
     });
     expect(register).toHaveBeenCalledTimes(1);
+  });
+
+  it('com CEP único da cidade (sem rua), pede a rua e só cria a conta com ela', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({ json: async () => ({ logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' }) })
+      )
+    );
+    const wrapper = await mountRegister();
+    await fillForm(wrapper);
+    await wrapper.find('#CEP').setValue('35588000');
+    await flushPromises();
+
+    expect(wrapper.find('#CEP-ajuda').text()).toContain('Serra Azul/MG. Este CEP vale para a cidade toda');
+    expect(wrapper.find('#street').exists()).toBe(true);
+    expect(wrapper.find('#neighborhood').exists()).toBe(true);
+
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+    expect(wrapper.find('#street-erro').text()).toContain('Informe a rua e o número.');
+    expect(localStorage.getItem(ACCOUNT_KEY)).toBeNull();
+
+    await wrapper.find('#street').setValue('Rua das Flores, 10');
+    // O erro some durante a digitação, sem esperar o blur (que mudaria o botão de lugar no clique)
+    expect(wrapper.find('#street-erro').exists()).toBe(false);
+    await wrapper.find('#neighborhood').setValue('Centro');
+    await wrapper.find('form').trigger('submit');
+    await vi.advanceTimersByTimeAsync(1000);
+    await vi.waitFor(() => expect(localStorage.getItem(ACCOUNT_KEY)).not.toBeNull());
+
+    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY)).address).toEqual({
+      street: 'Rua das Flores, 10',
+      neighborhood: 'Centro',
+      city: 'Serra Azul',
+      state: 'MG',
+    });
   });
 });

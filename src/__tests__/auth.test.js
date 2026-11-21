@@ -232,7 +232,8 @@ describe('dados da conta na sessão e no cadastro', () => {
     expect(store.user.address.street).toBe('Avenida Paulista');
     expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toMatchObject({
       CEP: '01310100',
-      password: fullAccount.password,
+      // O login converteu a senha em texto puro do cadastro antigo em hash
+      password: expect.stringMatching(/^pbkdf2-sha256\$600000\$/),
       address: { street: 'Avenida Paulista' },
     });
   });
@@ -246,7 +247,111 @@ describe('dados da conta na sessão e no cadastro', () => {
     form.address.street = 'Outra rua'; // mudança durante a espera: não entra
     await settle(attempt);
 
-    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toEqual(fullAccount);
+    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toEqual({
+      ...fullAccount,
+      password: expect.stringMatching(/^pbkdf2-sha256\$600000\$/),
+      orderHistory: [],
+    });
     expect(hasSavedAccount()).toBe(true);
+  });
+});
+
+describe('senha em hash no cadastro', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    setActivePinia(createPinia());
+  });
+
+  afterEach(() => vi.useRealTimers());
+
+  const savedAccount = () => JSON.parse(localStorage.getItem(ACCOUNT_KEY));
+
+  it('o cadastro guarda o hash, e não a senha, e o login confere com ele', async () => {
+    await settle(authService.register(fullAccount));
+
+    expect(savedAccount().password).toMatch(/^pbkdf2-sha256\$600000\$[A-Za-z0-9+/=]+\$[A-Za-z0-9+/=]+$/);
+    expect(localStorage.getItem(ACCOUNT_KEY)).not.toContain(fullAccount.password);
+
+    const store = useUserStore();
+    await loginWith(store);
+    expect(store.isAuthenticated).toBe(true);
+
+    const wrong = await settle(authService.login({ email: fullAccount.email, password: 'errada123' }));
+    expect(wrong.message).toContain('Credenciais inválidas');
+  });
+
+  it('um cadastro de antes do hash entra com a senha antiga e passa a guardar o hash', async () => {
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify(fullAccount));
+
+    const wrong = await settle(authService.login({ email: fullAccount.email, password: 'errada123' }));
+    expect(wrong).toBeInstanceOf(Error);
+    expect(savedAccount().password).toBe(fullAccount.password);
+
+    await settle(authService.login({ email: fullAccount.email, password: fullAccount.password }));
+    expect(savedAccount().password).toMatch(/^pbkdf2-sha256\$/);
+    expect(savedAccount()).toMatchObject({ email: fullAccount.email, address: fullAccount.address });
+
+    // E continua entrando depois da troca
+    const again = await settle(authService.login({ email: fullAccount.email, password: fullAccount.password }));
+    expect(again).toMatchObject({ ok: true });
+  });
+});
+
+describe('histórico de pedidos no cadastro', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    setActivePinia(createPinia());
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify(fullAccount));
+  });
+
+  afterEach(() => vi.useRealTimers());
+
+  it('"Sair" não apaga o histórico: ele fica no cadastro e volta no próximo login', async () => {
+    const store = useUserStore();
+    await loginWith(store);
+    store.placeOrder(order);
+    store.placeOrder(order);
+
+    store.logout();
+    expect(store.orderHistory).toEqual([]);
+    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY)).orderHistory.map((o) => o.id)).toEqual([1002, 1001]);
+
+    await loginWith(store);
+    expect(store.orderHistory.map((o) => o.id)).toEqual([1002, 1001]);
+    // A numeração continua de onde parou
+    expect(store.placeOrder(order).id).toBe(1003);
+  });
+
+  it('com o localStorage cheio, sair, pedir e entrar continuam funcionando', async () => {
+    const store = useUserStore();
+    await loginWith(store);
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('cota', 'QuotaExceededError');
+    });
+
+    expect(store.placeOrder(order).id).toBe(1001);
+    store.logout();
+    expect(store.isAuthenticated).toBe(false);
+    await loginWith(store);
+    expect(store.isAuthenticated).toBe(true);
+    setItem.mockRestore();
+  });
+
+  it('migra o formato de sessão da versão antiga, com o histórico, para o cadastro', async () => {
+    localStorage.clear();
+    const oldOrder = { id: 1001, date: '2026-10-17T22:15:00.000Z', status: 'Recebido', total: 10, paymentMethod: 'PIX', items: [] };
+    localStorage.setItem('user', JSON.stringify({ user: fullAccount, isAuthenticated: true, orderHistory: [oldOrder, { id: 'x' }] }));
+
+    migrateLegacyAccount();
+
+    expect(localStorage.getItem('user')).toBeNull();
+    expect(JSON.parse(localStorage.getItem(ACCOUNT_KEY))).toEqual({ ...fullAccount, orderHistory: [oldOrder] });
+
+    const store = useUserStore();
+    await loginWith(store);
+    expect(store.orderHistory).toEqual([oldOrder]);
+    expect(store.placeOrder(order).id).toBe(1002);
   });
 });

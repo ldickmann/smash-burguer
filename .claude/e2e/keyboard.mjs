@@ -98,7 +98,7 @@ for (const w of [1440, 390]) {
 
   // Admin
   const actx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 } });
-  await actx.addInitScript(() => { if (!sessionStorage.getItem('k')) { localStorage.clear(); localStorage.setItem('admin', JSON.stringify({ admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true })); sessionStorage.setItem('k', '1'); } });
+  await actx.addInitScript(() => { if (!sessionStorage.getItem('k')) { localStorage.clear(); localStorage.setItem('smash-burger:admin-session', JSON.stringify({ admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true })); sessionStorage.setItem('k', '1'); } });
   const ap = await actx.newPage();
   await ap.goto(BASE + '#/admin/orders');
   await ap.waitForLoadState('networkidle');

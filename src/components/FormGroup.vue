@@ -76,7 +76,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { maskPhone, maskCEP } from "@/utils/masks";
+import { maskPhone, maskCEP, MASK_DIGITS } from "@/utils/masks";
 
 const props = defineProps({
   id: {
@@ -169,13 +169,14 @@ const describedBy = computed(() => {
   return ids.length ? ids.join(" ") : undefined;
 });
 
-const hasMask = computed(() => ["phone", "cep"].includes(props.mask?.toLowerCase()));
+const maskName = computed(() => props.mask?.toLowerCase() ?? "");
+const hasMask = computed(() => maskName.value in MASK_DIGITS);
 
 // Aplica máscara no input de acordo com o tipo
 const displayValue = computed(() => {
   if (!props.modelValue) return "";
 
-  switch (props.mask?.toLowerCase()) {
+  switch (maskName.value) {
     case "phone":
       return maskPhone(props.modelValue.toString());
     case "cep":
@@ -185,8 +186,9 @@ const displayValue = computed(() => {
   }
 });
 
+// Campo numérico ou com máscara: só dígitos (teclas de controle, como Enter, passam)
 const handleKeyPress = (event) => {
-  if ((props.type === "number" || props.mask === "tel") && !/[\d]/.test(event.key)) {
+  if ((props.type === "number" || hasMask.value) && event.key.length === 1 && !/\d/.test(event.key)) {
     event.preventDefault();
   }
 };
@@ -196,8 +198,11 @@ const handleInput = (event) => {
   let processedValue = value;
 
   if (hasMask.value) {
-    // Remove caracteres não numéricos para inputs com máscara
-    processedValue = value.replace(/\D/g, "");
+    // Só os dígitos que a máscara mostra: o campo não guarda um 9º dígito de CEP escondido
+    processedValue = value.replace(/\D/g, "").slice(0, MASK_DIGITS[maskName.value]);
+    // O valor do campo volta à máscara, sem o dígito que passou do limite
+    const masked = maskName.value === "phone" ? maskPhone(processedValue) : maskCEP(processedValue);
+    if (event.target.value !== masked) event.target.value = masked;
   } else if (props.type === "number") {
     // Garante que apenas números são processados para type number
     processedValue = value.replace(/\D/g, "");

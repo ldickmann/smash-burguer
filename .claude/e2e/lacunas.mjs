@@ -85,13 +85,13 @@ console.log('=== §5.1 menu ao cruzar md');
   await ctx.close();
 }
 
-// 4. Guard genérico como no baseline: /profile sem sessão vai para /login (sem redirect)
+// 4. Guard genérico: /profile sem sessão vai para /login, com o redirect de volta para o perfil
 console.log('=== §10.6 guard do perfil');
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await ctx.newPage();
   await go(page, '#/profile');
-  check(page.url().endsWith('#/login'), '/profile sem sessão → /login', page.url());
+  check(page.url().endsWith('#/login?redirect=/profile'), '/profile sem sessão → /login?redirect=/profile', page.url());
   await go(page, '#/payment');
   check(page.url().includes('#/login?redirect=/payment') || page.url().includes('redirect=%2Fpayment'), '/payment sem sessão continua com ?redirect=/payment', page.url());
   await ctx.close();
@@ -126,7 +126,7 @@ for (const reduce of [false, true]) {
 }
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await seed(ctx, { admin: { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
+  await seed(ctx, { 'smash-burger:admin-session': { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } });
   const page = await ctx.newPage();
   await go(page, '#/admin');
   const kpis = await page.evaluate(() => [...document.querySelectorAll('.kpi__value')].map((k) => k.textContent.trim()));

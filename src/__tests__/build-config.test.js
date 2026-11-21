@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { build } from 'vite';
 import { JSDOM } from 'jsdom';
 
@@ -81,5 +81,36 @@ describe('build', () => {
     expect(code).not.toContain('resposta');
     expect(code).toContain('console.warn');
     expect(code).toContain('console.error');
+  });
+
+  describe('admin de teste do yarn dev', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    // O Vite decide o import.meta.env.DEV pelo NODE_ENV, que no Vitest é "test"
+    const buildLogin = (nodeEnv) => {
+      vi.stubEnv('NODE_ENV', nodeEnv);
+      return buildEntry(`
+        import { adminAuthService, devTestAdmin } from '@/services/adminAuthServices';
+        import LoginAdminView from '@/views/admin/LoginAdminView.vue';
+        globalThis.saida = { adminAuthService, devTestAdmin, LoginAdminView };
+      `);
+    };
+
+    it('não vai para o build de produção', async () => {
+      const production = await buildLogin('production');
+
+      expect(production).toContain('Credenciais de administrador inválidas');
+      expect(production).not.toContain('Demo1234');
+      expect(production).not.toContain('admin@example.com');
+    }, 60000);
+
+    it('controle: fora da produção, o mesmo código leva as credenciais', async () => {
+      const development = await buildLogin('development');
+
+      expect(development).toContain('Demo1234');
+      expect(development).toContain('admin@example.com');
+    }, 60000);
   });
 });

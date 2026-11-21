@@ -72,6 +72,19 @@ describe('estado salvo no localStorage', () => {
   afterEach(() => vi.restoreAllMocks());
 
   describe('carrinho', () => {
+    it('a imagem enviada pelo painel (data URL) não é gravada em cada linha', () => {
+      loadPinia();
+      const cart = useCartStore();
+      const dataUrl = `data:image/png;base64,${'A'.repeat(4000)}`;
+
+      cart.addItem({ ...BURGER, image: dataUrl });
+      cart.$persist();
+
+      expect(localStorage.getItem(CART_KEY)).not.toContain('data:');
+      expect(saved(CART_KEY).items[0]).toMatchObject({ productId: BURGER.productId, image: '' });
+      expect(cart.items[0].image).toBe(dataUrl);
+    });
+
     it('com items que não é lista, começa vazio e as contas não quebram', () => {
       save(CART_KEY, { items: 'x' });
       loadPinia();
@@ -201,29 +214,47 @@ describe('estado salvo no localStorage', () => {
 
   describe('sessão do painel', () => {
     const ADMIN = { firstName: 'Admin', lastName: 'User', email: 'admin@example.com', password: 'Demo1234', role: 'admin' };
+    const ADMIN_SESSION_KEY = 'smash-burger:admin-session';
 
     it('admin que não é objeto derruba a sessão do painel', () => {
-      save('admin', { admin: 'x', isAuthenticated: true });
+      save(ADMIN_SESSION_KEY, { admin: 'x', isAuthenticated: true });
       loadPinia();
 
       const store = useAdminStore();
 
       expect(store.admin).toBeNull();
       expect(store.isAuthenticated).toBe(false);
-      expect(saved('admin')).toMatchObject({ admin: null, isAuthenticated: false });
+      expect(saved(ADMIN_SESSION_KEY)).toMatchObject({ admin: null, isAuthenticated: false });
     });
 
-    it('o cadastro que o createAdmin.html grava na mesma chave fica como está', () => {
-      const raw = JSON.stringify(ADMIN);
+    it('a sessão gravada com a senha perde a senha ao carregar e continua valendo', () => {
+      save(ADMIN_SESSION_KEY, { admin: ADMIN, isAuthenticated: true });
+      loadPinia();
+
+      const store = useAdminStore();
+
+      expect(store.isAdmin).toBe(true);
+      expect(store.admin).not.toHaveProperty('password');
+      expect(saved(ADMIN_SESSION_KEY).admin).toEqual({ firstName: 'Admin', lastName: 'User', email: 'admin@example.com', role: 'admin' });
+    });
+
+    it('o cadastro do admin, na chave `admin`, não é lido como sessão nem regravado pela store', () => {
+      const raw = JSON.stringify({ ...ADMIN, admin: ADMIN, isAuthenticated: true });
       localStorage.setItem('admin', raw);
       loadPinia();
 
-      expect(useAdminStore().isAuthenticated).toBe(false);
+      const store = useAdminStore();
+      store.setAdmin(ADMIN);
+      store.logout();
+      store.$persist();
+
+      expect(store.isAuthenticated).toBe(false);
       expect(localStorage.getItem('admin')).toBe(raw);
+      expect(saved(ADMIN_SESSION_KEY)).toEqual({ admin: null, isAuthenticated: false });
     });
 
     it('nome do admin que não é texto não quebra a barra do painel', () => {
-      save('admin', { admin: { ...ADMIN, name: 5, firstName: ['A'] }, isAuthenticated: true });
+      save(ADMIN_SESSION_KEY, { admin: { ...ADMIN, name: 5, firstName: ['A'] }, isAuthenticated: true });
       const pinia = loadPinia();
       const memoryRouter = createRouter({
         history: createMemoryHistory(),

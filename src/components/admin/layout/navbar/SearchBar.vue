@@ -1,6 +1,6 @@
 <template>
   <div class="navbar-search" role="search">
-    <label for="busca-admin" class="visually-hidden">Buscar</label>
+    <label for="busca-admin" class="visually-hidden">Buscar produtos e pedidos</label>
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="navbar-search__icon" aria-hidden="true" />
     <input
       id="busca-admin"
@@ -9,27 +9,41 @@
       type="search"
       :placeholder="placeholder"
       @input="handleSearch"
+      @keydown.enter.prevent="emit('submit', searchQuery)"
     />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-defineProps({
+const props = defineProps({
   placeholder: {
     type: String,
     default: "Buscar…",
   },
+  // Texto da busca no endereço (?q=): o campo acompanha quando ele muda por fora,
+  // como no "Limpar busca"
+  modelValue: {
+    type: String,
+    default: "",
+  },
 });
 
-const emit = defineEmits(["search"]);
-const searchQuery = ref("");
+// "search" a cada digitação; "submit" no Enter
+const emit = defineEmits(["search", "submit"]);
+const searchQuery = ref(props.modelValue);
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    emit("search", searchQuery.value);
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value !== searchQuery.value.trim()) searchQuery.value = value;
   }
+);
+
+// A cada digitação, inclusive quando o campo fica vazio (a busca sai)
+const handleSearch = () => {
+  emit("search", searchQuery.value);
 };
 </script>
 

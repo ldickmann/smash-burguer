@@ -2,6 +2,13 @@
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import { useToastStore } from '@/stores/toast';
+import { NO_WEBCRYPTO } from '@/utils/password';
+
+/** Aviso para quem abre o site por HTTP fora de localhost, onde o navegador não calcula o hash. */
+export const NO_WEBCRYPTO_MESSAGE =
+  'Abra o site por HTTPS (ou em localhost): neste endereço o navegador não protege a senha.';
+
+const needsSecureContext = (error) => String(error?.message).includes(NO_WEBCRYPTO);
 
 /**
  * Aceita só caminhos internos (começando com uma barra) como destino depois do login.
@@ -22,9 +29,9 @@ export function useAuthHandlers() {
       await userStore.login(credentials);
       router.push(safeRedirect(redirect) ?? '/');
       return { success: true };
-    } catch {
+    } catch (error) {
       return {
-        error: 'E-mail ou senha incorretos.'
+        error: needsSecureContext(error) ? NO_WEBCRYPTO_MESSAGE : 'E-mail ou senha incorretos.'
       };
     }
   };
@@ -43,9 +50,11 @@ export function useAuthHandlers() {
       const target = safeRedirect(redirect);
       router.push(target ? { path: '/login', query: { redirect: target } } : '/login');
       return { success: true };
-    } catch {
+    } catch (error) {
       return {
-        error: 'Não foi possível criar a conta. Tente de novo.'
+        error: needsSecureContext(error)
+          ? NO_WEBCRYPTO_MESSAGE
+          : 'Não foi possível criar a conta. Tente de novo.'
       };
     }
   };

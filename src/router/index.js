@@ -119,6 +119,19 @@ const router = createRouter({
           component: () => import('../views/admin/SalesReports.vue'),
           meta: { title: 'Relatórios' },
         },
+        // Itens do menu de perfil
+        {
+          path: 'profile',
+          name: 'admin-profile',
+          component: () => import('../views/admin/AdminProfile.vue'),
+          meta: { title: 'Meu perfil' },
+        },
+        {
+          path: 'settings',
+          name: 'admin-settings',
+          component: () => import('../views/admin/AdminSettings.vue'),
+          meta: { title: 'Configurações' },
+        },
       ],
     },
   ],
@@ -175,9 +188,9 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // Verifica rotas de usuários normais
+  // Verifica rotas de usuários normais: depois do login, a pessoa volta para onde ia
   if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next('/login');
+    next({ path: '/login', query: { redirect: to.fullPath } });
     return;
   }
 
@@ -191,8 +204,9 @@ router.afterEach((to, from, failure) => {
 
   document.title = to.meta.title ? `${to.meta.title} · ${BRAND}` : `${BRAND} · Delivery`;
 
-  // Na primeira carga o foco fica onde o navegador deixou
-  if (!from.matched.length) return;
+  // Na primeira carga o foco fica onde o navegador deixou. Na mesma página, com só a query
+  // mudando (filtro de status, busca do painel), o foco fica onde a pessoa está digitando
+  if (!from.matched.length || to.path === from.path) return;
 
   nextTick(() => {
     const main = document.getElementById('conteudo');

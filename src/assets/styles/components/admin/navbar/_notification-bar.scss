@@ -1,5 +1,31 @@
-// Atalhos do header do admin (SPEC §5.11): botões iconOnly de 44px.
+// Atalhos do header do admin (SPEC §5.11): botões iconOnly de 44px, com o selo do
+// número de pedidos no canto (as mesmas cores do CartBadge).
 .navbar-notifications {
   display: flex;
   gap: var(--space-1);
+}
+
+.navbar-notifications__item {
+  position: relative;
+  display: inline-flex;
+}
+
+.navbar-notifications__count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1;
+  // O clique no selo vai para o link de baixo
+  pointer-events: none;
 }

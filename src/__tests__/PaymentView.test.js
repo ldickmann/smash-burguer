@@ -122,6 +122,31 @@ describe('PaymentView', () => {
     expect(router.currentRoute.value.path).toBe('/confirmation');
   });
 
+  it('o pedido do histórico não guarda a imagem do produto', async () => {
+    const { wrapper } = await mountPayment([burger()]);
+
+    await confirm(wrapper);
+
+    const [order] = useUserStore().orderHistory;
+    expect(order.items[0]).not.toHaveProperty('image');
+    expect(order.items[0]).toMatchObject({ productId: 1, name: 'Cheese Bacon', quantity: 2 });
+  });
+
+  it('quem sai da tela durante a espera desiste do pedido', async () => {
+    const { wrapper, router } = await mountPayment([burger()]);
+    const button = wrapper.findAll('button').find((b) => b.text().startsWith('Confirmar pedido'));
+    await button.trigger('click');
+
+    await router.push('/');
+    wrapper.unmount();
+    await vi.advanceTimersByTimeAsync(800);
+    await flushPromises();
+
+    expect(useUserStore().orderHistory).toEqual([]);
+    expect(useCartStore().items).toHaveLength(1);
+    expect(router.currentRoute.value.path).toBe('/');
+  });
+
   it('se nenhuma linha bate com o cardápio, o pedido não sai e a tela volta ao carrinho', async () => {
     const { wrapper, router } = await mountPayment([{ ...burger(), productId: 99 }]);
 
