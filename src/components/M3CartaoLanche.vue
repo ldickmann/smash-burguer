@@ -1,14 +1,28 @@
 <!-- Filled card do feed [63][64] (cópia de produção do M3CartaoLanche da Home, SPEC-material §4.1):
      comum (foto 4:3 com canto 28) ou destaque (foto quadrada no cookie, na horizontal a partir de md).
      Sem sombra e sem hover: só os botões reagem. "Adicionar" abre o modal Personalizar real; a metade
-     de trás abre a folha de ingredientes do próprio produto. Substitui o ProductCard menu e compact. -->
+     de trás abre a folha de ingredientes do próprio produto. Substitui o ProductCard menu e compact.
+     No destaque, a camada dos lobos (§10.3) fica atrás da foto: o prato claro da foto encostava no
+     fundo do card, e os lobos de baixo sumiam. A referência não tem a camada (decisão e). -->
 <template>
   <article class="m3-cartao" :class="{ 'm3-cartao--destaque': destaque, 'is-aberto': aberto }">
+    <div v-if="destaque" class="m3-cartao__cookie">
+      <span class="m3-cartao__lobos" aria-hidden="true"></span>
+      <M3Foto
+        class="m3-cartao__foto"
+        :imagem="imagem"
+        :alt="produto.name"
+        forma="cookie"
+        :falhou="imagemFalhou"
+        @erro="imagemFalhou = true"
+      />
+    </div>
     <M3Foto
+      v-else
       class="m3-cartao__foto"
       :imagem="imagem"
       :alt="produto.name"
-      :forma="destaque ? 'cookie' : 'cartao'"
+      forma="cartao"
       :falhou="imagemFalhou"
       @erro="imagemFalhou = true"
     />

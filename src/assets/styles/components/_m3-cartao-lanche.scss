@@ -83,10 +83,25 @@
 
 // ---------- Destaque ----------
 
+// Lobos do cookie sempre à vista (SPEC-material §10.3): atrás da foto, o mesmo cookie em primary, um
+// pouco maior (inset negativo, sem transform). O prato claro da foto encostava no fundo do card, e
+// os lobos de baixo sumiam. Decorativa (aria-hidden): não entra nos pares de texto. O invólucro isola
+// a camada (fica sobre o fundo do card e sob a foto) e ocupa o lugar que era da foto.
+.m3-cartao__lobos {
+  position: absolute;
+  inset: calc(-1 * var(--space-1));
+  z-index: var(--m3-z-fundo);
+  clip-path: var(--m3-forma-cookie);
+  background: var(--m3-primary);
+}
+
 .m3-cartao--destaque {
-  .m3-cartao__foto {
-    align-self: center;
+  .m3-cartao__cookie {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
     max-width: 15rem;
+    align-self: center;
   }
 
   .m3-cartao__corpo {
@@ -126,7 +141,7 @@
     align-items: center;
     gap: var(--space-4);
 
-    .m3-cartao__foto {
+    .m3-cartao__cookie {
       max-width: none;
     }
 
