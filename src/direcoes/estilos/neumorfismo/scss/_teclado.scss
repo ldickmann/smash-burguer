@@ -1,0 +1,29 @@
+// NeuTeclado: 2 colunas no celular, 3 de md a lg e uma coluna de 7 a partir de lg, ao lado do visor.
+@use "@/assets/styles/base/breakpoints" as *;
+
+.neu-teclado {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.neu-teclado__legenda {
+  margin-bottom: var(--space-4);
+  padding: 0;
+  color: var(--neu-tinta-suave);
+  font-weight: 600;
+}
+
+.neu-teclado__teclas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,118 @@
+// Painel: o aparelho elevado (a única sombra grande da página com a barra do topo). No celular,
+// uma coluna; a partir de lg, as teclas numa coluna de 7 e o visor ao lado, alinhado ao topo, na
+// altura do próprio conteúdo (foto 4:3, sem esticar até a altura das teclas).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-painel__aparelho {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--neu-raio-card);
+  background: var(--neu-kraft);
+  box-shadow: var(--neu-elevado-grande);
+
+  @include reserva-sombra;
+
+  @include up(md) {
+    gap: var(--space-6);
+    padding: var(--space-6);
+    border-radius: var(--neu-raio-painel);
+  }
+
+  @include up(xl) {
+    padding: var(--space-7);
+  }
+}
+
+.neu-painel__titulo {
+  @include titulo(var(--neu-titulo-secao));
+}
+
+.neu-painel__corpo {
+  display: grid;
+  gap: var(--space-5);
+
+  @include up(md) {
+    gap: var(--space-6);
+  }
+
+  @include up(lg) {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  @include up(xl) {
+    grid-template-columns: 17.5rem minmax(0, 1fr);
+  }
+}
+
+// Régua de adicionais: texto plano num poço raso, sem cara de botão
+.neu-regua {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--neu-raio-card);
+
+  @include poco(var(--neu-afundado-pequeno));
+
+  @media (prefers-contrast: more) {
+    border: var(--neu-borda-largura) solid var(--neu-borda);
+  }
+
+  @include up(lg) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-6);
+    padding: var(--space-4) var(--space-6);
+    border-radius: var(--neu-raio-pilula);
+  }
+}
+
+.neu-regua__titulo {
+  @include titulo(var(--neu-titulo-grupo));
+}
+
+.neu-regua__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+
+  @include up(lg) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+}
+
+.neu-regua__item {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-2);
+}
+
+.neu-regua__nome {
+  color: var(--neu-tinta);
+  font-weight: 600;
+}
+
+.neu-regua__preco {
+  color: var(--neu-tinta-suave);
+}
+
+// Lista vazia: um poço com o aviso e o caminho para o cardápio
+.neu-painel__vazio {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--neu-raio-card);
+
+  @include poco(var(--neu-afundado));
+}
+
+.neu-painel__vazio-texto {
+  color: var(--neu-tinta-suave);
+  font-weight: 600;
+}

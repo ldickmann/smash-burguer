@@ -50,6 +50,27 @@
   --neu-fonte: "Nunito Variable", "Nunito", system-ui, sans-serif;
   --neu-titulo: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
 
+  // ---------- Rodada 2: a Home nova ("Kraft prensado") ----------
+  // Kraft um tom abaixo, só no fundo de poço sem texto (as fotos do visor e das vagas)
+  --neu-kraft-poco: #cbb796;
+  // O visor "recebe a pressão": sombra interna mais funda que --neu-afundado-grande (a da cova)
+  --neu-impressao: inset 20px 20px 36px #b09c7f, inset -12px -12px 24px #f1e2c9;
+  // Lábio da cova do hero: a camada clara de --neu-afundado-grande vinda só de baixo (o mesmo
+  // deslocamento vertical e o mesmo desfoque), por cima da base do lanche
+  --neu-labio: inset 0 -14px 28px #f1e2c9;
+  // Contato do recorte do lanche com o fundo da cova (valor de filter)
+  --neu-sombra-recorte: drop-shadow(8px 12px 10px rgba(122, 102, 74, 0.45));
+  // Sulco de uma linha: escuro do lado da luz, claro do outro (rodapé e divisor dos acompanhamentos)
+  --neu-sulco: inset 2px 2px 3px #b09c7f, inset -2px -2px 3px #f1e2c9;
+  // Largura da borda de estado da tecla marcada (3 px com prefers-contrast: more)
+  --neu-borda-estado: 2px;
+  --neu-z-recorte: 1;
+  --neu-z-labio: 2;
+  // Escala dos títulos: h2 de 28 a 36 px e h3 de 21 a 24 px
+  --neu-titulo-secao: clamp(1.75rem, 1.45rem + 0.9vw, 2.25rem);
+  --neu-titulo-grupo: clamp(1.3125rem, 1.22rem + 0.3vw, 1.5rem);
+  --neu-leitura: 1.5rem;
+
   // ---------- Tokens do projeto ----------
   --color-bg: var(--neu-kraft);
   --color-surface-sunken: var(--neu-kraft);
@@ -143,6 +164,7 @@
   :root[data-direcao="neumorfismo"],
   [data-direcao="neumorfismo"] {
     --neu-borda-largura: 2px;
+    --neu-borda-estado: 3px;
     --neu-tinta-suave: #463828;
   }
 }

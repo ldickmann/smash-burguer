@@ -1,0 +1,55 @@
+// NeuSemana: 7 poços rasos; o dia aberto em tinta 800 com um ponto em alface embaixo do rótulo.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-semana {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+
+  @include up(sm) {
+    gap: var(--space-2);
+  }
+}
+
+.neu-semana__dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1875rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-round);
+  color: var(--neu-tinta-suave);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1;
+
+  @include poco(var(--neu-afundado-pequeno));
+
+  @include up(sm) {
+    width: 3rem;
+    height: 3rem;
+    font-size: var(--text-sm);
+  }
+
+  &.is-aberto {
+    color: var(--neu-tinta);
+    font-weight: 800;
+
+    &::after {
+      content: "";
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: var(--radius-round);
+      background: var(--neu-alface);
+    }
+  }
+
+  @media (forced-colors: active) {
+    &.is-aberto::after {
+      background: CanvasText;
+    }
+  }
+}

@@ -1,0 +1,82 @@
+// NeuRodape: o sulco na largura do container e, embaixo, a marca e a navegação lado a lado a partir
+// de md, com os direitos na largura toda.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-rodape {
+  padding-bottom: var(--space-7);
+}
+
+.neu-rodape__sulco {
+  height: 6px;
+
+  @include sulco;
+}
+
+.neu-rodape__grade {
+  display: grid;
+  gap: var(--space-5);
+  padding-top: var(--space-6);
+
+  @include up(md) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: var(--space-7);
+  }
+}
+
+.neu-rodape__marca {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.neu-rodape__nome {
+  color: var(--neu-tinta);
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: var(--leading-tight);
+}
+
+.neu-rodape__descricao {
+  max-width: 48ch;
+  color: var(--neu-tinta-suave);
+}
+
+.neu-rodape__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-inline: calc(-1 * var(--space-3));
+}
+
+.neu-rodape__link {
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--neu-tinta);
+  font-weight: 600;
+
+  @include foco;
+
+  @include hover-capable {
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+
+  &[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+}
+
+.neu-rodape__direitos {
+  grid-column: 1 / -1;
+  color: var(--neu-tinta-suave);
+  font-size: var(--text-sm);
+}

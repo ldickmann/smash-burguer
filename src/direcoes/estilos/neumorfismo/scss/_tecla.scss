@@ -1,0 +1,138 @@
+// NeuTecla: a face em relevo com borda. As camadas trocam por opacidade em --dur-fast; a borda de
+// estado engrossa por dentro (o padding desconta a diferença, para o texto não pular).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+// A label é grid: a face estica até a altura da linha (teclas vizinhas com nomes de uma e de duas
+// linhas ficam do mesmo tamanho)
+.neu-tecla {
+  display: grid;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.neu-tecla__face {
+  --neu-tecla-borda: var(--neu-borda-largura);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 3.5rem;
+  padding-block: calc(var(--space-2) - var(--neu-tecla-borda) + 1px);
+  padding-inline: calc(var(--space-2) - var(--neu-tecla-borda) + 1px) calc(var(--space-3) - var(--neu-tecla-borda) + 1px);
+  border: var(--neu-tecla-borda) solid var(--neu-borda);
+  border-radius: var(--neu-raio-pilula);
+  background: var(--neu-convexo);
+  color: var(--neu-tinta);
+
+  @include relevo(var(--neu-elevado-pequeno), var(--neu-afundado));
+
+  @include up(md) {
+    gap: var(--space-3);
+    padding-inline: calc(var(--space-3) - var(--neu-tecla-borda) + 1px) calc(var(--space-4) - var(--neu-tecla-borda) + 1px);
+  }
+}
+
+// O poço do check: vazio em repouso, com o check em tinta quando marcada
+.neu-tecla__poco {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-round);
+  box-shadow: var(--neu-afundado-pequeno);
+
+  @include up(md) {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.neu-tecla__check {
+  color: var(--neu-tinta);
+  font-size: 0.875rem;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.neu-tecla__texto {
+  display: grid;
+  min-width: 0;
+}
+
+.neu-tecla__nome {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  overflow-wrap: break-word;
+
+  @include up(md) {
+    font-size: var(--text-md);
+  }
+}
+
+.neu-tecla__detalhe {
+  color: var(--neu-tinta-suave);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-compact);
+}
+
+// Hover só na tecla não marcada: o convexo mais claro, direto
+@include hover-capable {
+  .neu-tecla:hover input:not(:checked) + .neu-tecla__face {
+    background: var(--neu-convexo-hover);
+  }
+}
+
+// Pressionado: o degradê sai e a camada afundada entra
+.neu-tecla:active .neu-tecla__face {
+  background: var(--neu-kraft);
+
+  @include afundar;
+}
+
+// Selecionado: afundado fixo, sem convexo, borda de estado em tinta e o check
+input:checked + .neu-tecla__face {
+  --neu-tecla-borda: var(--neu-borda-estado);
+
+  border-color: var(--neu-tinta);
+  background: var(--neu-kraft);
+
+  @include afundar;
+
+  .neu-tecla__check {
+    opacity: 1;
+  }
+
+  .neu-tecla__nome {
+    font-weight: 800;
+  }
+}
+
+// Foco no rádio escondido: o anel vai na face
+input:focus-visible + .neu-tecla__face {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+@include motion-ok {
+  .neu-tecla:active .neu-tecla__face {
+    transform: translateY(1px);
+  }
+}
+
+@media (forced-colors: active) {
+  .neu-tecla__poco {
+    border: 1px solid CanvasText;
+  }
+
+  input:checked + .neu-tecla__face {
+    border-color: Highlight;
+  }
+
+  .neu-tecla__check {
+    color: CanvasText;
+  }
+}

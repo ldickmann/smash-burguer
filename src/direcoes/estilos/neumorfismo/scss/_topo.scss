@@ -1,0 +1,157 @@
+// NeuTopo: pílula elevada (bloco de duas linhas no celular). A faixa de kraft atrás é opaca, para o
+// conteúdo não passar visível em volta da pílula quando ela fica fixa.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-topo {
+  padding-block: var(--space-3);
+  background: var(--neu-kraft);
+
+  @include up(md) {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-navbar);
+  }
+}
+
+.neu-topo__barra {
+  display: grid;
+  grid-template-areas:
+    "marca carrinho"
+    "nav nav";
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--neu-raio-card);
+  background: var(--neu-kraft);
+  box-shadow: var(--neu-elevado);
+
+  @include reserva-sombra;
+
+  @include up(md) {
+    grid-template-areas: "marca nav carrinho";
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    min-height: 4rem;
+    padding-left: var(--space-5);
+    border-radius: var(--neu-raio-pilula);
+  }
+}
+
+.neu-topo__marca {
+  grid-area: marca;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-sm);
+  color: var(--neu-tinta);
+  font-family: var(--neu-fonte);
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+
+  @include foco;
+}
+
+.neu-topo__nav {
+  grid-area: nav;
+}
+
+.neu-topo__lista {
+  display: flex;
+  gap: var(--space-1);
+
+  @include up(md) {
+    gap: var(--space-2);
+  }
+}
+
+.neu-topo__item {
+  flex: 1;
+
+  @include up(md) {
+    flex: none;
+  }
+}
+
+// Links planos; o atual afunda e ganha sublinhado de 2 px (a sombra não é o único sinal)
+.neu-topo__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding-inline: var(--space-3);
+  border-radius: var(--neu-raio-pilula);
+  color: var(--neu-tinta-suave);
+  font-weight: 700;
+
+  @include foco;
+
+  @include up(md) {
+    padding-inline: var(--space-5);
+  }
+
+  @include hover-capable {
+    &:hover {
+      color: var(--neu-tinta);
+    }
+  }
+
+  &[aria-current="page"] {
+    box-shadow: var(--neu-afundado-pequeno);
+    color: var(--neu-tinta);
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+}
+
+.neu-topo__carrinho {
+  grid-area: carrinho;
+  justify-self: end;
+}
+
+// O selo do carrinho: ketchup, com o número
+.neu-topo__selo {
+  position: absolute;
+  top: calc(-1 * var(--space-1));
+  right: calc(-1 * var(--space-1));
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding-inline: var(--space-1);
+  border: 2px solid var(--neu-kraft);
+  border-radius: var(--neu-raio-pilula);
+  background: var(--neu-ketchup);
+  color: var(--neu-branco);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.neu-selo-enter-active,
+.neu-selo-leave-active {
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.neu-selo-enter-from,
+.neu-selo-leave-to {
+  opacity: 0;
+}
+
+@include motion-ok {
+  .neu-selo-enter-active {
+    transition:
+      transform var(--dur-base) var(--ease-spring),
+      opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .neu-selo-enter-from {
+    transform: scale(0.4);
+  }
+}

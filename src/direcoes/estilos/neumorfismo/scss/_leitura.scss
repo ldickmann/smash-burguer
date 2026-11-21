@@ -1,0 +1,22 @@
+// NeuLeitura: poço raso em pílula, sem borda (é leitura, não controle).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.neu-leitura {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.5rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--neu-raio-pilula);
+  color: var(--neu-tinta);
+  font-size: var(--neu-leitura);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+
+  @include poco(var(--neu-afundado-pequeno));
+
+  @include up(md) {
+    padding-inline: var(--space-4);
+  }
+}
