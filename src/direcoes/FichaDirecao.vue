@@ -17,6 +17,7 @@
       <header class="ficha__cabecalho">
         <h2 :id="`ficha-${direcao.slug}`" class="ficha__nome">{{ direcao.nome }}</h2>
         <p class="ficha__apelido">{{ direcao.apelido }}</p>
+        <p v-if="direcao.situacao" class="ficha__situacao">{{ direcao.situacao }}</p>
       </header>
 
       <p class="ficha__tese">{{ ficha.tese }}</p>
@@ -289,6 +290,10 @@ const resumoComuns = computed(() => {
 
 .ficha__apelido {
   color: var(--dir-tinta-suave);
+}
+
+.ficha__situacao {
+  font-weight: 700;
 }
 
 .ficha__abrir {

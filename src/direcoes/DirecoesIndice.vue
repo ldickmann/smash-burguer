@@ -8,9 +8,9 @@
         <p class="indice__marca">Smash Burger</p>
         <h1 class="indice__titulo">Direções visuais</h1>
         <p class="indice__intro">
-          A Home da loja refeita em três estilos de interface. Abra cada uma
-          em 1440 px, compare com as fichas abaixo e escolha a direção que vai para o sistema inteiro.
-          Estas páginas só existem no servidor de desenvolvimento e não entram no build.
+          A Home da loja refeita em três estilos de interface. O Material 3 Expressive foi o
+          escolhido para o sistema inteiro; o esqueumorfismo e o neumorfismo ficam como acervo de
+          ideias de UI/UX. Estas páginas só existem no servidor de desenvolvimento e não entram no build.
         </p>
       </div>
     </header>
@@ -23,6 +23,7 @@
             <thead>
               <tr>
                 <th scope="col">Direção</th>
+                <th scope="col">Situação</th>
                 <th scope="col">Paleta</th>
                 <th scope="col">Custo de levar ao sistema</th>
                 <th scope="col"><span class="visually-hidden">Abrir</span></th>
@@ -34,6 +35,7 @@
                   <span class="indice__nome">{{ direcao.nome }}</span>
                   <span class="indice__apelido">{{ direcao.apelido }}</span>
                 </th>
+                <td>{{ direcao.situacao }}</td>
                 <td>
                   <span class="indice__paleta" :data-direcao="direcao.slug" aria-hidden="true">
                     <span
