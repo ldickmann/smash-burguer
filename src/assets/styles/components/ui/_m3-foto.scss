@@ -1,0 +1,54 @@
+// M3Foto (cópia de scss/_foto.scss do material): a imagem cobre a moldura inteira; a forma recorta
+// (border-radius ou clip-path).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-foto {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--m3-surface-container);
+  color: var(--m3-on-surface-variant);
+}
+
+.m3-foto--cartao {
+  border-radius: var(--m3-forma-l);
+
+  @include up(md) {
+    border-radius: var(--m3-forma-xl);
+  }
+}
+
+.m3-foto--cookie {
+  clip-path: var(--m3-forma-cookie);
+}
+
+.m3-foto--circulo {
+  border-radius: var(--m3-forma-full);
+}
+
+.m3-foto--flor {
+  clip-path: var(--m3-forma-flor);
+}
+
+.m3-foto__picture {
+  position: absolute;
+  inset: 0;
+}
+
+.m3-foto__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.m3-foto__reserva {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+
+  @include up(md) {
+    font-size: 2.5rem;
+  }
+}

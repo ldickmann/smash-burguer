@@ -1,0 +1,87 @@
+// M3ItemSegmentado (cópia de scss/_item-segmentado.scss do material): os mesmos cantos e vãos da
+// lista segmentada; o link tem camada de estado de on-surface (8% e 10%) e o anel por dentro, para
+// não invadir o vão de 2 px.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-segmento-item {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  }
+
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+  }
+}
+
+.m3-segmento {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 4.5rem;
+  padding: var(--space-3);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima) var(--m3-item-canto-baixo)
+    var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
+  text-decoration: none;
+
+  @include up(sm) {
+    padding-inline: var(--space-4);
+  }
+}
+
+a.m3-segmento {
+  @include camada-de-estado;
+  @include anel-interno;
+}
+
+.m3-segmento__icone {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+  font-size: 1.125rem;
+
+  .m3-segmento--info & {
+    background: var(--m3-tertiary-container);
+    color: var(--m3-on-tertiary-container);
+  }
+}
+
+.m3-segmento__texto {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.m3-segmento__titulo {
+  @include tipo(body-l);
+
+  display: block;
+  color: var(--m3-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.m3-segmento__apoio {
+  @include tipo(body-m);
+
+  display: block;
+  color: var(--m3-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+// Ícone de link externo em todas as larguras: é a pista de que a linha abre outro app (o aviso de
+// nova aba também fica no nome acessível)
+.m3-segmento__fim {
+  display: block;
+  color: var(--m3-on-surface-variant);
+  font-size: 0.875rem;
+}
