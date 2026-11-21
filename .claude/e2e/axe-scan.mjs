@@ -1,5 +1,5 @@
 /* global process */
-// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque, fontes e violações da CSP.
+// Varredura §13.3: axe (WCAG 2.x A/AA), rolagem horizontal, alvos de toque, fontes, peso do h1 e violações da CSP.
 // uso: node axe-scan.mjs <grupo: loja|admin|todos> [viewports] [reduce]
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -60,11 +60,14 @@ const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENA
 
 // SPEC-material §2.3: o texto da loja e do painel é a Roboto Variable
 const FONTE_BODY = '"Roboto Variable"';
+// SPEC-material §13.3, item 5: o h1 em Medium (peso 500); a caixa alta não é conferida aqui
+const PESO_H1 = '500';
 
 const browser = await chromium.launch();
 let total = 0;
 let cspTotal = 0;
 let fonteTotal = 0;
+let pesoTotal = 0;
 for (const w of VPS) {
   for (const sc of list) {
     const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 }, reducedMotion: REDUCE ? 'reduce' : 'no-preference' });
@@ -116,14 +119,14 @@ for (const w of VPS) {
         if (box.width < 44 || box.height + extra < 44) small.push(`${el.tagName}.${[...el.classList].slice(0, 2).join('.')} "${(el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 24)}" ${Math.round(box.width)}x${Math.round(box.height)}`);
       }
       const h1 = [...document.querySelectorAll('h1')].map((h) => h.textContent.trim());
-      const bebas = [...document.querySelectorAll('h1, .display')].map((h) => getComputedStyle(h).fontWeight);
+      const pesoH1 = [...document.querySelectorAll('h1')].map((h) => getComputedStyle(h).fontWeight);
       return {
         violations: r.violations.map((v) => `${v.id} (${v.impact}) x${v.nodes.length}: ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`),
         overflow: document.documentElement.scrollWidth !== vw ? document.documentElement.scrollWidth : 0,
         small: [...new Set(small)].slice(0, 8),
         h1,
         font: getComputedStyle(document.body).fontFamily.split(',')[0],
-        bebas: [...new Set(bebas)],
+        pesoH1: [...new Set(pesoH1)],
         title: document.title,
       };
     });
@@ -131,16 +134,20 @@ for (const w of VPS) {
     cspTotal += csp.length;
     const fonteErrada = res.font !== FONTE_BODY;
     if (fonteErrada) fonteTotal += 1;
-    const flag = res.violations.length || res.overflow || res.small.length || csp.length || fonteErrada ? '✗' : '✓';
-    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} csp=${csp.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} bebasW=${res.bebas} title="${res.title}"`);
+    const pesoErrado = res.pesoH1.some((p) => p !== PESO_H1);
+    if (pesoErrado) pesoTotal += 1;
+    const flag = res.violations.length || res.overflow || res.small.length || csp.length || fonteErrada || pesoErrado ? '✗' : '✓';
+    console.log(`${flag} ${w} ${sc.name.padEnd(15)} axe=${res.violations.length} csp=${csp.length} overflow=${res.overflow} h1=${JSON.stringify(res.h1)} font=${res.font} h1W=${res.pesoH1} title="${res.title}"`);
     res.violations.forEach((v) => console.log('    axe:', v));
     res.small.forEach((v) => console.log('    alvo:', v));
     csp.forEach((v) => console.log('    csp:', v));
     if (fonteErrada) console.log(`    fonte: o body usa ${res.font}, e não ${FONTE_BODY}`);
+    if (pesoErrado) console.log(`    peso: o h1 usa ${res.pesoH1}, e não ${PESO_H1}`);
     await ctx.close();
   }
 }
 console.log('TOTAL violações axe:', total);
 console.log('TOTAL violações CSP:', cspTotal);
 console.log('TOTAL telas com o body fora da Roboto:', fonteTotal);
+console.log('TOTAL telas com o h1 fora do peso 500:', pesoTotal);
 await browser.close();

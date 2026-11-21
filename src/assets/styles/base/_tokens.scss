@@ -112,6 +112,20 @@
   --m3-label-m-linha: 1rem;
   --m3-label-s: 0.6875rem;
   --m3-label-s-linha: 1rem;
+  // Espaçamento entre letras por papel (§2.3), com os valores que a Home escreve nas parciais
+  --m3-display-l-tracking: -0.015625rem;
+  --m3-display-m-tracking: 0;
+  --m3-display-s-tracking: 0;
+  --m3-headline-m-tracking: 0;
+  --m3-headline-s-tracking: 0;
+  --m3-title-l-tracking: 0;
+  --m3-title-m-tracking: 0;
+  --m3-body-l-tracking: 0.03125rem;
+  --m3-body-m-tracking: 0.015625rem;
+  --m3-body-s-tracking: 0;
+  --m3-label-l-tracking: 0.00625rem;
+  --m3-label-m-tracking: 0.03125rem;
+  --m3-label-s-tracking: 0;
 
   // ---------- Movimento ----------
   --m3-ease-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -156,8 +170,8 @@
   --z-sidebar: 400;
   --z-toast: 600;
 
-  // Foco (o anel passa a 3 px na etapa 2)
-  --focus-width: 2px;
+  // Foco: anel de 3 px em --color-focus (secondary), SPEC-material §3, item 8
+  --focus-width: 3px;
   --focus-offset: 2px;
 
   // Durações, com os valores do material (o JS lê por getComputedStyle)

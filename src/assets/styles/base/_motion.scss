@@ -17,13 +17,23 @@
     animation-iteration-count: 1;
   }
 
-  // Micro-interações 3D (§7.1–7.4): nenhum transform
+  // Micro-interações 3D da Brasa (SPEC §7.1–7.4): nenhum transform. Saem na limpeza (etapa 11),
+  // menos as do BurgerStack, que fica (SPEC-material, decisão f)
   .add-btn__inner,
   .add-btn__face,
   .odo__digit,
   .product-card,
   .burger-stack__scene,
   .burger-stack__layer {
+    transform: none;
+  }
+
+  // Micro-interações do M3 (SPEC-material §3, item 6, e §7): prensa, chevron, folha, check e badge
+  .m3-prensa__disco,
+  .m3-dividido__seta--baixo,
+  .m3-folha,
+  .m3-dividido__check,
+  .m3-badge {
     transform: none;
   }
 }

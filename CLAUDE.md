@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 315 testes
+npx vitest run                             # 321 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -61,7 +61,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 ## Convenções do código (SPEC)
 
 - **Tokens:** cores, espaços, raios, sombras, z-index e durações saem só dos tokens de `src/assets/styles/base/_tokens.scss`. Exceções: as cores das camadas em `BurgerStack.vue`, a assinatura de autoria e os `_tokens.scss` das direções visuais (seções abaixo).
-- **Breakpoints e mixins:** mobile-first, em `base/_breakpoints.scss` (`up()`, `below()`, `hover-capable`, `motion-ok`, `motion-reduced`).
+- **Breakpoints e mixins:** mobile-first, em `base/_breakpoints.scss` (`up()`, `below()`, `hover-capable`, `motion-ok`, `motion-reduced`). Os mixins do M3 (`tipo()`, `camada-de-estado` e outros) ficam em `base/_m3.scss`, fora do `main.scss`: a parcial faz `@use "@/assets/styles/base/m3" as *`.
 - **Estilos:** cada componente faz `@use` da própria parcial dentro de `<style scoped>`. O `main.scss` importa só a base.
 - **Animações:**
   - só `transform` e `opacity`;

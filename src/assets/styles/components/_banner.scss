@@ -1,11 +1,6 @@
 // BannerComponent (SPEC §5.2 e §5.3). Sem hover na imagem.
+// O título (h1) segue a regra global de base/_typography.scss: família, peso 500 e entrelinha do M3.
 @use "../base/breakpoints" as *;
-
-.banner__title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  line-height: var(--leading-display);
-}
 
 .banner__text {
   color: var(--color-ink-muted);
