@@ -73,7 +73,7 @@ Os indicadores, os relatórios e os pedidos iniciais são dados de exemplo; veja
   - botões com área de toque de 44 px.
 - **Micro-interações 3D só com CSS:** o botão "Adicionar" gira, o contador do carrinho anima e o card inclina com o mouse. Com `prefers-reduced-motion`, viram transições de opacidade.
 - **Imagens:** WebP responsivas com `<picture>` e `srcset`. A Home carrega menos de 1 MB no celular.
-- **Direções visuais (exploração):** no `yarn dev`, `#/direcoes` mostra a Home em sete estilos de interface (Material 3 Expressive, esqueumorfismo, neumorfismo, 3D e gradientes suaves, flat, minimalismo e dark mode), ao lado da Brasa, com uma ficha por estilo para comparar e escolher a próxima direção. Essas páginas não entram no build. A pesquisa, com as fontes, está em [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md).
+- **Direções visuais (exploração):** no `yarn dev`, `#/direcoes` mostra a Home em sete estilos de interface (Material 3 Expressive, esqueumorfismo, neumorfismo, 3D e gradientes suaves, flat, minimalismo e dark mode), com uma ficha por estilo para comparar e escolher a próxima direção. Essas páginas não entram no build. A pesquisa, com as fontes, está em [docs/direcoes/PESQUISA.md](./docs/direcoes/PESQUISA.md).
 
 ## Tecnologias
 

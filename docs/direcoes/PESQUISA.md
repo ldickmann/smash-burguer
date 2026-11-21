@@ -4,6 +4,7 @@ Base das oito Homes da exploração de direções visuais: os sete estilos e a B
 
 - **Quando:** a pesquisa foi feita em 20/11/2026, por três pesquisadores, na sessão de planejamento. As conferências do fim deste documento foram feitas na sessão de execução, no mesmo dia.
 - **Regra:** cada afirmação sobre um estilo cita uma fonte aberta. Galeria e blog de tendência servem só como exemplo visual. O que faltou está escrito como "não encontrei".
+- **Nota de 20/11/2026 (rodada 2):** a Brasa saiu da exploração: rota, base, ficha, pares, alternador e textos. A Home de produção não muda e continua em `#/`. O Dark mode segue comparado a ela. O texto abaixo é o da rodada 1, sem reescrita.
 - **Conteúdo da loja:** as Homes usam só os textos que já existem no app (`src/direcoes/compartilhado/conteudo.js` anota a origem de cada um), o `products.json` e as imagens de `public/images`. Nenhum texto de loja novo foi criado, e nenhuma imagem, ícone ou layout de terceiros foi copiado.
 
 ## Como as fontes estão classificadas

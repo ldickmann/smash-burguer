@@ -8,7 +8,7 @@
         <p class="indice__marca">Smash Burger</p>
         <h1 class="indice__titulo">Direções visuais</h1>
         <p class="indice__intro">
-          A Home da loja refeita em sete estilos de interface, ao lado da Brasa atual. Abra cada uma
+          A Home da loja refeita em sete estilos de interface. Abra cada uma
           em 1440 px, compare com as fichas abaixo e escolha a direção que vai para o sistema inteiro.
           Estas páginas só existem no servidor de desenvolvimento e não entram no build.
         </p>

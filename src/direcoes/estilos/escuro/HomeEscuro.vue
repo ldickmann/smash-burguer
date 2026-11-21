@@ -1,5 +1,5 @@
-<!-- Home em Dark mode, "A Brasa pelas diretrizes" (só desenvolvimento): a mesma composição da Brasa,
-     para a comparação mostrar só o sistema de cor e de elevação. -->
+<!-- Home em Dark mode, "A Brasa pelas diretrizes" (só desenvolvimento): a Brasa de produção (#/)
+     refeita pelas diretrizes de tema escuro do Material 3 e da Apple. -->
 <template>
   <MolduraDirecao estilo="escuro">
     <template #topo>

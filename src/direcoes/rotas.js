@@ -11,19 +11,6 @@ export const rotasDirecoes = import.meta.env.DEV
         component: () => import("./DirecoesIndice.vue"),
         meta: { title: "Direções visuais" },
       },
-      // Linha de base: a Home real, dentro do MainLayout, com o alternador
-      {
-        path: "/direcoes/brasa",
-        component: () => import("@/layouts/MainLayout.vue"),
-        children: [
-          {
-            path: "",
-            name: "direcao-brasa",
-            component: () => import("./BrasaBase.vue"),
-            meta: titulo("Brasa"),
-          },
-        ],
-      },
       // Homes dos estilos: página inteira, sem o MainLayout
       {
         path: "/direcoes/material",

@@ -86,14 +86,6 @@ export const PARES_COMUNS = [
 
 // Pares da Home de cada direção (tokens próprios e os usados de outro jeito)
 export const PARES_POR_DIRECAO = {
-  brasa: [
-    { frente: "color-ink", fundo: "color-bg", minimo: 4.5, onde: "texto principal" },
-    { frente: "color-ink-muted", fundo: "color-surface-2", minimo: 4.5, onde: "descrição no card" },
-    { frente: "color-accent-ink", fundo: "color-accent", minimo: 4.5, onde: "botão Adicionar" },
-    { frente: "color-accent-ink", fundo: "color-success", minimo: 4.5, onde: "face Adicionado" },
-    { frente: "color-accent", fundo: "color-bg", minimo: 3, onde: "indicador ativo" },
-    { frente: "color-focus", fundo: "color-surface-2", minimo: 3, onde: "anel de foco no card" },
-  ],
   material: [
     { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal" },
     { frente: "m3-on-surface-variant", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "descrição no card" },

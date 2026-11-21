@@ -87,7 +87,7 @@ Na entrega do redesign, na atualização de dependências (ambas em outubro de 2
 
 As Homes de `#/direcoes` existem só no `yarn dev` e foram verificadas contra o servidor de desenvolvimento (porta 5173), com Playwright e axe-core numa pasta fora do projeto, por scripts adaptados do `axe-scan.mjs` e do `tokens-contrast.mjs` (não versionados):
 
-- **axe-core (WCAG 2.2 AA):** o índice e as oito Homes, em 1440 e 390 px, com e sem movimento reduzido, e o modal Personalizar aberto em cada Home. Também mede rolagem horizontal e alvos de toque de 44 px.
+- **axe-core (WCAG 2.2 AA):** o índice e as sete Homes, em 1440 e 390 px, com e sem movimento reduzido, e o modal Personalizar aberto em cada Home. Também mede rolagem horizontal e alvos de toque de 44 px.
 - **Layout:** em 1440, 1024 e 390 px, captura de página inteira e checagem automática de rolagem horizontal, de controle coberto por outro e de texto cortado.
 - **Fluxo do "Adicionar":** modal, confirmação, retorno visual, contador do carrinho, anúncio para leitor de tela e foco de volta no botão (pelo teclado).
 - **Contraste:** os pares de `src/direcoes/contraste.js`, medidos também na ficha de cada estilo, no navegador.

@@ -4,46 +4,6 @@
 // `cores` aponta para tokens: a ficha lê o valor do próprio estilo no navegador.
 
 export const FICHAS = {
-  brasa: {
-    tese:
-      "A Home em produção: carvão quente com um único acento laranja, reservado para ação e seleção, Bebas Neue nos títulos, Archivo no texto e quatro micro-interações 3D em CSS [SPEC]. Entra sem nenhuma mudança, como régua para as outras sete.",
-    cores: [
-      { nome: "Carvão", token: "color-bg" },
-      { nome: "Superfície do card", token: "color-surface-2" },
-      { nome: "Texto", token: "color-ink" },
-      { nome: "Texto secundário", token: "color-ink-muted" },
-      { nome: "Brasa", token: "color-accent" },
-      { nome: "Sucesso", token: "color-success" },
-    ],
-    tipografia:
-      "Bebas Neue em caixa alta nos títulos de 28 px ou mais; Archivo variável no texto [SPEC].",
-    pros: [
-      "Já está publicada e verificada: o axe-core não achou violações WCAG 2.2 AA em 20 telas e estados, em 1440 e 390 px [README].",
-      "Tokens, componentes, testes e scripts de verificação já existem.",
-    ],
-    contras: [
-      "Fundo quase preto com um único acento vivo é um dos padrões que a skill frontend-design aponta como típicos de páginas geradas por IA [skill].",
-      "Com visão normal, a leitura rendeu mais no tema claro, e a vantagem cresce com a fonte menor [45].",
-    ],
-    riscos: [
-      "Ser confundida com qualquer hamburgueria de tema escuro.",
-      "As fotos do cardápio, escuras, dependem da sombra e da borda do card para não sumir no fundo.",
-    ],
-    custo: "Zero: é o sistema atual.",
-    custoResumo: "Zero",
-    desvios: [],
-    fontes: [
-      { ref: "SPEC", titulo: "SPEC.md, §0, §2 e §7 (neste repositório)" },
-      { ref: "README", titulo: "README.md, seção Interface (neste repositório)" },
-      { ref: "skill", titulo: "Skill frontend-design, carregada nesta exploração" },
-      {
-        ref: "45",
-        titulo: "NN/g: Dark Mode vs. Light Mode: Which Is Better? (2020)",
-        url: "https://www.nngroup.com/articles/dark-mode/",
-      },
-    ],
-  },
-
   material: {
     tese:
       "No Material 3, a marca vira sistema: uma cor-semente gera os papéis de cor em pares, como primary e on-primary [1][5], e o Expressive soma molas, troca de forma e tipografia enfatizada [25]. A semente é a alface, que está em seis dos sete lanches e na foto do hero; a forma de 12 lobos vira a folha atrás do lanche.",
@@ -358,7 +318,7 @@ export const FICHAS = {
 
   escuro: {
     tese:
-      "O tema escuro é um modo de aparência, e muita gente o escolhe como padrão [47]. Aqui ele é a Brasa refeita pelas regras do Material 3 e da Apple: saem o carvão quente com sombra e brilho e o laranja vivo único; entram superfícies neutras em degraus tonais, o laranja num tom claro dessaturado e texto que não é branco puro [13][48][4]. A composição é a da Brasa, para a comparação mostrar só o sistema de cor e de elevação.",
+      "O tema escuro é um modo de aparência, e muita gente o escolhe como padrão [47]. Aqui ele é a Brasa refeita pelas regras do Material 3 e da Apple: saem o carvão quente com sombra e brilho e o laranja vivo único; entram superfícies neutras em degraus tonais, o laranja num tom claro dessaturado e texto que não é branco puro [13][48][4]. A tabela abaixo compara com a Brasa da Home de produção (#/).",
     cores: [
       { nome: "Grafite (surface N6)", token: "esc-surface" },
       { nome: "Card (container N17)", token: "esc-surface-high" },

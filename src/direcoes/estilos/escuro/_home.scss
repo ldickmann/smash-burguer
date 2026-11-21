@@ -1,5 +1,5 @@
 // Home em Dark mode (scoped). Só var(--…): ./_tokens.scss.
-// A composição é a da Brasa; mudam o sistema de cor e o de elevação: degraus tonais em vez de
+// Comparada à Brasa de produção (#/), mudam o sistema de cor e o de elevação: degraus tonais em vez de
 // sombra e brilho, contorno nos cards, laranja no tom 80 e texto em on-surface (sem branco puro).
 @use "@/assets/styles/base/breakpoints" as *;
 

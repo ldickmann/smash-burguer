@@ -55,12 +55,12 @@
       </section>
 
       <section v-if="ficha.diferencas" class="ficha__secao" :aria-labelledby="`dif-${direcao.slug}`">
-        <h3 :id="`dif-${direcao.slug}`" class="ficha__titulo">Diferenças da Brasa</h3>
+        <h3 :id="`dif-${direcao.slug}`" class="ficha__titulo">Diferenças da Brasa, a Home de produção</h3>
         <table class="ficha__tabela ficha__tabela--quebra">
           <thead>
             <tr>
               <th scope="col">O quê</th>
-              <th scope="col">Na Brasa</th>
+              <th scope="col">Na produção</th>
               <th scope="col">Aqui</th>
             </tr>
           </thead>
