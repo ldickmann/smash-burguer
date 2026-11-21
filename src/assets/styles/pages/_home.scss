@@ -1,20 +1,30 @@
-// Home (SPEC §5.2). Fundo liso, sem foto fixa atrás do carrossel.
+// Home (SPEC-material §5.2): o layout da HomeMaterial.vue da referência. O cabeçalho e a reserva da
+// toolbar no pé são do MainLayout (_main-layout.scss e _reset.scss).
 @use "../base/breakpoints" as *;
 
-.home-popular {
-  padding-block: var(--space-7);
+// Ritmo vertical: --space-7 entre as seções e --space-8 a partir de lg
+.home {
+  display: grid;
+  align-content: start;
+  gap: var(--space-7);
+  min-width: 0;
+  padding-block: var(--space-2) var(--space-8);
 
   @include up(lg) {
-    padding-block: var(--space-8);
+    gap: var(--space-8);
+    padding-top: var(--space-4);
   }
 }
 
-.home-popular__title {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 400;
-  font-synthesis: none;
-  letter-spacing: 0.01em;
-  line-height: var(--leading-display);
-  text-transform: uppercase;
+// Bebidas e sobremesas ao lado de Horário e contato a partir de lg (7 e 5 colunas de 12). As colunas
+// têm alturas diferentes: cada contêiner fica com a altura do próprio conteúdo, alinhado ao topo
+.m3-faixa {
+  display: grid;
+  gap: var(--space-7);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+    gap: var(--space-5);
+  }
 }

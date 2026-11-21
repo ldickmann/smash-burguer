@@ -1,0 +1,33 @@
+// Horário e contato, a seção "onde" (cópia de scss/_secao-onde.scss do material, SPEC-material
+// §5.2): o mesmo contêiner e os mesmos cantos da coluna vizinha.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
+
+.m3-onde {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+  color: var(--m3-on-surface);
+
+  @include up(lg) {
+    padding: var(--space-5);
+  }
+
+  @include up(xl) {
+    padding: var(--space-6);
+  }
+}
+
+.m3-onde__titulo {
+  @include tipo(headline-s);
+
+  color: var(--m3-on-surface);
+}
+
+.m3-onde__lista {
+  display: grid;
+  gap: var(--m3-vao-segmento);
+}
