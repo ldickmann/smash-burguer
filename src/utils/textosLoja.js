@@ -1,8 +1,7 @@
 // Textos, contatos e rótulos reais da loja: a fonte única deles na produção (SPEC-material §4.1,
 // "Lógica que vem junto"). Cópia de src/direcoes/compartilhado/dados.js, que segue no acervo, sem o
 // carrossel (SECAO) e sem as redes sociais (REDES, §5.10). A origem de cada texto está no bloco.
-// Módulo puro (sem Vue). Nenhum texto de loja novo: os textos da Home do material que ainda esperam
-// a revisão de UX copy (§8.2) entram na etapa 5.
+// Módulo puro (sem Vue). Nenhum texto de loja novo além da microcopy da Home revisada (TEXTOS, §8.2).
 
 // src/layouts/MainLayout.vue (title e props do TheFooter). Endereço, telefone e e-mail também saem
 // sozinhos, para mostrar o rótulo e o valor separados (sem juntar com "·")
@@ -78,11 +77,23 @@ export const CATEGORIAS = [
   { chave: "desserts", rotulo: "Sobremesas" },
 ];
 
-// Rótulos da Home do material que já existem na produção (SPEC-material §8.2, "tirar a marca"):
-// ingredientes é a legenda da seção do src/components/ModalAdditional.vue; email, o rótulo dos
-// formulários (LoginView, RegisterView e ProfileView); whatsapp, o CONTATOS[whatsapp].rotulo
+// Microcopy da Home (src/direcoes/estilos/material/textos.js), revisada pela SPEC-material §8.2 com a
+// skill de UX copy. Sem número, prazo, taxa, preço, nota, promessa nem promoção.
+// - ingredientes: a legenda da seção do src/components/ModalAdditional.vue;
+// - vazio: o título do EmptyState do src/views/MenuView.vue;
+// - adicional/adicionais: "7 adicionais" na sobremesa (contagem calculada), a palavra do título
+//   "Adicionais" do modal, onde o "Adicionar" leva;
+// - ondeTitulo: o h2 da seção "onde". Na referência era "Onde e quando", que deixava de fora o WhatsApp
+//   e o e-mail; a lista é a "de horário e contato" do rodapé fora da Home (decisão g), e o endereço
+//   já ficava entre os contatos no rodapé da Brasa (TheFooterContactInfo.vue);
+// - email: o rótulo dos formulários (LoginView, RegisterView e ProfileView);
+// - whatsapp: o CONTATOS[whatsapp].rotulo.
 export const TEXTOS = {
   ingredientes: "Ingredientes",
+  vazio: "Nada nesta categoria por enquanto",
+  adicional: "adicional",
+  adicionais: "adicionais",
+  ondeTitulo: "Horário e contato",
   email: "E-mail",
   whatsapp: "WhatsApp",
 };

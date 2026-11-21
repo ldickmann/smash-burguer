@@ -1,41 +1,35 @@
+<!-- Home em Material 3 Expressive (SPEC-material §5.2): a composição da Home de referência
+     (src/direcoes/estilos/material/HomeMaterial.vue), sem a moldura do acervo. O cabeçalho, a toolbar e o
+     rodapé vêm do MainLayout. A prensa do hero é o único gesto expressivo; o resto são superfícies
+     tonais, o feed e listas segmentadas. O modal Personalizar é desta view: as seções o abrem por
+     usePersonalizar() e nenhuma usa o carrinho nem calcula preço. -->
 <template>
-  <BannerComponent
-    variant="hero"
-    title="Smash na chapa, entregue quente"
-    text="Hambúrgueres artesanais prensados na hora. De terça a sexta, das 13h à 01h."
-    image="/images/fundos/banner-burger-bg"
-    alt="Hambúrguer artesanal com queijo, carne prensada e alface"
-    :image-width="960"
-    :image-height="906"
-  >
-    <template #actions>
-      <BaseButton size="lg" to="/menu" icon-end="arrow-right">Ver cardápio</BaseButton>
-    </template>
-  </BannerComponent>
-
-  <section class="home-popular" aria-labelledby="mais-pedidos">
-    <div class="container">
-      <CarouselBurguer :products="productsStore.foods" @add="openModal">
-        <template #title>
-          <h2 id="mais-pedidos" class="home-popular__title">Mais pedidos</h2>
-        </template>
-      </CarouselBurguer>
+  <div class="home">
+    <M3SecaoHero />
+    <M3SecaoLanches />
+    <div class="m3-faixa container">
+      <M3SecaoBebidasSobremesas />
+      <M3SecaoOnde />
     </div>
-  </section>
+  </div>
 
   <ModalAdditional :open="isOpen" :product="product" @close="closeModal" @confirm="confirm" />
 </template>
 
 <script setup>
-import { useProductsStore } from "@/stores/products";
+import { provide } from "vue";
 import { useProductModal } from "@/composables/useProductModal";
-import BannerComponent from "@/components/BannerComponent.vue";
-import BaseButton from "@/components/ui/BaseButton.vue";
-import CarouselBurguer from "@/components/CarouselBurguer.vue";
+import { CHAVE_PERSONALIZAR } from "@/composables/usePersonalizar";
 import ModalAdditional from "@/components/ModalAdditional.vue";
+import M3SecaoBebidasSobremesas from "@/components/home/M3SecaoBebidasSobremesas.vue";
+import M3SecaoHero from "@/components/home/M3SecaoHero.vue";
+import M3SecaoLanches from "@/components/home/M3SecaoLanches.vue";
+import M3SecaoOnde from "@/components/home/M3SecaoOnde.vue";
 
-const productsStore = useProductsStore();
 const { isOpen, product, openModal, closeModal, confirm } = useProductModal();
+
+// As seções e os cards abrem o modal com personalizar(produto, contexto)
+provide(CHAVE_PERSONALIZAR, openModal);
 </script>
 
 <style scoped lang="scss">

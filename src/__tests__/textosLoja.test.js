@@ -30,7 +30,15 @@ describe('textosLoja', () => {
     expect(textos.RODAPE).not.toHaveProperty('copyright');
   });
 
-  it('só os rótulos da Home que já existem na produção (§8.2)', () => {
-    expect(textos.TEXTOS).toEqual({ ingredientes: 'Ingredientes', email: 'E-mail', whatsapp: 'WhatsApp' });
+  it('a microcopy da Home, revisada (§8.2): só o título da seção "onde" muda', () => {
+    expect(textos.TEXTOS).toEqual({
+      ingredientes: 'Ingredientes',
+      vazio: 'Nada nesta categoria por enquanto',
+      adicional: 'adicional',
+      adicionais: 'adicionais',
+      ondeTitulo: 'Horário e contato',
+      email: 'E-mail',
+      whatsapp: 'WhatsApp',
+    });
   });
 });

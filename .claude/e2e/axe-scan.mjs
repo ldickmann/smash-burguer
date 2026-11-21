@@ -31,6 +31,21 @@ const LOGGED = { user: SESSION, 'smash-burger:session': SESSION, 'smash-burger:a
 const SCENARIOS = {
   loja: [
     { name: 'home', hash: '#/' },
+    // SPEC-material §13.3: a Home com a folha de ingredientes aberta e com o cardápio esvaziado no
+    // painel (a store de produtos vazia, salva no navegador como o painel salva, e a página recarregada)
+    { name: 'home-folha', hash: '#/', act: async (p) => { await p.getByRole('button', { name: 'Ingredientes de Smash Burger', exact: true }).click(); await p.waitForTimeout(600); } },
+    {
+      name: 'home-vazio', hash: '#/', full: true, act: async (p) => {
+        await p.evaluate(() => { const s = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('products'); s.menuItems = { foods: [], drinks: [], desserts: [] }; s.loadedCategories = ['foods', 'drinks', 'desserts']; });
+        await p.waitForTimeout(300);
+        await p.reload();
+        await p.waitForLoadState('networkidle').catch(() => {});
+        await p.waitForTimeout(300);
+        // Sem esta conferência, uma mudança na persistência do catálogo faria o axe medir a Home cheia
+        const vazio = await p.evaluate(() => ({ produtos: document.querySelectorAll('[data-secao] article, [data-secao] .m3-item').length, avisos: [...document.querySelectorAll('[data-secao]')].filter((s) => s.textContent.includes('Nada nesta categoria por enquanto')).length }));
+        if (vazio.produtos > 0 || vazio.avisos !== 2) throw new Error(`home-vazio: o cardápio não ficou vazio depois de recarregar (${JSON.stringify(vazio)})`);
+      },
+    },
     { name: 'menu', hash: '#/menu' },
     { name: 'modal-burger', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Adicionar Cheese Bacon' }).click(); await p.waitForTimeout(600); } },
     { name: 'modal-bebida', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Bebidas' }).click(); await p.getByRole('button', { name: 'Adicionar Copo de Refrigerante' }).click(); await p.waitForTimeout(600); } },
@@ -85,7 +100,7 @@ for (const w of VPS) {
     if (OUT) {
       const tag = `${sc.name}-${w}${REDUCE ? '-reduce' : ''}`;
       await page.screenshot({ path: `${OUT}/${tag}-viewport.png` });
-      if (!sc.act) {
+      if (!sc.act || sc.full) {
         // Página inteira: rola até o fim e volta, para carregar o lazy
         await page.evaluate(async () => { window.scrollTo(0, document.documentElement.scrollHeight); await new Promise((r) => setTimeout(r, 400)); window.scrollTo(0, 0); document.activeElement?.blur?.(); });
         await page.waitForLoadState('networkidle').catch(() => {});

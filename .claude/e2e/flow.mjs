@@ -1,6 +1,8 @@
 /* global process */
 // Fluxo do pedido de ponta a ponta (SPEC §13.4 e SPEC-material §13.4), com ViaCEP simulado e
 // localStorage limpo. A navegação é pela pílula (Início, Cardápio, Entrar/Perfil) e o carrinho, pelo FAB.
+// O lanche e a bebida entram pela Home: a folha de ingredientes pelo split, o modal e o retorno
+// "Adicionado" no split e no botão tonal da lista (SPEC-material §13.4 e §7.6).
 // uso: node flow.mjs [largura]   (padrão: 390 e depois 1440)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -72,6 +74,27 @@ for (const w of widths) {
     check(bar.pos === 'fixed' && bar.top >= 0 && bar.bottom <= bar.vh, 'rolado até o fim, a pílula e o FAB continuam à vista', JSON.stringify(bar));
     await page.evaluate(() => window.scrollTo(0, 0));
   }
+
+  // Adicionar pela Home (SPEC-material §13.4): a folha de ingredientes pela metade de trás do split
+  await pill(page, 'Início').click();
+  await page.waitForURL(/#\/$/, { timeout: 3000 }).catch(() => {});
+  await page.waitForLoadState('networkidle');
+  check(await pill(page, 'Início').getAttribute('aria-current') === 'page', 'a pílula volta à Home, com Início atual');
+  const tras = page.getByRole('button', { name: 'Ingredientes de Cheese Bacon', exact: true });
+  await tras.click();
+  await page.waitForTimeout(400);
+  const folha = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('button[aria-controls]')].find((x) => x.getAttribute('aria-label') === 'Ingredientes de Cheese Bacon');
+    const f = document.getElementById(b.getAttribute('aria-controls'));
+    return { expanded: b.getAttribute('aria-expanded'), visivel: !!f && getComputedStyle(f).display !== 'none', itens: [...(f?.querySelectorAll('li') ?? [])].map((li) => li.textContent.trim()) };
+  });
+  check(folha.expanded === 'true' && folha.visivel && folha.itens.includes('Bacon') && folha.itens.includes('Tomate'), 'a metade de trás abre a folha com os ingredientes reais (aria-expanded="true")', JSON.stringify(folha));
+  await snap('folha');
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(250);
+  const fechou = await page.evaluate(() => { const a = document.activeElement; return { label: a.getAttribute('aria-label'), expanded: a.getAttribute('aria-expanded') }; });
+  check(fechou.label === 'Ingredientes de Cheese Bacon' && fechou.expanded === 'false', 'Esc fecha a folha e devolve o foco à metade de trás', JSON.stringify(fechou));
+
   await page.getByRole('button', { name: 'Adicionar Cheese Bacon', exact: true }).click();
   await page.waitForTimeout(500);
   check(await page.evaluate(() => document.querySelector('dialog').matches(':modal')), 'diálogo abre com :modal === true');
@@ -93,22 +116,22 @@ for (const w of widths) {
   await page.locator('dialog[open] label', { hasText: 'Tomate' }).click();
   await page.getByRole('button', { name: 'Aumentar Bacon' }).click();
   await page.locator('dialog[open] .dialog__footer button').click();
-  await page.waitForTimeout(120);
+  await page.waitForTimeout(400);
+  // Retorno "Adicionado" (SPEC-material §7.6): o foco na frente do split, com data-adicionado e a face
+  // "Adicionado" à vista; o nome acessível não muda
   const after = await page.evaluate(() => {
     const btn = document.activeElement;
-    const inner = btn.querySelector?.('.add-btn__inner');
-    const t = inner ? getComputedStyle(inner).transform : 'none';
-    let deg = null;
-    if (t !== 'none') { const mm = new DOMMatrix(t); deg = Math.abs(Math.atan2(mm.m23, mm.m22) * 180 / Math.PI); }
-    return { open: document.querySelector('dialog').open, focus: btn.getAttribute('aria-label'), added: btn.classList.contains('is-added'), deg };
+    const verso = btn.querySelector?.('.m3-dividido__face--verso');
+    return { open: document.querySelector('dialog').open, focus: btn.getAttribute('aria-label'), frente: btn.classList.contains('m3-dividido__frente'), adicionado: btn.dataset.adicionado, verso: verso && { texto: verso.textContent.trim(), opacidade: getComputedStyle(verso).opacity } };
   });
-  check(!after.open && after.focus === 'Adicionar Cheese Bacon', 'diálogo fecha e o foco está no "Adicionar" do card', JSON.stringify(after));
-  check(after.added && after.deg > 0 && after.deg < 180, 'botão com is-added e rotação entre 0 e 180° em ~120ms', `${after.deg?.toFixed(1)}°`);
-  await page.waitForTimeout(400);
+  check(!after.open && after.focus === 'Adicionar Cheese Bacon' && after.frente, 'diálogo fecha e o foco está na frente do split do card', JSON.stringify(after));
+  check(after.adicionado === 'true' && after.verso?.texto === 'Adicionado' && after.verso.opacidade === '1', 'a frente tem data-adicionado="true" e a face "Adicionado"', JSON.stringify(after.verso));
   const live = await page.evaluate(() => ({ badge: document.querySelector('.m3-fab .m3-badge')?.textContent.trim(), label: document.querySelector('a.m3-fab').getAttribute('aria-label'), live: document.querySelector('[data-announcer]').textContent }));
   check(live.badge === '1' && live.label === 'Carrinho, 1 item', 'badge do FAB mostra "1" e o FAB se chama "Carrinho, 1 item"', JSON.stringify({ badge: live.badge, label: live.label }));
   check(norm(live.live).includes('Cheese Bacon adicionado ao carrinho'), 'região viva anuncia a adição', norm(live.live));
   await page.waitForTimeout(1500);
+  const fim = await page.evaluate(() => [...document.querySelectorAll('[data-adicionado]')].length);
+  check(fim === 0, 'o data-adicionado some depois do retorno (~1,45 s)', `${fim} botão(ões)`);
   await page.getByRole('button', { name: 'Adicionar Smash Burger', exact: true }).click();
   await page.waitForTimeout(500);
   const smash = await page.evaluate(() => ({ zeros: [...document.querySelectorAll('dialog .additionals-list .stepper__value')].every((o) => o.textContent.trim() === '0'), cta: document.querySelector('dialog .dialog__footer button').textContent }));
@@ -192,17 +215,23 @@ for (const w of widths) {
   const relogged = await page.evaluate(() => ({ url: location.hash, link: [...document.querySelectorAll('.m3-pilula__item')].map((a) => a.textContent.trim()).join(',') }));
   check(relogged.url === '#/' && relogged.link.includes('Perfil'), 'sair e entrar de novo funciona', JSON.stringify(relogged));
 
-  // Quantidade e remoção
+  // Quantidade e remoção: a bebida entra pela lista segmentada da Home (SPEC-material §13.4)
   console.log('Quantidade e remoção');
-  await pill(page, 'Cardápio').click();
+  await pill(page, 'Início').click();
   await page.waitForTimeout(400);
-  await page.getByRole('button', { name: 'Bebidas' }).click();
   await page.getByRole('button', { name: 'Adicionar Coca Cola Lata', exact: true }).click();
   await page.waitForTimeout(400);
   await page.getByRole('button', { name: 'Aumentar Coca Cola Lata' }).click();
   await page.getByRole('button', { name: 'Aumentar Coca Cola Lata' }).click();
   await page.locator('dialog[open] .dialog__footer button').click();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(400);
+  // Retorno do BaseButton tonal da lista (o M3ItemLista): a mesma face "Adicionado" do split
+  const lista = await page.evaluate(() => {
+    const btn = document.activeElement;
+    const verso = btn.querySelector?.('.btn__face--verso');
+    return { focus: btn.getAttribute('aria-label'), item: !!btn.closest('.m3-item'), adicionado: btn.dataset.adicionado, verso: verso && { texto: verso.textContent.trim(), opacidade: getComputedStyle(verso).opacity } };
+  });
+  check(lista.focus === 'Adicionar Coca Cola Lata' && lista.item && lista.adicionado === 'true' && lista.verso?.texto === 'Adicionado' && lista.verso.opacidade === '1', 'na lista da Home, o foco volta ao "Adicionar" com o retorno "Adicionado"', JSON.stringify(lista));
   const three = await fabState(page);
   check(three.badge === '3' && three.label === 'Carrinho, 3 itens', 'bebida com quantidade 3: badge "3" e "Carrinho, 3 itens"', JSON.stringify(three));
   await fab(page).click();
