@@ -39,16 +39,12 @@ for (const reduce of [true, false]) {
   await go(page, '#/menu');
   const props = await page.evaluate(() => {
     const out = {};
-    for (const sel of ['.btn', '.navbar__link', '.category-tabs .btn', '.product-card', '.add-btn__inner', 'a']) {
+    for (const sel of ['.btn', '.m3-pilula__item', '.category-tabs .btn', '.product-card', '.add-btn__inner', 'a']) {
       const el = document.querySelector(sel); if (!el) continue;
       const s = getComputedStyle(el); out[sel] = `${s.transitionProperty} ${s.transitionDuration}`;
     }
     return out;
   });
-  await page.getByRole('button', { name: 'Menu principal' }).click();
-  await page.waitForTimeout(30);
-  const menu = await page.evaluate(() => { const m = document.querySelector('#menu-principal'); const s = getComputedStyle(m); return `${s.animationName.replace(/-[0-9a-f]{8}$/, '')} ${s.animationDuration}`; });
-  await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Adicionar Cheese Bacon' }).click();
   await page.waitForTimeout(30);
   const dlg = await page.evaluate(() => { const d = document.querySelector('dialog[open]'); const s = getComputedStyle(d); const b = getComputedStyle(d, '::backdrop'); const n = (x) => x.replace(/-[0-9a-f]{8}$/, ''); return { dialog: `${n(s.animationName)} ${s.animationDuration}`, backdrop: `${n(b.animationName)} ${b.animationDuration}` }; });
@@ -56,35 +52,15 @@ for (const reduce of [true, false]) {
   if (reduce) {
     const bad = Object.entries(props).filter(([, v]) => !/^opacity 0\.15s$|^(opacity, )*opacity 0\.15s(, 0\.15s)*$/.test(v) && !/^opacity 0\.15s/.test(v));
     check(bad.length === 0, 'reduzido: transições só de opacity em 150ms (botões, links, cards)', JSON.stringify(props));
-    check(menu === 'navbar-menu-fade 0.15s', 'reduzido: menu mobile só com opacidade em 150ms', menu);
     check(dlg.dialog === 'dialog-fade 0.15s' && dlg.backdrop === 'dialog-fade 0.15s', 'reduzido: sheet e fundo do diálogo com opacidade em 150ms', JSON.stringify(dlg));
   } else {
-    check(menu === 'navbar-menu-in 0.24s', 'normal: o menu mantém translateY + opacidade em 240ms', menu);
     check(dlg.dialog === 'dialog-sheet-in 0.4s' && dlg.backdrop === 'dialog-fade 0.24s', 'normal: sheet em 400ms e fundo em 240ms, como antes', JSON.stringify(dlg));
     check(!/color/.test(JSON.stringify(props)), 'normal: nenhuma transição de cor', JSON.stringify(props));
   }
   await ctx.close();
 }
 
-// 3. Menu mobile aberto e a tela passa de md: fecha e devolve a rolagem
-console.log('=== §5.1 menu ao cruzar md');
-{
-  const ctx = await browser.newContext({ viewport: { width: 700, height: 900 } });
-  const page = await ctx.newPage();
-  await go(page, '#/');
-  await page.getByRole('button', { name: 'Menu principal' }).click();
-  await page.waitForTimeout(200);
-  const before = await page.evaluate(() => getComputedStyle(document.body).overflow + '|' + getComputedStyle(document.documentElement).overflow);
-  await page.setViewportSize({ width: 1024, height: 900 });
-  await page.waitForTimeout(300);
-  const after = await page.evaluate(() => ({ overflow: getComputedStyle(document.body).overflow + '|' + getComputedStyle(document.documentElement).overflow, scroll: (window.scrollTo(0, 600), window.scrollY) }));
-  await page.setViewportSize({ width: 700, height: 900 });
-  await page.waitForTimeout(200);
-  const expanded = await page.getByRole('button', { name: 'Menu principal' }).getAttribute('aria-expanded');
-  check(/hidden/.test(before) && !/hidden/.test(after.overflow) && after.scroll > 0 && expanded === 'false', 'ao passar de md o menu fecha e a rolagem volta', `antes=${before} depois=${after.overflow} scrollY=${after.scroll} expanded=${expanded}`);
-  await ctx.close();
-}
-
+// 3. O menu mobile da Brasa saiu (SPEC-material §5.1): a toolbar do M3 não tem menu nem trava a rolagem
 // 4. Guard genérico: /profile sem sessão vai para /login, com o redirect de volta para o perfil
 console.log('=== §10.6 guard do perfil');
 {

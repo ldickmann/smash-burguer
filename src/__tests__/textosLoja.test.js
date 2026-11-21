@@ -24,6 +24,12 @@ describe('textosLoja', () => {
     expect(textos.RODAPE).toMatchObject({ endereco: 'Endereço', horario: 'Horário' });
   });
 
+  it('direitos nas três partes do texto de hoje, sem "·" nem "—" (§10.2)', () => {
+    expect(textos.DIREITOS).toEqual(['© 2026 Smash Burger', 'Sabiá Operações', 'Desenvolvido por Lucas Elias Dickmann']);
+    // Uma fonte só: a linha antiga, com os separadores, sai do RODAPE
+    expect(textos.RODAPE).not.toHaveProperty('copyright');
+  });
+
   it('só os rótulos da Home que já existem na produção (§8.2)', () => {
     expect(textos.TEXTOS).toEqual({ ingredientes: 'Ingredientes', email: 'E-mail', whatsapp: 'WhatsApp' });
   });

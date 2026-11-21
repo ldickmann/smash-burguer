@@ -1,21 +1,61 @@
-// §13.5 Teclado: só Tab, Shift+Tab, Enter, Espaço, setas e Esc.
+// §13.5 Teclado: só Tab, Shift+Tab, Enter, Espaço, setas e Esc (SPEC-material §13.5 e §13.3, item 6).
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 const USER = { firstName: 'Maria', lastName: 'Silva', email: 'maria@example.com', password: 'senha123', CEP: '88370000', address: { street: 'Rua Beira da Praia', neighborhood: 'Centro', city: 'Navegantes', state: 'SC' } };
 const SESSION = { user: USER, isAuthenticated: true, orderHistory: [], lastOrderId: null, nextOrderId: 1001 };
 const CART = { items: [{ productId: 1, category: 'foods', name: 'Cheese Bacon', image: '/images/foods/cheese-bacon', unitPrice: 25.99, quantity: 1, removedIngredients: [], additionals: [], observation: '' }] };
+// Pedido feito, para a confirmação abrir na checagem do foco não coberto
+const ORDER = { id: 1001, date: '2026-10-17T22:15:00.000Z', status: 'Recebido', paymentMethod: 'PIX', total: 25.99, address: USER.address, items: CART.items };
+const SESSION_PEDIDO = { ...SESSION, orderHistory: [ORDER], lastOrderId: 1001, nextOrderId: 1002 };
 let failures = 0;
 const check = (c, l, x = '') => { if (!c) failures++; console.log(`${c ? '  ✓' : '  ✗'} ${l}${x ? ` — ${x}` : ''}`); };
 const browser = await chromium.launch();
+const seed = (ctx, s) => ctx.addInitScript((s) => { if (!sessionStorage.getItem('k')) { localStorage.clear(); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, v); sessionStorage.setItem('k', '1'); } }, Object.fromEntries(Object.entries(s).map(([k, v]) => [k, JSON.stringify(v)])));
 
-// Anel visível no elemento focado (ou no card do rádio escondido)
+// Anel visível no elemento focado (ou no card do rádio escondido): 3 px (SPEC-material §2.2 e §13.5).
+// O link da assinatura de autoria fica fora das convenções (CLAUDE.md) e mantém o anel próprio, de 2 px
 const ringOf = () => {
   let el = document.activeElement;
   if (el.matches('input.visually-hidden')) el = el.closest('label');
   const s = getComputedStyle(el);
   const w = parseFloat(s.outlineWidth);
-  return { tag: el.tagName, name: (el.getAttribute('aria-label') || el.textContent || el.id || '').trim().replace(/\s+/g, ' ').slice(0, 28), ok: s.outlineStyle !== 'none' && w >= 2, outline: `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}` };
+  const min = el.matches('.ldk-encaixe__l') ? 2 : 3;
+  return { tag: el.tagName, name: (el.getAttribute('aria-label') || el.textContent || el.id || '').trim().replace(/\s+/g, ' ').slice(0, 28), ok: s.outlineStyle !== 'none' && w >= min, outline: `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}` };
 };
+
+// §13.3, item 6: abaixo de lg, o elemento focado nunca fica inteiro dentro da toolbar flutuante. Com a
+// reserva do pé (scroll-padding-bottom e padding-bottom de --m3-barra-reserva), também não encosta nela:
+// a toolbar fica 16 px acima da borda, então um foco rolado até a borda nunca ficaria inteiro dentro
+const coveredBy = () => {
+  const el = document.activeElement;
+  const bar = document.querySelector('.m3-ferramentas');
+  if (!bar || bar.contains(el) || el === document.body) return null;
+  const r = el.getBoundingClientRect();
+  const b = bar.getBoundingClientRect();
+  const name = `${el.tagName} "${(el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28)}"`;
+  const inside = r.width > 0 && r.left >= b.left && r.right <= b.right && r.top >= b.top && r.bottom <= b.bottom;
+  const overlap = Math.min(r.right, b.right) > Math.max(r.left, b.left) && Math.min(r.bottom, b.bottom) > Math.max(r.top, b.top);
+  return { name, inside, overlap };
+};
+
+async function focusNotCovered(page, label, max = 90) {
+  const seen = new Set();
+  const covered = [];
+  const touching = [];
+  let count = 0;
+  for (let i = 0; i < max; i++) {
+    await page.keyboard.press('Tab');
+    const key = await page.evaluate(() => { const el = document.activeElement; return el === document.body ? 'BODY' : `${el.tagName}:${(el.getAttribute('aria-label') || el.textContent || el.id || '').trim().slice(0, 40)}:${Math.round(el.getBoundingClientRect().top + scrollY)}`; });
+    if (key === 'BODY' || seen.has(key)) break;
+    seen.add(key);
+    count++;
+    const c = await page.evaluate(coveredBy);
+    if (c?.inside) covered.push(c.name);
+    if (c?.overlap) touching.push(c.name);
+  }
+  check(covered.length === 0, `${label}: nenhum dos ${count} focos fica coberto pela toolbar`, covered.join(' | '));
+  check(touching.length === 0, `${label}: a reserva do pé deixa todos os focos fora da toolbar`, touching.join(' | '));
+}
 
 async function tabAll(page, label, max = 60) {
   const seen = new Set();
@@ -44,6 +84,18 @@ for (const w of [1440, 390]) {
   check(skip.text === 'Pular para o conteúdo' && skip.visible, 'o primeiro Tab mostra o skip link');
   await page.keyboard.press('Enter');
   check(await page.evaluate(() => document.activeElement.id === 'conteudo'), 'Enter no skip link leva o foco ao conteúdo');
+
+  // Ordem do Tab no topo: skip link, marca, Início, Cardápio, Perfil, carrinho e o <main>. O reload
+  // começa o foco do início do documento (trocar só o hash manteria o foco no <main>)
+  await page.goto(BASE + '#/menu');
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  const order = [];
+  for (let i = 0; i < 7; i++) {
+    await page.keyboard.press('Tab');
+    order.push(await page.evaluate(() => { const el = document.activeElement; return document.getElementById('conteudo').contains(el) ? 'main' : (el.getAttribute('aria-label') || el.textContent).trim().replace(/\s+/g, ' '); }));
+  }
+  check(order.join(' | ') === 'Pular para o conteúdo | Smash Burger | Início | Cardápio | Perfil | Carrinho, 1 item | main', 'ordem do Tab: skip, marca, os 3 links, carrinho e main', order.join(' | '));
   await page.goto(BASE + '#/');
   await page.waitForLoadState('networkidle');
   await tabAll(page, 'Home');
@@ -83,18 +135,33 @@ for (const w of [1440, 390]) {
   check(ring.ok && ring.tag === 'LABEL', 'anel de foco no card do pagamento', ring.outline);
   await tabAll(page, 'Pagamento', 25);
 
-  if (w === 390) {
-    await page.goto(BASE + '#/');
-    await page.waitForLoadState('networkidle');
-    await page.getByRole('button', { name: 'Menu principal' }).focus();
-    await page.keyboard.press('Enter');
-    await page.waitForTimeout(300);
-    const opened = await page.evaluate(() => document.activeElement.textContent.trim());
-    await page.keyboard.press('Escape');
-    const back = await page.evaluate(() => document.activeElement.getAttribute('aria-label'));
-    check(opened === 'Início' && back === 'Menu principal', 'menu mobile: Enter abre, Esc fecha e devolve o foco');
-  }
+  // O menu mobile saiu: os três links ficam sempre à vista na pílula
+  check(await page.getByRole('button', { name: 'Menu principal' }).count() === 0, 'sem o botão do menu mobile');
   await ctx.close();
+
+  // §13.3, item 6: abaixo de lg, em todas as rotas da loja (com sessão; login e cadastro sem)
+  if (w < 1024) {
+    const fctx = await browser.newContext({ viewport: { width: w, height: 844 } });
+    await seed(fctx, { 'smash-burger:session': SESSION_PEDIDO, 'smash-burger:cart:v1': CART, 'smash-burger:account': USER });
+    const fp = await fctx.newPage();
+    for (const [hash, name] of [['#/', 'Home'], ['#/menu', 'Cardápio'], ['#/cart', 'Carrinho'], ['#/payment', 'Pagamento'], ['#/confirmation', 'Confirmação'], ['#/profile', 'Perfil'], ['#/rota-inexistente', '404']]) {
+      await fp.goto(BASE + hash);
+      await fp.waitForLoadState('networkidle');
+      await fp.waitForTimeout(250);
+      check(fp.url().endsWith(hash), `${name}: a rota abre com a sessão semeada`, fp.url().split('#')[1]);
+      await focusNotCovered(fp, `${name} em ${w}`);
+    }
+    await fctx.close();
+    const gctx = await browser.newContext({ viewport: { width: w, height: 844 } });
+    const gp = await gctx.newPage();
+    for (const [hash, name] of [['#/login', 'Login'], ['#/register', 'Cadastro']]) {
+      await gp.goto(BASE + hash);
+      await gp.waitForLoadState('networkidle');
+      await gp.waitForTimeout(250);
+      await focusNotCovered(gp, `${name} em ${w}`);
+    }
+    await gctx.close();
+  }
 
   // Admin
   const actx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 } });

@@ -1,5 +1,6 @@
 /* global process */
-// Fluxo do pedido de ponta a ponta (SPEC §13.4), com ViaCEP simulado e localStorage limpo.
+// Fluxo do pedido de ponta a ponta (SPEC §13.4 e SPEC-material §13.4), com ViaCEP simulado e
+// localStorage limpo. A navegação é pela pílula (Início, Cardápio, Entrar/Perfil) e o carrinho, pelo FAB.
 // uso: node flow.mjs [largura]   (padrão: 390 e depois 1440)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -9,6 +10,10 @@ const OUT = process.env.FLOW_OUT;
 const widths = process.argv[2] ? [Number(process.argv[2])] : [390, 1440];
 const norm = (s) => (s || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
 let failures = 0;
+// Toolbar do M3: a nav Principal na pílula e o FAB do carrinho, com o badge (SPEC-material §4.1)
+const pill = (page, name) => page.getByRole('navigation', { name: 'Principal' }).getByRole('link', { name, exact: true });
+const fab = (page) => page.locator('a.m3-fab');
+const fabState = (page) => page.evaluate(() => { const f = document.querySelector('a.m3-fab'); return { badge: f.querySelector('.m3-badge')?.textContent.trim(), label: f.getAttribute('aria-label') }; });
 const check = (cond, label, extra = '') => {
   if (!cond) failures += 1;
   console.log(`${cond ? '  ✓' : '  ✗'} ${label}${extra ? ` — ${extra}` : ''}`);
@@ -52,8 +57,21 @@ for (const w of widths) {
 
   // Pedido como visitante
   console.log('Pedido como visitante');
-  await page.goto(BASE + '#/menu');
+  await page.goto(BASE + '#/');
   await page.waitForLoadState('networkidle');
+  await pill(page, 'Cardápio').click();
+  await page.waitForURL(/#\/menu$/, { timeout: 3000 }).catch(() => {});
+  await page.waitForLoadState('networkidle');
+  check(page.url().endsWith('#/menu'), 'a pílula leva ao Cardápio', page.url().split('#')[1]);
+  check(await pill(page, 'Cardápio').getAttribute('aria-current') === 'page', 'o item atual da pílula tem aria-current="page"');
+  if (w < 1024) {
+    // Abaixo de lg, a toolbar flutua: depois de rolar até o fim, a pílula e o FAB seguem na tela
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(250);
+    const bar = await page.evaluate(() => { const r = document.querySelector('.m3-ferramentas').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight, pos: getComputedStyle(document.querySelector('.m3-ferramentas')).position }; });
+    check(bar.pos === 'fixed' && bar.top >= 0 && bar.bottom <= bar.vh, 'rolado até o fim, a pílula e o FAB continuam à vista', JSON.stringify(bar));
+    await page.evaluate(() => window.scrollTo(0, 0));
+  }
   await page.getByRole('button', { name: 'Adicionar Cheese Bacon', exact: true }).click();
   await page.waitForTimeout(500);
   check(await page.evaluate(() => document.querySelector('dialog').matches(':modal')), 'diálogo abre com :modal === true');
@@ -87,8 +105,8 @@ for (const w of widths) {
   check(!after.open && after.focus === 'Adicionar Cheese Bacon', 'diálogo fecha e o foco está no "Adicionar" do card', JSON.stringify(after));
   check(after.added && after.deg > 0 && after.deg < 180, 'botão com is-added e rotação entre 0 e 180° em ~120ms', `${after.deg?.toFixed(1)}°`);
   await page.waitForTimeout(400);
-  const live = await page.evaluate(() => ({ badge: document.querySelector('.cart-badge__count')?.textContent.trim(), live: document.querySelector('[data-announcer]').textContent }));
-  check(live.badge === '1', 'badge mostra "1"', live.badge);
+  const live = await page.evaluate(() => ({ badge: document.querySelector('.m3-fab .m3-badge')?.textContent.trim(), label: document.querySelector('a.m3-fab').getAttribute('aria-label'), live: document.querySelector('[data-announcer]').textContent }));
+  check(live.badge === '1' && live.label === 'Carrinho, 1 item', 'badge do FAB mostra "1" e o FAB se chama "Carrinho, 1 item"', JSON.stringify({ badge: live.badge, label: live.label }));
   check(norm(live.live).includes('Cheese Bacon adicionado ao carrinho'), 'região viva anuncia a adição', norm(live.live));
   await page.waitForTimeout(1500);
   await page.getByRole('button', { name: 'Adicionar Smash Burger', exact: true }).click();
@@ -99,13 +117,15 @@ for (const w of widths) {
   await page.keyboard.press('Escape');
   await page.reload();
   await page.waitForLoadState('networkidle');
-  const persisted = await page.evaluate(() => document.querySelector('.cart-badge').getAttribute('aria-label'));
+  const persisted = (await fabState(page)).label;
   check(persisted === 'Carrinho, 1 item', 'depois de recarregar o carrinho mantém 1 item', persisted);
 
   // Carrinho
   console.log('Carrinho');
-  await page.goto(BASE + '#/cart');
+  await fab(page).click();
+  await page.waitForURL(/#\/cart$/, { timeout: 3000 }).catch(() => {});
   await page.waitForTimeout(500);
+  check(page.url().endsWith('#/cart'), 'o FAB leva ao carrinho', page.url().split('#')[1]);
   const cart = await page.evaluate(() => ({ details: [...document.querySelectorAll('.cart-item__detail')].map((d) => d.textContent.trim()), total: document.querySelector('.order-summary__value').textContent, notice: document.querySelector('.cart-page__notice')?.textContent.trim() }));
   check(cart.details.includes('Sem tomate') && cart.details.includes('+1 bacon'), 'item mostra "Sem tomate" e "+1 bacon"', cart.details.join(' | '));
   check(norm(cart.total) === 'R$ 29,49', 'total R$ 29,49', norm(cart.total));
@@ -151,7 +171,7 @@ for (const w of widths) {
 
   // Confirmação
   console.log('Confirmação');
-  const conf = await page.evaluate(() => ({ focus: document.activeElement.tagName + ':' + document.activeElement.textContent.trim(), meta: document.querySelector('.confirmation-page__meta')?.textContent, badge: !!document.querySelector('.cart-badge__count') }));
+  const conf = await page.evaluate(() => ({ focus: document.activeElement.tagName + ':' + document.activeElement.textContent.trim(), meta: document.querySelector('.confirmation-page__meta')?.textContent, badge: !!document.querySelector('.m3-fab .m3-badge') }));
   check(conf.focus === 'H1:Pedido recebido', 'o foco está no h1 "Pedido recebido"', conf.focus);
   check(norm(conf.meta) === 'Pedido #1001 · PIX', 'mostra "Pedido #1001 · PIX"', norm(conf.meta));
   check(!conf.badge, 'o badge some (carrinho esvaziado)');
@@ -169,12 +189,12 @@ for (const w of widths) {
   await page.fill('#password', 'senha123');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await page.waitForTimeout(1500);
-  const relogged = await page.evaluate(() => ({ url: location.hash, link: [...document.querySelectorAll('.navbar__link')].map((a) => a.textContent.trim()).join(',') }));
+  const relogged = await page.evaluate(() => ({ url: location.hash, link: [...document.querySelectorAll('.m3-pilula__item')].map((a) => a.textContent.trim()).join(',') }));
   check(relogged.url === '#/' && relogged.link.includes('Perfil'), 'sair e entrar de novo funciona', JSON.stringify(relogged));
 
   // Quantidade e remoção
   console.log('Quantidade e remoção');
-  await page.goto(BASE + '#/menu');
+  await pill(page, 'Cardápio').click();
   await page.waitForTimeout(400);
   await page.getByRole('button', { name: 'Bebidas' }).click();
   await page.getByRole('button', { name: 'Adicionar Coca Cola Lata', exact: true }).click();
@@ -183,9 +203,9 @@ for (const w of widths) {
   await page.getByRole('button', { name: 'Aumentar Coca Cola Lata' }).click();
   await page.locator('dialog[open] .dialog__footer button').click();
   await page.waitForTimeout(500);
-  const three = await page.evaluate(() => ({ badge: document.querySelector('.cart-badge__count')?.textContent.trim(), label: document.querySelector('.cart-badge').getAttribute('aria-label') }));
+  const three = await fabState(page);
   check(three.badge === '3' && three.label === 'Carrinho, 3 itens', 'bebida com quantidade 3: badge "3" e "Carrinho, 3 itens"', JSON.stringify(three));
-  await page.goto(BASE + '#/cart');
+  await fab(page).click();
   await page.waitForTimeout(400);
   await page.getByRole('button', { name: 'Diminuir Coca Cola Lata' }).click();
   await page.waitForTimeout(200);
