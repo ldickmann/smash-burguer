@@ -30,6 +30,41 @@ $trilho: 1.125rem;
   }
 }
 
+// A comanda órfã: sozinha na última fileira, ocupa o trilho todo e se deita (foto ao lado das
+// linhas), para não sobrar vazio à direita dela. Em 2 colunas, a última de posição ímpar; em 3, a
+// de posição 3n+1.
+@mixin comanda-larga {
+  grid-column: 1 / -1;
+
+  :deep(.esq-comanda__papel) {
+    @include up(lg) {
+      grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "nome nome"
+        "foto linhas"
+        "foto total";
+      column-gap: var(--space-5);
+    }
+  }
+}
+
+.esq-comandas__lista > .esq-comandas__gancho:last-child {
+  @include up(md) {
+    @include below(xl) {
+      &:nth-child(odd) {
+        @include comanda-larga;
+      }
+    }
+  }
+
+  @include up(xl) {
+    &:nth-child(3n + 1) {
+      @include comanda-larga;
+    }
+  }
+}
+
 // O gancho: o trecho do trilho (::before) e o prendedor de inox (::after) sobre o alto do papel
 .esq-comandas__gancho {
   position: relative;
