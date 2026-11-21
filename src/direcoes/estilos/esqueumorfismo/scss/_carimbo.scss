@@ -1,0 +1,42 @@
+// EsqCarimbo: o pai o põe na mesma área de grade do texto (sobreposto, sem transform para centrar).
+// Com movimento, carimba: gira −8° e cai de 1,3 para 1; reduzido, só a opacidade [E16].
+@use "@/assets/styles/base/breakpoints" as *;
+
+.esq-carimbo {
+  z-index: var(--esq-z-carimbo);
+  align-self: center;
+  justify-self: center;
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  border: 4px solid var(--esq-carimbo);
+  border-radius: var(--radius-md);
+  color: var(--esq-carimbo);
+  font-family: var(--esq-fonte-placa);
+  font-size: 2.5rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast);
+
+  &.is-visivel {
+    opacity: 0.92;
+  }
+
+  @include motion-ok {
+    transform: rotate(-8deg) scale(1.3);
+    transition:
+      transform var(--esq-dur-carimbo) var(--esq-ease-carimbo),
+      opacity var(--dur-fast);
+
+    &.is-visivel {
+      transform: rotate(-8deg) scale(1);
+    }
+  }
+}
+
+.esq-carimbo--pequeno {
+  padding: var(--space-1) var(--space-3) 0;
+  border-width: 3px;
+  font-size: 1.5rem;
+}

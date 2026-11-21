@@ -1,0 +1,59 @@
+// Layout da Home: a moldura (a MolduraDirecao não tem estilo próprio) e o balcão de inox claro, com
+// a coluna da linha (comandas e expositor) e a coluna do passe (o cupom, fixo ao rolar em lg).
+@use "@/assets/styles/base/breakpoints" as *;
+
+.moldura {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.moldura :deep(.moldura__conteudo) {
+  flex: 1;
+  min-width: 0;
+}
+
+.esq-balcao {
+  padding-block: var(--space-7) var(--space-8);
+  border-top: 3px solid var(--esq-inox-borda);
+  background: var(--esq-escovado-claro), var(--esq-inox-claro);
+
+  @media (forced-colors: active) {
+    border-top-color: CanvasText;
+  }
+}
+
+.esq-balcao__grade {
+  display: grid;
+  gap: var(--space-8);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) 18.75rem;
+    column-gap: var(--space-6);
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    column-gap: var(--space-7);
+  }
+}
+
+.esq-balcao__linha {
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+// O passe: o cupom fica ao lado das comandas e acompanha a rolagem, só em janela alta o bastante
+// para o botão da impressora nunca ser cortado
+.esq-balcao__cupom {
+  align-self: start;
+
+  @include up(lg) {
+    @media (min-height: 45rem) {
+      position: sticky;
+      top: calc(var(--esq-altura-coifa) + var(--space-5));
+    }
+  }
+}

@@ -1,0 +1,66 @@
+// EsqBotao: o botão físico vermelho. Afunda 3 px ao apertar (só com movimento); a sombra troca por
+// opacidade entre as duas camadas [E18][E20].
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.esq-botao {
+  @include camadas-de-sombra(var(--esq-sombra-botao), var(--esq-sombra-botao-apertado));
+  @include anel-foco;
+
+  // O aro escuro do botão tem 3 px: o anel de foco fica além dele, com uma fresta da superfície no
+  // meio, para não se confundir com o aro
+  &:focus-visible {
+    outline-offset: calc(2 * var(--focus-offset));
+  }
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  // A Bebas não tem descendente: o respiro de cima centra a caixa alta na vista
+  padding: var(--space-1) var(--space-4) 0;
+  border-radius: var(--esq-raio-botao);
+  background: linear-gradient(180deg, var(--esq-ketchup-claro), var(--esq-ketchup));
+  box-shadow: var(--esq-bisel);
+  color: var(--color-accent-ink);
+  font-family: var(--esq-fonte-placa);
+  font-size: 1.375rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  @include hover-capable {
+    &:hover {
+      background: var(--esq-ketchup-claro);
+    }
+  }
+
+  @include motion-ok {
+    transition: transform var(--dur-instant) var(--ease-out);
+
+    &:active {
+      transform: translateY(3px);
+    }
+  }
+
+  @media (forced-colors: active) {
+    border: 2px solid ButtonText;
+
+    &::before,
+    &::after {
+      box-shadow: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    border: 2px solid var(--esq-tinta);
+  }
+}
+
+.esq-botao--grande {
+  min-height: 3.5rem;
+  padding-inline: var(--space-6);
+  font-size: 1.75rem;
+}

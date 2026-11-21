@@ -38,8 +38,9 @@ export const FICHA = {
   custoResumo: "O mais alto",
   desvios: [
     "Comanda com foto do lanche: a de verdade não tem, mas o cardápio precisa da imagem.",
-    "Com movimento reduzido, comandas, etiqueta e carimbo ficam retos (sem o giro de ±1° e de −8°), pela regra do projeto de usar transform só com movimento.",
+    "Com movimento reduzido, comandas e carimbo ficam retos (sem o giro de ±0,75° e de −8°), pela regra do projeto de usar transform só com movimento.",
     "Grão do papel gerado com feTurbulence nesta exploração; nenhuma textura foi copiada.",
+    "Títulos de seção gravados, sem placa: a placa fica só na marca, que é clicável [E15].",
   ],
   fontes: [
     { ref: "E1", titulo: "NN/g: Skeuomorphism (Megan Chan, 15/03/2024)", url: "https://www.nngroup.com/articles/skeuomorphism/" },

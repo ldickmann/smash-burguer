@@ -88,6 +88,32 @@
   --esq-z-fundo: -1;
   --esq-z-trilho: 2;
 
+  // ---------- Rodada 2: o passe da cozinha ----------
+  // Coifa: a linha da marca abaixo de md sai ao rolar (sticky com top negativo)
+  --esq-altura-coifa: 4.5rem;
+  --esq-coifa-marca: 3.5rem;
+  // Calha de gordura na frente de inox da chapa: o canal escuro logo abaixo da borda
+  --esq-calha: inset 0 12px 10px -8px rgba(20, 16, 14, 0.6), inset 0 3px 0 rgba(42, 38, 36, 0.35);
+  // As marcas da espátula centradas no lanche (o mesmo desenho de --esq-chapa-riscos, no centro e embaixo)
+  --esq-chapa-marcas: repeating-radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.025) 0 2px, rgba(0, 0, 0, 0.06) 2px 5px, rgba(255, 255, 255, 0) 5px 9px);
+  // Ponto mais claro da chapa curada (têmpera, brilho e riscos somados, por cima): só para medir o h1
+  --esq-chapa-max: rgba(180, 140, 120, 0.24);
+  // Expositor aberto: luz fria no alto do interior escuro, e o ponto mais claro dela
+  --esq-luz-fria: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(200, 225, 255, 0.2), rgba(200, 225, 255, 0) 70%);
+  --esq-luz-fria-max: rgba(200, 225, 255, 0.2);
+  --esq-sombra-prateleira: 0 4px 6px rgba(0, 0, 0, 0.55);
+  --esq-divisoria: linear-gradient(90deg, #6f757c, #f6f7f8 40%, #b9bfc6 60%, #5b6168);
+  // Impressora térmica: carcaça de plástico claro (o ponto mais escuro mede o anel de foco)
+  --esq-impressora-escuro: #bdb9ae;
+  --esq-impressora: linear-gradient(180deg, #ecebe6, #d8d5cd 55%, #bdb9ae);
+  --esq-fenda: inset 0 3px 4px rgba(0, 0, 0, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+  --esq-sombra-impressora: 0 2px 0 #6f757c, 0 14px 22px rgba(0, 0, 0, 0.35);
+  --esq-filtro-papel: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.22));
+  --esq-z-papel: 1;
+  --esq-z-fenda: 3;
+  --esq-z-prendedor: 4;
+  --esq-z-carimbo: 2;
+
   // ---------- Tipografia: a do próprio objeto ----------
   --esq-fonte-impressa: "Courier Prime", "Courier New", monospace;
   --esq-fonte-placa: "Bebas Neue", "Arial Narrow", sans-serif;
@@ -97,6 +123,10 @@
   --esq-dur-carimbo: 320ms;
   --esq-dur-balanco: 600ms;
   --esq-ease-carimbo: cubic-bezier(0.3, 1.5, 0.6, 1);
+  // O papel avança em passos, como o motor da impressora térmica (troque por --ease-out se engasgar)
+  --esq-dur-impressao: 360ms;
+  --esq-ease-impressao: steps(4, end);
+  --esq-dur-led: 520ms;
 
   // ---------- Tokens do projeto ----------
   --color-bg: var(--esq-inox-claro);

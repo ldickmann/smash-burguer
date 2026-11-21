@@ -1,0 +1,103 @@
+// Mixins do esqueumorfismo (scoped em cada componente). Só var(--…): os materiais, as sombras e as
+// texturas ficam em ../_tokens.scss. Não gera CSS sozinho: cada parcial faz `@use "./base" as *;`.
+// Gramática: um material por superfície, relevo só no que se aperta, texto sempre sobre área sólida.
+@use "@/assets/styles/base/breakpoints" as *;
+
+// Papel térmico com grão: comanda, etiqueta de gôndola e cupom. O anel de foco vira tinta.
+@mixin papel-termico($curva: true) {
+  --color-focus: var(--esq-tinta);
+
+  @if $curva {
+    background: var(--esq-grao), var(--esq-papel-curva), var(--esq-papel);
+  } @else {
+    background: var(--esq-grao), var(--esq-papel);
+  }
+
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-impressa);
+
+  @media (prefers-contrast: more) {
+    background: var(--esq-papel);
+  }
+}
+
+// Inox escovado com bisel (frente da chapa, moldura do expositor, placa do rodapé). A cor chapada
+// no fim é a do fundo para quem mede o contraste (o degradê não tem background-color).
+@mixin inox-escovado {
+  --color-focus: var(--esq-tinta);
+
+  background: var(--esq-escovado), var(--esq-inox);
+  box-shadow: var(--esq-bisel-inox);
+  color: var(--esq-tinta);
+}
+
+// Título gravado na superfície de inox: Bebas, tinta e a luz por baixo do sulco
+@mixin titulo-gravado {
+  color: var(--esq-tinta);
+  font-family: var(--esq-fonte-placa);
+  font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: var(--esq-gravado);
+
+  @media (prefers-contrast: more) {
+    text-shadow: none;
+  }
+}
+
+// Anel de foco do projeto, com a cor da superfície (--color-focus)
+@mixin anel-foco {
+  &:focus-visible {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: var(--focus-offset);
+  }
+}
+
+// Troca de sombra por opacidade entre duas camadas: ::before em repouso e ::after apertado.
+// A sombra não anima; só a opacidade, em --dur-instant [E20].
+@mixin camadas-de-sombra($repouso, $apertado) {
+  position: relative;
+  isolation: isolate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: var(--esq-z-fundo);
+    border-radius: inherit;
+    pointer-events: none;
+    transition: opacity var(--dur-instant) var(--ease-out);
+  }
+
+  &::before {
+    box-shadow: $repouso;
+  }
+
+  &::after {
+    box-shadow: $apertado;
+    opacity: 0;
+  }
+
+  &:active {
+    &::before {
+      opacity: 0;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+// Reservas das sombras e degradês: borda real em forced-colors [E19] e com mais contraste [E27]
+@mixin reserva-contraste($forcada: 1px, $mais: 1px, $cor-forcada: CanvasText) {
+  @media (forced-colors: active) {
+    border: $forcada solid $cor-forcada;
+  }
+
+  @media (prefers-contrast: more) {
+    border: $mais solid var(--esq-tinta);
+  }
+}
