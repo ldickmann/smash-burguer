@@ -47,11 +47,21 @@ function blocos(texto) {
   return { fora, lista };
 }
 
+// Lista de seletores dividida só nas vírgulas de fora dos parênteses (as de :is() e :where() ficam)
+function separar(seletor) {
+  const partes = [''];
+  let nivel = 0;
+  for (const c of seletor) {
+    if (c === '(') nivel++;
+    else if (c === ')') nivel--;
+    if (c === ',' && nivel === 0) partes.push('');
+    else partes[partes.length - 1] += c;
+  }
+  return partes.map((s) => s.trim().replace(/\s+/g, ' '));
+}
+
 const regras = (texto) =>
-  [...texto.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, seletor, corpo]) => [
-    seletor.split(',').map((s) => s.trim().replace(/\s+/g, ' ')),
-    corpo,
-  ]);
+  [...texto.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, seletor, corpo]) => [separar(seletor), corpo]);
 
 // Valor de uma propriedade para um seletor exato, fora dos @media: a última declaração vence
 function valor(seletor, propriedade, texto = blocos(css).fora) {
@@ -64,6 +74,16 @@ function valor(seletor, propriedade, texto = blocos(css).fora) {
     }
   }
   return achado;
+}
+
+const fundos = (seletor) => ['repouso', 'hover', 'pressionado'].map((estado) => valor(seletor, `--m3-botao-fundo-${estado}`));
+
+// Posição da primeira regra fora dos @media com o seletor exato (a regra que falta reprova)
+function posicao(seletor, texto = blocos(css).fora) {
+  for (const m of texto.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (regras(m[0])[0][0].includes(seletor)) return m.index;
+  }
+  throw new Error(`sem regra para ${seletor}`);
 }
 
 describe('BaseButton no M3', () => {
@@ -82,9 +102,6 @@ describe('BaseButton no M3', () => {
   });
 
   it('cada variante pinta com os papéis do mapa (§6), e o retorno troca a face', () => {
-    const fundos = (seletor) =>
-      ['repouso', 'hover', 'pressionado'].map((estado) => valor(seletor, `--m3-botao-fundo-${estado}`));
-
     expect(fundos('.m3-botao--filled')).toEqual(['var(--m3-primary)', 'var(--m3-primary-hover)', 'var(--m3-primary-pressed)']);
     expect(valor('.m3-botao--filled', 'color')).toBe('var(--m3-on-primary)');
     expect(fundos('.m3-botao--tonal')).toEqual([
@@ -111,6 +128,28 @@ describe('BaseButton no M3', () => {
     expect(valor('.btn--sm .btn__face--frente::after', 'inset')).toBe('-2px 0');
     expect(valor('.btn--lg', 'min-height')).toBe('3.5rem');
     expect(valor('.btn--lg', 'font-size')).toBe('var(--m3-title-m)');
+  });
+
+  it('desabilitado, inerte e "a desenhar" vencem a cascata (§6)', () => {
+    // Desabilitado: os três fundos das camadas também viram o do desabilitado, senão o ::before
+    // pintaria a cor da variante por cima
+    for (const seletor of ['.btn:disabled', '.btn[aria-disabled=true]']) {
+      expect(fundos(seletor)).toEqual(Array(3).fill('var(--color-surface-4)'));
+      expect(valor(seletor, 'color')).toBe('var(--color-ink-disabled)');
+    }
+    // Inerte (desabilitado ou carregando): o pressionado não troca a forma nem acende a camada
+    const inerte = ':is(.m3-botao--filled, .m3-botao--tonal):is(:disabled, [aria-disabled=true], .is-loading):active';
+    expect(valor(inerte, 'border-radius')).toBe('var(--m3-botao-forma-repouso)');
+    expect(valor(`${inerte}::before`, 'opacity')).toBe('1');
+    expect(valor(`${inerte}::after`, 'opacity')).toBe('0');
+    expect(valor('.m3-botao--texto:is(:disabled, [aria-disabled=true], .is-loading)::before', 'opacity')).toBe('0');
+    expect(valor(':where(.btn--legado).btn--primary', 'background-color')).toBe('var(--color-accent)');
+
+    // Entre regras de mesma especificidade, a ordem decide
+    expect(posicao('.btn')).toBeLessThan(posicao('.btn--legado'));
+    expect(posicao('.m3-botao--filled')).toBeLessThan(posicao('.btn:disabled'));
+    expect(posicao('.m3-botao.is-retorno')).toBeLessThan(posicao('.btn:disabled'));
+    expect(posicao(':where(.btn--legado).btn--primary')).toBeLessThan(posicao('.btn:disabled'));
   });
 
   it('danger, iconOnly e pressed ficam com a forma de hoje (§4.2, a desenhar)', () => {
