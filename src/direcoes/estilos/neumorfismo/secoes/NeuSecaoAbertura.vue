@@ -37,7 +37,7 @@ import NeuAcao from "../componentes/NeuAcao.vue";
 
 const imagem = responsiveImage(HERO.imagem, {
   ...IMAGEM_HERO,
-  sizes: "(min-width: 1280px) 304px, (min-width: 1024px) 256px, (min-width: 768px) 208px, 192px",
+  sizes: "(min-width: 1280px) 432px, (min-width: 1024px) 352px, (min-width: 768px) 208px, 192px",
 });
 </script>
 

@@ -37,13 +37,30 @@
     gap: var(--space-6);
   }
 
+  // A partir de lg, as teclas ocupam as duas linhas à esquerda e, à direita, o visor em cima e a
+  // régua de adicionais embaixo, esticada até o pé das teclas: o aparelho fecha sem vazio de kraft
   @include up(lg) {
+    grid-template-areas:
+      "teclado visor"
+      "teclado regua";
     grid-template-columns: 15rem minmax(0, 1fr);
-    align-items: start;
+    grid-template-rows: auto minmax(0, 1fr);
+
+    > :first-child {
+      grid-area: teclado;
+      align-self: start;
+    }
   }
 
   @include up(xl) {
     grid-template-columns: 17.5rem minmax(0, 1fr);
+  }
+}
+
+.neu-painel__visor {
+  @include up(lg) {
+    grid-area: visor;
+    align-self: start;
   }
 }
 
@@ -61,12 +78,9 @@
   }
 
   @include up(lg) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: var(--space-6);
-    padding: var(--space-4) var(--space-6);
-    border-radius: var(--neu-raio-pilula);
+    grid-area: regua;
+    align-content: center;
+    padding: var(--space-5) var(--space-6);
   }
 }
 

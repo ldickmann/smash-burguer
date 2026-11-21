@@ -15,17 +15,17 @@
             :legenda="TEXTOS.painelLegenda"
             @update:model-value="selecionar"
           />
-          <NeuVisor :produto="produto" :pulsar="interagiu" />
-        </div>
+          <NeuVisor class="neu-painel__visor" :produto="produto" :pulsar="interagiu" />
 
-        <div v-if="adicionais.length" class="neu-regua">
-          <h3 class="neu-regua__titulo">{{ TEXTOS.adicionais }}</h3>
-          <ul class="neu-regua__lista" role="list">
-            <li v-for="adicional in adicionais" :key="adicional.id" class="neu-regua__item">
-              <span class="neu-regua__nome">{{ adicional.name }}</span>
-              <span class="neu-regua__preco tabular">{{ adicional.precoTexto }}</span>
-            </li>
-          </ul>
+          <div v-if="adicionais.length" class="neu-regua">
+            <h3 class="neu-regua__titulo">{{ TEXTOS.adicionais }}</h3>
+            <ul class="neu-regua__lista" role="list">
+              <li v-for="adicional in adicionais" :key="adicional.id" class="neu-regua__item">
+                <span class="neu-regua__nome">{{ adicional.name }}</span>
+                <span class="neu-regua__preco tabular">{{ adicional.precoTexto }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </template>
 

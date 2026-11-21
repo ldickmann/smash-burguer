@@ -47,11 +47,11 @@
   }
 
   @include up(lg) {
-    --neu-recorte: 16rem;
+    --neu-recorte: 22rem;
   }
 
   @include up(xl) {
-    --neu-recorte: 19rem;
+    --neu-recorte: 27rem;
   }
 }
 
@@ -125,4 +125,20 @@
   color: var(--neu-tinta-suave);
   font-size: 1.1875rem;
   line-height: var(--leading-body);
+}
+
+// A partir de lg, com o lanche maior, a frase cresce e o texto desce para o meio da cova: equilibra a
+// sobra à direita sem sair do fundo afundado
+@include up(lg) {
+  .neu-cova__texto {
+    align-self: center;
+    max-width: 34rem;
+  }
+
+  .neu-cova__frase {
+    color: var(--neu-tinta);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+  }
 }
