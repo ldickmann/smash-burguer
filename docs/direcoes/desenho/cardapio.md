@@ -19,7 +19,7 @@
 
 - **Cardápio:** é uma tela de tarefa. Não tem prensa, cookie nem contêiner de cor: o título é texto sobre a superfície, e o único gesto do Expressive é a troca de forma da categoria marcada [54]. A grade é a do feed sem destaque, porque no cardápio os itens são equivalentes [64].
 - **Modal:** é a personalização. O traço próprio dele é o montador (decisão f), que mostra o que se tira e o que se acrescenta [FLX-02]. Ele ganha um "prato" tonal, e as opções viram as peças do sistema: linhas de checkbox e lista segmentada. O CTA continua o filled M, o maior controle da tela.
-- **Sem:** foto atrás de texto [H5], entrada animada de seção, hover nos cards, sombra fora do que flutua [1][13] e `primary` fora de ação. A opção marcada do grupo em `primary` é exceção a essa regra, **em aberto** para o usuário (§12 b).
+- **Sem:** foto atrás de texto [H5], entrada animada de seção, hover nos cards, sombra fora do que flutua [1][13] e `primary` fora de ação. A opção marcada do grupo em `primary` é exceção a essa regra, decidida pelo usuário (§12 b).
 
 ### O que muda da Brasa
 
@@ -848,7 +848,7 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 
 - **a.** O banner `page` sai; entra o cabeçalho de texto na superfície (`h1` e `FRASE_CARDAPIO`). `BannerComponent`, `_banner.scss`, `BannerComponent.test.js` e `--gradient-scrim` saem na etapa 11; a imagem `banner-burger-black` fica no repositório.
 - **b.** Grupo conectado [54] com rádios nativos em `fieldset`/`legend` (sai o `aria-pressed`); marcada em pílula `primary`, desmarcadas em `surface-container`; 44 px; vão de 2 px; anel interno (`on-primary` na marcada).
-  - **Em aberto para o usuário:** a marcada em `primary` é exceção à regra "`primary` só em ação" (SPEC-M §2.2), porque [103] não diz qual cor vai no marcado. A alternativa é `secondary-container` com a troca de forma, mas a diferença dela contra a desmarcada não chega a 3:1 (§2), e o sinal ficaria só na forma.
+  - **Decidido pelo usuário (22/11/2026): verde `primary`.** A marcada em `primary` é exceção registrada à regra "`primary` só em ação" (SPEC-M §2.2), porque [103] não diz qual cor vai no marcado. A alternativa, `secondary-container` com a troca de forma, ficou de fora: a diferença dela contra a desmarcada não chega a 3:1 (§2), e o sinal ficaria só na forma.
   - Sem contagem; uma linha em 390; continua grudando, opaco e sem sombra, com a borda quando grudado.
 - **c.** `h2` escondido com o rótulo da categoria, que nomeia a `section` da grade; os cards ficam com o `h3`.
 - **d.** Recomendação: nome do card comum em 500 [1], também na Home; **em aberto para o usuário**.
@@ -908,7 +908,7 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 **Volta 2:** não rodou. As correções seguiram a lista da volta 1 e não mexeram em mais nada.
 
 **Para o usuário decidir antes da sessão C:**
-- **12 b:** a categoria marcada em `primary`;
+- **12 b:** decidido pelo usuário em 22/11/2026: verde `primary`;
 - **12 d:** o peso 500 no nome do card, que muda também a Home.
 
 **Pendências de outras etapas:**
