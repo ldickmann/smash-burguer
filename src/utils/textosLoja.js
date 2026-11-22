@@ -67,10 +67,11 @@ export const CONTATOS = [
   },
 ];
 
-// src/views/MenuView.vue (props do BannerComponent)
+// src/views/MenuView.vue: a frase do cabeçalho do Cardápio (era o text do BannerComponent)
 export const FRASE_CARDAPIO = "Escolha, personalize e peça.";
 
-// src/views/MenuView.vue (categories): rótulo de cada lista de products.json > menuItems
+// src/views/MenuView.vue (opções do CategoryTabs e h2 da região): rótulo de cada lista de
+// products.json > menuItems
 export const CATEGORIAS = [
   { chave: "foods", rotulo: "Hambúrgueres" },
   { chave: "drinks", rotulo: "Bebidas" },

@@ -33,8 +33,10 @@
   }
 }
 
+// Nome em Medium (500), como o title do M3 [1]: decisão do usuário (desenho do Cardápio, 6.d), também
+// na Home, onde a referência congelada continua em 400
 .m3-cartao__nome {
-  @include tipo(title-m);
+  @include tipo(title-m, 500);
   @include linhas(2);
 
   color: var(--m3-on-surface);
@@ -57,6 +59,11 @@
   @include up(md) {
     display: -webkit-box;
   }
+}
+
+// Sem ingredientes não há folha: a descrição fica também abaixo de md (as bebidas mostram o volume)
+.m3-cartao--sem-folha .m3-cartao__descricao {
+  display: -webkit-box;
 }
 
 .m3-cartao__preco {

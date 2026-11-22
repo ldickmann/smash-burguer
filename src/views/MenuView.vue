@@ -1,56 +1,62 @@
+<!-- Cardápio em Material 3 Expressive (docs/direcoes/desenho/cardapio.md): o cabeçalho de texto na
+     superfície, sem foto atrás (o banner saiu, 6.a), o grupo de categorias com rádios nativos e a região
+     da grade, nomeada por um h2 escondido com o rótulo da categoria (6.c). A grade é a do feed sem
+     destaque, com os M3CartaoLanche comuns (6.e). O modal Personalizar é desta view: os cards o abrem por
+     usePersonalizar(). -->
 <template>
-  <BannerComponent
-    variant="page"
-    title="Cardápio"
-    text="Escolha, personalize e peça."
-    image="/images/fundos/banner-burger-black"
-    alt=""
-    :image-width="1920"
-    :image-height="1280"
-  />
+  <div class="menu-page">
+    <div class="menu-page__cabecalho container">
+      <h1>Cardápio</h1>
+      <p class="menu-page__frase">{{ FRASE_CARDAPIO }}</p>
+    </div>
 
-  <CategoryTabs v-model="currentCategory" :options="categories" />
+    <CategoryTabs v-model="categoriaAtual" :options="opcoes" />
 
-  <div class="menu-page container">
-    <ul v-if="products.length" class="menu-page__grid" role="list">
-      <li v-for="product in products" :key="`${product.category}-${product.id}`">
-        <ProductCard :product="product" variant="menu" :heading-level="2" @add="openModal" />
-      </li>
-    </ul>
+    <section class="menu-page__regiao container" aria-labelledby="menu-categoria-titulo">
+      <h2 id="menu-categoria-titulo" class="visually-hidden">{{ rotuloAtual }}</h2>
 
-    <EmptyState
-      v-else
-      icon="utensils"
-      title="Nada nesta categoria por enquanto"
-      text="Dê uma olhada nas outras categorias."
-    />
+      <!-- Cada categoria mostra todos os itens: sem paginação (SPEC.md §5.3). Os ids se repetem entre
+           as categorias: a chave leva a categoria -->
+      <ul v-if="produtos.length" class="menu-page__grade" role="list">
+        <li v-for="produto in produtos" :key="`${categoriaAtual}-${produto.id}`" class="menu-page__item">
+          <M3CartaoLanche :produto="produto" :aberto="aberta === produto.id" @alternar="alternar" />
+        </li>
+      </ul>
+
+      <EmptyState v-else icon="utensils" :title="TEXTOS.vazio" text="Dê uma olhada nas outras categorias." />
+    </section>
   </div>
 
   <ModalAdditional :open="isOpen" :product="product" @close="closeModal" @confirm="confirm" />
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, provide, ref, watch } from "vue";
 import { useProductsStore } from "@/stores/products";
 import { useProductModal } from "@/composables/useProductModal";
-import BannerComponent from "@/components/BannerComponent.vue";
+import { useFolhaUnica } from "@/composables/useFolhaUnica";
+import { CHAVE_PERSONALIZAR } from "@/composables/usePersonalizar";
+import { CATEGORIAS, FRASE_CARDAPIO, TEXTOS } from "@/utils/textosLoja";
 import CategoryTabs from "@/components/ui/CategoryTabs.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
-import ProductCard from "@/components/ProductCard.vue";
+import M3CartaoLanche from "@/components/M3CartaoLanche.vue";
 import ModalAdditional from "@/components/ModalAdditional.vue";
 
 const productsStore = useProductsStore();
 const { isOpen, product, openModal, closeModal, confirm } = useProductModal();
 
-const categories = [
-  { value: "foods", label: "Hambúrgueres" },
-  { value: "drinks", label: "Bebidas" },
-  { value: "desserts", label: "Sobremesas" },
-];
+// Os cards abrem o modal com personalizar(produto, contexto)
+provide(CHAVE_PERSONALIZAR, openModal);
 
-// Cada categoria mostra todos os itens: sem paginação
-const currentCategory = ref("foods");
-const products = computed(() => productsStore[currentCategory.value] ?? []);
+const opcoes = CATEGORIAS.map(({ chave, rotulo }) => ({ value: chave, label: rotulo }));
+const categoriaAtual = ref("foods");
+const rotuloAtual = computed(() => CATEGORIAS.find((c) => c.chave === categoriaAtual.value)?.rotulo ?? "");
+const produtos = computed(() => productsStore[categoriaAtual.value] ?? []);
+
+// Uma folha de ingredientes aberta por vez. A folha guarda o produto.id, que se repete entre as
+// categorias: trocar de categoria fecha a folha, sem mover o foco, que fica no rádio (6.f)
+const { aberta, alternar, fechar } = useFolhaUnica();
+watch(categoriaAtual, () => fechar());
 </script>
 
 <style scoped lang="scss">

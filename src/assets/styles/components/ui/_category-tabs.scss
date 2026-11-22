@@ -1,6 +1,11 @@
-// CategoryTabs (SPEC §4.1): controle segmentado que gruda ao rolar. Abaixo de lg o cabeçalho rola com a
-// página, e as abas grudam no topo; a partir de lg, abaixo do cabeçalho sticky (SPEC-material §5.1).
+// CategoryTabs (desenho do Cardápio, §5.2): barra opaca que gruda ao rolar, com o grupo conectado [54].
+// Abaixo de lg o cabeçalho rola com a página, e a barra gruda no topo; a partir de lg, abaixo do
+// cabeçalho sticky (SPEC-material §5.1). Opções de 44 px com vão de 2 px: desmarcadas em
+// surface-container, com as formas de início, meio e fim; a marcada é uma pílula primary (decisão do
+// usuário, §12 b). A troca de forma do pressionado é por opacidade (troca-de-forma); nada anima por
+// transform.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 
 .category-tabs__sentinel {
   height: 0;
@@ -10,12 +15,14 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  padding-block: var(--space-5);
+  // A altura do token entra no scroll-padding-top da rota (_menu-page.scss)
+  min-block-size: var(--m3-categorias-altura);
+  padding-block: var(--space-3);
   border-bottom: 1px solid transparent;
-  background: var(--color-bg);
+  background: var(--m3-surface);
 
   &.is-stuck {
-    border-bottom-color: var(--color-border);
+    border-bottom-color: var(--m3-outline-variant);
   }
 
   @include up(lg) {
@@ -23,35 +30,120 @@
   }
 }
 
-.category-tabs__group {
+// O padrão do fieldset é min-content, que impediria a rolagem de reserva
+.category-tabs__grupo {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.category-tabs__opcoes {
   display: flex;
-  gap: var(--space-2);
-  // Mobile: uma linha só, com rolagem horizontal; nunca empilha
+  gap: var(--m3-vao-segmento);
+  // Reserva abaixo de cerca de 337 px: uma linha só, com rolagem horizontal; nunca empilha. Sem
+  // scroll-snap, para a rolagem não brigar com o foco
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   scrollbar-width: none;
-  // O anel de foco não pode ser cortado pela rolagem horizontal
-  padding: calc(var(--focus-width) + var(--focus-offset));
-  margin: calc(-1 * (var(--focus-width) + var(--focus-offset)));
 
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-.category-tabs__group .category-tabs__tab {
-  flex-shrink: 0;
-  scroll-snap-align: start;
+.category-tabs__opcao {
+  --m3-botao-fundo: var(--m3-surface-container);
 
-  &[aria-pressed="false"] {
-    background-color: var(--color-surface-2);
-    color: var(--color-ink-muted);
+  @include troca-de-forma(var(--m3-forma-s), var(--m3-forma-xs));
+  @include tipo(label-l, 500);
 
-    @include hover-capable {
-      &:hover {
-        background-color: var(--color-surface-2);
-        color: var(--color-ink);
-      }
+  display: inline-flex;
+  // Abaixo de md o grupo ocupa a largura toda, e cada opção cresce a partir do rótulo
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-min);
+  padding-inline: var(--space-3);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-label-l-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+
+  @include up(sm) {
+    padding-inline: var(--space-4);
+  }
+
+  @include up(md) {
+    flex: 0 0 auto;
+  }
+
+  // Camada de estado no fundo composto que a troca de forma pinta (o ::before é dela)
+  @include hover-capable {
+    &:hover {
+      --m3-botao-fundo: linear-gradient(var(--m3-camada-hover) 0 0), var(--m3-surface-container);
     }
+  }
+
+  &:active {
+    --m3-botao-fundo: linear-gradient(var(--m3-camada-pressionada) 0 0), var(--m3-surface-container);
+  }
+
+  // O rádio fica escondido: o anel vai no label, por dentro, porque as opções ficam encostadas
+  &:has(:focus-visible) {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: calc(-1 * var(--focus-width));
+  }
+
+  // O fundo some com as cores forçadas: a borda devolve a forma (pílula contra cantos de 8)
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--m3-outline);
+  }
+}
+
+// Formas pela posição: de fora redondos e de dentro Small (8); apertadas, de fora 12 e de dentro 4
+.category-tabs__opcao--inicio {
+  --m3-botao-forma-repouso: var(--m3-forma-full) var(--m3-forma-s) var(--m3-forma-s) var(--m3-forma-full);
+  --m3-botao-forma-pressionada: var(--m3-forma-m) var(--m3-forma-xs) var(--m3-forma-xs) var(--m3-forma-m);
+}
+
+.category-tabs__opcao--meio {
+  --m3-botao-forma-repouso: var(--m3-forma-s);
+  --m3-botao-forma-pressionada: var(--m3-forma-xs);
+}
+
+.category-tabs__opcao--fim {
+  --m3-botao-forma-repouso: var(--m3-forma-s) var(--m3-forma-full) var(--m3-forma-full) var(--m3-forma-s);
+  --m3-botao-forma-pressionada: var(--m3-forma-xs) var(--m3-forma-m) var(--m3-forma-m) var(--m3-forma-xs);
+}
+
+// Marcada: pílula inteira em primary, em qualquer posição (5,52:1 contra a desmarcada, sinal além da
+// cor). O anel troca para on-primary: o secondary sobre o primary daria 1,00:1
+.category-tabs__opcao.is-marcada {
+  --m3-botao-fundo: var(--m3-primary);
+  --m3-botao-forma-repouso: var(--m3-forma-full);
+  --m3-botao-forma-pressionada: var(--m3-forma-m);
+
+  color: var(--m3-on-primary);
+
+  @include hover-capable {
+    &:hover {
+      --m3-botao-fundo: var(--m3-primary-hover);
+    }
+  }
+
+  &:active {
+    --m3-botao-fundo: var(--m3-primary-pressed);
+  }
+
+  &:has(:focus-visible) {
+    outline-color: var(--m3-on-primary);
+  }
+
+  @media (forced-colors: active) {
+    border: 2px solid Highlight;
   }
 }
