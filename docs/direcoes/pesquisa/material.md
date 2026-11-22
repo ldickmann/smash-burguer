@@ -266,3 +266,199 @@ Coletadas no Chrome em 20 e 21/11/2026, numa aba própria, recusando os cookies 
 | https://land-book.com/websites/52325-android-do-more-with-google-on-android-phones-and-devices | Land-book | Publicado (android.com) | Sistema operacional e aparelhos (Google) | Cards de foto com raio grande; botão redondo de "+" para abrir o card; botões em pílula translúcidos sobre foto; containers pastel (menta, lavanda) para cada aparelho; títulos sans grandes e diretos. É a fase Android… |
 | https://dribbble.com/shots/27446051-Food-Bank-app | Dribbble | Conceito (shot de um case; não confirmei que o app está no ar) | Comida: resgate e retirada de pacotes de alimentos | Componentes M3 adaptados a uma identidade de fora (azul-marinho e amarelo); blocos de informação empilhados no canto da foto (dia, quantos restam, novo); chips de status com ícone (disponível, vence hoje); confirmação… |
 | https://www.figma.com/community/file/1559643321874678939/instagram-material-3-expressive | Figma Community | Conceito (releitura de um app real) | Rede social | Barra de navegação flutuante, solta da borda, em pílula de tom claro, com o item ativo dentro de um quadrado-arredondado tonal; listas agrupadas em blocos arredondados com pequenos vãos entre os itens; ícones coloridos… |
+
+## Etapa 6: grupo de categorias e checkbox (21/11/2026)
+
+Feita em 21/11/2026, com a verificação concluída em 22/11. Um pesquisador abriu as páginas com WebFetch e devolveu 37 afirmações. Depois, um verificador reabriu cada URL e tentou derrubar cada uma, conferindo se a página diz aquilo, com a medida ou o comportamento citado, e se a fonte é da classe declarada. A seção responde a duas perguntas do desenho da etapa 6 (Cardápio e modal Personalizar): qual a semântica web do grupo de categorias, com três opções que se excluem e trocam a grade logo abaixo, na mesma página; e como o M3 desenha o checkbox e a linha de lista com seleção, para os ingredientes do modal. Ela completa a linha "Semântica dos componentes novos" de "Riscos de acessibilidade e desempenho", que dizia que o padrão de rádio da APG não tinha sido aberto: agora foi, junto com os de botão, abas e toolbar. Também detalha o padrão 6 e a linha "Button group conectado" de "Componentes típicos e estados". Das 37 afirmações, 30 ficaram inteiras, 7 ficaram em parte e nenhuma caiu inteira. Da síntese do pesquisador, dois trechos caíram e dois viraram inferência. Tudo isso está em "Refutadas na verificação (etapa 6)". As fontes que já tinham número mantêm o número ([29], [54] e [78]), e as novas vão de [88] a [117].
+
+### Fontes da etapa 6
+
+| Nº | Tipo | Título | URL | O que sustenta |
+|---|---|---|---|---|
+| [88] | referência técnica | Radio Group Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/radio/ | O que é o grupo de rádio, o teclado dentro e fora de toolbar, os papéis e estados e a diferença do rádio nativo no Shift+Tab. |
+| [89] | referência técnica | Radio Group Example Using Roving tabindex (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/ | O foco itinerante, o foco que envolve rádio e rótulo, o `::before` e o `forced-color-adjust`. |
+| [90] | referência técnica | Button Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/button/ | O toggle com `aria-pressed`, o rótulo que não muda com o estado, o teclado e o foco depois da ação. |
+| [91] | referência técnica | Tabs Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ | Os papéis, o `aria-controls`, a ativação automática ou manual e o teclado das abas. |
+| [92] | referência técnica | Read Me First (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/ | O papel ARIA como promessa de teclado e o suporte incompleto no celular. |
+| [93] | referência técnica | Toolbar Example (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/ | O alinhamento de texto como `radiogroup` com cara de toggle, e o negrito, o itálico e o sublinhado como toggles. |
+| [94] | referência técnica | Toolbar Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/ | O papel `toolbar` só com três controles ou mais, uma parada no Tab e as setas com foco itinerante. |
+| [95] | referência técnica | H71: Providing a description for groups of form controls using fieldset and legend elements (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/html/H71 | O `fieldset` com `legend` para rádios e checkboxes, suficiente para a 1.3.1 e a 3.3.2. |
+| [96] | referência técnica | Understanding SC 4.1.2 Name, Role, Value (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html | Nome, papel e estado; o selecionado do checkbox e do rádio como estado; os controles HTML padrão já cumprem. |
+| [97] | referência técnica | Understanding SC 3.2.2 On Input (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/on-input.html | A mudança de conteúdo que não é mudança de contexto e a falha F37. |
+| [98] | referência técnica | Understanding SC 1.4.11 Non-text Contrast (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html | O 3:1 de componentes, estados, check e foco; o checkbox reprovado; a troca de fundo e a 1.4.1. |
+| [99] | referência técnica | Understanding SC 1.4.1 Use of Color (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html | A cor que não pode ser o único sinal e a diferença de luminância de 3:1 como sinal extra. |
+| [54] | documentação oficial | Button groups (Jetpack Compose; já citada) | https://developer.android.com/develop/ui/compose/components/button-group | Nesta etapa: o código de seleção única com `Role.RadioButton`, o FlexBox com quebra e os ícones que não trocam. |
+| [78] | referência técnica | Understanding SC 2.5.8 Target Size (Minimum) (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html | Nesta etapa: as fileiras com 1 px de folga e a exceção do controle do agente do usuário. |
+| [100] | documentação oficial | ButtonGroup (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ButtonGroup.composable | As amostras do grupo conectado, horizontal e vertical, com `Role.RadioButton` e sem `selectableGroup()`. |
+| [101] | documentação oficial | SingleChoiceSegmentedButtonRow (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/SingleChoiceSegmentedButtonRow.composable | A linha de seleção única existe para dar a semântica certa. |
+| [102] | documentação oficial | Segmented button (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/segmented-button | A seleção única e a múltipla, o limite de 2 a 5 itens e o check no selecionado. |
+| [103] | documentação oficial | ToggleButton (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ToggleButton.composable | A troca entre as cores primary e tonal, a troca de forma e o tamanho small padrão. |
+| [104] | documentação oficial | ToggleButtonDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ToggleButtonDefaults | As cores, as formas e as medidas padrão, todas sem valor escrito. |
+| [105] | documentação oficial | ButtonGroupDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ButtonGroupDefaults | As formas de início, meio e fim, o marcado único, o `ConnectedSpaceBetween` e o `ExpandedRatio`. |
+| [106] | documentação oficial | ShapeDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ShapeDefaults | O `Small` sem medida. |
+| [107] | documentação oficial | ListItem (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ListItem.composable | As linhas de seleção única e múltipla, com o controle filho sem callback. |
+| [108] | documentação oficial | Checkbox (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/checkbox | A anatomia, os três estados e o `TriStateCheckbox`. |
+| [109] | documentação oficial | Checkbox (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/Checkbox.composable | O checkbox sem callback e a amostra da linha com texto, de 56 dp. |
+| [110] | documentação oficial | CheckboxDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/CheckboxDefaults | As cores do checkbox, sem papéis, e o `StrokeWidth`. |
+| [111] | documentação oficial | API defaults (acessibilidade no Jetpack Compose) | https://developer.android.com/develop/ui/compose/accessibility/api-defaults | O alvo de 48 dp, o clique levado à linha, a fusão da semântica e o `minimumInteractiveComponentSize`. |
+| [112] | documentação oficial | Checkbox (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/checkbox.md | Os tokens principais, o rótulo e a nota de rótulo do `md-checkbox`. |
+| [113] | documentação oficial | _md-comp-checkbox.scss (tokens v0_192 do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-comp-checkbox.scss | As medidas e as cores por papel de cada estado do checkbox. |
+| [114] | documentação oficial | _checkbox.scss (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/checkbox/internal/_checkbox.scss | O alvo de 48 px, o anel de foco, o traço do indeterminado, as cores forçadas e o movimento. |
+| [115] | documentação oficial | checkbox.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/checkbox/internal/checkbox.ts | O input nativo dentro do shadow root e o `aria-checked="mixed"`. |
+| [116] | documentação oficial | Lists (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/list.md | Os tipos de item, os papéis e as cores da lista, sem exemplo com checkbox. |
+| [117] | documentação oficial | Radio button (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/radio.md | O grupo pelo `name` dentro de um `radiogroup` com rótulo e os tokens do rádio. |
+
+### Grupo de seleção única: rádio, toggle e abas (APG)
+
+**Rádio [88][89].** Um grupo de rádio é um conjunto de botões marcáveis em que no máximo um fica marcado. Algumas implementações começam sem nenhum marcado, para obrigar a escolha [88].
+
+- Papéis: o `radiogroup` contém os `radio`, cada um com `aria-checked` true ou false. Cada rádio tira o nome do conteúdo, de `aria-labelledby` ou de `aria-label`. O grupo tem rótulo por `aria-labelledby` (rótulo visível) ou por `aria-label`, e o `aria-describedby` entra se houver descrição [88].
+- Teclado fora de toolbar: Tab e Shift+Tab entram e saem do grupo. Ao entrar, o foco vai ao rádio marcado ou, sem marcado, ao primeiro. Espaço marca o focado. Seta direita ou baixo leva ao próximo, desmarca o anterior e marca o novo, voltando do último ao primeiro; esquerda ou cima faz o inverso [88].
+- Rádio nativo: quando nenhum está marcado, alguns navegadores põem o foco no último rádio com Shift+Tab, em vez do primeiro [88]. A página do padrão não fala de `<input type="radio">` nem de `<fieldset>`; o foco itinerante e o `aria-activedescendant` aparecem só nos títulos dos exemplos [88].
+- No exemplo com foco itinerante, só um rádio tem `tabindex="0"`: o primeiro ao carregar, depois o último focado; os outros têm −1. O visual segue o `aria-checked` por seletor de atributo. O indicador de foco envolve o rádio e o rótulo. O marcado é desenhado com `::before`, e os SVG têm `forced-color-adjust: auto` [89].
+
+**Rádio dentro de toolbar [88][94].** As setas movem o foco sem mudar o marcado. Espaço marca, e Enter também, como opção. A página nota que esses rádios costumam ter cara de toggle [88]. O papel `toolbar` só vale para grupos de 3 controles ou mais; a toolbar é uma parada só no Tab, e as setas movem o foco, com foco itinerante no exemplo [94].
+
+**Toggle [90].** É um botão de dois estados, com `aria-pressed` true ou false. A página chama de crítico que o rótulo não mude quando o estado muda. Espaço e Enter ativam. Numa ação que não fecha o contexto, o foco em geral fica no botão. A página não trata vários toggles como seleção única nem compara o toggle com o rádio ou com as abas.
+
+**Abas [91].** São seções de conteúdo em camadas, com um painel visível por vez.
+
+- Papéis: `tablist` com rótulo; cada `tab` com `aria-controls` para o painel e `aria-selected` true ou false; cada `tabpanel` com `aria-labelledby` para a aba e `tabindex="0"` se não começar com algo focável.
+- Ativação: a automática, no foco, é a recomendada quando o painel aparece sem atraso perceptível, o que em geral pede conteúdo pré-carregado; sem isso, ela deixa o foco lento. Na manual, Espaço ou Enter ativam a aba.
+- Teclado: Tab entra na aba ativa e sai para o painel. Esquerda e direita circulam entre as abas, com volta; Home e End são opcionais. Numa lista horizontal, cima e baixo ficam para a rolagem.
+- A página não compara abas com rádio nem com toggles.
+
+**Como a APG escolhe.** Nenhuma das páginas abertas traz um critério geral. A Read Me First não trata disso: diz que é melhor não usar ARIA do que usar ARIA errado, que um papel ARIA não traz teclado nem estilo do navegador (ao contrário dos inputs HTML) e é uma promessa que o autor tem de cumprir com JavaScript, e que alguns recursos ARIA não funcionam em nenhum navegador móvel, sem abordagem padrão para toque [92]. A única justificativa achada está no exemplo da toolbar: os botões de alinhamento (esquerda, centro, direita) têm cara de toggle, mas são um `radiogroup` com `aria-label="Text Alignment"`, `role="radio"` e `aria-checked`, porque só um vale por vez e o ARIA descreve semântica, não estilo. Negrito, itálico e sublinhado, que são independentes, são toggles com `aria-pressed`. Ali, mover o foco não muda o marcado [93].
+
+**O que a WCAG acrescenta.**
+
+- O `fieldset` com `legend` agrupa rádios e checkboxes, e os agentes do usuário muitas vezes apresentam a legenda antes do rótulo de cada controle. É técnica suficiente para a 1.3.1 e a 3.3.2. Não se deve aninhar fieldsets à toa, e eles são dispensáveis quando o grupo já tem instruções claras e opções distintas (H44). A página não fala de `role="group"` nem de `role="radiogroup"` [95].
+- Os controles HTML padrão já cumprem a 4.1.2 quando usados conforme a especificação. Se um checkbox ou rádio está selecionado é um estado da interface. Os widgets próprios, entre eles os toggle buttons, pedem medidas extras (ARIA5) [96].
+- Mudança de conteúdo nem sempre é mudança de contexto: a definição cita menus dinâmicos e abas, e um exemplo com select que mostra campos novos na mesma página mantém o contexto básico. A F37 é abrir janela nova sem aviso ao mudar rádio, checkbox ou select [97].
+
+| | Rádio | Toggle | Abas |
+|---|---|---|---|
+| Papéis | `radiogroup` com rótulo; `radio` | botão com `aria-pressed` | `tablist` com rótulo; `tab`; `tabpanel` |
+| Estado | `aria-checked`, no máximo um marcado | `aria-pressed`, um por botão | `aria-selected`; `aria-controls` aponta o painel |
+| Tab | uma parada; cai no marcado ou no primeiro | a página não trata de grupo | entra na aba ativa e sai para o painel |
+| Setas | movem e marcam, com volta; em toolbar, só movem | não há | movem, com volta; ativam no modo automático |
+| Espaço e Enter | Espaço marca; Enter é opcional em toolbar | ativam | ativam no modo manual |
+| Escolha exclusiva na APG | o alinhamento de texto [93] | não tratada | não comparada |
+| Fontes | [88], [89], [93] | [90] | [91] |
+
+**Leitura da verificação (inferência).** Para três opções que se excluem e trocam a grade na mesma página, o caso documentado mais próximo é o rádio: a APG o usa na escolha exclusiva com cara de toggle [93], e o Compose marca o grupo conectado de seleção única com papel de rádio ([54], [100]). O `aria-pressed` de hoje (`src/components/ui/CategoryTabs.vue`) é o caso que a APG não cobre [90]. Com rádio nativo dentro de `fieldset` e `legend`, o teclado e o estado vêm do navegador ([92], [96]), e a legenda dá o contexto do grupo [95]; com `role="radiogroup"` à mão, o teclado e o foco itinerante ficam por conta do código ([88], [89], [92]). As abas também serviriam, mas pedem `aria-controls` e fazem da grade um `tabpanel` [91]. Trocar a grade com as setas é mudança de conteúdo [97], e a grade já está carregada, como pede a ativação automática das abas [91]. A escolha fica com o desenho.
+
+### Grupo conectado no Compose
+
+| Tema | O que as páginas dizem | Fontes |
+|---|---|---|
+| Uso | O grupo conectado reúne toggle buttons para escolher opções, trocar de vista ou ordenar, e substitui os segmented buttons. Não se usa quando nenhum botão alterna. Na referência, os botões de início e de fim têm forma assimétrica e servem para fazer uma seleção. | [54], [100] |
+| Semântica | Na seleção única, cada `ToggleButton` recebe `Modifier.semantics { role = Role.RadioButton }`; no multi-select, nenhum papel é definido. Nenhuma amostra do grupo conectado põe `selectableGroup()` no contêiner. A amostra de seleção única do `ListItem` põe `selectableGroup()` na `Column`. A `SingleChoiceSegmentedButtonRow` serve quando só um valor vale, "for correct semantics"; nela o item usa `selected` e `onClick`, e no multi-select, `checked` e `onCheckedChange`. | [54], [100], [107], [101], [102] |
+| Cores | O `ToggleButton` é um botão filled que troca entre as cores primary e tonal conforme o `checked`; a página não diz qual cor vai em qual estado. Em `ToggleButtonDefaults.colors()`, os seis parâmetros (contêiner e conteúdo, em habilitado, desabilitado e marcado) têm padrão `Color.Unspecified`, sem papel de cor citado. A elevação padrão vem de `FilledButtonTokens`. | [103], [104] |
+| Formas | O `ToggleButton` troca entre as três formas de `ToggleButtonShapes` (desmarcada, pressionada e marcada) desde que sejam `CornerBasedShape`; o tamanho padrão é o small. Em `ButtonGroupDefaults`, cada posição (início, meio e fim) tem forma própria em repouso e pressionada; a do meio usa `ShapeDefaults.Small` em repouso; o marcado é um só `connectedButtonCheckedShape`, um `RoundedCornerShape`, nas três posições. `shapesFor(altura)` escolhe o balde de forma (XS a XL) pela altura padrão mais próxima. Nenhuma dessas formas tem dp escrito. | [103], [105], [104], [106] |
+| Espaços | `ConnectedSpaceBetween` é o espaço padrão entre os botões do grupo conectado, sem valor na página. Os exemplos quebram linha: o guia usa FlexBox com `wrap`, `columnGap(ButtonGroupDefaults.ConnectedSpaceBetween)` e `rowGap(2.dp)`; a referência usa FlowRow com os mesmos valores. O grupo padrão, ao contrário, fica numa linha só. A amostra vertical empilha os botões com `spacedBy((-6).dp)`, parte da forma do meio, põe `CornerSize(100)` no topo do primeiro e no pé do último e usa o `pressedShape` e o `connectedButtonCheckedShape` padrão. | [105], [54], [100] |
+| Sinal do selecionado | Nenhum exemplo do grupo conectado mostra check. As amostras da referência com ícone trocam o Outlined pelo Filled ao marcar. No código do guia, Restaurant e Search usam o mesmo ícone nos dois estados, e nesses dois o estado aparece só pela cor e pela forma. O segmented button de seleção única mostra um check no selecionado, pelo texto alternativo da figura; o multi-select vai de 2 a 5 itens, e acima disso se usam chips. | [100], [103], [54], [102] |
+| Versão | `ToggleButtonDefaults` e `ButtonGroupDefaults` entraram na 1.5.0, sem anotação de experimental no texto aberto. No grupo padrão, o botão pressionado cresce 15% da largura (`ExpandedRatio`). | [104], [105] |
+
+### Checkbox e linhas de lista com seleção (M3)
+
+**Anatomia e estados [108].** O checkbox tem caixa, check e rótulo. Há três estados: não selecionado (caixa vazia), indeterminado (um traço) e selecionado (um check). O indeterminado exige o `TriStateCheckbox`. O guia pede checkbox em vez de switch ou rádio quando dá para marcar várias opções.
+
+**Medidas (material-web).** A caixa e o ícone têm 18 px, e o canto, 2 px; a camada de estado tem 40 px, com forma corner-full [113]. O doc do componente repete o canto de 2 px [112]. O alvo é um input nativo invisível (opacidade 0) de 48×48 px; com `touch-target="wrapper"`, o host ganha uma margem de (48 px menos o tamanho da caixa) dividido por 2. O anel de foco mede 44×44 px, e o traço do indeterminado, 10×2 px [114]. No Compose, as páginas não escrevem a medida da caixa, do canto nem do `StrokeWidth` ([109], [110]).
+
+**Cores por papel e estados (tokens v0_192 do material-web [113]).**
+
+| Estado | Contorno | Contêiner | Ícone | Camada de estado |
+|---|---|---|---|---|
+| Desmarcado | 2 px, on-surface-variant | não há token de cor | não se aplica | on-surface no hover e no foco; primary no pressionado |
+| Desmarcado com hover, foco ou pressionado | 2 px, on-surface | não há token de cor | não se aplica | como acima |
+| Marcado | 0 px | primary | on-primary | primary no hover e no foco; on-surface no pressionado |
+| Erro, desmarcado | error, também no hover, no foco e no pressionado | não há token de cor | não se aplica | só as opacidades, de md-sys-state |
+| Erro, marcado | não há token | error | on-error | só as opacidades, de md-sys-state |
+| Desabilitado, desmarcado | 2 px, on-surface | opacidade 0,38 | não se aplica | não há token |
+| Desabilitado, marcado | 0 px | on-surface, opacidade 0,38 | surface | não há token |
+| Indeterminado | traço de 10×2 px [114] | não encontrei token próprio | não encontrei token próprio | não encontrei token próprio |
+
+As opacidades da camada de estado vêm de md-sys-state, sem número no arquivo [113]. No Compose, `CheckboxDefaults.colors()` cobre check, caixa e borda, nos estados marcado, desmarcado, desabilitado e indeterminado desabilitado; todos os padrões são `Color.Unspecified`, sem papel citado. Por padrão, a caixa desmarcada é transparente, e as cores animam entre os estados. Um só `StrokeWidth` serve ao check (marcado e indeterminado) e ao contorno (desmarcado). O checkbox do Compose não tem estado de erro [110].
+
+**Cores forçadas e movimento [114].** Em `forced-colors`, o fundo e o contorno ficam CanvasText, o ícone fica Canvas e o desabilitado fica GrayText. Marcar leva 350 ms com emphasized-decelerate, e desmarcar, 150 ms com emphasized-accelerate; o fundo e o ícone têm ainda uma transição linear de 50 ms. Um keyframe anima o `width` do traço longo do check a partir de 0.
+
+**Semântica web.** O componente do material-web desenha um `<input type="checkbox">` nativo dentro do shadow root, sem `role` explícito. O `aria-checked="mixed"` só aparece no indeterminado, o SVG fica `aria-hidden`, e o `aria-label` do host passa para o input [115]. O doc manda associar o rótulo com `<label>`, em volta ou por for e id, mas avisa que o checkbox não é rotulado automaticamente pelo `<label>` e sempre precisa de `aria-label` (b/294081528). Os exemplos usam `touch-target="wrapper"` sem explicar. O doc não descreve estado de erro visual; traz o `required` e a validação de formulário [112]. O rádio do material-web tem a mesma nota de rótulo; o grupo se forma pelo `name` e fica num `role="radiogroup"` com rótulo, sem falar de fieldset nem de setas; os tokens são ícone on-surface-variant, selecionado primary e 20 px [117].
+
+**A linha inteira como alvo.**
+
+- No Compose, o normal nos controles de seleção é deixar o callback do controle `null` e pôr `toggleable` ou `selectable` no pai. No exemplo CheckableRow, a Row tem `toggleable(role = Role.Checkbox)` e padding de 16 dp, o texto tem `weight(1f)` e o checkbox fica no fim, com `onCheckedChange = null`. `clickable` e `toggleable` fundem a semântica dos filhos numa entidade só [111].
+- O alvo mínimo é de 48 dp, pelas diretrizes de acessibilidade do Material. O `Checkbox` com callback ganha padding até 48 dp; com `null`, não. O `minimumInteractiveComponentSize` reserva 48 dp de layout em cada dimensão e centraliza o elemento, sem aumentar o alvo em si; o Compose ainda estende o alvo de um clicável pequeno para fora das bordas dele [111].
+- Com `onCheckedChange = null`, o checkbox não é interagível, salvo se outro elemento tratar a entrada. Na amostra da linha com texto, a Row tem largura total, 56 dp de altura, `toggleable(role = Role.Checkbox, indication = null)` com o mesmo `interactionSource` do checkbox e padding horizontal de 16 dp; o checkbox vem no início, com o próprio callback, e o texto em bodyLarge tem 16 dp à esquerda [109].
+- O `ListItem` com `checked` e `onCheckedChange` é a linha de seleção múltipla, análoga a um checkbox; a amostra põe `Checkbox(onCheckedChange = null)` no `leadingContent`. O com `selected` e `onClick` é a de seleção única, análoga a um rádio, com `RadioButton(onClick = null)` no início e `selectableGroup()` na coluna. O `trailingContent` aceita, por exemplo, checkbox, switch ou ícone. As `ListItemShapes` mudam de forma conforme a interação [107].
+- Achado na verificação: os exemplos do guia de checkbox põem texto e checkbox lado a lado numa Row, com o callback no próprio checkbox. Ali, a linha não é o alvo [108].
+- No material-web, os itens interativos usam `type` button ou link (o padrão é text), com os slots start, end, headline, supporting-text e trailing-supporting-text. A lista tem `role="list"` (tabindex −1), e cada item, `role="listitem"` (tabindex 0). As cores são contêiner surface, rótulo on-surface e texto de apoio on-surface-variant. Não há exemplo com checkbox, rádio ou switch, nem altura ou padding de linha [116].
+- O controle aparece no início ([107], [109]) e no fim [111].
+
+**WCAG para o checkbox e a linha.**
+
+- Componentes e estados precisam de 3:1 contra as cores vizinhas. O exemplo reprovado é um checkbox com borda cinza (#9D9D9D) a 2,7:1 no branco. O check também precisa de contraste (o exemplo aprovado tem um check cinza-claro a 5,6:1 na caixa roxa). Os indicadores de selecionado e de foco precisam de 3:1 [98].
+- A troca de cor entre estados não precisa de 3:1 entre eles, mas a troca só de matiz tende a falhar a 1.4.1, e a troca de fundo dentro do componente fica fora da 1.4.11 e não passaria na 1.4.1. Os componentes desabilitados ficam isentos. Um controle com texto dispensa borda, mas o foco precisa de contraste; o hover é suplementar [98].
+- A cor não pode ser o único meio visual. Uma diferença de cor conta como sinal extra quando a diferença de luminância dá 3:1 ou mais, mas o conteúdo que depende de perceber uma cor específica ainda pede outro sinal. A página não fala de abas, toggles, checkboxes nem rádios [99].
+- A 2.5.8 não fala de checkbox nem do rótulo como parte do alvo. Duas fileiras de botões de 16 px com 1 px de folga falham, porque os círculos de 24 px invadem a outra fileira. A exceção do controle do agente do usuário só vale se o autor não mexeu no tamanho padrão [78].
+
+### Riscos da etapa 6
+
+- **Papel ARIA sem o teclado prometido:** um papel não traz teclado do navegador, e errar é pior que não usar ARIA; o suporte no celular é incompleto [92]. Um `radiogroup` à mão precisa do Tab no marcado, das setas com volta e do foco itinerante ([88], [89]); abas à mão precisam das setas e do Tab para o painel [91].
+- **Toggles para escolha exclusiva:** a APG não trata vários toggles como seleção única [90] e, no exemplo equivalente, usa rádio [93]. Inferência: com `aria-pressed`, o leitor de tela anuncia cada botão como pressionado ou não, e nada diz que só um vale.
+- **Setas que trocam a grade:** fora de toolbar, cada seta marca o rádio seguinte [88], então a grade troca a cada seta. É mudança de conteúdo, que não é necessariamente mudança de contexto [97]; nas abas, a ativação no foco só é recomendada sem atraso perceptível [91]. Inferência: o foco tem de continuar no grupo quando a grade troca.
+- **Shift+Tab no rádio nativo:** sem nenhum marcado, alguns navegadores põem o foco no último rádio [88]. Inferência: o grupo de categorias sempre tem uma opção marcada, o que evita o caso.
+- **Cor como único sinal:** a troca de fundo sozinha não passa na 1.4.1 ([98], [99]). O código do guia do Compose deixa dois itens só com cor e forma [54]. Os sinais documentados a mais são o check do segmented [102] e a troca do ícone Outlined pelo Filled ([100], [103]).
+- **Contorno e check do checkbox:** o contorno desmarcado e o check precisam de 3:1 [98]. No M3, o contorno é on-surface-variant [113]; é preciso medir nos tokens do projeto (hoje, `--color-border-strong` em `src/assets/styles/components/ingredients-list.scss`).
+- **Foco:** o indicador de foco precisa de 3:1 [98]. O exemplo da APG envolve rádio e rótulo [89], e o anel do checkbox M3 tem 44 px [114]. Inferência: com o input desenhado por `appearance: none`, o anel tem de aparecer no lugar certo.
+- **Alto contraste:** o material-web tem regras próprias de `forced-colors` [114], e a APG usa `forced-color-adjust: auto` nos SVG [89]. Inferência: um checkbox com `appearance: none` precisa das suas.
+- **Movimento:** o check do material-web anima `width` e leva 350 ms [114]. Isso fere a regra do projeto (só `transform` e `opacity`, e durações acima de `--dur-fast` só dentro de `motion-ok`): um check copiado tem de ser refeito.
+- **Alvo:** a 2.5.8 pede 24×24 px CSS [78]; o Compose pede 48 dp [111], e o material-web usa um input de 48 px [114]. A linha de ingrediente do modal tem altura mínima de 44 px e checkbox de 24 px (`ingredients-list.scss`): passa na WCAG e fica abaixo dos 48 do M3. A folga entre as linhas só pesa se o alvo for menor que 24 px, como a caixa de 18 px do M3 sozinha ([78], [113]). Inferência: um checkbox com `appearance: none` e tamanho mudado perde a exceção do controle do agente do usuário [78].
+- **Alvo duplo na linha:** o Compose leva o clique para a linha e deixa o controle sem callback ([111], [107]), mas a amostra de [109] mantém o callback do checkbox e compartilha o `interactionSource` com a linha. Inferência: na web, um controle clicável dentro de uma linha clicável pode marcar duas vezes ou ser lido duas vezes; um input nativo dentro de `<label>` dá um alvo só.
+- **Rótulo:** a nota de rótulo do `md-checkbox` e do `md-radio` ([112], [117]) é do web component, que põe o input dentro do shadow root [115]. Inferência: um input nativo dentro de `<label>`, fora de shadow DOM, é rotulado, e os controles HTML padrão cumprem a 4.1.2 [96].
+- **Rótulo fixo:** o rótulo de um toggle não pode mudar com o estado [90].
+- **Medidas de antes do Expressive:** as medidas do checkbox vêm do material-web, que está em manutenção e não cita o Expressive [29]; as páginas do Compose não dão dp ([104], [105], [110]). Inferência: são medidas do M3, não necessariamente do Expressive.
+
+### Não encontrei (etapa 6)
+
+- Um critério geral da APG para escolher entre rádio, abas e toggle. Só há a justificativa do exemplo da toolbar [93]; nem a Read Me First [92] nem as páginas dos três padrões ([88], [90], [91]) tratam disso.
+- Numa página do W3C aberta, o teclado do rádio nativo além da nota do Shift+Tab [88]. A página do padrão de rádio não fala de `fieldset`, e a H71 não fala de `radiogroup` [95].
+- Os valores em dp do grupo conectado: `ConnectedSpaceBetween`, `ShapeDefaults.Small`, os cantos de início, fim, pressionado e marcado, `MinHeight`, `IconSize` e `IconSpacing` ([104], [105], [106]).
+- Os papéis de cor do `ToggleButton` além de "primary e tonal", e qual vai no marcado ([103], [104]).
+- O papel padrão do `ToggleButton` sem o modificador de semântica [103].
+- Anotação de API experimental no `ToggleButton`, no `ToggleButtonDefaults` e no `ButtonGroupDefaults` ([103], [104], [105]).
+- No Compose, a medida da caixa e do canto do checkbox e o valor do `StrokeWidth` ([109], [110]), e um estado de erro do checkbox [110].
+- No material-web, as cores do indeterminado e a cor da camada de estado de erro: os tokens abertos trazem só as opacidades de erro [113].
+- Orientação de erro no doc do checkbox do material-web, que traz só os tokens, o `required` e a validação [112].
+- Exemplo de lista com checkbox no material-web, e altura ou padding de linha [116]. Os valores de `ListItemDefaults` (página não aberta).
+- Os estados de que as `ListItemShapes` mudam de forma [107].
+- Na 2.5.8, algo sobre checkbox ou sobre o rótulo como parte do alvo [78]. Na 1.4.1, algo sobre abas, toggles, checkboxes ou rádios [99].
+
+### Não abriu (etapa 6)
+
+| URL | Motivo |
+|---|---|
+| https://developer.android.com/reference/kotlin/androidx/compose/material3/TonalToggleButton.composable | HTTP 404, na pesquisa e na verificação. |
+| https://m3.material.io/ (checkbox, segmented buttons, lists, toggle button) | Só funciona com JavaScript; não foi tentado. |
+| Links "View Source" do cs.android.com (ToggleButton.kt, ButtonGroup.kt, Checkbox.kt, ListItem.kt) | Não foram abertos. É onde estariam os valores em dp e os papéis de cor. |
+| https://developer.android.com/develop/ui/compose/accessibility/merging-clearing | Apareceu na busca e não foi aberta; a [111] bastou. |
+| https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/ | Não foi aberta; a página do padrão [88] e o exemplo [89] bastaram. |
+| Exemplos de abas automáticas e manuais da APG e https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button/ | Não foram abertos. |
+| Página de referência do OutlinedToggleButton | O pesquisador a citou sem URL; não foi reaberta (ver abaixo). |
+| Referências de `ListItemDefaults` e `ListItemShapes` | Não foram abertas na verificação; o pesquisador cita `ListItemDefaults` sem URL. |
+
+### Refutadas na verificação (etapa 6)
+
+1. **A2:** a nota do rádio nativo sem a condição. [88] diz que o Shift+Tab põe o foco no último rádio só quando nenhum está marcado.
+2. **A10:** "é a única passagem da APG que justifica a escolha entre rádio e toggle". A verificação só sustenta que é a única entre as páginas abertas.
+3. **A12:** "o agente do usuário apresenta a legenda antes do rótulo de cada controle", como regra. [95] diz que isso acontece muitas vezes. E o fieldset é dispensável quando o grupo tem instruções claras e opções distintas, não só "quando cada rótulo já é claro".
+4. **A14:** "um select que mostra campos novos na mesma página não é falha". [97] dá esse caso como exemplo em que o contexto básico se mantém, sem chamá-lo de "não falha".
+5. **A16:** "(percentual)" depois de `CornerSize(100)`. [100] escreve só o valor, sem dizer a unidade.
+6. **A19:** a lista de estados das `ListItemShapes` (selected, pressed, focused, hovered, dragged). [107] diz só que as formas mudam conforme a interação.
+7. **A20:** "a página do OutlinedToggleButton repete a mesma frase das cores". A página não tem URL nos dados e não foi reaberta; [103] traz só o `ToggleButton`.
+8. **Síntese (componentes e riscos):** "no Compose, o controle filho fica sem callback (A26, A28)". Vale para [111] e [107], mas a amostra de [109] mantém o callback do checkbox e compartilha o `interactionSource` com a linha.
+9. **Síntese (riscos):** "linhas empilhadas sem folga falham se o alvo for só a caixa". Pela [78], a folga só pesa se o alvo for menor que 24 px; uma caixa de 24 px passa pelo tamanho.
+10. **Síntese (riscos), rebaixada a inferência:** o leitor de tela "anuncia cada botão como pressionado ou não, sem dizer que só um vale". Nenhuma página aberta diz isso.
+11. **Síntese (recomendação), rebaixada a inferência:** "o nativo vale no celular (A9)". [92] diz que alguns recursos ARIA não funcionam no celular; não fala do rádio nativo.
+
+Ajustes de redação, sem derrubada: A6 (o foco fica no botão "em geral"), A8 ([91] não diz que a ativação manual serve ao painel que demora; diz que, sem conteúdo pré-carregado, a automática deixa o foco lento), A17 (o `checked` e o `onCheckedChange` do multi-select foram conferidos em [102]) e A23 (na referência, trocam de ícone as amostras que têm ícone; a vertical só tem texto).
