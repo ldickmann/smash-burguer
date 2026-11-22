@@ -97,8 +97,10 @@ const foraDe = (texto, condicao) =>
 
 describe('tokens novos (§8)', () => {
   it('a altura da barra das categorias e o canto do checkbox', () => {
-    expect(tokens).toMatch(/--m3-categorias-altura:\s*calc\(var\(--target-min\) \+ 2 \* var\(--space-3\)\);/);
-    expect(tokens).toMatch(/--m3-forma-caixa:\s*2px;/);
+    // Pelo lerTokens: um "--m3-…:" escrito aqui contaria na busca dos papéis fora dos tokens (§13.2)
+    const { tokens: declarados } = lerTokens(tokens);
+    expect(declarados.get('m3-categorias-altura')).toBe('calc(var(--target-min) + 2 * var(--space-3))');
+    expect(declarados.get('m3-forma-caixa')).toBe('2px');
   });
 });
 
@@ -258,9 +260,9 @@ describe('modal Personalizar (§5.5)', () => {
   it('adicionais em lista segmentada: blocos brancos, vão de 2 px e cantos 20/4 pela posição', () => {
     expect(valor(css.adicionais, '.additionals-list', 'gap')).toBe('var(--m3-vao-segmento)');
     expect(valor(css.adicionais, '.additionals-list__item', 'background')).toBe('var(--m3-surface-container-lowest)');
-    expect(valor(css.adicionais, '.additionals-list__item', '--m3-adicional-canto-cima')).toBe('var(--m3-forma-xs)');
-    expect(valor(css.adicionais, '.additionals-list__item:first-child', '--m3-adicional-canto-cima')).toBe('var(--m3-forma-l-aumentada)');
-    expect(valor(css.adicionais, '.additionals-list__item:last-child', '--m3-adicional-canto-baixo')).toBe('var(--m3-forma-l-aumentada)');
+    expect(valor(css.adicionais, '.additionals-list__item', '--m3-item-canto-cima')).toBe('var(--m3-forma-xs)');
+    expect(valor(css.adicionais, '.additionals-list__item:first-child', '--m3-item-canto-cima')).toBe('var(--m3-forma-l-aumentada)');
+    expect(valor(css.adicionais, '.additionals-list__item:last-child', '--m3-item-canto-baixo')).toBe('var(--m3-forma-l-aumentada)');
     expect(valor(css.adicionais, '.additionals-list__price', 'color')).toBe('var(--m3-on-surface-variant)');
     expect(css.adicionais).not.toMatch(/border-top/);
   });

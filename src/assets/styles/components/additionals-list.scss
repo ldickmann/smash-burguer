@@ -11,25 +11,25 @@
 }
 
 .additionals-list__item {
-  --m3-adicional-canto-cima: var(--m3-forma-xs);
-  --m3-adicional-canto-baixo: var(--m3-forma-xs);
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
-  border-radius: var(--m3-adicional-canto-cima) var(--m3-adicional-canto-cima)
-    var(--m3-adicional-canto-baixo) var(--m3-adicional-canto-baixo);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima)
+    var(--m3-item-canto-baixo) var(--m3-item-canto-baixo);
   background: var(--m3-surface-container-lowest);
   color: var(--m3-on-surface);
 
   &:first-child {
-    --m3-adicional-canto-cima: var(--m3-forma-l-aumentada);
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
   }
 
   &:last-child {
-    --m3-adicional-canto-baixo: var(--m3-forma-l-aumentada);
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
   }
 }
 
