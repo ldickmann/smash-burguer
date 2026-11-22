@@ -701,7 +701,7 @@ Legenda: `○` é o controle vazio de 24 px (contorno de 2 px em `on-surface-var
   - o número e a forma dizem qual pedido foi recebido: são parte do estado que o `h1` anuncia, e não do que foi pedido;
   - sem eles, a faixa teria só o ícone e o título, e o resumo começaria com dados soltos antes do próprio título;
   - os pares já existem: `on-primary-container` sobre `primary-container` (7,24), o mesmo do `h1`.
-  - A sessão C atualiza a §5.7 do SPEC-M. A troca do "·" pela `dl` ainda depende da confirmação do usuário ao ler o desenho (seção 12); se ele preferir o texto de hoje, a linha "Pedido #1001 · PIX" fica, em body-l, no mesmo lugar da `dl`.
+  - A sessão C atualiza a §5.7 do SPEC-M. A troca do "·" pela `dl` foi confirmada pelo usuário em 22/11/2026, ao ler o desenho (seção 12).
 - **Como se diferencia do hero da Home:**
 
   | | Hero da Home abaixo de `md` | Faixa da confirmação |
@@ -929,7 +929,7 @@ Todos reais. Mudam três apresentações; nenhuma palavra nova:
 
 | Texto | Antes | Depois | Motivo |
 |---|---|---|---|
-| "Pedido #1001 · PIX" | uma linha com "·" (`SPEC.md` §5.7, SPEC-M §5.7) | `dl`: "Pedido" / "#1001" e "Forma de pagamento" / "PIX" | Junta dois dados com "·", o padrão genérico que a Home tirou dos contatos e dos direitos (SPEC-M §8.1 e §10.2); coerente com o 6.h, que manteve o "·" só onde rótulo e preço são uma ação. Os rótulos são reais ("Pedido", da linha de hoje; "Forma de pagamento", do grupo). **Depende da confirmação do usuário ao ler o desenho; a sessão C passa pela skill `design:ux-copy`** |
+| "Pedido #1001 · PIX" | uma linha com "·" (`SPEC.md` §5.7, SPEC-M §5.7) | `dl`: "Pedido" / "#1001" e "Forma de pagamento" / "PIX" | Junta dois dados com "·", o padrão genérico que a Home tirou dos contatos e dos direitos (SPEC-M §8.1 e §10.2); coerente com o 6.h, que manteve o "·" só onde rótulo e preço são uma ação. Os rótulos são reais ("Pedido", da linha de hoje; "Forma de pagamento", do grupo). **Confirmado pelo usuário em 22/11/2026; a sessão C passa pela skill `design:ux-copy`** |
 | "Forma de pagamento" | `legend` visível | `h2` visível e a `legend` escondida, com o mesmo texto | Hierarquia (5.7) |
 | "Itens do carrinho" | `aria-label` da `section` | `h2` escondido que nomeia a `section` | Hierarquia (5.2) |
 
@@ -1022,7 +1022,7 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
 - `lacunas.mjs`: a conferência do padding de `.confirmation-page__card` (32 px) passa a `.confirmation-page__status` (24 px) ou sai.
 - `axe-scan.mjs`: os estados abaixo; o `cart-itens` de hoje é o do visitante.
 
-**SPEC-M (no mesmo PR):** as linhas `PaymentMethodPicker`, `CartItem` e `OrderSummary` da §4.2; o "a desenhar" das §5.5 a §5.7; a linha `PaymentMethodPicker` da §6; na §5.7, os dados do pedido dentro da faixa (desvio registrado em 5.9) e a `dl` no lugar de "Pedido #1001 · PIX", se o usuário confirmar a troca.
+**SPEC-M (no mesmo PR):** as linhas `PaymentMethodPicker`, `CartItem` e `OrderSummary` da §4.2; o "a desenhar" das §5.5 a §5.7; a linha `PaymentMethodPicker` da §6; na §5.7, os dados do pedido dentro da faixa (desvio registrado em 5.9) e a `dl` no lugar de "Pedido #1001 · PIX" (troca confirmada pelo usuário em 22/11/2026).
 
 **Estados para o axe** (em 1440 e 390, com e sem movimento reduzido):
 
@@ -1106,7 +1106,7 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
 - **d.** Seções em contêineres `low` de canto 28, cada uma com `h2`; "Alterar no perfil" como text button; aviso `aviso-container` com o filled S "Adicionar endereço" dentro (4,98 contra o aviso); CTA filled M com o rótulo que quebra linha; o desabilitado fica como hoje e vai para a etapa 10.
 - **e.** Rádios nativos em `fieldset` com `legend` escondida, numa `section` sem `aria-labelledby`; uma coluna; controle de 24 px no início (vazio → `primary` com check); marcada em `secondary-container` com os quatro cantos de 20; sem marcado no início; rádio com o retângulo do `label` e `appearance: none` para o foco não coberto.
 - **f.** Pilha central de 40rem: faixa `primary-container` (28/28/4/4) com o check, o `h1` em headline-m e a `dl`, colada ao resumo `low` (4/4/28/28); ações filled M e tonal M na superfície. A `dl` dentro da faixa é desvio registrado da SPEC-M §5.7 (5.9).
-- **g.** O "·" fica em "Confirmar pedido · R$ x" e sai de "Pedido #1001 · PIX" (vira `dl`). **A troca depende da confirmação do usuário ao ler o desenho**; confirmada, a sessão C passa o texto pela `design:ux-copy`; recusada, a linha de hoje fica no lugar da `dl`.
+- **g.** O "·" fica em "Confirmar pedido · R$ x" e sai de "Pedido #1001 · PIX" (vira `dl`). **O usuário confirmou a troca em 22/11/2026, ao ler o desenho**; a sessão C passa o texto pela `design:ux-copy`.
 - **h.** `h1` em `--text-page` no carrinho e no pagamento, com o ritmo do Cardápio; na confirmação, headline-m 500 dentro da faixa.
 - **i.** A reserva de hoje cobre a toolbar; enquanto há aviso, o `scroll-padding` soma `--m3-toast-reserva` (no pé abaixo de `md`, no topo a partir dele); o rádio cobre o `label`; o `keyboard.mjs` mede com 800 e 830 px, no Chromium.
 - **j.** `EmptyState` na superfície, na largura do contêiner, abaixo do `h1`, sem bandeja.
@@ -1119,7 +1119,7 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
 - a coluna de 24rem saiu: a grade é a 8/12 e 4/12 do `SPEC.md`, e o rótulo do CTA quebra linha;
 - o "Adicionar endereço" é filled S;
 - a `section` "Forma de pagamento" fica sem `aria-labelledby`;
-- a `dl` fica na faixa, como desvio registrado da SPEC-M §5.7; a troca do "·" ainda espera o usuário (g);
+- a `dl` fica na faixa, como desvio registrado da SPEC-M §5.7; a troca do "·" foi confirmada pelo usuário (g);
 - as três inferências (rádio do tamanho do `label`, `focus()` com o `scroll-padding`, reserva de um aviso) ficam para o `keyboard.mjs` da sessão C;
 - o canto da `M3Foto` de 64 px: o `cartao` usa `--m3-forma-l` e passa a `--m3-forma-xl` a partir de `md` (`_m3-foto.scss`, linhas 15 a 18); uma regra no `<style scoped>` do `CartItem` sobre a raiz da `M3Foto`, onde fica o `border-radius`, com especificidade maior que a do `.m3-foto--cartao`, fixa `--m3-forma-l` em todas as larguras, sem `:deep()` (5.2);
 - a regra do `scroll-padding` com o aviso e o `--m3-toast-reserva` ficam nesta etapa; a altura mínima do sticky vira o mixin `altura-min` em `base/_breakpoints.scss`.
@@ -1191,9 +1191,9 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
 - As inferências ficam para o `keyboard.mjs`.
 - O canto da `M3Foto` é fixado por uma regra do `CartItem` na raiz do filho, sem `:deep()`.
 
-**Para o usuário decidir ao ler o desenho:**
-- a troca do "·" de "Pedido #1001 · PIX" pela `dl` "Pedido" / "Forma de pagamento" (7.g);
-- se ele recusar, a linha de hoje fica no lugar da `dl`, e a §5.7 do SPEC-M não muda.
+**Decidido pelo usuário ao ler o desenho (22/11/2026):**
+- "Pedido #1001 · PIX" vira a `dl` "Pedido" / "Forma de pagamento" (7.g);
+- a sessão C muda a §5.7 do SPEC-M no mesmo PR.
 
 **O que a sessão C mede, porque o desenho estimou pelo CSS:**
 - as alturas do sticky com a coluna 4/12;
