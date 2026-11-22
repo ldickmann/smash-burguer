@@ -1,8 +1,8 @@
 <!-- Home em Material 3 Expressive (SPEC-material §5.2): a composição da Home de referência
      (src/direcoes/estilos/material/HomeMaterial.vue), sem a moldura do acervo. O cabeçalho, a toolbar e o
      rodapé vêm do MainLayout. A prensa do hero é o único gesto expressivo; o resto são superfícies
-     tonais, o feed, os adicionais em chips (etapa 5a) e listas segmentadas. O modal Personalizar é desta view: as seções o abrem por
-     usePersonalizar() e nenhuma usa o carrinho nem calcula preço. -->
+     tonais, o feed, os adicionais em chips (etapa 5a) e listas segmentadas. O modal Personalizar é
+     desta view: as seções o abrem por usePersonalizar() e nenhuma usa o carrinho nem calcula preço. -->
 <template>
   <div class="home">
     <M3SecaoHero />

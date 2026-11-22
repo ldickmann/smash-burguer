@@ -86,7 +86,8 @@
   letter-spacing: var(--m3-label-l-tracking);
 }
 
-// Nome longo (cardápio editado) quebra dentro do chip; o acréscimo não quebra
+// Nome longo (defesa: hoje os adicionais vêm só do products.json) quebra dentro do chip; o acréscimo
+// não quebra
 .m3-monte__nome {
   min-width: 0;
   overflow-wrap: anywhere;

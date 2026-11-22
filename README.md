@@ -25,7 +25,7 @@ Front-end de delivery de hambúrgueres artesanais feito em Vue 3, com:
 
 ### Loja
 
-- **Cardápio** com abas Hambúrgueres, Bebidas e Sobremesas. Os produtos ficam em `src/json/products.json`, e a Home mostra todos os hambúrgueres num feed, com o Smash Burger em destaque, e as bebidas e as sobremesas numa lista, cada produto com o botão de adicionar.
+- **Cardápio** com abas Hambúrgueres, Bebidas e Sobremesas. Os produtos ficam em `src/json/products.json`, e a Home mostra todos os hambúrgueres num feed, com o Smash Burger em destaque, os adicionais de lanche e de sobremesa com o acréscimo de cada um, e as bebidas e as sobremesas numa lista, cada produto com o botão de adicionar.
 - **Personalizar** abre um modal antes de o item entrar no carrinho:
   - nos hambúrgueres e na sobremesa, dá para tirar ingredientes e somar adicionais (até 5 de cada), com o preço recalculado na hora;
   - nos hambúrgueres, um montador 3D mostra as camadas do lanche;

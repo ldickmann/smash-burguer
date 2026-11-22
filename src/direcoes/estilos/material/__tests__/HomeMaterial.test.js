@@ -125,10 +125,12 @@ describe('Home nova em Material 3 Expressive', () => {
     expect(secao.find('h2').text()).toBe('Monte o seu');
     expect(secao.text()).toContain('Escolha, personalize e peça.');
     expect(secao.findAll('h3').map((h) => h.text())).toEqual(['No hambúrguer', 'Na sobremesa']);
-    for (const lista of secao.findAll('ul')) {
-      expect(lista.attributes('role')).toBe('list');
-      expect(document.getElementById(lista.attributes('aria-labelledby'))?.tagName).toBe('H3');
-    }
+    // Cada lista tem o nome do próprio grupo (o h3 dela)
+    const listas = secao.findAll('ul');
+    expect(listas.map((ul) => ul.attributes('role'))).toEqual(['list', 'list']);
+    const rotulos = listas.map((ul) => document.getElementById(ul.attributes('aria-labelledby')));
+    expect(rotulos.map((h3) => h3?.tagName)).toEqual(['H3', 'H3']);
+    expect(rotulos.map((h3) => h3.textContent.trim())).toEqual(['No hambúrguer', 'Na sobremesa']);
     const adicionais = [...produtos.foodAdditionals, ...produtos.dessertAdditionals];
     const chips = secao.findAll('li');
     expect(chips).toHaveLength(adicionais.length);

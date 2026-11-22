@@ -812,7 +812,7 @@ Textos provisórios: `monteTitulo`, `monteLanche` e `monteSobremesa`.
   - os grupos empilhados, com `--space-5` entre eles: 3 linhas de chips no de lanche e 4 no de sobremesa;
   - o "Ver cardápio" no fim, alinhado ao início;
   - a seção tem cerca de 510 px e começa por volta de 2.100 px, depois da Batata Frita.
-- **Nome longo** (cardápio editado): o nome quebra dentro do chip (`max-width: 100%`), e o acréscimo não quebra (`white-space: nowrap`).
+- **Nome longo** (defesa: hoje os adicionais vêm só do `products.json`): o nome quebra dentro do chip (`max-width: 100%`), e o acréscimo não quebra (`white-space: nowrap`).
 
 **Movimento:**
 
@@ -824,7 +824,7 @@ Textos provisórios: `monteTitulo`, `monteLanche` e `monteSobremesa`.
 - **Grupo sem adicionais** (`foodAdditionals` ou `dessertAdditionals` vazio): o grupo some, com o `h3`, e o outro ocupa a largura toda.
 - **Categoria vazia** (sem lanches ou sem sobremesas): o grupo dela some, porque não há onde acrescentar.
 - **Nenhum grupo:** ficam o `h2`, a frase e o "Ver cardápio". A seção continua na página, como as outras (o teste do cardápio vazio).
-- **Adicional renomeado ou com outro preço:** o chip mostra o que o catálogo tiver, sempre por `formatPrice`. O catálogo é conferido ao carregar (`storedState.js`).
+- **Adicional renomeado ou com outro preço:** o chip mostra o que o catálogo tiver, sempre por `formatPrice`. Hoje os adicionais vêm só do `products.json`: o painel não os edita, e a store não os guarda no `localStorage` (revisão final da sessão C).
 - **Só itens sem adicionais em `foods`** (por exemplo, só a Batata Frita): o grupo de lanche continua, porque a seção não lê o `isBurger`. A referência não pode importar `@/components` (teste de isolamento), e a produção fica igual a ela. Risco aceito (seção 11).
 - **`forced-colors`:** o chip perde o fundo e ganha borda de 1 px em `CanvasText`; com `prefers-contrast: more`, borda de 1 px em `--m3-outline` (mixin `reserva-de-sombra`, que serve às superfícies que dependem de fundo).
 

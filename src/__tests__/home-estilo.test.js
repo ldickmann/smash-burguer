@@ -6,6 +6,7 @@
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { initCompiler } from 'sass-embedded';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { PARES_HOME } from '@/utils/contraste';
 
 const SRC = fileURLToPath(new URL('../', import.meta.url));
 const ALIAS = { findFileUrl: (url) => (url.startsWith('@/') ? pathToFileURL(`${SRC}${url.slice(2)}`) : null) };
@@ -90,5 +91,16 @@ describe('chip dos adicionais (etapa 5a)', () => {
     expect(cssMonte).not.toMatch(/tertiary|:hover|:active|:focus|cursor|transition|transform|animation/);
     expect(cssMonte).toMatch(/@media \(forced-colors: active\)\s*\{\s*\.m3-monte__chip\s*\{\s*border: 1px solid CanvasText/);
     expect(cssMonte).toMatch(/@media \(prefers-contrast: more\)\s*\{\s*\.m3-monte__chip\s*\{\s*border: 1px solid var\(--m3-outline\)/);
+  });
+
+  it('as tintas do chip sobre o fundo dele têm par de texto (4,5) em src/utils/contraste.js', () => {
+    const papel = (valor) => valor?.match(/^var\(--(m3-[a-z-]+)\)$/)?.[1];
+    const fundo = papel(regra('.m3-monte__chip', cssMonte)?.background);
+    const tintas = [regra('.m3-monte__chip', cssMonte)?.color, regra('.m3-monte__preco', cssMonte)?.color].map(papel);
+    expect(tintas).toHaveLength(2);
+    for (const frente of tintas) {
+      const par = PARES_HOME.find((p) => p.frente === frente && p.fundo === fundo);
+      expect(par?.minimo, `${frente} sobre ${fundo}`).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });

@@ -186,7 +186,7 @@ Todos são conferidos no passo final (§13). A assinatura de autoria (`src/compo
     - nenhum texto em inglês na interface;
     - preços sempre por `formatPrice` (`R$ 25,99`), com algarismos tabulares;
     - nenhum texto marcado `// provisório` chega ao build (§8.2).
-13. **Fidelidade à Home aprovada:** em 1440, 1024 e 390, a Home de `#/` mostra as quatro seções do `docs/direcoes/desenho/material.json`, na ordem, com o mesmo layout da referência viva (comparação de capturas).
+13. **Fidelidade à Home aprovada:** em 1440, 1024 e 390, a Home de `#/` mostra as seções do `docs/direcoes/desenho/material.json` (cinco desde a etapa 5a), na ordem, com o mesmo layout da referência viva (comparação de capturas).
 
 ---
 
@@ -648,7 +648,7 @@ Props copiadas do código. A produção recebe **cópias** dos componentes, das 
 | `compartilhado/useContadorCarrinho.js` | `src/composables/useContadorCarrinho.js` | A mesma lógica do `CartBadge`; na cópia, `digitos` e `sentido` saem com o odômetro |
 | `compartilhado/useLinksPrincipais.js` | `src/composables/useLinksPrincipais.js` | Início, Cardápio, Entrar ou Perfil |
 | `compartilhado/usePersonalizar.js` | `src/composables/usePersonalizar.js` | Na produção, o `provide` fica nas views que renderizam o `ModalAdditional` (Home e Cardápio), e não na `MolduraDirecao` |
-| `compartilhado/useCardapio.js` | `src/composables/useCardapio.js` | Só `useCardapio` e `contar` são usados pelo material |
+| `compartilhado/useCardapio.js` | `src/composables/useCardapio.js` | Só `useCardapio` é usado pelo material (o `contar` ficou sem uso na Home desde a etapa 5a; a limpeza decide) |
 | `compartilhado/dados.js` | `src/utils/` (nome a decidir) | A cópia passa a ser a fonte única dos textos da loja; o original do acervo continua sendo uma cópia |
 | `material/useFolhaUnica.js` | `src/composables/useFolhaUnica.js` | — |
 | `material/cardapio.js` | `src/utils/cardapio.js` | `separarDestaque` |
@@ -753,7 +753,8 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 | Cabeçalho | `M3BarraSuperior`, `M3BarraFerramentas` | `MARCA`, `useLinksPrincipais`, `useContadorCarrinho` |
 | `hero` (a prensa) | `M3SecaoHero` → `M3FormaPrensa`, `BaseButton` tonal M (filled abaixo de `md`) | `HERO.titulo`, `HERO.texto`, `HERO.acao` ("Ver cardápio", para `/menu`), `HERO.imagem` com `IMAGEM_HERO` |
 | `lanches` (feed "Hambúrgueres") | `M3SecaoLanches` → `M3CartaoLanche`, `M3BotaoDividido`, `M3FolhaIngredientes`, `M3Foto`, text button "Ver cardápio" | `CATEGORIAS` ("Hambúrgueres"), `useProductsStore().foods`; destaque por `separarDestaque(foods, MARCA)` |
-| `bebidas-e-sobremesas` | `M3SecaoBebidasSobremesas` → `M3ItemLista` (círculo nas bebidas, flor na sobremesa) | `drinks`, `desserts`, contagem de `dessertAdditionals` |
+| `monte-o-seu` (etapa 5a; "Adicionais" na produção) | `M3SecaoMonte` → chips estáticos (marcação da seção, fundo `surface-container-high`), `BaseButton` ghost "Ver cardápio" | `useCardapio().adicionais` (`formatPrice`), `categoria("foods")` e `categoria("desserts")`, `TEXTOS.monteTitulo`, `monteLanche` e `monteSobremesa`, `FRASE_CARDAPIO`, `HERO.acao` |
+| `bebidas-e-sobremesas` | `M3SecaoBebidasSobremesas` → `M3ItemLista` (círculo nas bebidas, flor na sobremesa) | `drinks`, `desserts` (sem a contagem dos adicionais desde a etapa 5a) |
 | `onde` | `M3SecaoOnde` → `M3ItemSegmentado` | `itensOnde` (horário, endereço, WhatsApp e e-mail) |
 | Rodapé | `M3Rodape`, `AssinaturaEncaixe` | `MARCA`, `DESCRICAO`, `RODAPE.copyright` |
 
