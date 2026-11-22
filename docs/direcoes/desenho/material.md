@@ -2,7 +2,15 @@
 
 A Home nova do estilo `material` (`#/direcoes/material`, só no `yarn dev`). O desenho parte da identidade aprovada na rodada 1 (`src/direcoes/estilos/material/ficha.js` e `_tokens.scss`), do dossiê `docs/direcoes/pesquisa/material.md` (fontes [25] a [87]), da seção do estilo em `docs/direcoes/PESQUISA.md` (fontes [1] a [36]), das galerias e da pesquisa transversal `docs/direcoes/pesquisa/home-delivery.md` (fontes [H1] a [H45]).
 
-**Resumo:** quatro seções (`hero`, `lanches`, `bebidas-e-sobremesas`, `onde`), a navegação numa toolbar flutuante em pílula com o FAB do carrinho e 11 componentes próprios.
+**Resumo:** cinco seções (`hero`, `lanches`, `monte-o-seu`, `bebidas-e-sobremesas`, `onde`), a navegação numa toolbar flutuante em pílula com o FAB do carrinho e 11 componentes próprios.
+
+**Etapa 5a (21/11/2026):**
+
+- entrou `monte-o-seu`: os adicionais de lanche e de sobremesa em chips estáticos, com o acréscimo e o caminho para o cardápio, sem componente novo (5.5);
+- saiu a linha "7 adicionais" do Sorvete de Pote, em `bebidas-e-sobremesas`, que repetiria os 7 chips de sobremesa logo acima. É a única mudança numa seção que já existia (5.3);
+- a sexta seção pedida, o carrossel multi-browse, fica **fora até haver fotos reais que não sejam de produto**. Toda imagem real que serviria já está na Home (as 11 fotos de produto e o recorte do hero) ou é um banner único (5.6);
+- o usuário escolheu ficar com **5 seções** (SPEC-material §0.2, "Resultado do desenho");
+- o `vue3-carousel` não serve ao carrossel, se ele voltar, e sai na limpeza (decisão i, 5.6).
 
 **A ousadia fica num lugar só, o hero:**
 
@@ -39,8 +47,11 @@ O resto é quieto: superfícies tonais, listas segmentadas e cards sem sombra.
 | Rodapé com endereço, contatos, horário e redes | Horário e contatos sobem para a seção `onde`. As redes saem. O rodapé fica com a marca, a descrição e os direitos | As redes apontam para links genéricos (`facebook.com`, `instagram.com`), o que mina a credibilidade [H25][H26] |
 | Sem bebidas e sobremesas na Home | Seção `bebidas-e-sobremesas` em lista segmentada | Mostrar a variedade [H21][H22]. O `/menu` abre sempre em Hambúrgueres |
 | `vue3-carousel` e a paginação em pílulas | Sem carrossel | Não há mais carrossel na Home |
+| (5a) Sem os adicionais na Home: só a contagem "7 adicionais" sob o Sorvete de Pote | Seção `monte-o-seu`: os 5 adicionais de lanche e os 7 de sobremesa em chips estáticos, com o acréscimo ("+ R$ 3,50") e o "Ver cardápio". A linha "7 adicionais" sai da lista | Pedido do usuário (SPEC-material §0.2); a personalização descrita antes do item [H24][H23]; chips em canto small [7] |
+| (5a) Sem carrossel (rodada 2) | Continua sem carrossel: fica fora até haver fotos reais que não sejam de produto (5.6). A técnica fica definida para quando houver. O usuário escolheu ficar com 5 seções (SPEC-material §0.2, "Resultado do desenho") | A §0.2 proíbe repetir o feed e a lista, e toda imagem real que serviria já está na Home (as 11 fotos de produto e o recorte do hero) ou é um banner único (seção 2, "Etapa 5a") |
+| (5a) `vue3-carousel` instalado e sem uso | Um carrossel futuro é feito à mão (`scroll-snap` e dois botões); o pacote sai na limpeza (decisão i) | No efeito slide, o pacote move o trilho por `transform` mesmo com movimento reduzido e desabilita os botões das pontas com `disabled` (5.6) |
 
-Seções que a v1 não tinha: `bebidas-e-sobremesas` e `onde` (e `lanches` troca o carrossel por outro padrão).
+Seções que a v1 não tinha: `bebidas-e-sobremesas`, `onde` e, desde a etapa 5a, `monte-o-seu` (e `lanches` troca o carrossel por outro padrão).
 
 ---
 
@@ -84,6 +95,92 @@ Seções que a v1 não tinha: `bebidas-e-sobremesas` e `onde` (e `lanches` troca
 - **FAB menu de contato: saiu.** Escondia os contatos atrás de um toque, e o Baymard pede cautela com elemento fixo no celular [H35]. Os contatos foram para uma lista agrupada sempre aberta.
 - **Redes no rodapé: saíram** (links genéricos [H25][H26]).
 
+### Etapa 5a (21/11/2026): duas seções novas
+
+**O pedido** (SPEC-material §0.2):
+
+- a Home passa de 4 para 6 seções;
+- a preferência do usuário é o "Monte o seu" (os adicionais de lanche e de sobremesa com o preço, em chips [60], levando ao cardápio) e o carrossel multi-browse [34];
+- o carrossel não gira sozinho, tem Anterior e Próximo, a espiada do próximo e os itens na ordem do `products.json`, e não repete o que o feed e a lista já mostram.
+
+**Sistema da seção nova** (dentro da identidade aprovada; nenhuma cor nova):
+
+- **Cores:**
+  - Fundo (`surface`) #f7fbf1;
+  - Tinta (`on-surface`) #181d17;
+  - Apoio (`on-surface-variant`) #424940;
+  - Chip (`tertiary-container`) #bcebf1;
+  - Tinta do chip (`on-tertiary-container`) #1f4d53.
+- **Tipo:** Roboto; `h2` em headline-m (headline-s no celular); `h3` em title-m 500; chip em label-l (nome em 500, acréscimo em 400, tabular).
+- **Layout:** tudo alinhado à esquerda. A seção fica na superfície, sem contêiner, entre o feed e a faixa. Os dois grupos ficam lado a lado em 7/5 a partir de `lg`, alinhados com as colunas da faixa logo abaixo, e empilhados abaixo de `lg`.
+- **Princípio:** o chip se lê como informação, e não como ação, por vários sinais juntos:
+  - a cor: fora o círculo do ícone do horário (que também é informação, 5.4), é o único fundo `tertiary-container` da Home, e nenhuma ação usa essa cor;
+  - a falta de camada de estado, de cursor de ação e de foco;
+  - os 32 px de altura, abaixo dos 44 px de toda ação da página;
+  - a marcação de lista e o acréscimo "+ R$", a notação do modal.
+- **A forma não separa:** o canto small (8) também está na marca do cabeçalho, o FAB é um quadrado arredondado, e os links de `onde` são linhas de cantos 20/4. A volta 1 corrigiu a frase "toda ação é pílula", que era falsa.
+
+#### Plano (primeira passada)
+
+1. **Carrossel multi-browse** logo depois do feed, com as fotos em 1440 dos 7 lanches, o nome e o preço, no `vue3-carousel` com o `configCarrossel` do `compartilhado/`.
+2. **"Monte o seu" com filter chips** [60]: os 12 adicionais; tocar num chip marcaria os lanches que o aceitam.
+3. **Contêiner `surface-container-low`** de canto 28, com o `h2` e um "Ver cardápio" à direita, como no feed.
+4. **Grupos com os rótulos reais** "Hambúrgueres" e "Sobremesas", cada um com a contagem ("5 adicionais", "7 adicionais").
+5. **Preço no chip** como "R$ 3,50".
+
+#### Revisão contra o pedido (o que saiu repetido, inventado ou inviável, e o que entrou)
+
+- **Carrossel com os 7 lanches: saiu.** Repete o feed (as mesmas fotos, o nome e o preço) e a v1. Os outros conteúdos reais também não passam (tabela de 5.6). O usuário escolheu ficar com 5 seções.
+- **`vue3-carousel`: trocado,** para quando houver carrossel, por `scroll-snap` e dois botões. O pacote move o trilho com `transform` mesmo com movimento reduzido e põe `disabled` nos botões das pontas (5.6).
+- **Filter chips: trocados por chips estáticos.**
+  - Filtrar não tem função real: os 5 adicionais de lanche valem para os mesmos 6 hambúrgueres, e o filtro daria sempre a mesma lista.
+  - Um chip que se toca sugeriria que o adicional já fica escolhido, e o modal abre com os adicionais zerados.
+- **Contêiner com o "Ver cardápio" à direita: trocado.** Repetiria o cabeçalho do feed, logo acima, e os dois contêineres da faixa, logo abaixo. A seção fica na superfície, e o link vai para o fim dela.
+- **Rótulo "Hambúrgueres" no grupo: trocado.** O rótulo real inclui a Batata Frita, que não tem adicionais no modal (`isBurger` em `BurgerStack.vue`). Entram os rótulos provisórios "No hambúrguer" e "Na sobremesa".
+- **Contagem nos grupos: saiu.** Os chips ficam todos à vista, e "5 adicionais" repetiria o que se conta na tela. O juiz tirou o "7 itens" do feed pelo mesmo motivo (seção 13).
+- **"R$ 3,50" sozinho: trocado por "+ R$ 3,50".** O preço sozinho se lê como o preço de comprar o bacon. O "+" é a notação do próprio modal (`AdditionalsList.vue`).
+- **O que entrou:** a `FRASE_CARDAPIO` ("Escolha, personalize e peça."), real, sob o `h2`. Ela diz quando os adicionais se escolhem, sem texto novo.
+
+#### Volta 1 do revisor e do juiz (21/11/2026)
+
+O revisor e o juiz de distinção aprovaram sem bloqueante; a sessão principal decidiu cada item. O que mudou:
+
+- **Motivo do carrossel:** a regra 2 do teste passou a ser "o que for vital também aparece fora do carrossel". Quem barra é a §0.2 com a falta de imagens: toda imagem real que serviria já está na Home ou é um banner único (5.6). A tabela de 5.6 ganhou os conteúdos que o juiz testou.
+- **Chip que pode parecer selecionável:** saíram as frases "na Home, toda ação é pílula" e "nada sugere escolha". A separação vem da cor, da falta de camada e de foco, da altura, da marcação de lista e do "+ R$". O risco fica aceito, com a conferência do crítico e uma reserva (seção 11).
+- **Linha "7 adicionais":** sai de `bebidas-e-sobremesas` (5.3), porque repetiria os 7 chips de sobremesa logo acima.
+- **Marcas dos grupos (o cookie e a flor):** saíram. Repetiam o esquema da lista vizinha (círculo e flor), espalhavam o cookie do hero e usariam o `--m3-tertiary`, que a Home não usa direto (SPEC-material §2.2).
+- **Grade dos grupos:** passou de 5/7 a partir de `md` para 7/5 a partir de `lg`, com o vão da faixa (`--space-5`), e empilhada abaixo.
+- **Canto do chip:** cita só o [7]; o 12 dp do filter chip do Expressive [60] ficou de fora de propósito.
+- **Par de contraste:** em vez de um par novo, o par que já existe sobe de 3 para 4,5.
+- **Terceiro "Ver cardápio":** fica pela §0.2; saiu o argumento da distância em 390, que ignorava o "Cardápio" da toolbar.
+- **`carrossel.js`, técnica do carrossel e testes:** corrigidos em 5.6 e na seção 9.
+
+#### As três objeções da rodada 2 ao carrossel
+
+| Objeção | O que mudaria se o carrossel voltasse | O que fica |
+|---|---|---|
+| 1. A v1 já era carrossel ("Mais pedidos", 7 lanches, setas e pontos) | A forma e os controles: multi-browse, sem pontos [75], sem volta ao início, Anterior e Próximo com `aria-disabled`, rótulo "n de N" e título sem alegar popularidade [H25] | O conteúdo. As únicas imagens de conteúdo são as 11 fotos de produto, e um carrossel delas voltaria a mostrar os lanches da v1. **A objeção continua de pé** |
+| 2. Não há produto publicado com o multi-browse [34] | Nada: continua sem exemplo publicado (dossiê, "Não encontrei") | Risco aceito pelo pedido do usuário, como o split button [55] e o feed [64], que também são só documentação (seção 10). Sozinha, ela não barra |
+| 3. O carrossel esconde conteúdo [75][H6][H9] | Até 5 quadros [75], de 3 a 4 passos até o fim [H9], a espiada do próximo e os controles grandes dentro do carrossel; o que for vital (produto, preço, "Adicionar") também aparece fora dele [H6][H7] | **Resolve-se pela forma.** Quem barra o carrossel é a §0.2 (não repetir o feed nem a lista) com a falta de fotos reais que não sejam de produto (5.6) |
+
+O §12 ("Fora") e a tabela "O que mudou da rodada 1" seguem esta resposta: o carrossel fica fora até haver fotos reais que não sejam de produto.
+
+#### Desenho final da etapa
+
+- **`monte-o-seu` (5.5): confirmada.** O dossiê a lista como viável sem inventar (catálogo de seções, "'Monte o seu': adicionais em chips"), e a pesquisa transversal também ("Monte do seu jeito", [H24][H23]).
+- **Carrossel (5.6): não confirmado.** Pela §0.2, a troca seria outra candidata viável do catálogo do material, mas nenhuma das viáveis é nova na Home (5.6, "Troca").
+- **Decisão do usuário (21/11/2026):** a Home fica com **5 seções** (saída 1 de 5.6; SPEC-material §0.2, "Resultado do desenho").
+
+#### Distinção
+
+| Comparação | Por que `monte-o-seu` não repete |
+|---|---|
+| `lanches` e `bebidas-e-sobremesas` | Não mostra produto, foto, preço de produto nem "Adicionar": mostra os acréscimos, que hoje só aparecem dentro do modal |
+| A linha "7 adicionais" do Sorvete de Pote | Saiu na volta 1: com os 7 chips de sobremesa logo acima, a contagem repetiria o que a seção mostra (5.3) |
+| `onde` | Não é lista segmentada nem link |
+| Neumorfismo: a régua de adicionais do `painel` | É o parente mais próximo no acervo: os 5 adicionais de lanche com preço numa faixa afundada, dentro do aparelho. Aqui são os 12 (os 7 de sobremesa não aparecem no acervo), em chips separados, em dois grupos, numa seção própria que leva ao cardápio. O juiz aprovou na volta 1, com a nota de que o chip não pode virar texto solto numa faixa (5.5) |
+| Esqueumorfismo | A bancada de adicionais saiu na revisão do juiz (desenho de lá, seção 16); o `expositor` mostra só a contagem na etiqueta do sorvete |
+
 ---
 
 ## 3. Composição
@@ -93,11 +190,14 @@ Ordem dos blocos:
 1. **Cabeçalho** (`M3BarraSuperior`, slot `#topo`): a marca. Dentro dele vai a `M3BarraFerramentas`, flutuante embaixo abaixo de `lg` e ancorada à direita do cabeçalho a partir de `lg`.
 2. **`hero`**, a ousadia: título, texto e "Ver cardápio" à esquerda; à direita, o disco de 12 lobos com o recorte do lanche, tudo num contêiner `primary-container`.
 3. **`lanches`**: o feed "Hambúrgueres", com o link para o cardápio e os 7 cards. O "Smash Burger" ocupa duas colunas.
-4. **`bebidas-e-sobremesas`**: lista segmentada num contêiner, com as bebidas e a sobremesa.
-5. **`onde`**: lista agrupada com o horário, o endereço, o WhatsApp e o e-mail.
-6. **Rodapé** (`M3Rodape`, slot `#rodape`): marca, descrição e direitos. Depois vem a `AssinaturaEncaixe` (da moldura).
+4. **`monte-o-seu`** (etapa 5a): os adicionais em chips, em dois grupos, e o "Ver cardápio". Fica entre o feed e a faixa: logo depois dos hambúrgueres que levam os adicionais de lanche. A partir de `lg`, os grupos (7/5) alinham com as colunas da faixa logo abaixo.
+5. **`bebidas-e-sobremesas`**: lista segmentada num contêiner, com as bebidas e a sobremesa.
+6. **`onde`**: lista agrupada com o horário, o endereço, o WhatsApp e o e-mail.
+7. **Rodapé** (`M3Rodape`, slot `#rodape`): marca, descrição e direitos. Depois vem a `AssinaturaEncaixe` (da moldura).
 
-As seções 4 e 5 ficam lado a lado a partir de `lg` (7 e 5 colunas de 12), dentro de um `div.m3-faixa` na `HomeMaterial.vue`; abaixo de `lg` ficam empilhadas.
+As seções 5 e 6 ficam lado a lado a partir de `lg` (7 e 5 colunas de 12), dentro de um `div.m3-faixa` na `HomeMaterial.vue`; abaixo de `lg` ficam empilhadas.
+
+**Sexta seção:** não há. O usuário escolheu ficar com 5 seções (SPEC-material §0.2, "Resultado do desenho"). Se um dia entrar um carrossel, com fotos reais que não sejam de produto (5.6), o lugar sugerido é entre `monte-o-seu` e a faixa: os adicionais de lanche continuam colados no feed, e `onde` continua sendo o último bloco antes do rodapé [H30].
 
 **Ritmo vertical:** `--space-8` entre seções a partir de `lg` e `--space-7` abaixo. O hero termina antes da dobra de 900 px em 1440, e o cabeçalho do feed aparece acima dela [H2][H3].
 
@@ -145,7 +245,7 @@ As seções 4 e 5 ficam lado a lado a partir de `lg` (7 e 5 colunas de 12), dent
 │ │ │ ◯ Coca Cola Lata        R$ 4,99 [Adicionar] │ │ ├ (⌖) Endereço                        ↗  ┤│    │
 │ │ ╰ ◯ Suco de Abacaxi       R$ 7,99 [Adicionar] ╯ │ │   Rua Beira da Praia - Navegantes, SC   ││    │
 │ │ Sobremesas (h3)                       │ │ ├ (☏) WhatsApp                        ↗  ┤│    │
-│ │ ╭ ✿ Sorvete de Pote, 7 adicionais     │ │ │   +55 47 5 6355 3265                    ││    │
+│ │ ╭ ✿ Sorvete de Pote                   │ │ │   +55 47 5 6355 3265                    ││    │
 │ │ ╰               R$ 12,90 [Adicionar] ╯│ │ ╰ (✉) E-mail  contato@smashburger.com.br ╯│    │
 │ ╰───────────────────────────────────────╯ │ ╰───────────────────────────────────────────────╯    │
 │                                                                                                 │
@@ -158,7 +258,32 @@ As seções 4 e 5 ficam lado a lado a partir de `lg` (7 e 5 colunas de 12), dent
 └───────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Legenda: `┃` é o vão de 2 px entre as metades do split button; `╭ ├ ╰` marcam os itens de uma lista segmentada (vãos de 2 px; cantos externos de 20, internos de 4).
+Legenda: `┃` é o vão de 2 px entre as metades do split button; `╭ ├ ╰` marcam os itens de uma lista segmentada (vãos de 2 px; cantos externos de 20, internos de 4). Desde a etapa 5a, o Sorvete de Pote não tem mais a linha "7 adicionais" (5.3), e `monte-o-seu` entra entre o feed e a faixa (trecho abaixo).
+
+### Trecho novo em 1440 (etapa 5a)
+
+O resto da página não muda. As posições vêm da captura `home-1440-full.png` da etapa 5; as quebras dos chips são estimativas pela largura do texto em label-l, e o construtor confere na captura.
+
+```
+  … [lanches] sem mudança: cabeçalho, destaque e 6 cards; o feed termina por volta de 1.675 px …
+                                                                         ↕ --space-8
+  [monte-o-seu]  na superfície, sem contêiner, largura do .container (75 rem); começa por volta de 1.740 px
+  Monte o seu                                headline-m 28/36, on-surface
+  Escolha, personalize e peça.               body-l, on-surface-variant (FRASE_CARDAPIO)
+                                                                         ↕ --space-5
+  No hambúrguer                       (7 de 12)                                 │ Na sobremesa       (5 de 12)
+  ⟨Bacon + R$ 3,50⟩ ⟨Ovo + R$ 2,50⟩ ⟨Queijo + R$ 2,00⟩ ⟨Queijo Cheddar + R$ 3,00⟩ │ ⟨Calda de Chocolate + R$ 3,00⟩ ⟨Granulado + R$ 1,50⟩
+  ⟨Cebola Caramelizada + R$ 2,50⟩                                                │ ⟨Leite Ninho + R$ 1,00⟩ ⟨Paçoca + R$ 1,50⟩ ⟨Nutella + R$ 3,00⟩
+                                                                                 │ ⟨Morango + R$ 2,00⟩ ⟨Cereja + R$ 1,50⟩
+                                                                         ↕ --space-5
+  [ Ver cardápio ]   text button, no fim, alinhado ao início
+                                                                         ↕ --space-8
+  [bebidas-e-sobremesas] 7/12                                                    │ [onde] 5/12   … sem mudança; a faixa desce para cerca de 2.100 px
+```
+
+Grade dos grupos: `minmax(0, 7fr) minmax(0, 5fr)` com `--space-5` entre as colunas, a mesma da faixa (cerca de 690 e 490 px), e `align-items: start`. Os grupos alinham com as colunas da faixa logo abaixo. Estimativa: 2 linhas de chips no grupo de lanche e 3 no de sobremesa.
+
+Legenda do trecho: `⟨ ⟩` é o chip estático (canto 8, `tertiary-container`, 32 px de altura); `│` marca só o vão entre as colunas, sem linha desenhada.
 
 ### Wireframe em 390
 
@@ -222,6 +347,33 @@ Legenda: `┃` é o vão de 2 px entre as metades do split button; `╭ ├ ╰`
 └──────────────────────────────────┘
 ```
 
+### Trecho novo em 390 (etapa 5a)
+
+Posições da captura `home-390-full.png` da etapa 5; quebras estimadas nos 358 px úteis.
+
+```
+│ … Batata Frita: o feed termina por volta de 2.050 px
+│                                    ↕ --space-7
+│ [monte-o-seu]  sem contêiner, de gutter a gutter (cerca de 510 px)
+│ Monte o seu                 headline-s 24/32
+│ Escolha, personalize e peça.     body-l
+│ No hambúrguer               title-m 500
+│ ⟨Bacon + R$ 3,50⟩ ⟨Ovo + R$ 2,50⟩
+│ ⟨Queijo + R$ 2,00⟩ ⟨Queijo Cheddar + R$ 3,00⟩
+│ ⟨Cebola Caramelizada + R$ 2,50⟩
+│                                    ↕ --space-5
+│ Na sobremesa
+│ ⟨Calda de Chocolate + R$ 3,00⟩
+│ ⟨Granulado + R$ 1,50⟩ ⟨Leite Ninho + R$ 1,00⟩
+│ ⟨Paçoca + R$ 1,50⟩ ⟨Nutella + R$ 3,00⟩
+│ ⟨Morango + R$ 2,00⟩ ⟨Cereja + R$ 1,50⟩
+│ [ Ver cardápio ]            o único alvo de foco da seção
+│                                    ↕ --space-7
+│ ╭ [bebidas-e-sobremesas] … começa por volta de 2.660 px; o Sorvete de Pote sem a linha "7 adicionais"
+```
+
+A toolbar flutuante continua embaixo à direita; a reserva da barra (`scroll-padding-bottom`) já cobre o "Ver cardápio" quando ele recebe foco.
+
 ### Em 1024
 
 O layout é o de 1440, mais estreito:
@@ -229,9 +381,10 @@ O layout é o de 1440, mais estreito:
 - **Cabeçalho:** fixo, com a pílula ancorada (a partir de `lg`, 1024 inclusive).
 - **Hero:** duas colunas, título em display-m 45/52 (até 3 linhas), disco de 36 rem e recorte de 27 rem.
 - **Feed:** 3 colunas. O "Smash Burger" ocupa a linha inteira, na horizontal, e os outros 6 cards formam duas linhas de 3.
+- **Monte o seu (5a):** os dois grupos em 7 e 5 colunas, alinhados com a faixa; estimativa de 2 linhas de chips no grupo de lanche e 4 no de sobremesa. A seção tem cerca de 340 px e começa por volta de 2.030 px (captura `home-1024-full.png` da etapa 5).
 - **Faixa:** `bebidas-e-sobremesas` e `onde` lado a lado, em 7 e 5 colunas.
 
-Entre `md` e `lg` (768 a 1023 px): a toolbar flutua embaixo, com ícone e rótulo lado a lado; o feed tem 2 colunas, e o destaque fica na linha inteira, na horizontal.
+Entre `md` e `lg` (768 a 1023 px): a toolbar flutua embaixo, com ícone e rótulo lado a lado; o feed tem 2 colunas, e o destaque fica na linha inteira, na horizontal. Em `monte-o-seu`, os grupos ficam empilhados, como a faixa, com 2 linhas de chips em cada (estimativa).
 
 ---
 
@@ -462,9 +615,14 @@ Textos provisórios (`textos.js`):
 | `h2` | Composto dos rótulos reais: `${rotulo de "drinks"} e ${rotulo de "desserts" em minúsculas}` → "Bebidas e sobremesas" (`dados.js` → `CATEGORIAS`) |
 | `h3` dos grupos | `CATEGORIAS` → "Bebidas" e "Sobremesas" |
 | Itens | `useProductsStore().drinks` e `.desserts`: `name`, `description`, `price` (`formatPrice` via `useCartaoProduto`), `image` |
-| Linha extra da sobremesa | `useProductsStore().dessertAdditionals.length` + " " + `TEXTOS.adicionais` ("7 adicionais", calculado) |
 
-Texto provisório: `adicionais: "adicionais"`.
+**Mudança da etapa 5a (volta 1):** saiu a linha extra da sobremesa ("7 adicionais", `contar(dessertAdditionals.length, [TEXTOS.adicional, TEXTOS.adicionais])`).
+
+- **Motivo:** os 7 chips de sobremesa de `monte-o-seu`, logo acima, já mostram quais são os adicionais; a contagem repetiria o que se vê.
+- **É a única mudança numa seção que já existia.** A sessão C a faz na referência (`M3SecaoBebidasSobremesas.vue`) e na produção (`src/components/home/M3SecaoBebidasSobremesas.vue`).
+- **O que fica sem uso nesta seção:** o `contar`, o `adicionais` do `useCardapio` e os `TEXTOS.adicional` e `TEXTOS.adicionais` (seção 8, "Etapa 5a"). A prop `apoio` do `M3ItemLista` continua, com o padrão vazio.
+
+Texto provisório: nenhum (o `adicionais` saiu com a linha).
 
 **Componentes:**
 
@@ -518,7 +676,6 @@ A forma da foto marca o grupo: o círculo é o copo ou a lata visto de cima; a f
 - **Os dois vazios:** fica o `h2` com `TEXTOS.vazio`.
 - **Imagem `data:` ou que falha:** a imagem `data:` entra sem `<source>`; se falhar, entra o ícone `utensils` em `--m3-surface-container`, na forma do grupo.
 - **Sem `description`:** a linha some.
-- **`dessertAdditionals` vazio:** a linha "n adicionais" some.
 - **Nome longo:** quebra em até 2 linhas.
 
 ### 5.4 `onde`: lista agrupada de horário e contato
@@ -574,6 +731,189 @@ Textos provisórios: `ondeTitulo: "Onde e quando"`, `whatsapp: "WhatsApp"` e `em
 - **Contato sem " · ":** o apoio é o texto inteiro.
 - **Chave desconhecida em `CONTATOS`:** o título é o texto e o apoio fica vazio.
 
+### 5.5 `monte-o-seu`: os adicionais em chips (etapa 5a)
+
+- **Arquivo:** `secoes/M3SecaoMonte.vue`, raiz `<section data-secao="monte-o-seu" aria-labelledby="m3-monte-titulo" class="m3-monte container">`. Na produção, `src/components/home/M3SecaoMonte.vue`.
+- **Objetivo:**
+  - mostrar de antemão o que se pode acrescentar e quanto custa: o Baymard viu a personalização sem descrição nos sites de delivery [H24][H23]. Hoje os adicionais só aparecem dentro do modal Personalizar;
+  - levar ao cardápio, onde se escolhe o produto e se personaliza (§0.2);
+  - ser quieta: sem contêiner, sem sombra, sem foto e sem movimento.
+
+**Conteúdo (tudo real):**
+
+| Campo | Origem |
+|---|---|
+| `h2` | `TEXTOS.monteTitulo` ("Monte o seu", provisório: o nome que o usuário deu à seção na SPEC-material §0.2) |
+| Frase | `dados.js` → `FRASE_CARDAPIO` ("Escolha, personalize e peça.", a frase do `MenuView`); na produção, `textosLoja.js` |
+| `h3` dos grupos | `TEXTOS.monteLanche` ("No hambúrguer") e `TEXTOS.monteSobremesa` ("Na sobremesa"), provisórios |
+| Chips de lanche | `useCardapio().adicionais.value.lanche` (`products.json` → `foodAdditionals[]`): `name` e `precoTexto` (`formatPrice(price)`), na ordem do JSON: Bacon, Ovo, Queijo, Queijo Cheddar e Cebola Caramelizada |
+| Chips de sobremesa | `adicionais.value.sobremesa` (`dessertAdditionals[]`): `name` e `precoTexto`, na ordem do JSON: Calda de Chocolate, Granulado, Leite Ninho, Paçoca, Nutella, Morango e Cereja |
+| Sinal do acréscimo | "+ " antes do preço, como no `AdditionalsList.vue` do modal (`+ {{ formatPrice(additional.price) }}`): texto de tela real (lição 10 da rodada 2), escrito no template |
+| Link | `HERO.acao` ("Ver cardápio"), `RouterLink` para `/menu` |
+| Quando o grupo aparece | Com adicionais (`adicionais.value.<grupo>.length > 0`) e com a categoria dele (`foods` ou `desserts`) não vazia (`useCardapio().categoria(chave).value.vazia`) |
+
+- **Contagem:** nenhuma visível (revisão do §2, "Etapa 5a"). O teste confere que o número de chips é o de `adicionais.value.lanche.length + adicionais.value.sobremesa.length`, calculado. A linha "7 adicionais" do Sorvete de Pote saiu (5.3), e o `contar()` e os `TEXTOS.adicional`/`adicionais` ficam sem uso na Home.
+- **Preço:** só o `precoTexto` (`formatPrice`); a seção não soma nada.
+
+Textos provisórios: `monteTitulo`, `monteLanche` e `monteSobremesa`.
+
+**Componentes:**
+
+- `M3Botao` com `variante="texto"` e `para="/menu"` (na produção, `BaseButton variant="ghost" to="/menu"`);
+- o chip é marcação da própria seção (7.12), sem componente novo.
+
+**Interação e estados:**
+
+- **Chip: estático, com um estado só.**
+  - Não é botão nem link: não recebe foco, não tem camada de estado nem cursor de ação, e o texto se seleciona como texto.
+  - Não tem check nem estado selecionado, e o modal abre com os adicionais zerados.
+  - **Mesmo assim, pode parecer selecionável.** O juiz lembrou que um chip cheio, tonal, lembra o filter chip selecionado [60]; o dossiê descreve o selecionado do [60] pela forma redonda e pelo check. Risco aceito, com a conferência do crítico e a reserva da seção 11.
+- **Por que estático, e não interativo:**
+  - o filter chip existe para filtrar, e os chips de ação e de sugestão viraram botões [60];
+  - aqui não há o que filtrar: os 5 adicionais de lanche valem para todos os hambúrgueres, e os 7 de sobremesa para a sobremesa (`ModalAdditional.vue`, `catalogAdditionals`);
+  - um chip que abrisse o modal com o adicional marcado seria função nova no modal, e a revisão da rodada 2 já tirou o menu de adicionais do split por enganar (seção 2).
+- **Como o chip se separa de uma ação** (vários sinais juntos; a forma sozinha não separa, porque a marca do cabeçalho também tem `--m3-forma-s`, o FAB é um quadrado arredondado e os links de `onde` são linhas de cantos 20/4):
+  - **cor:** fora o círculo do ícone do horário, que também é informação (5.4), o chip é o único fundo `tertiary-container` da Home, e nenhuma ação usa essa cor;
+  - **sem camada de estado e sem foco:** nada muda no hover, no toque ou no Tab;
+  - **tamanho:** 32 px de altura, abaixo dos 44 px de toda ação da página;
+  - **marcação de lista** e o acréscimo "+ R$", a notação do modal.
+- **Canto:** `--m3-forma-s` (8), o canto small dos chips [7]. O Expressive mostra o filter chip com 12 dp [60]; o 8 fica de propósito, para o chip não parecer filter chip.
+- **"Ver cardápio":** os estados do `M3Botao` de texto (camada de 8% e 10%, anel de 3 px em `--m3-secondary`).
+
+**Por que um terceiro "Ver cardápio"** (o hero e o cabeçalho do feed já têm um, e o "Cardápio" da toolbar fica sempre à vista):
+
+- a §0.2 pede que a seção leve ao cardápio ("levando ao cardápio"); é o motivo que decide;
+- o mesmo destino fica com o mesmo nome: um rótulo diferente para o mesmo lugar seria texto novo de loja e um segundo vocabulário;
+- é a variante de menor ênfase (texto), no fim da seção, e não repete a forma do cabeçalho do feed (o `h2` com o link à direita);
+- a alternativa, a `FRASE_CARDAPIO` como texto do link, não nomeia o destino [H1]. Ela fica como frase, sob o `h2`, e é a mesma que o `/menu` mostra na chegada.
+
+**Acessibilidade:**
+
+- **Títulos:** `h2#m3-monte-titulo` e um `h3` por grupo (`#m3-monte-lanche` e `#m3-monte-sobremesa`), sem salto de nível.
+- **Listas:** cada grupo é um `<ul role="list" aria-labelledby="<id do h3>">`, com um `<li>` por chip. O leitor de tela diz o nome do grupo e quantos itens ele tem, sem contagem escrita.
+- **Chip:** `<li class="m3-monte__chip">` com `<span class="m3-monte__nome">` e `<span class="m3-monte__preco tabular">`.
+- **Foco:** só o "Ver cardápio" recebe foco. Abaixo de `lg`, a reserva da barra (`scroll-padding-bottom`) o mantém fora da toolbar flutuante (2.4.11 [76]).
+- **Cor:** o chip não depende de cor para ser lido: o nome e o acréscimo são texto, com o par de texto medido (seção 8).
+
+**Comportamento:**
+
+- **1440 (`xl`):**
+  - **Lugar:** depois do feed, na largura do `.container` (75 rem), sem contêiner e com o ritmo das outras seções (`--space-8`).
+  - **Cabeçalho:** `h2` em headline-m 28/36 (`--m3-on-surface`) e, logo abaixo, a frase em body-l (`--m3-on-surface-variant`, máx. 40ch).
+  - **Grupos:** a partir de `lg`, grade `minmax(0, 7fr) minmax(0, 5fr)` (lanche em 7, sobremesa em 5), `column-gap: var(--space-5)`, o vão da faixa, e `align-items: start`. As colunas alinham com as da faixa logo abaixo. Em cada grupo, o `h3` (title-m 500) e, embaixo, os chips em `flex-wrap`, com `gap: var(--space-2)`.
+  - **Chip:** `min-height: 2rem`, `padding: var(--space-1) var(--space-3)`, `--m3-forma-s` e `--m3-tertiary-container`. O nome em label-l 500 e o acréscimo em label-l 400, tabular, os dois em `--m3-on-tertiary-container`, com `gap: var(--space-2)`.
+  - **Encaixe estimado** (largura do texto em label-l; o construtor confere na captura): 2 linhas de chips no grupo de lanche e 3 no de sobremesa.
+  - **Link:** "Ver cardápio" depois dos grupos, alinhado ao início (`margin-inline-start: calc(-1 * var(--space-3))`, para o texto alinhar com o `h2`).
+  - **Altura estimada:** cerca de 300 px, de 1.740 px a 2.040 px na captura da etapa 5.
+- **1024 (`lg`):** os mesmos 7/5; estimativa de 2 linhas no grupo de lanche e 4 no de sobremesa; a seção tem cerca de 340 px.
+- **De 768 a 1023 (`md`):** os grupos empilhados, com `--space-5` entre eles, como a faixa; 2 linhas de chips em cada; cerca de 390 px.
+- **390:**
+  - `h2` em headline-s 24/32; a frase numa linha;
+  - os grupos empilhados, com `--space-5` entre eles: 3 linhas de chips no de lanche e 4 no de sobremesa;
+  - o "Ver cardápio" no fim, alinhado ao início;
+  - a seção tem cerca de 510 px e começa por volta de 2.100 px, depois da Batata Frita.
+- **Nome longo** (defesa: hoje os adicionais vêm só do `products.json`): o nome quebra dentro do chip (`max-width: 100%`), e o acréscimo não quebra (`white-space: nowrap`).
+
+**Movimento:**
+
+- **`motion-ok` e reduzido:** nada se move. O chip não tem transição; o "Ver cardápio" troca a camada de estado por opacidade em 150 ms, nos dois modos.
+- **Sem:** entrada de seção, `transform` e hover no chip.
+
+**Reserva (cardápio editado):**
+
+- **Grupo sem adicionais** (`foodAdditionals` ou `dessertAdditionals` vazio): o grupo some, com o `h3`, e o outro ocupa a largura toda.
+- **Categoria vazia** (sem lanches ou sem sobremesas): o grupo dela some, porque não há onde acrescentar.
+- **Nenhum grupo:** ficam o `h2`, a frase e o "Ver cardápio". A seção continua na página, como as outras (o teste do cardápio vazio).
+- **Adicional renomeado ou com outro preço:** o chip mostra o que o catálogo tiver, sempre por `formatPrice`. Hoje os adicionais vêm só do `products.json`: o painel não os edita, e a store não os guarda no `localStorage` (revisão final da sessão C).
+- **Só itens sem adicionais em `foods`** (por exemplo, só a Batata Frita): o grupo de lanche continua, porque a seção não lê o `isBurger`. A referência não pode importar `@/components` (teste de isolamento), e a produção fica igual a ela. Risco aceito (seção 11).
+- **`forced-colors`:** o chip perde o fundo e ganha borda de 1 px em `CanvasText`; com `prefers-contrast: more`, borda de 1 px em `--m3-outline` (mixin `reserva-de-sombra`, que serve às superfícies que dependem de fundo).
+
+**Notas para a construção** (juiz, volta 1):
+
+- **O chip continua um contêiner próprio.** Se os chips virarem texto solto numa faixa (nome e preço em sequência, sem contêiner), a seção vira a régua de adicionais do `painel` do neumorfismo (seção 2, "Distinção").
+- **"Monte o seu" pode prometer montar do zero** (escolher pão e carne), e o modal só tira ingredientes e acrescenta adicionais a uma base fixa. O título vai para a revisão de UX copy (`design:ux-copy`) com essa ressalva.
+
+### 5.6 Carrossel: fora até haver fotos reais que não sejam de produto (etapa 5a)
+
+**Veredito:** o carrossel fica **fora até haver fotos reais que não sejam de produto**. Com o conteúdo real de hoje, nenhum carrossel cumpre as condições da §0.2. O usuário escolheu ficar com 5 seções (SPEC-material §0.2, "Resultado do desenho").
+
+**O teste.** Um carrossel multi-browse é uma fileira de imagens [34]. O conteúdo dele precisa:
+
+1. não repetir o que o feed de Hambúrgueres e a lista de bebidas e sobremesas já mostram (§0.2);
+2. deixar fora do carrossel o que for vital (produto, preço, "Adicionar"), que também aparece em outro lugar, porque muita gente rola e passa direto pelos quadros [H6][H7][75];
+3. ser imagem real (`public/images`), com os itens na ordem do `products.json`.
+
+**Quem decide é a regra 1 com a regra 3.** Toda imagem real que serviria já está na Home (as 11 fotos de produto, em 480, 960 e 1440, e o recorte do hero) ou é um banner único (`banner-burger-black` e o fundo do login do painel). A regra 2 se cumpre pela forma e pelo conteúdo (a técnica, abaixo), e a objeção 3 também (seção 2).
+
+| Conteúdo testado | Origem | 1. Não repete | 3. Imagem real que serve | Veredito |
+|---|---|---|---|---|
+| Os 7 lanches em 1440, com nome e preço | `foods[]`: `image`, `name`, `price` | Não: o feed mostra as mesmas fotos, o nome e o preço, e a v1 era isto | Sim | Não passa |
+| Os 7 lanches com os ingredientes, para comparar | `foods[].ingredients` | Não: as fotos são as do feed, e os ingredientes são os da folha | Sim | Não passa |
+| As 3 bebidas e a sobremesa em 1440 | `drinks[]`, `desserts[]` | Não: são os produtos da lista; só a foto grande é nova (lá ela tem 56 px) | Sim | Não passa: repete a lista |
+| As 11 fotos, sem preço nem "Adicionar" (galeria) | `menuItems.*[].image` | Não: as 11 já estão na Home | Sim | Não passa; 11 quadros também passam dos 5 [75] |
+| Uma foto por categoria, com a contagem e o menor preço | `useCardapio().categorias` | Não: as fotos repetem, e o "a partir de R$ 10,90" de Hambúrgueres saiu por infiel (seção 13) | Sim | Não passa; o `/menu` abre sempre em Hambúrgueres, e o atalho não cumpriria o rótulo |
+| O `banner-burger-black` | `public/images/fundos` (banner do `MenuView`) | Sim | Não: é uma imagem só | Não passa |
+| O fundo do login do painel (juiz) | `public/images/fundos/background-admin-login` | Sim | Não: é do painel e uma imagem só, uma ilustração de giz com comida que a casa não vende (pretzel, pizza, baguete, croissant; conferido no arquivo de 1440) | Não passa |
+| A montagem do `BurgerStack` (juiz) | `src/components/BurgerStack.vue` | Sim | Não: é ilustração do modal, com as cores em hex fora dos tokens (a exceção vale só dentro do componente), e a referência não pode importar `@/components` (teste de isolamento); já aparece no modal | Não passa |
+| O carrinho (juiz) | `useCartStore()` | Não: as fotos são as dos produtos | Não segue a ordem do `products.json` e vem vazio para quem chega | Não passa |
+| Os pedidos anteriores (juiz) | `userStore.orderHistory` | Não: as fotos são as dos produtos | Só existe com sessão, e "pedir de novo" seria lógica nova (`home-delivery.md`, catálogo) | Não passa |
+| Os 12 adicionais | `foodAdditionals`, `dessertAdditionals` | Sim | Não: não há foto de adicional | Não passa como carrossel; é o conteúdo de 5.5 |
+| Os ingredientes da sobremesa | `desserts[].ingredients` | Sim | Não | Não passa |
+
+**O que faria o carrossel passar:** fotos reais que não sejam dos 11 produtos, por exemplo do local, da chapa ou da montagem. Hoje elas não existem (inventário, "O que NÃO existe": fotos do local ou da equipe). Elas não seriam vitais, e o vital continuaria no feed e na lista (regra 2). Com elas, a técnica abaixo vale como está.
+
+**Troca** (§0.2: "outra candidata viável do mesmo catálogo"). O catálogo de seções do dossiê do material não tem outra candidata viável que seja nova na Home:
+
+- o hero, o feed com destaque, o split button, a toolbar flutuante e os contêineres de horário e endereço já estão nela;
+- o filtro de categorias repetiria os produtos que a Home já mostra inteiros, e esconder as outras categorias atrás de uma aba reduz a variedade à vista [H21];
+- a busca no topo e o FAB menu estão entre os proibidos da direção (SPEC-material §0, "Proibido nesta direção"), e o rodapé em docked toolbar não é seção de conteúdo;
+- as promoções, o Live Update, o indicador de carregamento e as avaliações não têm conteúdo real.
+
+As saídas que o desenho levou à sessão principal:
+
+1. **Home com 5 seções** (dentro do escopo de 4 a 6 das regras comuns), até haver fotos que não sejam de produto. Era a recomendação do desenho: a única saída que não força conteúdo.
+2. **Carrossel com as bebidas e a sobremesa em 1440,** aceitando a repetição dos produtos da lista como risco. Não recomendada: quebra a condição da §0.2.
+3. **"Como pedir em três passos",** do catálogo transversal (`home-delivery.md`, a partir da `FRASE_CARDAPIO`). Não recomendada: a descrição de cada passo seria texto novo de loja, que a microcopy não permite, e o passo "personalize" repetiria `monte-o-seu`.
+
+**Decisão do usuário (21/11/2026): a saída 1.** A Home fica com 5 seções, e o carrossel volta só quando houver fotos reais que não sejam de produto, com a técnica abaixo, feita à mão (SPEC-material §0.2, "Resultado do desenho").
+
+**Decisão (i): o carrossel não usa o `vue3-carousel`.** Conferido no código do pacote (`node_modules/vue3-carousel/dist/carousel.mjs`, versão 0.14.0):
+
+| Ponto | `vue3-carousel` 0.14.0 | Feito à mão (`scroll-snap` e dois botões) |
+|---|---|---|
+| Movimento | O trilho anda por `transform: translateX(…)` no estilo do `<ol>` (`trackTransform`), sempre no efeito slide (no efeito `fade`, o `trackTransform` é `undefined`, mas o fade não tem espiada). Com movimento reduzido, só a duração vai a zero (`configCarrossel`): o `transform` continua, e a §1.1 (item 10) e o P14 reprovam | O trilho rola (`scrollLeft`), sem nenhum `transform`. A rolagem suave fica só em `motion-ok`; com movimento reduzido, a troca é instantânea |
+| Botões nas pontas | O `Navigation` põe `disabled` em Anterior e Próximo, e o foco cai no `body` | `aria-disabled="true"`: o botão continua focável, e o clique não faz nada |
+| Volta ao início | `wrapAround: true` no `configCarrossel` (desligável) | Não existe |
+| Marcação | Raiz `<section aria-label tabindex="0">`: uma segunda região dentro da seção e uma parada de Tab a mais, sem `aria-roledescription`. Slides em `<li>`, sem grupo nem rótulo "n de N"; a região viva é sempre `polite` | O padrão da APG [74], abaixo |
+| Larguras | Iguais, por `itemsToShow` (ou a do próprio item, com `'auto'`); nada varia por posição | Fixas, na ordem, no CSS, sem animar largura (uncontained [34]) |
+| Peso | `carousel.min.js` com 21 KB (7,5 KB em gzip) e `carousel.css` com 4,7 KB (1,2 KB em gzip), medidos no `node_modules`; o CSS entra global (`import "vue3-carousel/carousel.css"`) | Algumas dezenas de linhas na própria seção, com o CSS `scoped` |
+
+- **Consequência:** sem carrossel na Home, o pacote fica sem uso e sai na limpeza (§12, etapa 11), com o pedido do usuário e o `yarn.lock` e o `.yarn/cache` juntos.
+- **Quem o importa:** só o `src/components/CarouselBurguer.vue`, que sai pela §4.4.
+- **O `src/direcoes/compartilhado/carrossel.js` não depende do pacote:** só importa o `readDurationToken` e monta um objeto de configuração. A saída do `vue3-carousel` não mexe no `compartilhado/`, e o `carrossel.js` fica como configuração sem uso no acervo (nenhuma Home do acervo o importa, busca no `src/`).
+
+**Técnica, para quando houver fotos reais que não sejam de produto** (a construção desta etapa não faz nada disto). Com rolagem nativa e larguras fixas pela ordem, o resultado é o carrossel uncontained do M3 (itens de mesma largura, o último passando da borda [34]), e não o multi-browse: uma aproximação sem largura variável.
+
+- **Estrutura** [74]:
+  - a raiz `<section data-secao>` ganha `aria-roledescription="carrossel"`;
+  - o trilho é um `div` com `overflow-x: auto`, `scroll-snap-type: x mandatory` e `scroll-padding-inline` igual ao gutter;
+  - cada item é um `div` com `role="group"`, `aria-roledescription="item"`, `aria-label="n de N"` e `scroll-snap-align: start`. Não um `ul`: o `role="group"` tiraria o papel de item de lista dos filhos.
+- **Controles:**
+  - Anterior e Próximo (`SECAO.anterior` e `SECAO.proximo` do `dados.js`; na produção, eles voltam ao `textosLoja.js`), dois `<button type="button">` de 44 px com o rótulo visível, dentro da seção, ao lado do título, sempre à vista [75][H10];
+  - cada clique rola um passo (`scrollBy`) e não move o foco [74][H11];
+  - nas pontas, `aria-disabled="true"`, sem volta ao início.
+- **Posição:** o texto "n de N" visível ao lado dos botões (os números calculados, a palavra "de" no `textos.js`), numa região viva `polite` que só muda depois de um clique nos botões [74][H11]. Sem pontos, que são pista fraca [75].
+- **Rotação:** nenhuma, sem timer [73][74].
+- **Uncontained, e não multi-browse (aproximação sem largura variável):**
+  - no multi-browse do M3, os itens mudam de largura conforme passam pelas linhas-guia [34];
+  - aqui os itens têm larguras fixas, na ordem, e o seguinte aparece cortado na borda (a espiada [75][H9]): é o uncontained [34];
+  - variar o tamanho com a rolagem pediria animação atrelada à rolagem, que os dossiês não cobrem (não encontrei fonte de suporte) e que o desenho já proíbe no hero;
+  - com movimento reduzido, nada muda.
+- **Toque e teclado:** deslize nativo no toque. No desktop, os botões e o Tab: o foco num item fora da vista o traz à vista pela rolagem nativa, e o `scroll-padding-inline` evita que ele pare sob a espiada. Se nenhum item tiver elemento focável, o trilho ganha `tabindex="0"` e nome, para rolar pelo teclado.
+- **Passos:** até 5 itens [75] e de 3 a 4 passos até o fim [H9]. Em 1440, cerca de 2 itens e meio por tela (2 passos); em 390, 1 e a espiada (até 4 passos).
+- **Foco coberto:** os botões ficam no cabeçalho da seção, e a reserva da barra (`scroll-padding-bottom`) cobre o resto abaixo de `lg` (2.4.11 [76]).
+- **Estado para o axe:** o carrossel depois de um Próximo, com o seletor do botão de rótulo "Próximo" dentro da seção.
+
 ---
 
 ## 6. Rodapé (`M3Rodape`, slot `#rodape`)
@@ -614,6 +954,12 @@ Pastas: `componentes/` e uma parcial por componente em `scss/`. Mixins comuns em
 | 9 | `M3ItemLista` | Item de lista segmentada com produto e "Adicionar" | [66], [81], galeria (Instagram M3E), [63] |
 | 10 | `M3ItemSegmentado` | Item de lista agrupada de horário e contato | [66], [81], galeria (Instagram M3E), [H29], [H32]-[H34] |
 | 11 | `M3Rodape` | O `<footer>` | [H30] |
+
+**Etapa 5a: nenhum componente novo; a contagem continua 11 (teto 12).**
+
+- `monte-o-seu` reusa o `M3Botao` (texto).
+- O chip fica na própria seção (7.12), porque só ela o usa.
+- Se o perfil (SPEC-material §5.9) ou o admin (§5.11) usarem chips de status estáticos, o chip pode virar componente então, como o 12º.
 
 ### 7.1 `M3BarraSuperior`
 
@@ -794,7 +1140,7 @@ Pastas: `componentes/` e uma parcial por componente em `scss/`. Mixins comuns em
 - **Props:**
   - `produto: { type: Object, required: true }`;
   - `forma: { type: String, default: "circulo" }`;
-  - `apoio: { type: String, default: "" }` (por exemplo, "7 adicionais").
+  - `apoio: { type: String, default: "" }` (até a etapa 5a, a linha "7 adicionais" da sobremesa; desde a volta 1, sem uso na Home, com o padrão vazio).
 - **Emits e slots:** nenhum.
 - **Usa:** `useCartaoProduto(() => produto, { sizes: "56px" })`, `usePersonalizar()`, `M3Foto` e `M3Botao` (tonal, s, `:retorno="adicionado"`, `v-bind="atributosAdicionar"`).
 - **Estrutura:** `li.m3-item` → `M3Foto` (56 px), `div.m3-item__texto` (`p.m3-item__titulo`, `p.m3-item__descricao`, `p.m3-item__apoio`), `p.m3-item__preco.tabular` e o botão.
@@ -828,6 +1174,22 @@ Pastas: `componentes/` e uma parcial por componente em `scss/`. Mixins comuns em
 - **Props, slots e emits:** nenhum.
 - **Estados:** estático.
 - **Tokens:** `--m3-surface-container`, `--m3-on-surface`, `--m3-on-surface-variant`, `--m3-outline-variant`, `--m3-forma-xl`, `--m3-title-l`, `--m3-body-m` e `--m3-body-s`.
+
+### 7.12 Peças da seção `monte-o-seu` (etapa 5a; não são componentes)
+
+- **Chip estático:** `li.m3-monte__chip` → `span.m3-monte__nome` e `span.m3-monte__preco.tabular` ("+ " e o `precoTexto`).
+- **Grupo:** `div.m3-monte__grupo` → o `h3` e `ul.m3-monte__chips[role=list][aria-labelledby]`.
+- **Sem marca de grupo:** o cookie e a flor ao lado dos `h3` saíram na volta 1. Repetiam o esquema de formas da lista vizinha (círculo e flor), espalhavam o cookie do hero e usariam o `--m3-tertiary`, que a Home não usa direto (SPEC-material §2.2).
+- **Matriz de estados:**
+
+  | Peça | Padrão | Hover | Foco | Pressionado | Selecionado | Desabilitado | Carregando |
+  |---|---|---|---|---|---|---|---|
+  | Chip | `--m3-tertiary-container` e tinta `--m3-on-tertiary-container`, `--m3-forma-s`, 32 px de altura | não há: sem camada e sem cursor de ação | não recebe foco | não há | não há: não é filter chip [60] | não há | não há |
+  | Chip, reserva (seção 11) | `--m3-surface-container-high`, nome em `--m3-on-surface` e acréscimo em `--m3-on-surface-variant` | não há | não recebe foco | não há | não há | não há | não há |
+
+- **Reserva de fundo:** o chip usa o mixin `reserva-de-sombra` (borda de 1 px em `CanvasText` com `forced-colors`; em `--m3-outline` com `prefers-contrast: more`).
+- **Tokens:** `--m3-tertiary-container`, `--m3-on-tertiary-container`, `--m3-forma-s`, `--m3-label-l`, `--m3-label-l-linha`, `--m3-title-m`, `--m3-title-m-linha` e `--m3-outline`; na reserva, `--m3-surface-container-high`, `--m3-on-surface` e `--m3-on-surface-variant`.
+- **Referências:** [7] (canto small dos chips) e [60] (o filter chip do Expressive, com 12 dp, que o chip estático evita parecer).
 
 ---
 
@@ -905,6 +1267,68 @@ export const TEXTOS = {
 };
 ```
 
+### Etapa 5a
+
+**Tokens novos:** nenhum. A seção usa papéis, formas e tipos que já existem (`--m3-tertiary-container`, `--m3-on-tertiary-container`, `--m3-forma-s`) e os espaços do projeto. Nenhuma duração nova: o chip não anima.
+
+**Par de contraste: nenhum novo; um sobe de mínimo** (em `contraste.js` e em `src/utils/contraste.js`):
+
+| Frente | Fundo | Mínimo | Onde |
+|---|---|---|---|
+| `m3-on-tertiary-container` | `m3-tertiary-container` | de 3 para 4,5 | Ícone do horário e, desde a etapa 5a, nome e acréscimo nos chips de `monte-o-seu` |
+
+- Hoje o par está nos dois arquivos com mínimo 3, só para o ícone do horário. O uso como texto pede 4,5, e o "onde" ganha os chips; não entra um par duplicado.
+- A SPEC-material (§2.2) traz 7,26:1, calculado com a fórmula do `contraste.js`; o P5 confere a medida.
+
+**Pares que ganham uso** (a coluna "onde" muda; o mínimo não):
+
+| Frente | Fundo | Novo uso |
+|---|---|---|
+| `m3-on-surface` | `m3-surface` | `h2` e `h3` de `monte-o-seu` |
+| `m3-on-surface-variant` | `m3-surface` | A frase do cardápio sob o `h2` |
+| `m3-primary` | `m3-surface` | O "Ver cardápio" de `monte-o-seu` |
+| `m3-secondary` | `m3-surface` | O anel de foco desse link |
+| `m3-outline` | `m3-surface` | A borda do chip com `prefers-contrast: more` |
+
+- **Reserva do chip** (seção 11), se o crítico a pedir: os pares `m3-on-surface` e `m3-on-surface-variant` sobre `m3-surface-container-high` já estão no `contraste.js` (título e ingredientes da folha, mínimo 4,5). Com a reserva, eles ganham o uso dos chips, e o P5 mede de novo.
+
+**Lógica:** nada novo.
+
+- A seção lê `useCardapio()` → `adicionais` e `categoria(chave)` (o mesmo composable na referência e na produção).
+- O `computed` dos grupos fica na própria seção: dois grupos fixos, cada um com a chave do adicional (`lanche` ou `sobremesa`), a categoria (`foods` ou `desserts`) e o título, filtrados pela regra de 5.5.
+- Outro estilo poderia usar? Não: é a regra desta seção.
+- **Fica sem uso na Home** (a linha "7 adicionais" saiu de `bebidas-e-sobremesas`, 5.3): o `contar` e os `TEXTOS.adicional` e `TEXTOS.adicionais`. Tirar as duas chaves do `textos.js` e do `textosLoja.js` fica com a sessão C.
+
+**Testes** (`HomeMaterial.test.js` e `src/__tests__/HomeView.test.js`):
+
+- as seções vêm do `material.json`, na ordem;
+- o número de chips é o de `adicionais.value.lanche.length + adicionais.value.sobremesa.length`;
+- cada chip mostra o `formatPrice` do próprio adicional;
+- nenhum chip tem `a` nem `button`, e a seção tem um `a[href="/menu"]`;
+- com o cardápio vazio, a seção fica com o `h2` e o link, sem chips;
+- o caso "bebidas e sobremesas vêm em grupos, com a contagem calculada dos adicionais" perde a conferência da contagem (`HomeMaterial.test.js`, perto da linha 122; `HomeView.test.js`, perto da linha 213) e passa a conferir que a lista não mostra "adicionais".
+
+**Dependências novas:** nenhuma. O `vue3-carousel` sai na limpeza (5.6, decisão i). Nenhum ícone novo.
+
+**`textos.js`** (o arquivo de hoje, com as três chaves novas; todas com `// provisório`, sem dígitos):
+
+```js
+export const TEXTOS = {
+  ingredientes: "Ingredientes", // provisório
+  vazio: "Nada nesta categoria por enquanto", // provisório
+  adicional: "adicional", // provisório (sem uso na Home desde a volta 1 da etapa 5a)
+  adicionais: "adicionais", // provisório (sem uso na Home desde a volta 1 da etapa 5a)
+  ondeTitulo: "Onde e quando", // provisório
+  email: "E-mail", // provisório
+  whatsapp: "WhatsApp", // provisório
+  monteTitulo: "Monte o seu", // provisório (h2 de monte-o-seu: o nome que o usuário deu à seção, SPEC-material §0.2)
+  monteLanche: "No hambúrguer", // provisório (h3 dos adicionais de lanche; não "Hambúrgueres", que inclui a Batata Frita)
+  monteSobremesa: "Na sobremesa", // provisório (h3 dos adicionais de sobremesa)
+};
+```
+
+Na produção, as três chaves entram no `TEXTOS` do `textosLoja.js` depois da revisão de UX copy, sem `// provisório`. O `monteTitulo` vai com a ressalva de 5.5 ("Monte o seu" pode prometer montar do zero).
+
 ---
 
 ## 9. Arquivos para o construtor
@@ -928,6 +1352,44 @@ src/direcoes/estilos/material/
 
 - **Sai:** o `_home.scss` da v1 (o conteúdo útil vai para `scss/_base.scss` e para as parciais) e o `import "vue3-carousel/carousel.css"`.
 - **Contrato:** nenhuma seção chama `cartStore.addItem` nem calcula preço.
+
+**Etapa 5a: o `material.json` é o gabarito dos testes.**
+
+- O `HomeMaterial.test.js` (referência) e o `src/__tests__/HomeView.test.js` (produção) comparam as `[data-secao]` da página com `desenho.secoes`.
+- Desde o commit do desenho, com `monte-o-seu` no JSON, **os dois ficam vermelhos até a construção**.
+- **O primeiro commit da sessão C** entra com a seção na referência, a cópia na produção (`M3SecaoMonte.vue` e `HomeView.vue`) e os testes, juntos, para a árvore voltar ao verde num commit só.
+
+**Na referência:**
+
+```
+src/direcoes/estilos/material/
+  HomeMaterial.vue            + <M3SecaoMonte /> entre M3SecaoLanches e a div.m3-faixa, e o import (92 de 100 linhas)
+  secoes/M3SecaoMonte.vue     nova: raiz section[data-secao="monte-o-seu"], os grupos e o M3Botao de texto
+  scss/_secao-monte.scss      nova (@use no <style scoped> da seção): grade 7/5 a partir de lg, grupo, chip
+  secoes/M3SecaoBebidasSobremesas.vue   sem a linha "7 adicionais" (5.3): saem o contar e o adicionais
+  textos.js                   + monteTitulo, monteLanche, monteSobremesa
+  contraste.js                o par on-tertiary-container sobe de 3 para 4,5; a coluna "onde" dos pares da superfície
+  ficha.js                    secoes: + monte-o-seu (id, nome e papel), na ordem da página
+  __tests__/HomeMaterial.test.js   os casos de 8 ("Etapa 5a")
+docs/direcoes/desenho/material.json   secoes com "monte-o-seu" (já no commit do desenho)
+```
+
+**Na produção** (cópia, no mesmo commit, depois dos portões e do crítico):
+
+- `src/components/home/M3SecaoMonte.vue`, com `BaseButton variant="ghost" to="/menu"`, `useCardapio` de `@/composables/useCardapio` e os textos de `@/utils/textosLoja` (`FRASE_CARDAPIO`, `HERO`, `TEXTOS`);
+- `src/assets/styles/pages/home/_secao-monte.scss`;
+- `src/views/HomeView.vue`, com a seção entre `M3SecaoLanches` e a `div.m3-faixa`;
+- `src/components/home/M3SecaoBebidasSobremesas.vue`, sem a linha "7 adicionais" (a mesma mudança da referência);
+- `src/utils/textosLoja.js` (as três chaves sem `// provisório`) e `src/utils/contraste.js` (o mínimo de 3 para 4,5);
+- `src/__tests__/HomeView.test.js`, com os casos de 8;
+- nenhum token, ícone nem dependência.
+
+**Documentação** (CLAUDE.md: mudou a Home e os testes):
+
+- `README.md`, linha 159: a pasta `home/` passa a citar a seção "Monte o seu";
+- `TESTING.md`: a linha do `HomeView.test.js` (contagem de casos, o "Monte o seu" e a lista de bebidas e sobremesas sem a contagem dos adicionais) e a do `HomeMaterial.test.js`, se ela citar as seções.
+
+**Única mudança numa seção que já existia:** a linha "7 adicionais" de `bebidas-e-sobremesas` (5.3). As outras três seções não mudam.
 
 ---
 
@@ -955,6 +1417,10 @@ src/direcoes/estilos/material/
 | Galeria: kit M3E não oficial (Figma Community) | conceito | Formas recortadas como fundo; botões que trocam de forma com mola | Disco do hero; botões |
 | Galeria: reservas em M3E (Dribbble) | conceito (comida) | Folha tonal com a foto aninhada em raio grande | Fotos com recuo e canto 28 nos cards |
 | [H1], [H2], [H3], [H5], [H14], [H15], [H17], [H20], [H21], [H22], [H25], [H26], [H29], [H30], [H32]-[H35] | pesquisa e referência técnica | Identidade e tarefa no topo; seção seguinte acima da dobra; texto fora da foto; links visíveis; barra persistente; cabeçalho fixo opaco; nome, foto e preço; variedade; credibilidade; contato com mapa; carrinho no canto | Composição inteira |
+| (5a) [60] Chips (Compose) | conceito (documentação) | O filter chip filtra, e os chips de ação e de sugestão viraram botões; o filter chip do Expressive tem canto de 12 dp | O chip estático de `monte-o-seu`, de propósito fora dos tipos interativos e fora dos 12 dp |
+| (5a) [7] Formas (rodada 1) | documentação oficial | Chips em small (8) | Canto do chip |
+| (5a) [H23], [H24] Baymard (delivery) | pesquisa | A personalização não aparece descrita antes do item | Objetivo de `monte-o-seu` |
+| (5a) [34], [73], [74], [75], [76], [H6], [H7], [H9], [H10], [H11] | documentação, referência técnica e pesquisa | Multi-browse e uncontained; rotação e pausa; padrão de carrossel da APG; até 5 quadros e a espiada; foco não coberto; recurso vital fora do slide; de 3 a 4 passos; controles visíveis no desktop; botões que não movem o foco | O teste e a técnica do carrossel (5.6) |
 
 **Recorrência:**
 
@@ -976,6 +1442,14 @@ Não encontrei site ou app de comida publicado em M3 Expressive (dossiê, "Não 
 | Split button sem papel claro | A metade de trás mostra uma coisa só, real e do próprio produto (os ingredientes), e não um atalho para o mesmo modal |
 | Muitos tokens (ficha) | 6 tokens novos, todos de forma, medida ou layout; nenhuma cor nova |
 | Cards SaaS iguais | O destaque muda de tamanho e de forma de foto; as bebidas e os contatos não são cards, são listas segmentadas; sem sombra nem hover nos cards |
+| (5a) Chip estático parecer clicável ou selecionável [60] | **Risco aceito.** Um chip cheio, tonal, lembra o filter chip selecionado (juiz). A separação vem de vários sinais juntos: a cor (fora o círculo do horário, o único fundo `tertiary-container` da Home, e nenhuma ação a usa), a falta de camada de estado, de cursor e de foco, os 32 px de altura, a marcação de lista e o "+ R$" do modal. A forma não separa: a marca do cabeçalho também tem canto 8, e o FAB e os links de `onde` não são pílulas. **Conferência:** o crítico olha a captura parada em 390 e pergunta "parece selecionável?". **Reserva,** se parecer: fundo neutro `--m3-surface-container-high`, nome em `--m3-on-surface` e acréscimo em `--m3-on-surface-variant` (pares já no `contraste.js`, a medir de novo nesse uso) |
+| (5a) Chip sugerir que o adicional já fica escolhido | Sem check e sem estado selecionado; o acréscimo "+ R$" é a notação do modal; a frase "Escolha, personalize e peça." diz que a escolha vem depois, no modal |
+| (5a) "No hambúrguer" e a Batata Frita | O rótulo fala dos hambúrgueres, e a Batata Frita não é um; o rótulo real "Hambúrgueres", que a inclui, ficou de fora. Se o painel deixar em `foods` só itens sem adicionais, o grupo continua, porque a seção não lê o `isBurger`: risco aceito |
+| (5a) Os chips repetirem a régua de adicionais do neumorfismo | Os dois grupos (os 7 de sobremesa não aparecem no acervo), chips separados e uma seção própria que leva ao cardápio; o juiz aprovou na volta 1. Na construção, o chip não pode virar texto solto numa faixa (5.5, "Notas para a construção") |
+| (5a) "Monte o seu" prometer montar do zero | O modal só tira ingredientes e acrescenta adicionais a uma base fixa; o título vai para a revisão de UX copy com essa ressalva (5.5) |
+| (5a) A contagem "7 adicionais" repetir os chips | Saiu de `bebidas-e-sobremesas` (5.3), a única mudança numa seção que já existia |
+| (5a) Terceiro "Ver cardápio" | Fica pela §0.2 ("levando ao cardápio"), com o mesmo nome para o mesmo destino e a variante de texto, no fim da seção (5.5). O "Cardápio" da toolbar também fica sempre à vista |
+| (5a) A preferência do usuário pelo carrossel fica sem atender | O usuário escolheu ficar com 5 seções (SPEC-material §0.2, "Resultado do desenho"); o carrossel fica fora até haver fotos reais que não sejam de produto, com a técnica de 5.6 pronta |
 
 ---
 
@@ -984,14 +1458,21 @@ Não encontrei site ou app de comida publicado em M3 Expressive (dossiê, "Não 
 - **Fora:**
   - busca;
   - filtro de categorias;
-  - carrossel;
+  - carrossel: fora até haver fotos reais que não sejam de produto (5.6); a técnica (uncontained, feita à mão) e a decisão (i) ficaram definidas na etapa 5a;
+  - marcas de forma nos grupos de `monte-o-seu` (o cookie e a flor saíram na volta 1);
+  - chips interativos (filtro, ação ou escolha de adicional): os de `monte-o-seu` são estáticos (5.5);
   - FAB menu;
   - indicador de carregamento (não há espera real [58]);
   - selo "aberto agora" (o horário passa da meia-noite e não há fuso nem feriados [H31]);
   - redes sociais;
   - qualquer número, prazo, taxa, avaliação ou promoção;
   - resumo do feed com contagem ou "a partir de" (ver "Revisão do juiz").
-- **`justificativaEscopo`:** não precisa (4 seções e 11 componentes).
+- **Decidido na etapa 5a:**
+  - **5 seções** (decisão do usuário, 21/11/2026; SPEC-material §0.2, "Resultado do desenho"): entrou só `monte-o-seu`, com chips estáticos, entre o feed e a faixa;
+  - a linha "7 adicionais" sai de `bebidas-e-sobremesas` (5.3);
+  - decisão (i): um carrossel futuro é feito à mão, e o `vue3-carousel` sai na limpeza (etapa 11). A saída não mexe no `compartilhado/`: o `carrossel.js` não importa o pacote e fica como configuração sem uso no acervo (5.6).
+- **Para a revisão de UX copy:** os rótulos provisórios "Monte o seu" (com a ressalva de que pode prometer montar do zero), "No hambúrguer" e "Na sobremesa".
+- **`justificativaEscopo`:** não precisa (5 seções e 11 componentes).
 
 ---
 
@@ -1035,6 +1516,42 @@ Não encontrei site ou app de comida publicado em M3 Expressive (dossiê, "Não 
 - **Conteúdo:** nada novo; a revisão só tirou texto.
 - **`material.json`:** sem mudança. As seções, os tetos do `h1` e o estado "ingredientes abertos" continuam os mesmos.
 
+### Etapa 5a: revisor, juiz de distinção e decisões (21/11/2026)
+
+**Decisão do usuário.** Ficar com 5 seções (saída 1 de 5.6). Nenhum conteúdo real fez o carrossel passar na §0.2, e nenhuma outra candidata viável do catálogo é nova na Home. O carrossel volta só quando houver fotos reais que não sejam de produto. Sem carrossel, o `vue3-carousel` sai na limpeza (decisão i). A SPEC-material §0.2 registra o mesmo, em "Resultado do desenho".
+
+**Volta 1** (um revisor e um juiz de distinção, em paralelo). Os dois aprovaram, sem nenhum bloqueante. O revisor apontou 3 importantes e 10 menores; o juiz, 2 importantes e 5 menores, além da conferência do carrossel. A sessão principal juntou as duas listas em 13 correções, e todas entraram:
+
+- **Motivo do carrossel:**
+  - o que barra é a §0.2 junto com a falta de imagem: toda foto real que serviria já está na Home, ou é um banner único;
+  - a objeção 3 (o carrossel esconde conteúdo) se resolve pela forma;
+  - a tabela de 5.6 ganhou os conteúdos que o juiz testou a mais: o fundo do login do painel, a montagem do `BurgerStack`, o carrinho e o `orderHistory`.
+- **Chip que pode parecer selecionável:**
+  - o argumento "toda ação é pílula" era falso e saiu;
+  - a separação entre chip e ação vem da cor, da falta de camada de estado e de foco, dos 32 px, da marcação de lista e do "+ R$";
+  - o risco ficou aceito. O crítico confere a captura parada em 390, e a reserva é um fundo neutro.
+- **Linha "7 adicionais":** saiu do Sorvete de Pote (5.3), porque repetia os 7 chips de sobremesa logo acima. É a única mudança numa seção que já existia, na referência e na produção.
+- **Testes vermelhos até a construção:** o `material.json` é o gabarito do `HomeMaterial.test.js` e do `HomeView.test.js`, e desde o commit do desenho os dois ficam vermelhos. O primeiro commit da sessão C leva juntos a seção, a cópia na produção e os testes (§9).
+- **Menores:**
+  - sem as marcas dos grupos;
+  - grupos em 7/5, lado a lado só a partir de `lg`;
+  - canto 8 citando só o [7];
+  - o par do chip sobe de 3 para 4,5, sem par duplicado;
+  - o terceiro "Ver cardápio" fica pela §0.2, sem o argumento da distância;
+  - o `carrossel.js` não depende do pacote;
+  - a técnica é chamada de uncontained [34];
+  - trechos desatualizados corrigidos.
+
+**Ressalvas do designer, aceitas:**
+- o círculo do horário também tem fundo `tertiary-container`, e o texto diz isso;
+- o dossiê descreve o filter chip selecionado [60] pela forma e pelo check, e não pelo fundo cheio. A leitura do fundo cheio é do juiz.
+
+**O que sobrou, para a sessão C:**
+- conferir na captura parada em 390 se o chip parece selecionável;
+- o chip não pode virar texto solto numa faixa, senão vira a régua do `painel` do neumorfismo;
+- os rótulos provisórios passam pelo `design:ux-copy`, inclusive "Monte o seu", que pode prometer montar do zero;
+- o grupo de lanche aparece mesmo que o painel deixe em `foods` só itens sem adicionais (risco aceito, §11).
+
 ## 14. Notas da construção (W4, 21/11/2026)
 
 A Home foi aprovada pelo crítico na rodada 3 (notas 4, 4, 4, 4, 5 e 4; a v1 somava 16 e a Home nova soma 25). Os portões passaram em todas as rodadas. O que a construção mudou deste desenho, e por quê:
@@ -1046,3 +1563,19 @@ A Home foi aprovada pelo crítico na rodada 3 (notas 4, 4, 4, 4, 5 e 4; a v1 som
 - **Onde:** o WhatsApp mostra o rótulo e o `TELEFONE` separados, sem o "·" (o `dados.js` passou a exportar `ENDERECO`, `TELEFONE` e `EMAIL`); o ícone de link externo aparece em todas as larguras.
 - **Tokens novos além dos previstos:** `--m3-atraso-prensa` (atraso do disco, porque nenhuma duração é escrita direto) e propriedades locais para repintar o conteúdo da prensa.
 - **Menores que ficaram:** a linha de direitos do rodapé ainda junta textos com "·" (é o texto real do `RODAPE.copyright`); no cookie do destaque, o prato claro da foto encosta no fundo do card nos lobos de baixo.
+
+### Etapa 5a: construção de `monte-o-seu` (sessão C, 21/11/2026)
+
+A seção foi construída na referência, passou nos portões e no crítico e foi copiada para a produção (`src/components/home/M3SecaoMonte.vue`), com 0 px de diferença nos retângulos das 5 seções em 1440, 1024 e 390.
+
+- **Portões:** `passou: true` nas duas rodadas (P1 a P17).
+- **Crítico, rodada 1 (não aprovou):** notas 4, 4, 4, 3, 5 e 4 (soma 24).
+  - **Importante:** na captura parada em 390, o chip em `tertiary-container` cheio parecia um filter chip selecionado: tinha a medida do chip interativo do M3 (32 px, canto 8), e o "+" se lia como "adicionar". Era também o bloco mais vistoso entre o feed e a faixa, mais forte que o "Ver cardápio", o único alvo da seção.
+  - **Menor:** em 1440, os chips de lanche quebram em 4 + 1, a mesma quebra da régua do `painel` do neumorfismo. Quem separa as duas são os contêineres dos chips.
+- **O que mudou:** entrou a reserva da seção 11 e da §7.12. O fundo passou a `--m3-surface-container-high`, o nome a `--m3-on-surface` e o acréscimo a `--m3-on-surface-variant`. A forma, a altura e a falta de estado continuam iguais.
+  - Os pares do chip são os da folha de ingredientes (13,93:1 e 7,57:1).
+  - O par `on-tertiary-container` sobre `tertiary-container` voltou a 3, só para o ícone do horário: a subida para 4,5 (seção 8, "Etapa 5a") servia ao texto do chip em `tertiary-container`, que não existe mais.
+- **Crítico, rodada 2 (aprovou):** notas 4, 4, 4, 4, 5 e 4 (soma 25), sem bloqueante e sem importante. Os dois problemas da rodada 1 foram resolvidos. O chip neutro se lê como etiqueta de informação, continua um contêiner visível sobre a superfície e não parece um card do feed. O "Ver cardápio" passou a ser o único elemento com cor na seção.
+- **Medidas** (dev, as mesmas nas duas rodadas): em 1440, a seção vai de 1.741 a 2.049 px, com 2 e 3 linhas de chips, e os grupos ficam em x 152 (649 px) e 825 (463 px), iguais às colunas da faixa; em 1024, 2 e 4 linhas; em 800, empilhados, com 2 e 2; em 390, empilhados, com 3 e 4, de 2.099 a 2.615 px. As estimativas da §3 e da §5.5 se confirmaram.
+- **Textos (UX copy):** na produção, o `h2` é "Adicionais", o título da seção do modal onde esses itens se escolhem. "Monte o seu" prometia montar o lanche do zero, e o usuário escolheu a troca. "No hambúrguer" e "Na sobremesa" ficaram. A referência continua com os três provisórios, como o "Onde e quando".
+- **Removido:** as chaves `adicional` e `adicionais` saíram do `textos.js` e do `textosLoja.js`, porque ficaram sem uso. O `contar` fica no `compartilhado/` (o esqueumorfismo usa) e no `useCardapio.js` da produção (cópia; a limpeza decide).

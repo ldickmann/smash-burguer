@@ -1,12 +1,13 @@
 <!-- Home em Material 3 Expressive (SPEC-material §5.2): a composição da Home de referência
      (src/direcoes/estilos/material/HomeMaterial.vue), sem a moldura do acervo. O cabeçalho, a toolbar e o
      rodapé vêm do MainLayout. A prensa do hero é o único gesto expressivo; o resto são superfícies
-     tonais, o feed e listas segmentadas. O modal Personalizar é desta view: as seções o abrem por
-     usePersonalizar() e nenhuma usa o carrinho nem calcula preço. -->
+     tonais, o feed, os adicionais em chips (etapa 5a) e listas segmentadas. O modal Personalizar é
+     desta view: as seções o abrem por usePersonalizar() e nenhuma usa o carrinho nem calcula preço. -->
 <template>
   <div class="home">
     <M3SecaoHero />
     <M3SecaoLanches />
+    <M3SecaoMonte />
     <div class="m3-faixa container">
       <M3SecaoBebidasSobremesas />
       <M3SecaoOnde />
@@ -24,6 +25,7 @@ import ModalAdditional from "@/components/ModalAdditional.vue";
 import M3SecaoBebidasSobremesas from "@/components/home/M3SecaoBebidasSobremesas.vue";
 import M3SecaoHero from "@/components/home/M3SecaoHero.vue";
 import M3SecaoLanches from "@/components/home/M3SecaoLanches.vue";
+import M3SecaoMonte from "@/components/home/M3SecaoMonte.vue";
 import M3SecaoOnde from "@/components/home/M3SecaoOnde.vue";
 
 const { isOpen, product, openModal, closeModal, confirm } = useProductModal();

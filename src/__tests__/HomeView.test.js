@@ -1,15 +1,16 @@
 // Contrato da Home de produção (SPEC-material §5.2 e §1.1, item 13): os casos de
 // src/direcoes/estilos/material/__tests__/HomeMaterial.test.js, na rota "/" e dentro do MainLayout
 // real (cabeçalho, toolbar e rodapé da etapa 4). As seções e a ordem vêm do desenho
-// (docs/direcoes/desenho/material.json). Mais o contrato da produção: o "Adicionar" abre o modal
-// Personalizar da HomeView (provide do personalizar), sem moldura nem tokens do acervo, e nenhuma
-// seção usa o carrinho nem calcula preço.
+// (docs/direcoes/desenho/material.json), com a seção dos adicionais da etapa 5a. Mais o contrato da
+// produção: o "Adicionar" abre o modal Personalizar da HomeView (provide do personalizar), sem
+// moldura nem tokens do acervo, e nenhuma seção usa o carrinho nem calcula preço.
 import { afterEach, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { RouterView, createMemoryHistory, createRouter } from 'vue-router';
 import { CATEGORIES, useProductsStore } from '@/stores/products';
+import { formatPrice } from '@/utils/formatters';
 import MainLayout from '@/layouts/MainLayout.vue';
 import HomeView from '@/views/HomeView.vue';
 import ModalAdditional from '@/components/ModalAdditional.vue';
@@ -136,6 +137,11 @@ describe('HomeView (Home do Material 3 na produção)', () => {
     expect(secoes(wrapper)).toEqual(desenho.secoes);
     expect(wrapper.find('[data-secao="lanches"]').text()).toContain('Nada nesta categoria por enquanto');
     expect(wrapper.find('[data-secao="bebidas-e-sobremesas"]').text()).toContain('Nada nesta categoria por enquanto');
+    // Sem lanches nem sobremesas, não há onde acrescentar: ficam o h2 e o caminho para o cardápio
+    const adicionais = wrapper.find('[data-secao="monte-o-seu"]');
+    expect(adicionais.find('h2').text()).toBe('Adicionais');
+    expect(adicionais.findAll('h3, li')).toHaveLength(0);
+    expect(adicionais.find('a[href="/menu"]').exists()).toBe(true);
   });
 
   it('a nav Principal tem Início, Cardápio e Entrar, e o carrinho tem o nome do contador', async () => {
@@ -204,13 +210,52 @@ describe('HomeView (Home do Material 3 na produção)', () => {
     expect(botoesAdicionar(wrapper)).toContain('Smash Burger');
   });
 
-  it('bebidas e sobremesas vêm em grupos, com a contagem calculada dos adicionais', async () => {
+  it('os adicionais aparecem em chips estáticos, com o acréscimo pelo formatPrice', async () => {
+    const { produtos } = await montarHome();
+    const secao = wrapper.find('[data-secao="monte-o-seu"]');
+    expect(secao.find('h2').text()).toBe('Adicionais');
+    expect(secao.text()).toContain('Escolha, personalize e peça.');
+    expect(secao.findAll('h3').map((h) => h.text())).toEqual(['No hambúrguer', 'Na sobremesa']);
+    // Cada lista tem o nome do próprio grupo (o h3 dela)
+    const listas = secao.findAll('ul');
+    expect(listas.map((ul) => ul.attributes('role'))).toEqual(['list', 'list']);
+    const rotulos = listas.map((ul) => document.getElementById(ul.attributes('aria-labelledby')));
+    expect(rotulos.map((h3) => h3?.tagName)).toEqual(['H3', 'H3']);
+    expect(rotulos.map((h3) => h3.textContent.trim())).toEqual(['No hambúrguer', 'Na sobremesa']);
+    const adicionais = [...produtos.foodAdditionals, ...produtos.dessertAdditionals];
+    const chips = secao.findAll('li');
+    expect(chips).toHaveLength(adicionais.length);
+    chips.forEach((chip, i) => {
+      expect(chip.find('.m3-monte__nome').text()).toBe(adicionais[i].name);
+      expect(chip.find('.m3-monte__preco').text()).toBe(`+ ${formatPrice(adicionais[i].price)}`);
+      expect(chip.find('a, button, [tabindex]').exists()).toBe(false);
+    });
+    // O chip é informação: o único alvo de foco da seção é o Ver cardápio
+    expect(secao.findAll('a, button, [tabindex]').map((el) => el.attributes('href'))).toEqual(['/menu']);
+  });
+
+  it('o grupo de adicionais sem itens ou sem a categoria some junto com o título', async () => {
+    const { produtos } = await montarHome();
+    const secao = () => wrapper.find('[data-secao="monte-o-seu"]');
+    produtos.dessertAdditionals = [];
+    await nextTick();
+    expect(secao().findAll('h3').map((h) => h.text())).toEqual(['No hambúrguer']);
+    expect(secao().findAll('li')).toHaveLength(produtos.foodAdditionals.length);
+
+    produtos.dessertAdditionals = [{ id: 1, name: 'Granulado', price: 1.5, quantity: 0 }];
+    produtos.menuItems.foods = [];
+    await nextTick();
+    expect(secao().findAll('h3').map((h) => h.text())).toEqual(['Na sobremesa']);
+    expect(secao().findAll('li')).toHaveLength(1);
+  });
+
+  it('bebidas e sobremesas vêm em grupos, sem a contagem dos adicionais (os chips já mostram)', async () => {
     const { produtos } = await montarHome();
     const secao = wrapper.find('[data-secao="bebidas-e-sobremesas"]');
     expect(secao.find('h2').text()).toBe('Bebidas e sobremesas');
     expect(secao.findAll('h3').map((h) => h.text())).toEqual(['Bebidas', 'Sobremesas']);
     expect(secao.findAll('li')).toHaveLength(produtos.drinks.length + produtos.desserts.length);
-    expect(secao.text()).toContain(`${produtos.dessertAdditionals.length} adicionais`);
+    expect(secao.text()).not.toMatch(/adiciona(l|is)/);
   });
 
   it('um grupo vazio some junto com o título', async () => {
@@ -255,7 +300,7 @@ const fontes = import.meta.glob(['../components/home/*.vue', '../components/M3*.
 describe('contrato das seções da Home', () => {
   it('nenhuma seção usa o carrinho nem calcula preço', () => {
     const arquivos = Object.keys(fontes);
-    expect(arquivos.filter((a) => a.includes('/home/'))).toHaveLength(4);
+    expect(arquivos.filter((a) => a.includes('/home/'))).toHaveLength(5);
     expect(arquivos).toContain('../components/M3CartaoLanche.vue');
     const usos = Object.entries(fontes)
       .filter(([, fonte]) => /useCartStore|cartStore|toFixed/.test(fonte))

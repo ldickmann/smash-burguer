@@ -79,8 +79,8 @@ export const lerTokens = (fonte) => {
 // 1. Os 34 da Home aprovada, copiados de src/direcoes/estilos/material/contraste.js
 export const PARES_HOME = [
   // Página, cabeçalho e rodapé
-  { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal, marca e títulos das seções" },
-  { frente: "m3-primary", fundo: "m3-surface", minimo: 4.5, onde: "text button Ver cardápio do feed" },
+  { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal, marca, títulos das seções e h3 dos Adicionais" },
+  { frente: "m3-primary", fundo: "m3-surface", minimo: 4.5, onde: "text button Ver cardápio do feed e dos Adicionais" },
   { frente: "m3-secondary", fundo: "m3-surface", minimo: 3, onde: "anel de foco" },
   { frente: "m3-on-surface", fundo: "m3-surface-container", minimo: 4.5, onde: "marca no rodapé" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container", minimo: 4.5, onde: "rótulos da toolbar e textos do rodapé" },
@@ -106,19 +106,19 @@ export const PARES_HOME = [
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "descrição no card" },
   { frente: "m3-primary", fundo: "m3-surface-container-highest", minimo: 3, onde: "contêiner do split contra o card" },
   { frente: "m3-secondary", fundo: "m3-surface-container-highest", minimo: 3, onde: "anel de foco no card" },
-  { frente: "m3-on-surface", fundo: "m3-surface-container-high", minimo: 4.5, onde: "título da folha" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-high", minimo: 4.5, onde: "ingredientes na folha" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container-high", minimo: 4.5, onde: "título da folha e nome nos chips dos Adicionais" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-high", minimo: 4.5, onde: "ingredientes na folha e acréscimo nos chips dos Adicionais" },
 
   // Listas segmentada e agrupada
   { frente: "m3-on-surface", fundo: "m3-surface-container-low", minimo: 4.5, onde: "h2 e h3 das duas listas" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-low", minimo: 4.5, onde: "aviso de lista vazia nas bebidas e sobremesas" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface", minimo: 4.5, onde: "aviso de lista vazia no feed" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface", minimo: 4.5, onde: "aviso de lista vazia no feed e frase dos Adicionais" },
   { frente: "m3-on-surface", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "título e preço dos itens das listas" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "apoio e descrição dos itens" },
   { frente: "m3-secondary", fundo: "m3-surface-container-lowest", minimo: 3, onde: "anel de foco interno nos itens" },
   { frente: "m3-on-tertiary-container", fundo: "m3-tertiary-container", minimo: 3, onde: "ícone do horário" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 3, onde: "ícones dos itens com link" },
-  { frente: "m3-outline", fundo: "m3-surface", minimo: 3, onde: "borda da toolbar, do FAB e da folha com prefers-contrast: more" },
+  { frente: "m3-outline", fundo: "m3-surface", minimo: 3, onde: "borda da toolbar, do FAB, da folha e dos chips com prefers-contrast: more" },
 ];
 
 // 2. Os que entram com as outras telas (SPEC-material §2.2: "Pares que entram com as outras telas" e,

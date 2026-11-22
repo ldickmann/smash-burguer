@@ -1,0 +1,106 @@
+// Monte o seu (etapa 5a): na superfície, sem contêiner. Os grupos ficam empilhados abaixo de lg e em
+// 7/5 a partir de lg, com o vão da faixa logo abaixo, para as colunas alinharem. O chip é informação:
+// sem camada de estado, sem cursor de ação, sem foco e sem transição; o canto small (8) fica abaixo
+// dos 12 dp do filter chip do Expressive [7][60]. O fundo é o neutro da reserva do desenho (§7.12 e
+// §11): em tertiary-container cheio, o chip parecia um filter chip selecionado na captura parada em 390
+// (crítico da etapa 5a).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "./base" as *;
+
+.m3-monte {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.m3-monte__cabecalho {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.m3-monte__titulo {
+  @include tipo(headline-s);
+
+  color: var(--m3-on-surface);
+
+  @include up(md) {
+    font-size: var(--m3-headline-m);
+    line-height: var(--m3-headline-m-linha);
+  }
+}
+
+.m3-monte__frase {
+  @include tipo(body-l);
+
+  max-width: 40ch;
+  color: var(--m3-on-surface-variant);
+}
+
+.m3-monte__grupos {
+  display: grid;
+  gap: var(--space-5);
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+}
+
+// Um grupo só (o outro sem adicionais ou sem a categoria) ocupa a largura toda
+.m3-monte__grupo {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+
+  &:only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.m3-monte__subtitulo {
+  @include tipo(title-m, 500);
+
+  color: var(--m3-on-surface);
+}
+
+.m3-monte__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// O chip é um contêiner próprio (nome e acréscimo juntos), para não virar texto solto numa faixa
+.m3-monte__chip {
+  @include tipo(label-l, 500);
+  @include reserva-de-sombra;
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-2);
+  max-width: 100%;
+  min-height: 2rem;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--m3-forma-s);
+  background: var(--m3-surface-container-high);
+  color: var(--m3-on-surface);
+  letter-spacing: 0.00625rem;
+}
+
+// Nome longo (defesa: hoje os adicionais vêm só do products.json) quebra dentro do chip; o acréscimo
+// não quebra
+.m3-monte__nome {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.m3-monte__preco {
+  font-weight: 400;
+  color: var(--m3-on-surface-variant);
+  white-space: nowrap;
+}
+
+// O text button encosta opticamente na margem da esquerda, com o texto alinhado ao h2
+.m3-monte__ver {
+  justify-self: start;
+  margin-inline-start: calc(-1 * var(--space-3));
+}

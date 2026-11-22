@@ -67,6 +67,12 @@ export const FICHA = {
         "Feed com os 7 lanches à vista, sem carrossel [75]. Um lanche ocupa duas colunas, porque no feed o item maior recebe a atenção [64]; é o Smash Burger por levar o nome da casa, sem dado de vendas por trás. Cada card tem foto, nome, preço e o split button.",
     },
     {
+      id: "monte-o-seu",
+      nome: "Monte o seu",
+      papel:
+        "Os 12 adicionais com o acréscimo, em chips estáticos de canto small [7], num grupo de lanche e num de sobremesa, e o Ver cardápio: mostra antes do modal o que se pode acrescentar e quanto custa [H24]. O chip é informação, não filter chip [60]: sem foco nem camada de estado. A partir de lg, os grupos ficam em 7/5, alinhados com a faixa logo abaixo.",
+    },
+    {
       id: "bebidas-e-sobremesas",
       nome: "Bebidas e sobremesas",
       papel:
