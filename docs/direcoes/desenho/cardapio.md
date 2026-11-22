@@ -7,7 +7,7 @@
 - **Cardápio:** sai o banner com foto. Fica um cabeçalho de texto (o `h1` "Cardápio" e a `FRASE_CARDAPIO`) direto na superfície, o grupo de categorias e a grade de `M3CartaoLanche` comuns, em 2, 3 e 4 colunas, sem destaque.
 - **Grupo de categorias:** visual de grupo conectado [54], com semântica de rádio nativo num `fieldset` (o padrão do `PaymentMethodPicker`). O `aria-pressed` sai. O marcado é uma pílula `primary`, sem contagem, e o grupo continua grudando, com uma altura de token que entra no `scroll-padding-top` da rota.
 - **Hierarquia:** um `h2` escondido com o rótulo da categoria nomeia a região da grade, e os cards continuam com o `h3`.
-- **Card:** recomendo o nome em Medium (500) [1], o que muda também a Home (em aberto, 6.d). Proponho mostrar a descrição abaixo de `md` quando o produto não tem a folha (as bebidas).
+- **Card:** o nome em Medium (500) [1], também na Home (decisão do usuário, 6.d), e a descrição abaixo de `md` quando o produto não tem a folha (as bebidas).
 - **Modal:** o montador fica (decisão f), sobre um "prato" em `surface-container-lowest`, e a foto vira `M3Foto`. Os ingredientes viram linhas de checkbox do M3 [113] num bloco branco, com a linha inteira como alvo [111]. Os adicionais viram lista segmentada [66][81]. O CTA filled M já existe e o "·" fica.
 - **Fica para outras etapas:** a 8 desenha a "Observação" (`FormGroup`); a 10, o `BaseDialog`, o `QuantityStepper` e o `EmptyState` (o desenho supõe a superfície e a API de hoje); a 11 apaga o `BannerComponent`, o `--gradient-scrim`, a variante `menu` do `ProductCard` e o `useTilt` e decide os apelidos que o `BurgerStack` lê (seção 11).
 
@@ -127,7 +127,7 @@ Ritmo vertical: o cabeçalho começa a `--space-5` do topo abaixo de `md` e a `-
 └───────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inteira; `[  ]` e `[  ⟩` são as formas de meio e de fim do grupo conectado. O Smash Burger aqui é um card comum, na ordem do JSON. O peso do nome (500 no wireframe) é a recomendação da 6.d, **em aberto**: 400 ou 500.
+Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inteira; `[  ]` e `[  ⟩` são as formas de meio e de fim do grupo conectado. O Smash Burger aqui é um card comum, na ordem do JSON. O nome fica em 500 (6.d, decisão do usuário).
 
 ### Wireframe do Cardápio em 390
 
@@ -142,7 +142,7 @@ Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inte
 │──────────────────────────────────│  gruda em top: 0, com a borda
 │ ┌ card ────────┐┌ card ────────┐ │  2 colunas, --space-3
 │ │╭ foto 4:3 16╮││╭────────────╮│ │
-│ │Cheese Bacon  ││Smash Burger  │ │  title-m 400 ou 500 (6.d, em aberto), até 2 linhas
+│ │Cheese Bacon  ││Smash Burger  │ │  title-m 500 (6.d), até 2 linhas
 │ │R$ 25,99      ││R$ 22,50      │ │  sem descrição: a folha faz o papel dela
 │ │(Adicionar┃⌄)││(Adicionar┃⌄)│ │
 │ └──────────────┘└──────────────┘ │
@@ -399,7 +399,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
   - abaixo de `md`, o nome (title-m, 400) e o preço (title-m, 500) têm o mesmo tamanho, e o preço pesa mais que o nome (captura `home-390-full.png`);
   - o nome do destaque já é 500 (`tipo(headline-s, 500)`).
 - **A mudança:** uma linha no `_m3-cartao-lanche.scss`: `.m3-cartao__nome { @include tipo(title-m, 500); }`.
-- **Efeito na Home:** o mesmo card está no feed. Os nomes dos 6 cards comuns da Home de produção ficam em 500, e a referência `#/direcoes/material`, congelada (decisão e), continua em 400. **Fica em aberto para a sessão principal**, porque muda a Home aprovada.
+- **Efeito na Home:** o mesmo card está no feed. Os nomes dos 6 cards comuns da Home de produção ficam em 500, e a referência `#/direcoes/material`, congelada (decisão e), continua em 400. **Decidido pelo usuário em 22/11/2026: 500**, com a conferência abaixo.
 - **Como a sessão C confere:**
   1. capturas da Home em 1440, 1024 e 390 antes e depois, com os retângulos das 5 seções iguais (como na etapa 5a, 0 px de diferença) e nenhum nome quebrando em mais linhas;
   2. a mesma conferência nos 11 cards do Cardápio;
@@ -412,7 +412,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - **Encaixes:** hambúrgueres em 4 + 3 (1440), 3 + 3 + 1 (1024) e 2 + 2 + 2 + 1 (390); bebidas em 3 (1440 e 1024) e 2 + 1 (390); a sobremesa sozinha na primeira coluna. A última linha alinha ao início.
 - **`sizes`:** o do card comum (`(min-width: 1280px) 280px, (min-width: 1024px) 30vw, (min-width: 768px) 45vw, 45vw`), sem mudança.
 - **Reservas, como no feed:** nome longo em 2 linhas (`line-clamp`); imagem que falha com o ícone `burger` em `surface-container`; imagem `data:` sem o `<source>`; produto sem ingredientes com o split de uma metade só.
-- **Proposta: descrição abaixo de `md` sem a folha.** Abaixo de `md`, o card esconde a descrição porque a folha de ingredientes faz o papel dela. Os produtos sem ingredientes (as 3 bebidas) ficam sem folha e sem descrição, e o volume ("500ml", "350ml") só aparece no modal. Proposta: com a lista de ingredientes vazia, o card mostra a descrição também abaixo de `md` (classe `m3-cartao--sem-folha`). Na Home de hoje não muda nada, porque os 7 hambúrgueres têm ingredientes. **Em aberto para a sessão principal**, porque mexe no componente da Home.
+- **Proposta: descrição abaixo de `md` sem a folha.** Abaixo de `md`, o card esconde a descrição porque a folha de ingredientes faz o papel dela. Os produtos sem ingredientes (as 3 bebidas) ficam sem folha e sem descrição, e o volume ("500ml", "350ml") só aparece no modal. Proposta: com a lista de ingredientes vazia, o card mostra a descrição também abaixo de `md` (classe `m3-cartao--sem-folha`). Na Home de hoje não muda nada, porque os 7 hambúrgueres têm ingredientes. **Aceita pela sessão principal**: mexe no componente da Home, sem efeito nela hoje.
 
 **Folha única (6.f): fecha ao trocar de categoria.**
 
@@ -608,7 +608,7 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 - **Tokens:** `--m3-surface-container-lowest`, `--m3-on-surface`, `--m3-on-surface-variant`, `--m3-forma-xl`, `--m3-forma-l`, `--m3-title-m`, `--m3-body-l`, `--m3-body-m` e os espaços.
 - **Referências:** [1], [17]-[19], [66], decisão (f).
 
-### 7.5 `M3CartaoLanche` (muda pouco, se a sessão principal aceitar)
+### 7.5 `M3CartaoLanche` (muda pouco)
 
 - **Peso do nome:** `tipo(title-m, 500)` (6.d).
 - **Sem folha:** classe `m3-cartao--sem-folha` quando a lista de ingredientes está vazia, com a descrição visível também abaixo de `md` (6.e).
@@ -851,11 +851,11 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
   - **Decidido pelo usuário (22/11/2026): verde `primary`.** A marcada em `primary` é exceção registrada à regra "`primary` só em ação" (SPEC-M §2.2), porque [103] não diz qual cor vai no marcado. A alternativa, `secondary-container` com a troca de forma, ficou de fora: a diferença dela contra a desmarcada não chega a 3:1 (§2), e o sinal ficaria só na forma.
   - Sem contagem; uma linha em 390; continua grudando, opaco e sem sombra, com a borda quando grudado.
 - **c.** `h2` escondido com o rótulo da categoria, que nomeia a `section` da grade; os cards ficam com o `h3`.
-- **d.** Recomendação: nome do card comum em 500 [1], também na Home; **em aberto para o usuário**.
-  - Se aceito, é exceção à §1.1 (item 13) e à §13.9 do SPEC-M: a Home de `#/` deixa de ser igual à referência congelada nesse peso.
+- **d.** **Decidido pelo usuário (22/11/2026): nome do card comum em 500** [1], também na Home.
+  - É exceção à §1.1 (item 13) e à §13.9 do SPEC-M: a Home de `#/` deixa de ser igual à referência congelada nesse peso.
   - A §2.3 do SPEC-M muda.
   - A conferência é a de 5.3.
-- **e.** Grade de 2, 3 e 4 colunas com os gaps do feed, cards da mesma linha com a mesma altura, reservas do feed. Proposta **em aberto**: descrição abaixo de `md` nos cards sem folha.
+- **e.** Grade de 2, 3 e 4 colunas com os gaps do feed, cards da mesma linha com a mesma altura, reservas do feed. Descrição abaixo de `md` nos cards sem folha: aceita pela sessão principal (as bebidas mostram o volume, conteúdo real; a Home não muda hoje).
 - **f.** A folha fecha ao trocar de categoria (`watch` com `fechar()`), e a chave do `v-for` leva a categoria.
 - **g.** Modal: montador sobre prato `surface-container-lowest` (28/16); foto em `M3Foto` 4:3; ingredientes em linhas de checkbox do M3 (caixa de 24, canto de 2 [113], linha de 48 como alvo [111]) num bloco branco de 1 e 2 colunas; adicionais em lista segmentada, sem mudar a linha com a quantidade; quantidade e observação onde estão; CTA filled M de hoje.
 - **h.** O "·" do CTA fica.
@@ -907,9 +907,9 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 
 **Volta 2:** não rodou. As correções seguiram a lista da volta 1 e não mexeram em mais nada.
 
-**Para o usuário decidir antes da sessão C:**
+**Decisões do usuário (22/11/2026):**
 - **12 b:** decidido pelo usuário em 22/11/2026: verde `primary`;
-- **12 d:** o peso 500 no nome do card, que muda também a Home.
+- **12 d:** peso 500 no nome do card, também na Home. A 6.e (descrição sem folha) foi aceita pela sessão principal.
 
 **Pendências de outras etapas:**
 - **Etapa 10:** a prop `pressed` sem uso; os pares do modal se a superfície do diálogo mudar.
