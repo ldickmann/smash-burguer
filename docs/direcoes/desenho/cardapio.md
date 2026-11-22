@@ -161,7 +161,7 @@ Em "Bebidas", a 390: os três cards sem ingredientes têm o split de uma metade 
 ### Cardápio em 1024
 
 - **Cabeçalho do site:** sticky, com a pílula ancorada (a partir de `lg`).
-- **Cabeçalho da página:** o `h1` em `--text-page` (por volta de 40 px nessa largura) e a frase.
+- **Cabeçalho da página:** o `h1` em `--text-page` (45 px nessa largura, o limite do clamp) e a frase.
 - **Grupo:** com a largura do conteúdo, alinhado ao início, e grudado em `top: var(--navbar-h)`.
 - **Grade:** 3 colunas, `--space-5`. Os 7 hambúrgueres em 3 + 3 + 1; as bebidas numa linha só.
 - **De `md` a `lg` (768 a 1023):** o cabeçalho do site rola; o grupo gruda em `top: 0`; a grade tem 2 colunas com `--space-5`; a toolbar flutua embaixo.
@@ -182,7 +182,7 @@ Ordem: a coluna visual (montador ou foto) e as opções. As opções, de cima pa
 │ │        BurgerStack (220 px, sem mudança)  │                              ↕ --space-6          │
 │ │                                           │  Ingredientes                 title-m 500         │
 │ │                                           │  Desmarque o que quiser tirar  body-m             │
-│ │        Do jeito da casa                   │  ╭ surface-container-lowest, canto 20 ──────────╮ │
+│ │        Sem tomate                         │  ╭ surface-container-lowest, canto 20 ──────────╮ │
 │ ╰───────────────────────────────────────────╯  │ ☑ Pão de hambúrguer   ☑ Hambúrguer artesanal │ │
 │   2fr (sticky no topo do corpo)                │ ☑ Queijo              ☑ Bacon                │ │
 │                                                │ ☑ Alface              ☐ T̶o̶m̶a̶t̶e̶              │ │
@@ -286,7 +286,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - `h1`: a regra global (`base/_typography.scss`): `--text-page`, de display-s 36/44 a display-m 45/52 [1], peso 500, `on-surface`;
 - frase: body-l 16/24 [1], `on-surface-variant`, `max-width: 40ch`.
 
-**Acessibilidade:** o único `h1` da página. A frase é `p`. Pares: `on-surface` sobre `surface` (16,32) e `on-surface-variant` sobre `surface` (8,86), que já existem.
+**Acessibilidade:** o único `h1` da página. A frase é `p`. Pares: `on-surface` sobre `surface` (16,31) e `on-surface-variant` sobre `surface` (8,86), que já existem.
 
 **Comportamento:** 1440 e 1024 com `--space-7` em cima; 390 com `--space-5`. Alinhado à esquerda, no `.container`.
 
@@ -352,6 +352,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
   - o estado nativo `checked`, lido pelo leitor de tela [96].
   - Sem check: nenhum exemplo do grupo conectado mostra check [100], e o check mudaria a largura da marcada a cada troca.
 - **Anel:** por dentro (`anel-interno`), porque os itens ficam encostados (SPEC-M §1.1, item 4), no `label` por `:has(:focus-visible)`. Na desmarcada, `--m3-secondary` sobre `surface-container` (5,53). Na marcada, `--m3-on-primary` (6,43): o `secondary` sobre o `primary` dá 1,00:1 (medido) e sumiria. Como no disco do hero, a cor do anel troca, sem token novo.
+- **Alto contraste (revisão, volta 1):** com `forced-colors: active`, o fundo das opções some. Toda opção ganha `border: 1px solid CanvasText`, e a forma (pílula contra cantos de 8) volta a aparecer; a marcada ganha `border: 2px solid Highlight`, como o item atual da pílula (`_m3-barra-ferramentas.scss`). Com `prefers-contrast: more`, a borda de 1 px vai para `--m3-outline` (SPEC-M §2.6).
 
 **Comportamento:**
 
@@ -460,7 +461,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - **`BurgerStack`:** sem mudança (decisão f): 220 px a partir de `md` e 160 px abaixo, com a legenda dele ("Do jeito da casa", "Sem tomate · +1 bacon") em `--color-ink-muted` sobre o prato (9,29:1, o par `on-surface-variant` sobre `surface-container-lowest`, que já existe).
 - **Foto:** `M3Foto` com `forma="cartao"`, `proporcao="4 / 3"`, `alt` igual ao nome, `icone` `["fas", "utensils"]` e `:falhou` por um `fotoFalhou` que zera a cada abertura. `sizes` de hoje: `(min-width: 768px) 340px, 92vw`.
 - **1440 e 1024:** coluna de 2fr (cerca de 320 px), `position: sticky; top: 0` dentro do corpo, como hoje.
-- **390:** no topo do sheet, na largura do corpo. A foto em 4:3 tem cerca de 342 × 256 px, e o prato com o montador, cerca de 230 px de altura.
+- **390:** no topo do sheet, na largura do corpo. A foto em 4:3 tem cerca de 342 × 256 px, e o prato com o montador, cerca de 270 px de altura (o montador de 160 px, a margem dele, a legenda e o padding).
 - **Movimento:** o do `BurgerStack`, que não muda.
 - **Reserva:** imagem que falha mostra o ícone na mesma proporção; imagem `data:` vai sem `<source>`; um produto de `foods` editado com um ingrediente fora do mapa deixa de ser `isBurger` e mostra a foto.
 
@@ -483,10 +484,10 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
   | Marcado | 0 (mesma cor do fundo) | `primary` | `on-primary` | — |
   | Desmarcado ("removido") | 2 px, `on-surface-variant` | transparente | — | nome riscado em `on-surface-variant` e "(removido)" escondido |
   | Desmarcado, no hover ou pressionado | 2 px, `on-surface` | transparente | — | camada de 8% ou 10% |
-  | Foco | — | — | — | anel de 3 px em `secondary` em volta da linha, afastado 2 px |
+  | Foco | — | — | — | anel interno de 3 px em `secondary` na linha (`anel-interno`), porque as linhas ficam encostadas |
 
 - **Sinais de "removido" além da cor:** a caixa vazia, o nome riscado e o "(removido)" escondido, como hoje.
-- **Anel:** na linha, por `:has(:focus-visible)`. O exemplo da APG envolve o rádio e o rótulo [89]; aqui, a linha inteira, que é o alvo. O anel passa por cima das linhas vizinhas sem cobrir o texto delas (14 px de folga em cada linha de 48 px).
+- **Anel:** interno (`anel-interno`), na linha, por `:has(:focus-visible)`. As linhas ficam encostadas, e a §1.1 (item 4) e a §13.5 do SPEC-M pedem o anel por dentro nesse caso, como no grupo de categorias (5.2). O exemplo da APG envolve o rádio e o rótulo [89]; aqui, a linha inteira, que é o alvo. Par: `secondary` sobre `surface-container-lowest` (6,44).
 - **Contraste não textual [98] (medido):** o contorno desmarcado tem 9,29:1 sobre o bloco; a caixa marcada, 6,43:1 (5,26:1 com a linha pressionada); o check, 6,43:1 sobre a caixa; o anel, 6,44:1.
 - **`forced-colors`:** a caixa ganha borda de 1 px em `CanvasText` nos dois estados (o fundo forçado esconde o `primary`), e o check, em `currentColor`, aparece sobre o fundo forçado [114]. A linha não precisa da `reserva-de-sombra`: o texto e a caixa já a delimitam.
 - **1440 e 1024:** duas colunas de cerca de 230 px. Os nomes cabem numa linha ("Hambúrguer artesanal" tem cerca de 150 px em body-l).
@@ -501,7 +502,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 
 #### 5.5.3 Adicionais (`AdditionalsList`)
 
-- **Quando:** hambúrgueres e sobremesas (a regra de hoje), e só se a lista do catálogo tiver itens (reserva nova: `showAdditionals` também confere `additionals.length`, para a seção não aparecer vazia).
+- **Quando:** hambúrgueres e sobremesas (a regra de hoje), e só se a lista do catálogo tiver itens (`showAdditionals` também confere `additionals.length`; é defesa sem caso real hoje, porque os adicionais vêm só do `products.json` e o painel não os edita).
 - **Seção:** a `section.customize__section` de hoje, com o `h3#adicionais-titulo` "Adicionais" (title-m 500).
 - **Lista segmentada [66][81]:** `ul.additionals-list[role=list]` com `gap: var(--m3-vao-segmento)`. Cada `li.additionals-list__item` em `--m3-surface-container-lowest`, com cantos de fora de `--m3-forma-l-aumentada` (20) e de dentro de `--m3-forma-xs` (4) pela posição (`:first-child`, `:last-child`, `:only-child`), como no `M3ItemLista` [8].
 - **Linha:** `padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4)`; à esquerda, o nome (body-l, `on-surface`) sobre o acréscimo "+ R$ 3,50" (body-m, `on-surface-variant`, tabular, `formatPrice`); à direita, o `QuantityStepper` (0 a 5). O `trailingContent` do `ListItem` aceita um controle no fim [107].
@@ -513,7 +514,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - **1440 e 1024:** linhas de cerca de 480 px, com o stepper à direita.
 - **390:** linhas de cerca de 342 px. O nome mais longo ("Cebola Caramelizada", cerca de 150 px) e o stepper (cerca de 120 px) cabem com o padding.
 - **Movimento:** o do stepper de hoje (`SPEC.md` §7.5) até a etapa 10.
-- **Reserva:** adicional editado aparece com o nome e o preço como vierem; lista vazia some (acima).
+- **Reserva:** os adicionais não são editáveis (a store persiste só `menuItems`, `lastIds` e `catalogVersion`); a lista vazia some (acima), como defesa.
 
 #### 5.5.4 Quantidade (bebidas)
 
@@ -553,7 +554,8 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 | `CategoryTabs`, opção desmarcada | `surface-container` / `on-surface-variant`, label-l 500, 44 px, forma da posição (5.2) | camada 8% | anel interno, `secondary`, no `label` (`:has(:focus-visible)`) | camada 10%; cantos apertados por opacidade (`troca-de-forma`) | — | — | — |
 | `CategoryTabs`, opção marcada | `primary` / `on-primary`, pílula inteira | `primary-hover` | anel interno em `on-primary` | `primary-pressed`; cantos `forma-m` | `checked` nativo; pílula; 5,52:1 contra a desmarcada [99] | — | — |
 | Barra do grupo | `surface` opaca, borda de 1 px transparente | — | — | — | grudada: borda em `outline-variant` | — | — |
-| Linha de ingrediente (checkbox) | caixa de 24 px: marcada em `primary` com check `on-primary`; nome `on-surface` | camada 8% na linha; contorno da desmarcada em `on-surface` | anel em volta da linha (`:has(:focus-visible)`) | camada 10%; contorno da desmarcada em `on-surface` | desmarcada = "removido": caixa vazia com contorno `on-surface-variant`, nome riscado em `on-surface-variant`, "(removido)" escondido | — | — |
+| `CategoryTabs` em `forced-colors` e `prefers-contrast: more` | toda opção com borda de 1 px (`CanvasText`; `outline` com mais contraste) | — | anel do sistema | — | marcada: `2px solid Highlight` | — | — |
+| Linha de ingrediente (checkbox) | caixa de 24 px: marcada em `primary` com check `on-primary`; nome `on-surface` | camada 8% na linha; contorno da desmarcada em `on-surface` | anel interno na linha (`:has(:focus-visible)`) | camada 10%; contorno da desmarcada em `on-surface` | desmarcada = "removido": caixa vazia com contorno `on-surface-variant`, nome riscado em `on-surface-variant`, "(removido)" escondido | — | — |
 | Linha de adicional | `surface-container-lowest`, cantos 20/4, nome `on-surface`, "+ R$" `on-surface-variant` | — (não é ação) | nos botões do stepper | — | — (o estado é o número do stepper) | botão do stepper no limite: `disabled` real | — |
 | Prato do montador | `surface-container-lowest`, canto 28 (16 abaixo de `md`) | — | — (não é interativo) | — | — | — | foto: caixa em `surface-container`; falha: ícone `utensils` |
 | Cabeçalho da página | `h1` `on-surface`, frase `on-surface-variant`, na `surface` | — | — | — | — | — | — |
@@ -661,7 +663,7 @@ Medidos nesta sessão com `lerTokens` e `medirPar` do próprio `contraste.js` so
 | `m3-on-surface` | `m3-surface-container-lowest` | 17,11 | Ingredientes e adicionais |
 | `m3-on-surface-variant` | `m3-surface-container-lowest` | 9,29 | "+ R$", nome removido, legenda do montador, contorno do checkbox desmarcado |
 | `m3-secondary` | `m3-surface-container-lowest` | 6,44 | Anel das linhas de ingrediente |
-| `m3-on-surface` / `m3-on-surface-variant` | `m3-surface` | 16,32 / 8,86 | `h1` e frase do Cardápio; textos do `EmptyState` |
+| `m3-on-surface` / `m3-on-surface-variant` | `m3-surface` | 16,31 / 8,86 | `h1` e frase do Cardápio; textos do `EmptyState` |
 
 **Medidos e descartados:** `m3-secondary` sobre `m3-primary` dá 1,00 (por isso o anel da marcada é `on-primary`); `m3-secondary-container` sobre `m3-surface-container-lowest` dá 1,29 (a etapa 10 confere o stepper tonal sobre as linhas).
 
@@ -861,4 +863,12 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 
 ## 13. Revisão
 
-A preencher pela sessão principal.
+**Volta 1 do revisor (22/11/2026): "aprovado: não".** Foram 2 bloqueantes, 7 importantes e 10 menores. Os pares medidos bateram.
+
+**Aplicado pela sessão principal:**
+- os dois bloqueantes:
+  - borda em `forced-colors` e em `prefers-contrast: more` no grupo de categorias (5.2 e §6);
+  - anel interno nas linhas de ingrediente, que ficam encostadas (5.5.2 e §6);
+- os menores de texto: a legenda "Sem tomate" no wireframe, a altura do `h1` em 1024 e a do prato em 390, o par 16,31 e os adicionais, que não são editáveis.
+
+**Falta, na retomada da sessão D:** os importantes 3 a 8 (técnica da camada com a troca de forma; a conta da largura em 360 px; o par da borda do stepper sobre as linhas brancas; a isenção do contorno do grupo; a marcada em `primary` e o peso 500 como "em aberto" para o usuário) e os menores 9, 10, 11 e 15 a 19. A lista inteira está no `ESTADO.md` do plano (`pacotes\revisao-cardapio-volta-1.md`).
