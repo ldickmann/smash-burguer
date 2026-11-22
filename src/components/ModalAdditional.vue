@@ -6,20 +6,22 @@
     @close="$emit('close')"
   >
     <div v-if="product" class="customize">
+      <!-- Coluna visual: o montador sobre o prato nos hambúrgueres; nos outros, a foto no lugar dele -->
       <div class="customize__visual">
-        <BurgerStack v-if="showStack" :ingredients="ingredients" :additionals="additionals" />
-        <picture v-else class="customize__photo">
-          <source v-if="photo.srcset" type="image/webp" :srcset="photo.srcset" :sizes="photo.sizes" />
-          <img
-            class="customize__photo-img"
-            :src="photo.src"
-            :alt="product.name"
-            width="960"
-            height="720"
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
+        <div v-if="showStack" class="customize__prato">
+          <BurgerStack :ingredients="ingredients" :additionals="additionals" />
+        </div>
+        <M3Foto
+          v-else
+          class="customize__foto"
+          :imagem="photo"
+          :alt="product.name"
+          forma="cartao"
+          proporcao="4 / 3"
+          :icone="['fas', 'utensils']"
+          :falhou="fotoFalhou"
+          @erro="fotoFalhou = true"
+        />
       </div>
 
       <div class="customize__options">
@@ -83,6 +85,7 @@ import FormGroup from "@/components/FormGroup.vue";
 import IngredientsList from "@/components/IngredientsList.vue";
 import AdditionalsList from "@/components/AdditionalsList.vue";
 import BurgerStack, { isBurger } from "@/components/BurgerStack.vue";
+import M3Foto from "@/components/ui/M3Foto.vue";
 
 const props = defineProps({
   open: {
@@ -105,6 +108,8 @@ const ingredients = ref([]);
 const additionals = ref([]);
 const quantity = ref(1);
 const observation = ref("");
+// A foto que falhou volta a ser tentada a cada abertura
+const fotoFalhou = ref(false);
 
 const isDrink = computed(() => props.product?.category === "drinks");
 const showStack = computed(() => isBurger(props.product));
@@ -113,7 +118,8 @@ const isCustomizable = computed(
   () => showStack.value || props.product?.category === "desserts"
 );
 const showIngredients = computed(() => isCustomizable.value && ingredients.value.length > 0);
-const showAdditionals = computed(() => isCustomizable.value);
+// Defesa sem caso real hoje: os adicionais vêm só do products.json, e o painel não os edita
+const showAdditionals = computed(() => isCustomizable.value && additionals.value.length > 0);
 
 const photo = computed(() =>
   responsiveImage(props.product?.image, { sizes: "(min-width: 768px) 340px, 92vw" })
@@ -142,6 +148,7 @@ const reset = () => {
   }));
   quantity.value = 1;
   observation.value = "";
+  fotoFalhou.value = false;
 };
 
 watch(

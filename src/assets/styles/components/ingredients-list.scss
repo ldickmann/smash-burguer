@@ -1,9 +1,16 @@
-// Ingredientes do modal (SPEC §5.4): checkbox de 24px dentro de um <label> de 44px.
+// Ingredientes do modal Personalizar (desenho do Cardápio, §5.5.2): linhas de checkbox do M3 [113] num
+// bloco em surface-container-lowest, de 1 coluna e de 2 a partir de sm. A linha de 48 px é o alvo [111],
+// com a camada de estado e o anel por dentro (as linhas ficam encostadas). A caixa tem 24 px (critério
+// 3 da §1.1 do SPEC-material) e o canto de 2 px do M3.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
 .ingredients-list {
   display: grid;
-  gap: 0 var(--space-4);
+  gap: 0 var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--m3-forma-l-aumentada);
+  background: var(--m3-surface-container-lowest);
 
   @include up(sm) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -11,60 +18,88 @@
 }
 
 .ingredients-list__label {
+  @include camada-de-estado;
+  @include tipo(body-l);
+
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  min-height: var(--target-min);
+  min-height: 3rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-l-tracking);
   cursor: pointer;
+
+  // O input fica escondido: o anel vai na linha, por dentro
+  &:has(:focus-visible) {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: calc(-1 * var(--focus-width));
+  }
 }
 
-.ingredients-list__checkbox {
+.ingredients-list__caixa {
   display: grid;
   flex-shrink: 0;
   place-content: center;
-  width: 24px;
-  height: 24px;
-  margin: 0;
-  border: 2px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--color-input);
-  appearance: none;
-  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--m3-on-surface-variant);
+  border-radius: var(--m3-forma-caixa);
+  color: var(--m3-on-primary);
+  font-size: var(--m3-body-m);
 
-  // Marca de "check" desenhada em CSS
-  &::before {
-    content: "";
-    width: 12px;
-    height: 7px;
-    margin-top: -3px;
-    border-left: 2px solid var(--color-accent-ink);
-    border-bottom: 2px solid var(--color-accent-ink);
-    transform: rotate(-45deg);
-    opacity: 0;
-  }
-
-  &:checked {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-
-    &::before {
-      opacity: 1;
-    }
-  }
-
-  &:focus-visible {
-    outline-offset: var(--focus-offset);
+  // O fundo forçado esconde o primary: a borda delimita a caixa nos dois estados
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
   }
 }
 
+// O check entra por opacidade, ligado ao :checked (os ingredientes abrem todos marcados: nada de entrada
+// animada); o contorno e o fundo da caixa trocam direto
+.ingredients-list__check {
+  opacity: 0;
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+// Marcado = incluído: caixa em primary, com o contorno da mesma cor, e o check em on-primary
+.ingredients-list__checkbox:checked + .ingredients-list__caixa {
+  border-color: var(--m3-primary);
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+
+.ingredients-list__checkbox:checked + .ingredients-list__caixa .ingredients-list__check {
+  opacity: 1;
+}
+
+// Desmarcado, no hover ou pressionado: o contorno escurece para on-surface
 @include hover-capable {
-  .ingredients-list__label:hover .ingredients-list__checkbox:not(:checked) {
-    border-color: var(--color-ink-muted);
+  .ingredients-list__label:hover .ingredients-list__checkbox:not(:checked) + .ingredients-list__caixa {
+    border-color: var(--m3-on-surface);
   }
+}
+
+.ingredients-list__label:active .ingredients-list__checkbox:not(:checked) + .ingredients-list__caixa {
+  border-color: var(--m3-on-surface);
 }
 
 // Desmarcado: removido do lanche
 .ingredients-list__label.is-removed .ingredients-list__name {
-  color: var(--color-ink-subtle);
+  color: var(--m3-on-surface-variant);
   text-decoration: line-through;
+}
+
+// Com movimento, o check entra também com a mola espacial rápida, como o do "Adicionado" (§7.6)
+@include motion-ok {
+  .ingredients-list__check {
+    transform: scale(0);
+    transition:
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .ingredients-list__checkbox:checked + .ingredients-list__caixa .ingredients-list__check {
+    transform: none;
+  }
 }
