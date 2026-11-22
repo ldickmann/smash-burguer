@@ -19,7 +19,7 @@
 
 - **Cardápio:** é uma tela de tarefa. Não tem prensa, cookie nem contêiner de cor: o título é texto sobre a superfície, e o único gesto do Expressive é a troca de forma da categoria marcada [54]. A grade é a do feed sem destaque, porque no cardápio os itens são equivalentes [64].
 - **Modal:** é a personalização. O traço próprio dele é o montador (decisão f), que mostra o que se tira e o que se acrescenta [FLX-02]. Ele ganha um "prato" tonal, e as opções viram as peças do sistema: linhas de checkbox e lista segmentada. O CTA continua o filled M, o maior controle da tela.
-- **Sem:** foto atrás de texto [H5], entrada animada de seção, hover nos cards, sombra fora do que flutua [1][13] e `primary` fora de ação. A opção marcada do grupo é um botão filled [103], e por isso conta como ação.
+- **Sem:** foto atrás de texto [H5], entrada animada de seção, hover nos cards, sombra fora do que flutua [1][13] e `primary` fora de ação. A opção marcada do grupo em `primary` é exceção a essa regra, **em aberto** para o usuário (§12 b).
 
 ### O que muda da Brasa
 
@@ -127,7 +127,7 @@ Ritmo vertical: o cabeçalho começa a `--space-5` do topo abaixo de `md` e a `-
 └───────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inteira; `[  ]` e `[  ⟩` são as formas de meio e de fim do grupo conectado. O Smash Burger aqui é um card comum, na ordem do JSON.
+Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inteira; `[  ]` e `[  ⟩` são as formas de meio e de fim do grupo conectado. O Smash Burger aqui é um card comum, na ordem do JSON. O peso do nome (500 no wireframe) é a recomendação da 6.d, **em aberto**: 400 ou 500.
 
 ### Wireframe do Cardápio em 390
 
@@ -142,7 +142,7 @@ Legenda: `┃` é o vão de 2 px (`--m3-vao-segmento`); `(  )` é a pílula inte
 │──────────────────────────────────│  gruda em top: 0, com a borda
 │ ┌ card ────────┐┌ card ────────┐ │  2 colunas, --space-3
 │ │╭ foto 4:3 16╮││╭────────────╮│ │
-│ │Cheese Bacon  ││Smash Burger  │ │  title-m 500 (6.d), até 2 linhas
+│ │Cheese Bacon  ││Smash Burger  │ │  title-m 400 ou 500 (6.d, em aberto), até 2 linhas
 │ │R$ 25,99      ││R$ 22,50      │ │  sem descrição: a folha faz o papel dela
 │ │(Adicionar┃⌄)││(Adicionar┃⌄)│ │
 │ └──────────────┘└──────────────┘ │
@@ -329,7 +329,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 **Visual (grupo conectado [54]):**
 
 - **Barra:** `div.category-tabs` com `--m3-surface` opaca [H17], `padding-block: var(--space-3)`, borda de baixo de 1 px transparente que vira `--m3-outline-variant` quando grudada (a regra e a sentinela de hoje). Sem sombra.
-- **Itens:** 44 px de altura (`--target-min`). O toggle padrão é o small [103], o S de 40 dp, que o projeto põe em 44 px (desvio da ficha, [19]). Rótulo em label-l 14/20, peso 500, `padding-inline: var(--space-4)`. Vão de `--m3-vao-segmento` (2 px) entre os itens: o `ConnectedSpaceBetween` não tem valor na página [105], e o projeto usa 2 px nos segmentos.
+- **Itens:** 44 px de altura (`--target-min`). O toggle padrão é o small [103], o S de 40 dp, que o projeto põe em 44 px (desvio da ficha, [19]). Rótulo em label-l 14/20, peso 500, `padding-inline: var(--space-3)` abaixo de `sm` e `var(--space-4)` a partir dele (revisão, volta 1). Vão de `--m3-vao-segmento` (2 px) entre os itens: o `ConnectedSpaceBetween` não tem valor na página [105], e o projeto usa 2 px nos segmentos.
 - **Cores:** o `ToggleButton` troca entre primary e tonal, e a página não diz qual cor vai em qual estado [103]. Aqui:
   - **marcada:** `--m3-primary`, com o rótulo em `--m3-on-primary` (o filled [103]); hover `--m3-primary-hover`, pressionada `--m3-primary-pressed`;
   - **desmarcada:** `--m3-surface-container`, com o rótulo em `--m3-on-surface-variant` e camada de estado de 8% e 10% [12]. São os papéis dos itens não atuais da pílula (SPEC-M §4.1). A `secondary-container`, o "tonal", fica de fora de propósito: no sistema ela é o "atual" da pílula [83] e o marcado do `PaymentMethodPicker` (SPEC-M §4.2). Pintar com ela as opções não escolhidas inverteria o sentido na mesma tela, onde a pílula mostra "Cardápio" em `secondary-container`.
@@ -346,6 +346,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
   - O marcado é uma forma só, nas três posições [105]; a pílula inteira é a escolha deste desenho (a página não dá o raio).
   - Nenhuma forma pressionada tem número na fonte [104][105]. Os valores seguem o botão S apertado do projeto (`forma-m`, SPEC-M §6) e o canto de dentro do split (`forma-xs`).
   - A forma da marcada troca direto (o raio de repouso muda de valor, sem transição), e a cor troca em `--m3-dur-mola-efeitos-rapida`, como no `BaseButton`.
+  - **Técnica (revisão, volta 1):** o `camada-de-estado` e o `troca-de-forma` usam os dois o `::before`. A camada vai no fundo composto que o `troca-de-forma` pinta: `--m3-botao-fundo-hover: linear-gradient(var(--m3-camada-hover) 0 0), var(--m3-surface-container)` e o mesmo no pressionado, com `--m3-camada-pressionada` (a composição que o par da §8 mede). As formas por posição passam quatro valores ao `troca-de-forma`, como o `.m3-dividido__frente`.
 - **Sinais do marcado além da cor (1.4.1 [99]):**
   - a diferença de luminância: `primary` contra `surface-container` dá 5,52:1 (medido), acima dos 3:1 que contam como sinal extra [99];
   - a forma: pílula inteira contra os cantos de 8;
@@ -358,8 +359,8 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 
 - **1440 e 1024 (`lg` e acima):** o grupo com a largura do conteúdo, alinhado ao início; gruda em `top: var(--navbar-h)`.
 - **De `md` a `lg`:** igual, grudando em `top: 0`.
-- **390 (abaixo de `md`):** o grupo ocupa a largura toda, e cada item cresce a partir do rótulo (`flex: 1 1 auto`). Os rótulos medem cerca de 96, 52 e 81 px em label-l (estimativa pela captura `menu-390-viewport.png`). Com 16 px de cada lado, somam 305 px com os vãos, nos 358 px úteis: **cabem numa linha**.
-- **Rolagem horizontal:** fica só como reserva, abaixo de cerca de 340 px (`overflow-x: auto`, sem barra visível e sem `scroll-snap`, para a rolagem não brigar com o foco). Não empilha (`SPEC.md` §4.1). Com o anel por dentro, sai o padding de folga em volta do grupo que existe hoje.
+- **390 (abaixo de `md`):** o grupo ocupa a largura toda, e cada item cresce a partir do rótulo (`flex: 1 1 auto`). Os rótulos medem cerca de 96, 52 e 81 px em label-l (estimativa pela captura `menu-390-viewport.png`). Com 12 px de cada lado abaixo de `sm`, somam cerca de 305 px com os vãos, nos 358 px úteis: **cabem numa linha**, e também numa janela de 360 px (328 úteis). Com 16 px, seriam cerca de 329 px, e em 360 a barra rolaria (revisão, volta 1).
+- **Rolagem horizontal:** fica só como reserva, abaixo de cerca de 337 px (`overflow-x: auto`, sem barra visível e sem `scroll-snap`, para a rolagem não brigar com o foco). Não empilha (`SPEC.md` §4.1). Com o anel por dentro, sai o padding de folga em volta do grupo que existe hoje.
 
 **Contagem por categoria (6.b): não entra.** A grade mostra a categoria inteira; a contagem é traço do acervo (desenho da Home, §13); e "Hambúrgueres 7" não caberia na linha em 390. A categoria vazia tem o `EmptyState` (5.4).
 
@@ -456,7 +457,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 
 #### 5.5.1 Coluna visual
 
-- **Estrutura:** `div.customize__visual` → `div.customize__prato` com o `BurgerStack` (hambúrgueres, `isBurger`) ou `M3Foto.customize__foto` (o resto).
+- **Estrutura:** `div.customize__visual` → `div.customize__prato` com o `BurgerStack` (hambúrgueres, `isBurger`). Nos outros produtos, a `M3Foto.customize__foto` fica no lugar do prato, sem padding, porque a foto já tem a moldura dela (revisão, volta 1).
 - **Prato do montador:** `--m3-surface-container-lowest`, canto `--m3-forma-xl` a partir de `md` e `--m3-forma-l` abaixo (os cantos da `M3Foto` cartão), `padding: var(--space-5)`, conteúdo centrado. A foto e o montador ocupam a mesma moldura, e o prato isola as cores da ilustração do fundo do diálogo. Sem sombra.
 - **`BurgerStack`:** sem mudança (decisão f): 220 px a partir de `md` e 160 px abaixo, com a legenda dele ("Do jeito da casa", "Sem tomate · +1 bacon") em `--color-ink-muted` sobre o prato (9,29:1, o par `on-surface-variant` sobre `surface-container-lowest`, que já existe).
 - **Foto:** `M3Foto` com `forma="cartao"`, `proporcao="4 / 3"`, `alt` igual ao nome, `icone` `["fas", "utensils"]` e `:falhou` por um `fotoFalhou` que zera a cada abertura. `sizes` de hoje: `(min-width: 768px) 340px, 92vw`.
@@ -494,7 +495,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - **De `sm` a `md` e na coluna estreita de `md`:** duas colunas mais estreitas, e um nome longo pode quebrar em 2 linhas; a linha cresce (`min-height`).
 - **390:** uma coluna.
 - **Movimento:**
-  - **sempre:** o check entra por opacidade em `--m3-dur-mola-efeitos-rapida`; o contorno e o fundo da caixa trocam direto;
+  - **sempre:** o check entra por opacidade em `--m3-dur-mola-efeitos-rapida`, por `transition` ligada ao `:checked` e nunca por `@keyframes`: os ingredientes abrem todos marcados, e não pode haver entrada animada (revisão, volta 1); o contorno e o fundo da caixa trocam direto;
   - **`motion-ok`:** o check entra também com `scale(0)` → `none` na mola espacial rápida, como o check do "Adicionado" (SPEC-M §7.6);
   - **reduzido:** só a opacidade. A classe `.ingredients-list__check` entra no `_motion.scss`;
   - **o que não se copia:** o check do material-web anima `width` em 350 ms [114], o que fere a regra do projeto.
@@ -574,9 +575,10 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 - **Emits:** `update:modelValue` (no `change` do rádio).
 - **Slots:** nenhum.
 - **Estrutura:** `div.category-tabs__sentinel[aria-hidden]` → `div.category-tabs(.is-stuck)` → `div.category-tabs__inner.container` → `fieldset.category-tabs__grupo` → `legend.visually-hidden` "Categorias" → `label.category-tabs__opcao` (`--inicio`, `--meio`, `--fim`; `.is-marcada`) → `input[type=radio][name="categoria"].visually-hidden` + `span.category-tabs__rotulo`.
+- **`fieldset`:** com `min-inline-size: 0` (o padrão é `min-content`, que impediria a rolagem de reserva) e um `div.category-tabs__opcoes` com as opções, como o `.payment-picker__options` (revisão, volta 1).
 - **Fica:** a sentinela e o `IntersectionObserver` com o `matchMedia` de `lg` (os 5 casos do `CategoryTabs.test.js` continuam).
 - **Sai:** o `BaseButton` com `pressed`, o `role="group"` e o `aria-label` (viram `fieldset` e `legend`).
-- **Tokens:** `--m3-surface`, `--m3-outline-variant`, `--m3-surface-container`, `--m3-on-surface-variant`, `--m3-primary`, `--m3-primary-hover`, `--m3-primary-pressed`, `--m3-on-primary`, `--m3-secondary`, `--m3-forma-full`, `--m3-forma-m`, `--m3-forma-s`, `--m3-forma-xs`, `--m3-vao-segmento`, `--m3-label-l`, `--m3-label-l-linha`, `--target-min`, `--space-3`, `--space-4`, `--navbar-h`, `--z-sticky`, `--m3-mola-efeitos-rapida`, `--m3-dur-mola-efeitos-rapida` e o novo `--m3-categorias-altura` (a altura documentada; a barra continua medida pelo conteúdo).
+- **Tokens:** `--m3-surface`, `--m3-outline-variant`, `--m3-surface-container`, `--m3-on-surface-variant`, `--m3-primary`, `--m3-primary-hover`, `--m3-primary-pressed`, `--m3-on-primary`, `--m3-secondary`, `--m3-forma-full`, `--m3-forma-m`, `--m3-forma-s`, `--m3-forma-xs`, `--m3-vao-segmento`, `--m3-label-l`, `--m3-label-l-linha`, `--target-min`, `--space-3`, `--space-4`, `--navbar-h`, `--z-sticky`, `--m3-mola-efeitos-rapida`, `--m3-dur-mola-efeitos-rapida` e o novo `--m3-categorias-altura` (o `min-block-size` da barra, com a borda de 1 px, para o `scroll-padding-top` seguir a altura real; revisão, volta 1).
 - **Mixins:** `troca-de-forma`, `camada-de-estado`, `anel-interno`, `tipo(label-l, 500)`, `up(md)`, `up(lg)`, `hover-capable`.
 - **Referências:** [54], [88], [89], [90], [92], [93], [95], [96], [97], [99], [100], [103], [104], [105], [106], [H17].
 
@@ -649,6 +651,10 @@ Medidos nesta sessão com `lerTokens` e `medirPar` do próprio `contraste.js` so
 | `m3-primary` | `m3-camada-pressionada` sobre `m3-surface-container-lowest` | 3 | 5,26 | Caixa marcada com a linha pressionada |
 | `m3-on-surface-variant` | `m3-camada-pressionada` sobre `m3-surface-container` | 4,5 | 6,55 | Rótulo da categoria desmarcada, pressionada |
 | `m3-primary` | `m3-surface-container` | 3 | 5,52 | Diferença entre a categoria marcada e a desmarcada (sinal extra da 1.4.1 [99]) |
+| `m3-outline` | `m3-surface-container-lowest` | 3 | 4,48 | Borda do `QuantityStepper` de hoje sobre as linhas dos adicionais (medido na revisão) |
+| `m3-on-surface` | `m3-camada-pressionada` sobre `m3-surface-container-lowest` | 4,5 | 14,00 | Nome do ingrediente com a linha pressionada (medido na revisão) |
+| `m3-on-surface-variant` | `m3-camada-pressionada` sobre `m3-surface-container-lowest` | 4,5 | 7,60 | Nome removido com a linha pressionada (medido na revisão) |
+| `m3-secondary` | `m3-camada-pressionada` sobre `m3-surface-container` | 3 | 4,54 | Anel interno da categoria desmarcada pressionada (medido na revisão) |
 
 **Pares que ganham uso** (o mínimo não muda; a coluna "onde" muda):
 
@@ -665,9 +671,9 @@ Medidos nesta sessão com `lerTokens` e `medirPar` do próprio `contraste.js` so
 | `m3-secondary` | `m3-surface-container-lowest` | 6,44 | Anel das linhas de ingrediente |
 | `m3-on-surface` / `m3-on-surface-variant` | `m3-surface` | 16,31 / 8,86 | `h1` e frase do Cardápio; textos do `EmptyState` |
 
-**Medidos e descartados:** `m3-secondary` sobre `m3-primary` dá 1,00 (por isso o anel da marcada é `on-primary`); `m3-secondary-container` sobre `m3-surface-container-lowest` dá 1,29 (a etapa 10 confere o stepper tonal sobre as linhas).
+**Medidos e descartados:** `m3-secondary` sobre `m3-primary` dá 1,00 (por isso o anel da marcada é `on-primary`); `m3-secondary-container` sobre `m3-surface-container-lowest` dá 1,29 (a etapa 10 confere o stepper tonal sobre as linhas). `m3-surface-container` contra `m3-surface` dá 1,11: o contorno das opções desmarcadas fica isento, porque um controle com texto dispensa borda [98]; o precedente é o tonal sobre `lowest` na Home (1,29), sem par (revisão, volta 1).
 
-**Pares de hoje que mudam de "onde"** (`PARES_COMUNS`): "borda do checkbox" e "checkbox marcado" (`color-border-strong` e `color-accent` sobre `color-surface-2`) deixam de servir ao checkbox, que passa ao bloco branco; ficam pelo campo e pelo modal do acervo.
+**Pares de hoje que mudam de "onde"** (`PARES_COMUNS`): "borda do checkbox" e "checkbox marcado" (`color-border-strong` e `color-accent` sobre `color-surface-2`) deixam de servir ao checkbox do modal, que passa ao bloco branco: o `color-border-strong` continua no campo e na borda do stepper da "Quantidade"; o `color-accent` perde o uso no checkbox. O modal das Homes do acervo é o mesmo componente: o esqueumorfismo e o neumorfismo passam a mostrar os blocos brancos e o checkbox `primary`, efeito aceito (SPEC-M §11.4). Medidos na revisão sobre os fundos de lá: `on-surface-variant` 5,40 (kraft) e 8,90 (papel), `on-surface` 9,95 e `secondary` 3,74 (kraft).
 
 ### Lógica
 
@@ -763,7 +769,13 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
   - a seta para a direita marca "Bebidas", e o foco continua no rádio;
   - a seta no último volta ao primeiro;
   - o foco não coberto no `#/menu` em 390 (toolbar e grupo) e em 1440 (cabeçalho e grupo): com Shift+Tab pelos cards, o retângulo focado nunca fica inteiro dentro da barra do grupo nem do cabeçalho.
-- `axe-scan.mjs`: os estados abaixo.
+- `axe-scan.mjs`: os estados abaixo. O estado `modal-bebida` que já existe (`getByRole('button', { name: 'Bebidas' })`) passa ao rádio.
+- `video-tour.mjs`: as categorias como rádio e o `.product-card` trocado pelo `.m3-cartao`.
+- **Janela de 360 px:** o grupo numa linha só, sem rolagem.
+
+**SPEC-M e CLAUDE.md (no mesmo PR):**
+- no SPEC-M: a linha do `pressed` na §4.1; as linhas `CategoryTabs`, `IngredientsList`/`AdditionalsList` e `BannerComponent` da §4.2; o "a desenhar" das §5.3 e §5.4; a linha `CategoryTabs` da §6;
+- no CLAUDE.md: a linha do `pressed` só muda com o pedido do usuário.
 
 **Estados para o axe** (em 1440 e 390, com e sem movimento reduzido):
 
@@ -817,11 +829,12 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 | Rádio nativo: teclado sem fonte aberta além do Shift+Tab | O `keyboard.mjs` confere Tab, setas e volta; o projeto já usa o mesmo padrão no `PaymentMethodPicker` |
 | Cada seta troca a grade | Mudança de conteúdo [97], com a grade já carregada [91]; o foco fica no rádio. Se o teste com leitor de tela incomodar, o plano B são as abas com ativação manual [91] |
 | Grupo grudado cobrir o foco a partir de `lg` | `scroll-padding-top` da rota com o token (seção 4); o `keyboard.mjs` mede em 1440 |
-| Rótulos não caberem numa linha abaixo de cerca de 340 px | Rolagem horizontal de reserva, como hoje; nunca empilha |
+| Rótulos não caberem numa linha abaixo de cerca de 337 px | Rolagem horizontal de reserva, como hoje; nunca empilha |
 | Peso 500 mudar a Home aprovada | Em aberto; conferência por captura e volta a 400 se algo quebrar (5.3) |
 | Descrição abaixo de `md` só nos cards sem folha deixar a linha desigual | Na grade de 2 colunas, as bebidas têm todas descrição; um hambúrguer editado sem ingredientes ficaria mais alto que o vizinho, e a linha estica (`stretch`) |
 | Batata Frita com folha ("Batata", "Sal") e sem ingredientes no modal | Já é assim na Home; o modal segue a regra do `isBurger` (decisão f). Fica registrado |
 | **O `BurgerStack` lê apelidos que a etapa 11 tira** (`--text-sm`, `--leading-compact`, `--ease-out` e `--ease-spring`; o `--color-ink-muted` fica entre os seis do acervo) | A decisão (f) diz que ele não muda, e a (a) tira os apelidos. A sessão principal decide na etapa 11: manter esses quatro apelidos ou abrir exceção à (f) para trocar só os nomes |
+| O prato branco tirar a separação das camadas claras do `BurgerStack` (maionese e clara do ovo; revisão, volta 1) | Conferir na captura da sessão C. O prato é a única alavanca, porque o `BurgerStack` não muda |
 | A superfície do diálogo mudar na etapa 10 | Os pares do modal são medidos sobre `surface-container`; mudando, mede-se de novo |
 | Teclado virtual cobrir a observação no sheet | Não encontrei fonte; fica para a conferência em aparelho, fora do Playwright |
 | Tudo em blocos brancos parecer kit de cards | Três formas para três papéis: o prato (28), o bloco de checklist (20 em volta) e a lista segmentada (20/4 com vãos); nenhuma sombra; nenhum hover em bloco que não é ação |
@@ -834,9 +847,14 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 **Decidido (item 6 do pacote):**
 
 - **a.** O banner `page` sai; entra o cabeçalho de texto na superfície (`h1` e `FRASE_CARDAPIO`). `BannerComponent`, `_banner.scss`, `BannerComponent.test.js` e `--gradient-scrim` saem na etapa 11; a imagem `banner-burger-black` fica no repositório.
-- **b.** Grupo conectado [54] com rádios nativos em `fieldset`/`legend` (sai o `aria-pressed`); marcada em pílula `primary`, desmarcadas em `surface-container`; 44 px; vão de 2 px; anel interno (`on-primary` na marcada); sem contagem; uma linha em 390; continua grudando, opaco e sem sombra, com a borda quando grudado.
+- **b.** Grupo conectado [54] com rádios nativos em `fieldset`/`legend` (sai o `aria-pressed`); marcada em pílula `primary`, desmarcadas em `surface-container`; 44 px; vão de 2 px; anel interno (`on-primary` na marcada).
+  - **Em aberto para o usuário:** a marcada em `primary` é exceção à regra "`primary` só em ação" (SPEC-M §2.2), porque [103] não diz qual cor vai no marcado. A alternativa é `secondary-container` com a troca de forma, mas a diferença dela contra a desmarcada não chega a 3:1 (§2), e o sinal ficaria só na forma.
+  - Sem contagem; uma linha em 390; continua grudando, opaco e sem sombra, com a borda quando grudado.
 - **c.** `h2` escondido com o rótulo da categoria, que nomeia a `section` da grade; os cards ficam com o `h3`.
-- **d.** Recomendação: nome do card comum em 500 [1], também na Home; **em aberto** para a sessão principal, com a conferência de 5.3.
+- **d.** Recomendação: nome do card comum em 500 [1], também na Home; **em aberto para o usuário**.
+  - Se aceito, é exceção à §1.1 (item 13) e à §13.9 do SPEC-M: a Home de `#/` deixa de ser igual à referência congelada nesse peso.
+  - A §2.3 do SPEC-M muda.
+  - A conferência é a de 5.3.
 - **e.** Grade de 2, 3 e 4 colunas com os gaps do feed, cards da mesma linha com a mesma altura, reservas do feed. Proposta **em aberto**: descrição abaixo de `md` nos cards sem folha.
 - **f.** A folha fecha ao trocar de categoria (`watch` com `fechar()`), e a chave do `v-for` leva a categoria.
 - **g.** Modal: montador sobre prato `surface-container-lowest` (28/16); foto em `M3Foto` 4:3; ingredientes em linhas de checkbox do M3 (caixa de 24, canto de 2 [113], linha de 48 como alvo [111]) num bloco branco de 1 e 2 colunas; adicionais em lista segmentada, sem mudar a linha com a quantidade; quantidade e observação onde estão; CTA filled M de hoje.
@@ -871,4 +889,28 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
   - anel interno nas linhas de ingrediente, que ficam encostadas (5.5.2 e §6);
 - os menores de texto: a legenda "Sem tomate" no wireframe, a altura do `h1` em 1024 e a do prato em 390, o par 16,31 e os adicionais, que não são editáveis.
 
-**Falta, na retomada da sessão D:** os importantes 3 a 8 (técnica da camada com a troca de forma; a conta da largura em 360 px; o par da borda do stepper sobre as linhas brancas; a isenção do contorno do grupo; a marcada em `primary` e o peso 500 como "em aberto" para o usuário) e os menores 9, 10, 11 e 15 a 19. A lista inteira está no `ESTADO.md` do plano (`pacotes\revisao-cardapio-volta-1.md`).
+**Aplicado depois, também pela sessão principal:**
+- os importantes:
+  - a técnica da camada com a troca de forma (5.2);
+  - o `padding-inline` de 12 px abaixo de `sm`, para o grupo caber numa janela de 360 px;
+  - o par da borda do stepper sobre as linhas brancas (4,48) e a isenção do contorno do grupo (1,11, [98]);
+  - a marcada em `primary` e o peso 500, agora **em aberto para o usuário** (§12 b e d);
+- os menores:
+  - o modal do acervo (§11.4) e os pares de lá;
+  - o `fieldset` com `min-inline-size: 0`;
+  - o token como `min-block-size`;
+  - a foto no lugar do prato;
+  - o risco do prato branco;
+  - o check por `transition`;
+  - os e2e e as linhas do SPEC-M que mudam;
+  - os três pares com a camada pressionada.
+
+**Volta 2:** não rodou. As correções seguiram a lista da volta 1 e não mexeram em mais nada.
+
+**Para o usuário decidir antes da sessão C:**
+- **12 b:** a categoria marcada em `primary`;
+- **12 d:** o peso 500 no nome do card, que muda também a Home.
+
+**Pendências de outras etapas:**
+- **Etapa 10:** a prop `pressed` sem uso; os pares do modal se a superfície do diálogo mudar.
+- **Etapa 11:** os apelidos que o `BurgerStack` lê (§11).
