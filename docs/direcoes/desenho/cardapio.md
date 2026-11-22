@@ -403,7 +403,7 @@ O diálogo tem os mesmos 880 px de 1440, e o layout é o mesmo. A janela de 768 
 - **Como a sessão C confere:**
   1. capturas da Home em 1440, 1024 e 390 antes e depois, com os retângulos das 5 seções iguais (como na etapa 5a, 0 px de diferença) e nenhum nome quebrando em mais linhas;
   2. a mesma conferência nos 11 cards do Cardápio;
-  3. o crítico olha o card em 390. Se algum nome quebrar diferente, ou se o crítico reprovar, volta a 400.
+  3. o crítico olha o card em 390. Se algum nome quebrar diferente, ou se o crítico reprovar, a sessão C avisa o usuário antes de voltar a 400, porque o 500 foi decisão dele.
 
 **Grade (6.e):**
 
@@ -567,7 +567,7 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 
 ## 7. Inventário
 
-**Contagem:** nenhum componente novo. Mudam **5 componentes** (`CategoryTabs`, `IngredientsList`, `AdditionalsList`, `ModalAdditional` e, se aceito, `M3CartaoLanche`) e **1 view** (`MenuView`). Peças novas ficam dentro dos componentes (o prato, a caixa do checkbox), sem `M3*` novo. Nada é copiado de `src/direcoes/`: o `M3CartaoLanche`, o `useFolhaUnica` e a `M3Foto` já são as cópias de produção.
+**Contagem:** nenhum componente novo. Mudam **5 componentes** (`CategoryTabs`, `IngredientsList`, `AdditionalsList`, `ModalAdditional` e `M3CartaoLanche`) e **1 view** (`MenuView`). Peças novas ficam dentro dos componentes (o prato, a caixa do checkbox), sem `M3*` novo. Nada é copiado de `src/direcoes/`: o `M3CartaoLanche`, o `useFolhaUnica` e a `M3Foto` já são as cópias de produção.
 
 ### 7.1 `CategoryTabs` (muda)
 
@@ -721,8 +721,8 @@ src/components/IngredientsList.vue           linha de checkbox (input escondido,
 src/assets/styles/components/ingredients-list.scss
 src/components/AdditionalsList.vue           lista segmentada
 src/assets/styles/components/additionals-list.scss
-src/components/M3CartaoLanche.vue            (se aceito) m3-cartao--sem-folha
-src/assets/styles/components/_m3-cartao-lanche.scss   (se aceito) nome em 500; descrição sem folha
+src/components/M3CartaoLanche.vue            m3-cartao--sem-folha
+src/assets/styles/components/_m3-cartao-lanche.scss   nome em 500; descrição sem folha
 src/assets/styles/base/_tokens.scss          --m3-categorias-altura e --m3-forma-caixa
 src/assets/styles/base/_motion.scss          + .ingredients-list__check
 src/utils/contraste.js                       os 4 pares novos e os "onde" da seção 8
@@ -824,13 +824,13 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 
 | Risco | Resposta |
 |---|---|
-| A cor da marcada contrariar o "tonal" de [103] | É inferência: [103] não diz qual cor vai em qual estado. A escolha guarda a `secondary-container` como "atual" no sistema. Se a sessão principal preferir o tonal no desmarcado, a medida da 1.4.1 cai para 4,99 (`secondary-container` contra `primary`, SPEC-M §2.2) e continua acima de 3 |
+| A cor da marcada contrariar o "tonal" de [103] | É inferência: [103] não diz qual cor vai em qual estado, e o usuário decidiu pelo `primary` (§12 b). A escolha guarda a `secondary-container` como "atual" no sistema. Se a sessão principal preferir o tonal no desmarcado, a medida da 1.4.1 cai para 4,99 (`secondary-container` contra `primary`, SPEC-M §2.2) e continua acima de 3 |
 | Dois "selecionados" no sistema: `primary` no grupo e `secondary-container` na pílula e no `PaymentMethodPicker` | Widgets diferentes: o grupo é um toggle filled [103]; a pílula é navegação [83]; o picker é lista. Na etapa 7, o picker pode seguir qualquer um dos dois, com o motivo |
 | Rádio nativo: teclado sem fonte aberta além do Shift+Tab | O `keyboard.mjs` confere Tab, setas e volta; o projeto já usa o mesmo padrão no `PaymentMethodPicker` |
 | Cada seta troca a grade | Mudança de conteúdo [97], com a grade já carregada [91]; o foco fica no rádio. Se o teste com leitor de tela incomodar, o plano B são as abas com ativação manual [91] |
 | Grupo grudado cobrir o foco a partir de `lg` | `scroll-padding-top` da rota com o token (seção 4); o `keyboard.mjs` mede em 1440 |
 | Rótulos não caberem numa linha abaixo de cerca de 337 px | Rolagem horizontal de reserva, como hoje; nunca empilha |
-| Peso 500 mudar a Home aprovada | Em aberto; conferência por captura e volta a 400 se algo quebrar (5.3) |
+| Peso 500 mudar a Home aprovada | Decidido pelo usuário (500). A sessão C confere por captura e avisa o usuário se algum nome quebrar em mais linhas (5.3) |
 | Descrição abaixo de `md` só nos cards sem folha deixar a linha desigual | Na grade de 2 colunas, as bebidas têm todas descrição; um hambúrguer editado sem ingredientes ficaria mais alto que o vizinho, e a linha estica (`stretch`) |
 | Batata Frita com folha ("Batata", "Sal") e sem ingredientes no modal | Já é assim na Home; o modal segue a regra do `isBurger` (decisão f). Fica registrado |
 | **O `BurgerStack` lê apelidos que a etapa 11 tira** (`--text-sm`, `--leading-compact`, `--ease-out` e `--ease-spring`; o `--color-ink-muted` fica entre os seis do acervo) | A decisão (f) diz que ele não muda, e a (a) tira os apelidos. A sessão principal decide na etapa 11: manter esses quatro apelidos ou abrir exceção à (f) para trocar só os nomes |
@@ -894,7 +894,7 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
   - a técnica da camada com a troca de forma (5.2);
   - o `padding-inline` de 12 px abaixo de `sm`, para o grupo caber numa janela de 360 px;
   - o par da borda do stepper sobre as linhas brancas (4,48) e a isenção do contorno do grupo (1,11, [98]);
-  - a marcada em `primary` e o peso 500, agora **em aberto para o usuário** (§12 b e d);
+  - a marcada em `primary` e o peso 500, levados ao usuário, que decidiu os dois (§12 b e d);
 - os menores:
   - o modal do acervo (§11.4) e os pares de lá;
   - o `fieldset` com `min-inline-size: 0`;
