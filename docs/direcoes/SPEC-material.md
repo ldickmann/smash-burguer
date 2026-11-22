@@ -186,7 +186,7 @@ Todos são conferidos no passo final (§13). A assinatura de autoria (`src/compo
     - nenhum texto em inglês na interface;
     - preços sempre por `formatPrice` (`R$ 25,99`), com algarismos tabulares;
     - nenhum texto marcado `// provisório` chega ao build (§8.2).
-13. **Fidelidade à Home aprovada:** em 1440, 1024 e 390, a Home de `#/` mostra as seções do `docs/direcoes/desenho/material.json` (cinco desde a etapa 5a), na ordem, com o mesmo layout da referência viva (comparação de capturas).
+13. **Fidelidade à Home aprovada:** em 1440, 1024 e 390, a Home de `#/` mostra as seções do `docs/direcoes/desenho/material.json` (cinco desde a etapa 5a), na ordem, com o mesmo layout da referência viva (comparação de capturas). Exceção decidida pelo usuário na etapa 6 (desenho do Cardápio, 6.d): o nome do card comum fica em 500 na produção e em 400 na referência congelada; a conferência por capturas não mudou nenhum retângulo de seção nem quebrou nenhum nome em mais linhas.
 
 ---
 
@@ -211,7 +211,7 @@ O contraste da última coluna foi calculado com a fórmula de `src/direcoes/cont
 
 | Token | Valor | Uso | Contraste relevante |
 |---|---|---|---|
-| `--m3-primary` | `#3a693b` | Botão filled, split button, disco do hero, text button | on-primary 6,43:1; sobre surface 6,14:1 |
+| `--m3-primary` | `#3a693b` | Botão filled, split button, disco do hero, text button; na etapa 6, a categoria marcada do Cardápio (exceção à regra "primary só em ação", decidida pelo usuário) e a caixa marcada do checkbox dos ingredientes | on-primary 6,43:1; sobre surface 6,14:1 |
 | `--m3-on-primary` | `#ffffff` | Texto sobre primary; texto e anel dentro do disco do hero a partir de `md` | — |
 | `--m3-primary-hover` | `#4a754b` | Filled no hover (camada de 8% já composta) | on-primary 5,33:1 |
 | `--m3-primary-pressed` | `#4e784f` | Filled pressionado (camada de 10% já composta) | on-primary 5,09:1 |
@@ -249,9 +249,9 @@ O arquivo chama `sucesso`, `aviso` e `info` de "cores personalizadas harmonizada
 | Token | Valor | Uso | Contraste relevante |
 |---|---|---|---|
 | `--m3-surface` | `#f7fbf1` | Fundo da página, cabeçalho | on-surface 16,32:1; on-surface-variant 8,87:1 |
-| `--m3-surface-container-lowest` | `#ffffff` | Itens das listas segmentadas | on-surface 17,12:1; on-surface-variant 9,30:1 |
+| `--m3-surface-container-lowest` | `#ffffff` | Itens das listas segmentadas; no modal Personalizar (etapa 6), o prato do montador, o bloco dos ingredientes e as linhas dos adicionais | on-surface 17,12:1; on-surface-variant 9,30:1 |
 | `--m3-surface-container-low` | `#f1f5ec` | Contêineres das listas da Home | on-surface 15,50:1; on-surface-variant 8,42:1 |
-| `--m3-surface-container` | `#ebefe6` | Pílula da toolbar, rodapé, reserva de foto | on-surface 14,69:1; on-surface-variant 7,98:1 |
+| `--m3-surface-container` | `#ebefe6` | Pílula da toolbar, rodapé, reserva de foto, opções desmarcadas do grupo de categorias (etapa 6) | on-surface 14,69:1; on-surface-variant 7,98:1 |
 | `--m3-surface-container-high` | `#e6e9e0` | Folha de ingredientes; chips dos adicionais (etapa 5a) | on-surface 13,93:1; on-surface-variant 7,57:1 |
 | `--m3-surface-container-highest` | `#e0e4db` | Card do feed; fundo de campo (apelido `--color-input`) | on-surface 13,28:1; on-surface-variant 7,21:1 |
 | `--m3-on-surface` | `#181d17` | Texto principal, títulos, preços | — |
@@ -372,7 +372,7 @@ Tipografia, raios, elevação e curvas estão nas próximas seções.
 | headline-m | `--m3-headline-m`, `-linha` | 1.75rem (28) | 2.25rem (36) | 400 | `h2` "Hambúrgueres" a partir de `md`; nome do destaque em `xl` (500) |
 | headline-s | `--m3-headline-s`, `-linha` | 1.5rem (24) | 2rem (32) | 400 | `h2` das listas; `h2` do feed no celular; nome do destaque (500) |
 | title-l | `--m3-title-l`, `-linha` | 1.375rem (22) | 1.75rem (28) | 500 | Marca no cabeçalho e no rodapé; preço do destaque |
-| title-m | `--m3-title-m`, `-linha` | 1rem (16) | 1.5rem (24) | 500 | Preço, botão M, `h3` dos grupos |
+| title-m | `--m3-title-m`, `-linha` | 1rem (16) | 1.5rem (24) | 500 | Preço, botão M, `h3` dos grupos, nome do card comum (title-l a partir de `md`) e títulos das seções do modal |
 | body-l | `--m3-body-l`, `-linha` | 1rem (16) | 1.5rem (24) | 400 | Texto do hero, nome dos itens das listas |
 | body-m | `--m3-body-m`, `-linha` | 0.875rem (14) | 1.25rem (20) | 400 | Descrições, ingredientes, descrição do rodapé |
 | body-s | `--m3-body-s`, `-linha` | 0.75rem (12) | 1rem (16) | 400 | Linha de direitos |
@@ -383,7 +383,7 @@ Tipografia, raios, elevação e curvas estão nas próximas seções.
 **Regras:**
 - **O mixin `tipo($papel, $peso: 400)`** aplica família, tamanho, entrelinha e peso de um papel. Nenhuma folha escreve tamanho de fonte fora da escala.
 - **O peso 500 do display é escolha da Home** (ficha, tipografia); os estilos enfatizados do Expressive [15] não viraram tokens.
-- **O nome do card comum** ficou em `title-m`/`title-l` com peso 400 no código (`tipo(title-m)`), e o M3 dá title em Medium [1]: conferir na revisão visual da etapa 6 (§12).
+- **O nome do card comum** fica em `title-m`/`title-l` com peso 500 (`tipo(title-m, 500)`), o Medium que o M3 dá ao title [1]: decisão do usuário na etapa 6 (desenho do Cardápio, 6.d), também na Home de `#/`. A referência congelada `#/direcoes/material` continua em 400 (exceção registrada na §1.1, item 13).
 - **Papéis sem token:** headline-l 32/40 [1] existe só como `--text-2xl: 2rem`; title-s 14/20 [1] é feito com label-l em 500 (título da folha).
 - **Espaçamento entre letras** (hoje escrito nas parciais): `0.00625rem` nos botões e na pílula a partir de `md`; `0.03125rem` no body-l do hero e no label-m da pílula; `0.015625rem` na descrição do card; `-0.015625rem` no display-l; `0` nos outros displays. Recomendação: virar tokens `--m3-<papel>-tracking` na etapa 2, com os mesmos valores.
 - **Algarismos tabulares** (`.tabular`) em preço, total, quantidade, contador e badge; `font-synthesis: none` no título do hero; os controles herdam a fonte (`font: inherit`), como no reset atual.
@@ -581,7 +581,7 @@ Props copiadas do código. A produção recebe **cópias** dos componentes, das 
   | `retorno` (novo) | face "Adicionado" | Vem do `M3Botao` |
   | `iconOnly` | botão de ícone redondo de 44 px | **a desenhar** (sem fonte de icon button nos dossiês) |
   | `loading` | spinner atual, na forma M3 | **a desenhar** (§6) |
-  | `pressed` | toggle | O grupo conectado troca a forma do selecionado [54] |
+  | `pressed` | toggle | Sem uso desde a etapa 6: o grupo de categorias passou a rádios nativos num `fieldset` (desenho do Cardápio, 6.b). A etapa 10 decide se a prop fica |
 
 - **Troca de forma:** ao pressionar, o canto diminui [17][18][19][54], por opacidade entre camadas (`troca-de-forma`).
 
@@ -663,7 +663,7 @@ Os dossiês não cobrem todos os componentes do M3. Onde não há fonte, a forma
 | Componente atual | Forma M3 correspondente | Fonte | Estado |
 |---|---|---|---|
 | `ui/QuantityStepper.vue` | Dois botões de ícone tonal redondos de 44 px e o número em title-m tabular. Sem o button group padrão, que comprime os vizinhos do botão pressionado [54] e arrisca o alvo mínimo [78] | [54], [78] | **a desenhar** |
-| `ui/CategoryTabs.vue` | Button group conectado: substitui os segmented buttons, com seleção única (papel de rádio no exemplo do Compose), formas de início, meio e fim e troca de forma no selecionado [54] | [54], [60] | **a desenhar**. O padrão de rádio da APG não foi aberto na pesquisa (dossiê, "Riscos"): fica o `aria-pressed` de hoje até lá |
+| `ui/CategoryTabs.vue` | Button group conectado: substitui os segmented buttons, com seleção única (papel de rádio no exemplo do Compose), formas de início, meio e fim e troca de forma no selecionado [54] | [54], [60], [93], [100] | Desenhado e construído na etapa 6 (`docs/direcoes/desenho/cardapio.md`, §5.2): rádios nativos num `fieldset` com `legend` (sai o `aria-pressed`), marcada em pílula `primary` (decisão do usuário), desmarcadas em `surface-container`, 44 px, vão de 2 px e anel por dentro |
 | `ui/AppToast.vue` | A ficha o chama de snackbar, mas **não encontrei** fonte de snackbar nos dossiês. Recomendação: `inverse-surface` com `inverse-on-surface` (11,54:1), sem a borda colorida da Brasa | — | **a desenhar** (pesquisa antes) |
 | `ui/EmptyState.vue` | **Não encontrei** componente de estado vazio nos dossiês. Recomendação: ícone em `on-surface-variant`, título title-l 500, texto body-m `on-surface-variant` e a ação como botão filled M | — | **a desenhar** |
 | `ui/BaseDialog.vue` | **Não encontrei** fonte de diálogo nos dossiês. Pelos apelidos, já fica `surface-container`, `forma-xl` (28), `elevacao-3` e `scrim` | — | **a desenhar** (pesquisa antes); comportamento igual (`showModal()`, foco, Esc) |
@@ -673,8 +673,8 @@ Os dossiês não cobrem todos os componentes do M3. Onde não há fonte, a forma
 | `OrderSummary.vue` | Recomendação: contêiner `surface-container-low` de canto 28, como as listas da Home | [66], [26] | **a desenhar** |
 | `CartBadge.vue` | Badge do FAB da `M3BarraFerramentas`: badge grande do M3 [35], 16 px, cor de erro | [35] | Pronto (vem da Home) |
 | `ProductCard.vue` (`admin`) | Filled card [63] com o slot de ações | [63] | **a desenhar** com o admin |
-| `IngredientsList.vue`, `AdditionalsList.vue` | Checkbox e linhas do modal. **Não encontrei** fonte de checkbox nos dossiês | — | **a desenhar** com o modal (§5.4) |
-| `BannerComponent.vue` (`page`) | Recomendação: título e frase sem foto atrás, porque o texto nunca fica sobre a foto na Home [H5] | [H5] | **a desenhar** com o Cardápio |
+| `IngredientsList.vue`, `AdditionalsList.vue` | Linhas de checkbox do M3 [113] num bloco branco, com a linha de 48 px como alvo [111], e lista segmentada dos adicionais [66][81] | [66], [81], [111], [113] | Desenhado e construído na etapa 6 (desenho do Cardápio, §5.5.2 e §5.5.3) |
+| `BannerComponent.vue` (`page`) | Recomendação: título e frase sem foto atrás, porque o texto nunca fica sobre a foto na Home [H5] | [H5] | Decidido na etapa 6 (desenho do Cardápio, 6.a): o banner sai do Cardápio, que passa a um cabeçalho de texto; o componente fica sem uso e sai na etapa 11 (§4.4) |
 | Admin (`SidebarAdmin`, `TheNavbarAdmin`, `AdminCard`, `ModalProducts`) | **Não encontrei** navigation drawer nem rail nos dossiês; a navigation bar serve de três a cinco destinos em janelas compactas [61]. `AdminCard` vira filled card [63] | [61], [63] | **a desenhar** |
 
 ### 4.3 Arquivos alterados
@@ -723,7 +723,7 @@ O CLAUDE.md descreve a Brasa (`SPEC.md`, tokens, assinatura, chaves). Atualizá-
 Removidos no fim (§12, etapa 11), depois de não haver mais referências:
 - **Moldura da Brasa:** `src/components/layout/TheNavbar.vue`, `TheFooter.vue`, `TheFooterContactInfo.vue`, `TheFooterSocialMediaLinks.vue` e as folhas `_navbar.scss`, `_footer.scss`, `_footer-contact.scss` e `_footer-social.scss`.
 - **Carrinho na navbar:** `src/components/CartBadge.vue` e `_cart-badge.scss`.
-- **Home da Brasa:** `src/components/CarouselBurguer.vue` e `_carousel.scss`. O `BannerComponent.vue` e o `_banner.scss` só saem se o desenho do Cardápio (§5.3) tirar o banner; senão, sai só a variante `hero` (e o `BannerComponent.test.js` muda).
+- **Home da Brasa:** `src/components/CarouselBurguer.vue` e `_carousel.scss`. O `BannerComponent.vue`, o `_banner.scss`, o `BannerComponent.test.js` e o `--gradient-scrim` também saem: o desenho do Cardápio tirou o banner (etapa 6). A imagem `banner-burger-black` fica.
 - **Card da Brasa:** `src/components/ProductCard.vue` e `_product-card.scss`, depois do admin; `src/composables/useTilt.js`.
 - **Montador:** `src/components/BurgerStack.vue`, só se a decisão (f) o tirar.
 - **Tokens sem uso:** `--color-sheen`, `--glow-hero`, `--glow-accent`, `--underline-active`, `--dur-stagger` e, se o banner sair, `--gradient-scrim`; os apelidos pela decisão (a).
@@ -763,7 +763,9 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 - **Modal:** a `HomeView` mantém o `useProductModal` e o `ModalAdditional` e faz o `provide` do `personalizar` para as seções. Nenhuma seção chama o `cartStore` nem calcula preço (contrato da Home).
 - **Reservas** (desenho, §5): cardápio vazio, produto sem ingredientes, imagem `data:`, imagem que falha e nome longo, como na Home.
 
-### 5.3 Cardápio — a desenhar
+### 5.3 Cardápio — desenhado na etapa 6
+
+- **Desenho e construção (etapa 6):** `docs/direcoes/desenho/cardapio.md`, §5.1 a §5.4. O banner saiu; o grupo usa rádios nativos num `fieldset` (sai o `aria-pressed`), com a marcada em pílula `primary` (decisão do usuário); a região da grade é nomeada por um `h2` escondido; a folha fecha ao trocar de categoria; o nome do card fica em 500 (decisão do usuário); e o `scroll-padding-top` da rota soma o grupo grudado (`--m3-categorias-altura`) e, a partir de `lg`, o cabeçalho.
 
 - **Recomendação:**
   - título "Cardápio" e a frase "Escolha, personalize e peça." sem foto atrás (o texto nunca fica sobre a foto [H5]);
@@ -772,9 +774,10 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
   - categoria vazia com `EmptyState` "Nada nesta categoria por enquanto".
 - **Fica do `SPEC.md`:** a categoria inteira à vista, sem paginação, e o acesso ao carrinho pelo FAB.
 
-### 5.4 Modal "Personalizar" — a desenhar
+### 5.4 Modal "Personalizar" — desenhado na etapa 6
 
-- **Hoje, em M3:** o layout da Brasa (`BaseDialog`, `BurgerStack`, ingredientes, adicionais, observação, CTA "Adicionar · R$ x"), com as cores M3 pelos apelidos. É assim que ele aparece na Home aprovada.
+- **Desenho e construção (etapa 6):** `docs/direcoes/desenho/cardapio.md`, §5.5. O montador fica sobre um prato `surface-container-lowest`, e a foto vira `M3Foto` 4:3; os ingredientes viram linhas de checkbox do M3 e os adicionais, lista segmentada; o CTA filled M e o "·" ficam. O `BaseDialog`, o `QuantityStepper` e o `EmptyState` são da etapa 10, e o `FormGroup`, da etapa 8.
+- **Antes da etapa 6:** o layout da Brasa (`BaseDialog`, `BurgerStack`, ingredientes, adicionais, observação, CTA "Adicionar · R$ x"), com as cores M3 pelos apelidos. É assim que ele aparece na Home aprovada.
 - **Recomendação:** desenhar o modal pela decisão (f), mantendo o fluxo e os textos da §5.4 do `SPEC.md`. O CTA vira filled M (`size="lg"`). Ao confirmar, o foco volta para a frente do split que abriu o modal, que mostra o retorno "Adicionado" (§7.6).
 
 ### 5.5 Carrinho — a desenhar
@@ -846,7 +849,7 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 | Item segmentado (link) | `surface-container-lowest`; ícone em `secondary-container` | camada 8% | anel interno | camada 10% | — | — | — |
 | Item segmentado (informação) | igual, ícone em `tertiary-container` | — | não recebe foco | — | — | — | — |
 | Item de lista (produto) | `surface-container-lowest`, sem hover próprio | — | no botão | — | — | — | imagem que falha: ícone `utensils` |
-| `CategoryTabs` | **a desenhar** (grupo conectado [54]) | camada | anel | troca de forma [54] | `aria-pressed` | — | — |
+| `CategoryTabs` (etapa 6) | grupo conectado [54]: desmarcada em `surface-container` / `on-surface-variant`; marcada em pílula `primary` / `on-primary` | camada no fundo composto | anel interno no `label` (`on-primary` na marcada) | troca de forma por opacidade [54] | `checked` nativo; pílula inteira | — | — |
 | `QuantityStepper` | **a desenhar** | via botão | via botão | via botão | — | no limite: `disabled` real | — |
 | `FormGroup` | fundo `surface-container-highest`, borda `outline` | **a desenhar** | borda `primary` + anel com `outline-offset: 0` | — | — | prop `disabled`/`readonly` | ajuda com spinner (CEP) |
 | `PaymentMethodPicker` | **a desenhar** | camada | anel no item (`:has(:focus-visible)`) | camada 10% | `secondary-container` + check | — | — |

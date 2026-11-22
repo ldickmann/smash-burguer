@@ -911,6 +911,12 @@ src/utils/textosLoja.js                      só o comentário de origem do FRAS
 - **12 b:** decidido pelo usuário em 22/11/2026: verde `primary`;
 - **12 d:** peso 500 no nome do card, também na Home. A 6.e (descrição sem folha) foi aceita pela sessão principal.
 
+**Construção (sessão C, 22/11/2026):**
+- **Peso 500 (5.3):** na Home e nas três categorias do Cardápio, em 1440, 1024 e 390, nenhum nome ganhou linha, e os retângulos das 5 seções da Home e a altura dos cards ficaram iguais com 500 e com 400; contra a referência congelada, 0 px de diferença. Não foi preciso voltar a 400.
+- **Prato branco (§11):** a maionese aparece como faixa branca entre a carne e o pão, delimitada por elas; o ovo fica sob o queijo nesse ângulo, como antes.
+- **Ajustes do construtor:** as variáveis dos cantos dos adicionais usam o nome do `M3ItemLista` (`--m3-item-canto-*`), que a busca da §13.2 do SPEC-M aceita; o prato e o bloco dos ingredientes ficam sem borda nos modos de contraste, que o desenho pede só na caixa e nas opções do grupo; no `fieldset` dos ingredientes, o vão de `--space-1` até a ajuda vem da margem da `legend`, que não é item do flex.
+- **Foco não coberto (§4):** o `keyboard.mjs` confere em 1440, 390 e 360; com o `scroll-padding-top` da rota anulado, 8 de 12 focos ficam inteiros sob as barras em 1440.
+
 **Pendências de outras etapas:**
 - **Etapa 10:** a prop `pressed` sem uso; os pares do modal se a superfície do diálogo mudar.
 - **Etapa 11:** os apelidos que o `BurgerStack` lê (§11).
