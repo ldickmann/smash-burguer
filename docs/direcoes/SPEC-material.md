@@ -134,6 +134,9 @@ Todas foram respondidas; em todas, o usuário seguiu a recomendação deste SPEC
   - Nenhum conteúdo real passou no teste do carrossel: as 11 fotos de produto já estão na Home (desenho, §5.6).
   - Nenhuma outra candidata viável do catálogo é nova na Home.
   - O usuário escolheu ficar com **5 seções**. O carrossel volta só quando houver fotos reais que não sejam de produto, com a técnica da §5.6 do desenho, feita à mão.
+- **Resultado da construção (etapa 5a, sessão C, 21/11/2026):**
+  - o chip usa a reserva neutra do desenho (`surface-container-high`, nome em `on-surface`, acréscimo em `on-surface-variant`). Em `tertiary-container`, ele parecia um filter chip selecionado na captura parada em 390 (crítico, rodada 1);
+  - o `h2` da produção é "Adicionais", o título da seção do modal onde esses itens se escolhem (UX copy, §8.2; escolha do usuário). A referência fica com "Monte o seu", provisório.
 
 **Git.**
 - A `feature/direcoes-homes` vai para a `develop` por PR antes da implementação, com a `origin/develop` mergeada de novo antes.
@@ -249,7 +252,7 @@ O arquivo chama `sucesso`, `aviso` e `info` de "cores personalizadas harmonizada
 | `--m3-surface-container-lowest` | `#ffffff` | Itens das listas segmentadas | on-surface 17,12:1; on-surface-variant 9,30:1 |
 | `--m3-surface-container-low` | `#f1f5ec` | Contêineres das listas da Home | on-surface 15,50:1; on-surface-variant 8,42:1 |
 | `--m3-surface-container` | `#ebefe6` | Pílula da toolbar, rodapé, reserva de foto | on-surface 14,69:1; on-surface-variant 7,98:1 |
-| `--m3-surface-container-high` | `#e6e9e0` | Folha de ingredientes | on-surface 13,93:1; on-surface-variant 7,57:1 |
+| `--m3-surface-container-high` | `#e6e9e0` | Folha de ingredientes; chips dos adicionais (etapa 5a) | on-surface 13,93:1; on-surface-variant 7,57:1 |
 | `--m3-surface-container-highest` | `#e0e4db` | Card do feed; fundo de campo (apelido `--color-input`) | on-surface 13,28:1; on-surface-variant 7,21:1 |
 | `--m3-on-surface` | `#181d17` | Texto principal, títulos, preços | — |
 | `--m3-on-surface-variant` | `#424940` | Texto secundário, descrições, rótulos da pílula | — |
@@ -946,10 +949,13 @@ O `src/direcoes/estilos/material/textos.js` marca cada texto com `// provisório
 |---|---|---|---|
 | `ingredientes` | "Ingredientes" | Título da folha; começo de "Ingredientes de <nome>" | Tirar a marca: já é o título da seção do modal (`ModalAdditional.vue`) |
 | `vazio` | "Nada nesta categoria por enquanto" | Feed e listas vazias | Tirar a marca: é o título do `EmptyState` do `MenuView` |
-| `adicional` / `adicionais` | "adicional" / "adicionais" | "7 adicionais" na sobremesa (contagem calculada) | Revisar: o modal usa o título "Adicionais", e a contagem é nova |
+| `adicional` / `adicionais` | "adicional" / "adicionais" | "7 adicionais" na sobremesa (contagem calculada) | Saíram na etapa 5a: a linha repetia os chips de `monte-o-seu`, logo acima |
 | `ondeTitulo` | "Onde e quando" | `h2` da seção `onde` | Revisar: texto novo |
 | `email` | "E-mail" | Título do item de contato | Tirar a marca: é o rótulo de todos os formulários |
 | `whatsapp` | "WhatsApp" | Título do item de contato | Tirar a marca: é o `CONTATOS[whatsapp].rotulo` e o rótulo visível do rodapé atual |
+| `monteTitulo` (5a) | "Monte o seu" | `h2` de `monte-o-seu` | Na produção, "Adicionais": o título da seção do modal onde esses itens se escolhem; "Monte o seu" prometia montar o lanche do zero (escolha do usuário, 21/11/2026) |
+| `monteLanche` (5a) | "No hambúrguer" | `h3` dos adicionais de lanche | Tirar a marca: o rótulo "Hambúrgueres" incluiria a Batata Frita, sem adicionais |
+| `monteSobremesa` (5a) | "Na sobremesa" | `h3` dos adicionais de sobremesa | Tirar a marca |
 
 ### 8.3 Proibidos
 

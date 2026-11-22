@@ -1563,3 +1563,19 @@ A Home foi aprovada pelo crítico na rodada 3 (notas 4, 4, 4, 4, 5 e 4; a v1 som
 - **Onde:** o WhatsApp mostra o rótulo e o `TELEFONE` separados, sem o "·" (o `dados.js` passou a exportar `ENDERECO`, `TELEFONE` e `EMAIL`); o ícone de link externo aparece em todas as larguras.
 - **Tokens novos além dos previstos:** `--m3-atraso-prensa` (atraso do disco, porque nenhuma duração é escrita direto) e propriedades locais para repintar o conteúdo da prensa.
 - **Menores que ficaram:** a linha de direitos do rodapé ainda junta textos com "·" (é o texto real do `RODAPE.copyright`); no cookie do destaque, o prato claro da foto encosta no fundo do card nos lobos de baixo.
+
+### Etapa 5a: construção de `monte-o-seu` (sessão C, 21/11/2026)
+
+A seção foi construída na referência, passou nos portões e no crítico e foi copiada para a produção (`src/components/home/M3SecaoMonte.vue`), com 0 px de diferença nos retângulos das 5 seções em 1440, 1024 e 390.
+
+- **Portões:** `passou: true` nas duas rodadas (P1 a P17).
+- **Crítico, rodada 1 (não aprovou):** notas 4, 4, 4, 3, 5 e 4 (soma 24).
+  - **Importante:** na captura parada em 390, o chip em `tertiary-container` cheio parecia um filter chip selecionado: tinha a medida do chip interativo do M3 (32 px, canto 8), e o "+" se lia como "adicionar". Era também o bloco mais vistoso entre o feed e a faixa, mais forte que o "Ver cardápio", o único alvo da seção.
+  - **Menor:** em 1440, os chips de lanche quebram em 4 + 1, a mesma quebra da régua do `painel` do neumorfismo. Quem separa as duas são os contêineres dos chips.
+- **O que mudou:** entrou a reserva da seção 11 e da §7.12. O fundo passou a `--m3-surface-container-high`, o nome a `--m3-on-surface` e o acréscimo a `--m3-on-surface-variant`. A forma, a altura e a falta de estado continuam iguais.
+  - Os pares do chip são os da folha de ingredientes (13,93:1 e 7,57:1).
+  - O par `on-tertiary-container` sobre `tertiary-container` voltou a 3, só para o ícone do horário: a subida para 4,5 (seção 8, "Etapa 5a") servia ao texto do chip em `tertiary-container`, que não existe mais.
+- **Crítico, rodada 2 (aprovou):** notas 4, 4, 4, 4, 5 e 4 (soma 25), sem bloqueante e sem importante. Os dois problemas da rodada 1 foram resolvidos. O chip neutro se lê como etiqueta de informação, continua um contêiner visível sobre a superfície e não parece um card do feed. O "Ver cardápio" passou a ser o único elemento com cor na seção.
+- **Medidas** (dev, as mesmas nas duas rodadas): em 1440, a seção vai de 1.741 a 2.049 px, com 2 e 3 linhas de chips, e os grupos ficam em x 152 (649 px) e 825 (463 px), iguais às colunas da faixa; em 1024, 2 e 4 linhas; em 800, empilhados, com 2 e 2; em 390, empilhados, com 3 e 4, de 2.099 a 2.615 px. As estimativas da §3 e da §5.5 se confirmaram.
+- **Textos (UX copy):** na produção, o `h2` é "Adicionais", o título da seção do modal onde esses itens se escolhem. "Monte o seu" prometia montar o lanche do zero, e o usuário escolheu a troca. "No hambúrguer" e "Na sobremesa" ficaram. A referência continua com os três provisórios, como o "Onde e quando".
+- **Removido:** as chaves `adicional` e `adicionais` saíram do `textos.js` e do `textosLoja.js`, porque ficaram sem uso. O `contar` fica no `compartilhado/` (o esqueumorfismo usa) e no `useCardapio.js` da produção (cópia; a limpeza decide).
