@@ -17,7 +17,9 @@ console.log('=== §5.4 seções do modal');
   const page = await ctx.newPage();
   await go(page, '#/menu');
   for (const [tab, name, expected] of [[null, 'Cheese Bacon', true], [null, 'Batata Frita', false], ['Sobremesas', 'Sorvete de Pote', true], ['Bebidas', 'Coca Cola Lata', false]]) {
-    if (tab) await page.getByRole('button', { name: tab, exact: true }).click();
+    // As categorias são rádios nativos escondidos (desenho do Cardápio, §5.2): o rótulo fica por cima,
+    // e o force clica no ponto (o label) e confere que o rádio ficou marcado
+    if (tab) await page.getByRole('radio', { name: tab, exact: true }).check({ force: true });
     await page.getByRole('button', { name: `Adicionar ${name}` }).click();
     await page.waitForTimeout(450);
     const s = await page.evaluate(() => ({ ing: !!document.querySelector('dialog[open] #ingredientes-titulo, dialog[open] .ingredients-list'), add: !!document.querySelector('dialog[open] .additionals-list'), qty: !!document.querySelector('dialog[open] #quantidade-titulo') }));
@@ -26,8 +28,6 @@ console.log('=== §5.4 seções do modal');
     await page.keyboard.press('Escape');
     await page.waitForTimeout(250);
   }
-  // Batata sem adicionais: o item entra no carrinho limpo
-  await page.getByRole('button', { name: 'Destaques', exact: true }).click().catch(() => {});
   await ctx.close();
 }
 
@@ -39,7 +39,7 @@ for (const reduce of [true, false]) {
   await go(page, '#/menu');
   const props = await page.evaluate(() => {
     const out = {};
-    for (const sel of ['.btn', '.m3-pilula__item', '.category-tabs .btn', '.product-card', '.add-btn__inner', 'a']) {
+    for (const sel of ['.btn', '.m3-pilula__item', '.category-tabs__opcao', '.m3-cartao', '.m3-dividido__frente', 'a']) {
       const el = document.querySelector(sel); if (!el) continue;
       const s = getComputedStyle(el); out[sel] = `${s.transitionProperty} ${s.transitionDuration}`;
     }

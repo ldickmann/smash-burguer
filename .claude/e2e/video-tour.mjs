@@ -63,6 +63,8 @@ const page = await ctx.newPage();
 
 const wait = (ms) => page.waitForTimeout(ms);
 const caption = (text) => page.evaluate((t) => window.__caption?.(t), text);
+// As categorias do Cardápio são rádios nativos escondidos (etapa 6): o toque e o clique vão no rótulo
+const categoria = (nome) => page.locator('.category-tabs__opcao', { has: page.getByRole('radio', { name: nome, exact: true }) });
 const press = async (locator) => {
   await locator.scrollIntoViewIfNeeded();
   await wait(250);
@@ -124,11 +126,11 @@ if (isPhone) {
   await wait(1200);
   await caption('Cardápio');
   await scrollBy(420, 1200);
-  await press(page.getByRole('button', { name: 'Bebidas', exact: true }));
+  await press(categoria('Bebidas'));
   await wait(1100);
-  await press(page.getByRole('button', { name: 'Sobremesas', exact: true }));
+  await press(categoria('Sobremesas'));
   await wait(1100);
-  await press(page.getByRole('button', { name: 'Hambúrgueres', exact: true }));
+  await press(categoria('Hambúrgueres'));
   await wait(1000);
 
   // 3. Personalizar o burger (montador 3D)
@@ -149,12 +151,12 @@ if (isPhone) {
   await page.locator('dialog[open] textarea').tap();
   await page.keyboard.type('Bem passado', { delay: 90 });
   await wait(700);
-  await caption('Adicionar: botão gira e o contador do carrinho anima');
+  await caption('Adicionar: o retorno "Adicionado" e o badge do carrinho');
   await press(page.locator('dialog[open] .dialog__footer button'));
   await wait(2400);
 
   // 4. Bebida com quantidade
-  await press(page.getByRole('button', { name: 'Bebidas', exact: true }));
+  await press(categoria('Bebidas'));
   await wait(900);
   await press(page.getByRole('button', { name: 'Adicionar Coca Cola Lata' }));
   await wait(1000);
@@ -209,12 +211,12 @@ if (isPhone) {
   await wait(1800);
   await scrollTour(450, 950);
 
-  // 2. Cardápio: tilt no hover, personalizar e flip
+  // 2. Cardápio: o card do M3 (sem tilt), personalizar e o retorno "Adicionado"
   await press(page.getByRole('link', { name: 'Cardápio' }).first());
   await wait(1200);
-  await caption('Cardápio: o card inclina com o mouse');
+  await caption('Cardápio: os cards do M3, sem reação ao mouse');
   await scrollBy(380, 1100);
-  const card = page.locator('.product-card').nth(1);
+  const card = page.locator('.m3-cartao').nth(1);
   const b = await card.boundingBox();
   for (const [x, y] of [[0.15, 0.15], [0.85, 0.2], [0.85, 0.85], [0.15, 0.8], [0.5, 0.5]]) {
     await page.mouse.move(b.x + b.width * x, b.y + b.height * y, { steps: 25 });
