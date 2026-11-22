@@ -28,6 +28,13 @@ const CART = { items: [ORDER.items[0]] };
 const ADMIN = { firstName: 'Admin', lastName: 'User', email: 'admin@example.com', password: 'Demo1234', role: 'admin' };
 
 const LOGGED = { user: SESSION, 'smash-burger:session': SESSION, 'smash-burger:account': USER, 'smash-burger:cart:v1': CART, cart: CART };
+
+// Cardápio (desenho do Cardápio, §9): as categorias são rádios nativos escondidos sob o rótulo (o force
+// clica no label e confere que o rádio ficou marcado), e cada estado confere o seletor estável dele antes
+// do axe, para não medir a tela errada
+const marcar = async (p, nome) => { await p.getByRole('radio', { name: nome, exact: true }).check({ force: true }); await p.waitForTimeout(200); };
+const exigir = async (p, seletor, estado) => { if (!(await p.locator(seletor).count())) throw new Error(`${estado}: o estado não abriu (${seletor})`); };
+const abrirModal = async (p, nome) => { await p.getByRole('button', { name: `Adicionar ${nome}`, exact: true }).click(); await p.waitForTimeout(600); };
 const SCENARIOS = {
   loja: [
     { name: 'home', hash: '#/' },
@@ -47,8 +54,32 @@ const SCENARIOS = {
       },
     },
     { name: 'menu', hash: '#/menu' },
-    { name: 'modal-burger', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Adicionar Cheese Bacon' }).click(); await p.waitForTimeout(600); } },
-    { name: 'modal-bebida', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Bebidas' }).click(); await p.getByRole('button', { name: 'Adicionar Copo de Refrigerante' }).click(); await p.waitForTimeout(600); } },
+    { name: 'menu-bebidas', hash: '#/menu', full: true, act: async (p) => { await marcar(p, 'Bebidas'); await exigir(p, '.category-tabs input[value="drinks"]:checked', 'menu-bebidas'); } },
+    {
+      name: 'menu-vazio', hash: '#/menu', full: true, act: async (p) => {
+        // Sobremesas esvaziadas na store (salva no navegador, como o painel salva) e a página recarregada
+        await p.evaluate(() => { const s = document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('products'); s.menuItems = { foods: [...s.foods], drinks: [...s.drinks], desserts: [] }; s.loadedCategories = ['foods', 'drinks', 'desserts']; });
+        await p.waitForTimeout(300);
+        await p.reload();
+        await p.waitForLoadState('networkidle').catch(() => {});
+        await p.waitForTimeout(300);
+        await marcar(p, 'Sobremesas');
+        await exigir(p, '.menu-page__regiao .empty-state', 'menu-vazio');
+      },
+    },
+    { name: 'menu-folha', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Ingredientes de Cheese Bacon', exact: true }).click(); await p.waitForTimeout(600); await exigir(p, '#m3-ingredientes-1:visible', 'menu-folha'); } },
+    { name: 'modal-burger', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await exigir(p, 'dialog[open] .burger-stack', 'modal-burger'); } },
+    { name: 'modal-bebida', hash: '#/menu', act: async (p) => { await marcar(p, 'Bebidas'); await abrirModal(p, 'Copo de Refrigerante'); await exigir(p, 'dialog[open] #quantidade-titulo', 'modal-bebida'); } },
+    {
+      name: 'modal-sobremesa', hash: '#/menu', act: async (p) => {
+        await marcar(p, 'Sobremesas');
+        await abrirModal(p, 'Sorvete de Pote');
+        await exigir(p, 'dialog[open] .additionals-list', 'modal-sobremesa');
+        if (await p.locator('dialog[open] .burger-stack').count()) throw new Error('modal-sobremesa: o montador apareceu na sobremesa');
+      },
+    },
+    { name: 'modal-ingrediente-removido', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.locator('dialog[open] .ingredients-list__label', { hasText: 'Tomate' }).click(); await p.waitForTimeout(300); await exigir(p, 'dialog[open] .ingredients-list__label.is-removed', 'modal-ingrediente-removido'); } },
+    { name: 'modal-adicional', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.getByRole('button', { name: 'Aumentar Bacon' }).click(); await p.waitForTimeout(400); const bacon = await p.locator('dialog[open] .additionals-list .stepper__value').first().textContent(); if (bacon.trim() !== '1') throw new Error(`modal-adicional: o Bacon ficou em "${bacon.trim()}"`); } },
     { name: 'cart-vazio', hash: '#/cart' },
     { name: 'cart-itens', hash: '#/cart', storage: { 'smash-burger:cart:v1': CART } },
     { name: 'payment', hash: '#/payment', storage: LOGGED },

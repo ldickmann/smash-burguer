@@ -2,10 +2,15 @@
      comum (foto 4:3 com canto 28) ou destaque (foto quadrada no cookie, na horizontal a partir de md).
      Sem sombra e sem hover: só os botões reagem. "Adicionar" abre o modal Personalizar real; a metade
      de trás abre a folha de ingredientes do próprio produto. Substitui o ProductCard menu e compact.
+     Sem ingredientes não há folha, e a descrição aparece também abaixo de md (m3-cartao--sem-folha,
+     desenho do Cardápio, 6.e).
      No destaque, a camada dos lobos (§10.3) fica atrás da foto: o prato claro da foto encostava no
      fundo do card, e os lobos de baixo sumiam. A referência não tem a camada (decisão e). -->
 <template>
-  <article class="m3-cartao" :class="{ 'm3-cartao--destaque': destaque, 'is-aberto': aberto }">
+  <article
+    class="m3-cartao"
+    :class="{ 'm3-cartao--destaque': destaque, 'm3-cartao--sem-folha': !ingredientes.length, 'is-aberto': aberto }"
+  >
     <div v-if="destaque" class="m3-cartao__cookie">
       <span class="m3-cartao__lobos" aria-hidden="true"></span>
       <M3Foto

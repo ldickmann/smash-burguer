@@ -1,5 +1,8 @@
 /* global process */
 // §13.5 Teclado: só Tab, Shift+Tab, Enter, Espaço, setas e Esc (SPEC-material §13.5 e §13.3, item 6).
+// No Cardápio (etapa 6): o grupo de categorias com rádios nativos (uma parada no Tab, setas que marcam e
+// a volta do último ao primeiro), o foco não coberto pelo grupo grudado e pelo cabeçalho (1440, 390 e
+// 360) e o grupo numa linha em 360 px.
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 // Altura das telas da checagem do foco não coberto (padrão 844, a da matriz da §13.3)
@@ -79,6 +82,41 @@ async function focusNotCovered(page, label, max = 150) {
   check(touching.length === 0, `${label}: a reserva do pé deixa todos os focos fora da toolbar`, touching.join(' | '));
 }
 
+// Desenho do Cardápio, §4 (2.4.11, decisão j): com o grupo de categorias grudado (e, a partir de lg, o
+// cabeçalho sticky), o foco que volta pelos cards com Shift+Tab nunca fica inteiro sob as barras fixas
+// do topo, nem encosta nelas. Mede o retângulo com o anel
+async function focoSobAsBarras(page, label) {
+  await page.goto(BASE + '#/menu');
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(250);
+  await page.locator('.menu-page__grade .m3-dividido__frente').last().focus();
+  const cobertos = [];
+  const encostados = [];
+  let n = 0;
+  for (let i = 0; i < 60; i++) {
+    await page.keyboard.press('Shift+Tab');
+    const r = await page.evaluate(() => {
+      const el = document.activeElement;
+      if (!document.querySelector('.menu-page__grade')?.contains(el)) return { fim: true };
+      const s = getComputedStyle(el);
+      const anel = s.outlineStyle === 'none' ? 0 : Math.max(0, parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset));
+      const b = el.getBoundingClientRect();
+      const barras = [document.querySelector('.category-tabs')];
+      const cabecalho = document.querySelector('.m3-cabecalho');
+      if (cabecalho && getComputedStyle(cabecalho).position === 'sticky') barras.push(cabecalho);
+      const limite = Math.max(...barras.map((x) => x.getBoundingClientRect().bottom));
+      const nome = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 30);
+      return { nome, inteiro: b.bottom + anel <= limite, encosta: b.top - anel < limite };
+    });
+    if (r.fim) break;
+    n++;
+    if (r.inteiro) cobertos.push(r.nome);
+    if (r.encosta) encostados.push(r.nome);
+  }
+  check(n > 5 && cobertos.length === 0, `${label}: voltando pelos ${n} focos da grade, nenhum fica inteiro sob as barras do topo`, cobertos.join(' | '));
+  check(encostados.length === 0, `${label}: e nenhum encosta nelas (scroll-padding-top da rota)`, encostados.join(' | '));
+}
+
 async function tabAll(page, label, max = 60) {
   const seen = new Set();
   const bad = [];
@@ -139,6 +177,38 @@ for (const w of [1440, 390]) {
   await page.goto(BASE + '#/menu');
   await page.waitForLoadState('networkidle');
   await tabAll(page, 'Cardápio', 30);
+
+  // Grupo de categorias (desenho do Cardápio, §5.2): rádios nativos. O Tab para uma vez só, na opção
+  // marcada; a seta para a direita marca a próxima e troca a grade, com o foco no rádio; no último,
+  // volta ao primeiro
+  await page.goto(BASE + '#/menu');
+  await page.waitForLoadState('networkidle');
+  await page.locator('#conteudo').focus();
+  await page.keyboard.press('Tab');
+  const radio = () => page.evaluate(() => {
+    const el = document.activeElement;
+    return { tipo: el.type, valor: el.value, marcado: el.checked, h2: document.getElementById('menu-categoria-titulo')?.textContent.trim(), primeiro: document.querySelector('.menu-page__grade .m3-dividido__frente')?.getAttribute('aria-label') };
+  });
+  const parada = await radio();
+  const anelGrupo = await page.evaluate(ringOf);
+  await page.keyboard.press('Tab');
+  const depois = await page.evaluate(() => document.activeElement.getAttribute('aria-label') ?? document.activeElement.type);
+  check(parada.tipo === 'radio' && parada.valor === 'foods' && parada.marcado && depois === 'Adicionar Cheese Bacon', 'grupo de categorias: uma parada só no Tab, na opção marcada', JSON.stringify({ parada, depois }));
+  check(anelGrupo.ok && anelGrupo.tag === 'LABEL', 'grupo de categorias: anel de foco no rótulo da opção', anelGrupo.outline);
+  await page.keyboard.press('Shift+Tab');
+  const setas = [];
+  for (let i = 0; i < 3; i++) {
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(100);
+    const r = await radio();
+    setas.push(`${r.tipo}:${r.valor}:${r.marcado}:${r.h2}:${r.primeiro}`);
+  }
+  check(
+    setas.join(' | ') === 'radio:drinks:true:Bebidas:Adicionar Copo de Refrigerante | radio:desserts:true:Sobremesas:Adicionar Sorvete de Pote | radio:foods:true:Hambúrgueres:Adicionar Cheese Bacon',
+    'grupo de categorias: a seta para a direita marca a próxima e troca a grade, com o foco no rádio; no último, volta ao primeiro',
+    setas.join(' | ')
+  );
+  await focoSobAsBarras(page, `Cardápio em ${w}`);
 
   // Modal: abre com Enter e o foco fica preso
   await page.goto(BASE + '#/menu');
@@ -223,5 +293,22 @@ for (const w of [1440, 390]) {
   check(menuOpen === 'menuitem' && second2 === 'Configurações' && back2, 'menu de perfil do admin: Enter abre, setas navegam, Esc fecha');
   await actx.close();
 }
+// Janela de 360 px (desenho do Cardápio, §5.2): o grupo de categorias cabe numa linha, sem rolagem, e o
+// foco que volta pela grade não fica sob ele
+{
+  const c = await browser.newContext({ viewport: { width: 360, height: 800 } });
+  const p = await c.newPage();
+  await p.goto(BASE + '#/menu');
+  await p.waitForLoadState('networkidle');
+  const linha = await p.evaluate(() => {
+    const g = document.querySelector('.category-tabs__opcoes');
+    const topos = new Set([...g.querySelectorAll('.category-tabs__opcao')].map((o) => Math.round(o.getBoundingClientRect().top)));
+    return { rola: g.scrollWidth > g.clientWidth, linhas: topos.size, largura: g.scrollWidth, util: g.clientWidth };
+  });
+  check(!linha.rola && linha.linhas === 1, 'em 360 px, o grupo de categorias cabe numa linha, sem rolagem', JSON.stringify(linha));
+  await focoSobAsBarras(p, 'Cardápio em 360');
+  await c.close();
+}
+
 await browser.close();
 console.log(failures ? `FALHAS: ${failures}` : 'TECLADO OK');

@@ -1,18 +1,57 @@
-// Cardápio (SPEC §5.3): grade de 1, 2, 3 ou 4 colunas.
+// Cardápio (desenho do Cardápio, §3 a §5.4): cabeçalho de texto na superfície, o grupo de categorias e
+// a grade do feed sem destaque, em 2, 3 e 4 colunas.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
+
+// Foco não coberto (2.4.11, técnica C43): com o Cardápio montado, a rolagem do foco e das âncoras para
+// abaixo da barra das categorias e, a partir de lg, também do cabeçalho sticky (84 e 148 px)
+:global(html:has(.menu-page)) {
+  scroll-padding-top: calc(var(--m3-categorias-altura) + var(--space-4));
+
+  @include up(lg) {
+    scroll-padding-top: calc(var(--navbar-h) + var(--m3-categorias-altura) + var(--space-4));
+  }
+}
 
 .menu-page {
-  padding-top: var(--space-2);
   padding-bottom: var(--space-8);
 }
 
-.menu-page__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+// O h1 segue a regra global (--text-page, peso 500, on-surface)
+.menu-page__cabecalho {
+  padding-top: var(--space-5);
 
-  @include up(sm) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
+}
+
+.menu-page__frase {
+  @include tipo(body-l);
+
+  max-width: 40ch;
+  margin-top: var(--space-2);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-l-tracking);
+}
+
+.menu-page__regiao {
+  padding-top: var(--space-3);
+
+  @include up(md) {
+    padding-top: var(--space-5);
+  }
+}
+
+// A regra do .m3-feed da Home, sem o destaque (a parcial da Home não muda)
+.menu-page__grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--space-3);
+
+  @include up(md) {
+    gap: var(--space-5);
   }
 
   @include up(lg) {
@@ -22,4 +61,8 @@
   @include up(xl) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+.menu-page__item {
+  min-width: 0;
 }

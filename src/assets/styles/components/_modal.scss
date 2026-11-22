@@ -1,5 +1,8 @@
-// Modal "Personalizar" (SPEC §5.4). O <dialog>, o cabeçalho e o rodapé vêm do BaseDialog.
+// Modal "Personalizar" (SPEC §5.4; desenho do Cardápio, §5.5). O <dialog>, o cabeçalho e o rodapé vêm
+// do BaseDialog (etapa 10). O montador fica sobre um prato tonal; nos outros produtos, a M3Foto 4:3
+// ocupa a mesma moldura. Duas colunas (2fr e 3fr) a partir de md; abaixo, o sheet empilha.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
 .customize {
   display: grid;
@@ -11,61 +14,67 @@
   }
 }
 
-// Coluna visual: montador do burger ou a foto
+// Coluna visual: o prato com o montador, ou a foto
 .customize__visual {
-  display: flex;
-  justify-content: center;
-
   @include up(md) {
     position: sticky;
     top: 0;
   }
 }
 
-.customize__photo {
-  width: 100%;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: var(--color-surface-3);
-  aspect-ratio: 16 / 9;
+// O prato isola as cores da ilustração do fundo do diálogo; os cantos são os da M3Foto cartão
+.customize__prato {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-5);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-surface-container-lowest);
 
   @include up(md) {
-    aspect-ratio: 4 / 3;
+    border-radius: var(--m3-forma-xl);
   }
 }
 
-.customize__photo-img {
+.customize__foto {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .customize__options {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-6);
   min-width: 0;
 }
 
 .customize__description {
-  color: var(--color-ink-muted);
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
 .customize__section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
   min-width: 0;
 }
 
 .customize__title {
+  @include tipo(title-m, 500);
+
   padding: 0;
-  font-size: var(--text-md);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  color: var(--m3-on-surface);
+}
+
+// A legend não é item do flex do fieldset: o vão até a ajuda vem da margem
+.customize__section > legend.customize__title {
+  margin-bottom: var(--space-1);
 }
 
 .customize__help {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }

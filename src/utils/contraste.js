@@ -79,12 +79,12 @@ export const lerTokens = (fonte) => {
 // 1. Os 34 da Home aprovada, copiados de src/direcoes/estilos/material/contraste.js
 export const PARES_HOME = [
   // Página, cabeçalho e rodapé
-  { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal, marca, títulos das seções e h3 dos Adicionais" },
-  { frente: "m3-primary", fundo: "m3-surface", minimo: 4.5, onde: "text button Ver cardápio do feed e dos Adicionais" },
+  { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal, marca, títulos das seções e h3 dos Adicionais; h1 do Cardápio e título do EmptyState" },
+  { frente: "m3-primary", fundo: "m3-surface", minimo: 4.5, onde: "text button Ver cardápio do feed e dos Adicionais; categoria marcada contra a barra do Cardápio" },
   { frente: "m3-secondary", fundo: "m3-surface", minimo: 3, onde: "anel de foco" },
-  { frente: "m3-on-surface", fundo: "m3-surface-container", minimo: 4.5, onde: "marca no rodapé" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container", minimo: 4.5, onde: "rótulos da toolbar e textos do rodapé" },
-  { frente: "m3-secondary", fundo: "m3-surface-container", minimo: 3, onde: "anel de foco na toolbar" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container", minimo: 4.5, onde: "marca no rodapé e títulos das seções do modal" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container", minimo: 4.5, onde: "rótulos da toolbar e textos do rodapé; rótulo das categorias desmarcadas; descrição e ajuda do modal" },
+  { frente: "m3-secondary", fundo: "m3-surface-container", minimo: 3, onde: "anel de foco na toolbar e anel interno da categoria desmarcada" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 4.5, onde: "item atual da toolbar e Adicionar tonal" },
   { frente: "m3-secondary", fundo: "m3-secondary-container", minimo: 3, onde: "anel de foco no item atual da toolbar" },
   { frente: "m3-on-error", fundo: "m3-error", minimo: 4.5, onde: "badge do carrinho" },
@@ -93,13 +93,13 @@ export const PARES_HOME = [
   { frente: "m3-on-primary-container", fundo: "m3-primary-container", minimo: 4.5, onde: "ícone do FAB, face Adicionado e, abaixo de md, título e texto do hero no contêiner" },
   { frente: "m3-primary", fundo: "m3-primary-container", minimo: 3, onde: "borda do disco do hero e, abaixo de md, do Ver cardápio filled contra o contêiner" },
   { frente: "m3-secondary", fundo: "m3-primary-container", minimo: 3, onde: "anel de foco no FAB e, abaixo de md, no Ver cardápio do hero" },
-  { frente: "m3-on-primary", fundo: "m3-primary", minimo: 4.5, onde: "título e texto dentro do disco do hero (a partir de md), Adicionar e Ver cardápio filled (abaixo de md)" },
-  { frente: "m3-on-primary", fundo: "m3-primary", minimo: 3, onde: "anel de foco dentro do disco do hero" },
+  { frente: "m3-on-primary", fundo: "m3-primary", minimo: 4.5, onde: "título e texto dentro do disco do hero (a partir de md), Adicionar e Ver cardápio filled (abaixo de md); rótulo da categoria marcada e check do checkbox" },
+  { frente: "m3-on-primary", fundo: "m3-primary", minimo: 3, onde: "anel de foco dentro do disco do hero e anel interno da categoria marcada" },
   { frente: "m3-secondary-container", fundo: "m3-primary", minimo: 3, onde: "contêiner do Ver cardápio tonal contra o disco do hero" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container-hover", minimo: 4.5, onde: "Ver cardápio tonal no hover" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container-pressed", minimo: 4.5, onde: "Ver cardápio tonal pressionado" },
-  { frente: "m3-on-primary", fundo: "m3-primary-hover", minimo: 4.5, onde: "Adicionar no hover" },
-  { frente: "m3-on-primary", fundo: "m3-primary-pressed", minimo: 4.5, onde: "Adicionar pressionado" },
+  { frente: "m3-on-primary", fundo: "m3-primary-hover", minimo: 4.5, onde: "Adicionar e categoria marcada no hover" },
+  { frente: "m3-on-primary", fundo: "m3-primary-pressed", minimo: 4.5, onde: "Adicionar e categoria marcada pressionados" },
 
   // Feed (filled card em surface-container-highest) e folha de ingredientes
   { frente: "m3-on-surface", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "nome e preço no card" },
@@ -112,10 +112,10 @@ export const PARES_HOME = [
   // Listas segmentada e agrupada
   { frente: "m3-on-surface", fundo: "m3-surface-container-low", minimo: 4.5, onde: "h2 e h3 das duas listas" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-low", minimo: 4.5, onde: "aviso de lista vazia nas bebidas e sobremesas" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface", minimo: 4.5, onde: "aviso de lista vazia no feed e frase dos Adicionais" },
-  { frente: "m3-on-surface", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "título e preço dos itens das listas" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "apoio e descrição dos itens" },
-  { frente: "m3-secondary", fundo: "m3-surface-container-lowest", minimo: 3, onde: "anel de foco interno nos itens" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface", minimo: 4.5, onde: "aviso de lista vazia no feed e frase dos Adicionais; frase do Cardápio e texto do EmptyState" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "título e preço dos itens das listas; ingredientes e adicionais do modal" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "apoio e descrição dos itens; acréscimo dos adicionais, ingrediente removido, legenda do montador e contorno do checkbox" },
+  { frente: "m3-secondary", fundo: "m3-surface-container-lowest", minimo: 3, onde: "anel de foco interno nos itens e nas linhas de ingrediente" },
   { frente: "m3-on-tertiary-container", fundo: "m3-tertiary-container", minimo: 3, onde: "ícone do horário" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 3, onde: "ícones dos itens com link" },
   { frente: "m3-outline", fundo: "m3-surface", minimo: 3, onde: "borda da toolbar, do FAB, da folha e dos chips com prefers-contrast: more" },
@@ -149,9 +149,9 @@ export const PARES_COMUNS = [
   { frente: "color-accent-ink", fundo: "color-accent-pressed", minimo: 4.5, onde: "primário pressionado" },
   { frente: "color-danger", fundo: "color-surface-2", minimo: 4.5, onde: "erro no modal" },
   { frente: "color-success", fundo: "color-surface-3", minimo: 3, onde: "ícone de sucesso no aviso" },
-  { frente: "color-border-strong", fundo: "color-surface-2", minimo: 3, onde: "borda do checkbox e do campo" },
+  { frente: "color-border-strong", fundo: "color-surface-2", minimo: 3, onde: "borda do campo e do stepper da Quantidade" },
   { frente: "color-border-strong", fundo: "color-input", minimo: 3, onde: "borda do campo" },
-  { frente: "color-accent", fundo: "color-surface-2", minimo: 3, onde: "checkbox marcado e indicador" },
+  { frente: "color-accent", fundo: "color-surface-2", minimo: 3, onde: "indicador" },
   { frente: "color-focus", fundo: "color-bg", minimo: 3, onde: "anel de foco na página" },
   { frente: "color-focus", fundo: "color-surface-2", minimo: 3, onde: "anel de foco no modal" },
 ];
@@ -170,4 +170,19 @@ export const PARES_TELAS_BRASA = [
   { frente: "m3-secondary", fundo: "m3-surface-container-high", minimo: 3, onde: "anel de foco no toast e nos menus" },
 ];
 
-export const PARES = [...PARES_HOME, ...PARES_OUTRAS_TELAS, ...PARES_COMUNS, ...PARES_TELAS_BRASA];
+// 5. Os do Cardápio e do modal Personalizar (etapa 6; docs/direcoes/desenho/cardapio.md, §8). A camada
+// de estado real usa currentColor; o par mede com o token da camada (on-surface a 10%). Os pares que só
+// ganham uso (primary sobre surface, on-primary sobre primary e os de surface-container e lowest) já
+// estão nos grupos acima.
+export const PARES_CARDAPIO = [
+  { frente: "m3-primary", fundo: "m3-surface-container-lowest", minimo: 3, onde: "caixa marcada do checkbox dos ingredientes" },
+  { frente: "m3-primary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 3, onde: "caixa marcada com a linha do ingrediente pressionada" },
+  { frente: "m3-on-surface-variant", fundo: "m3-camada-pressionada", sobre: "m3-surface-container", minimo: 4.5, onde: "rótulo da categoria desmarcada, pressionada" },
+  { frente: "m3-primary", fundo: "m3-surface-container", minimo: 3, onde: "categoria marcada contra a desmarcada (sinal além da cor, 1.4.1)" },
+  { frente: "m3-outline", fundo: "m3-surface-container-lowest", minimo: 3, onde: "borda do QuantityStepper sobre as linhas dos adicionais" },
+  { frente: "m3-on-surface", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "nome do ingrediente com a linha pressionada" },
+  { frente: "m3-on-surface-variant", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "nome do ingrediente removido com a linha pressionada" },
+  { frente: "m3-secondary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container", minimo: 3, onde: "anel interno da categoria desmarcada pressionada" },
+];
+
+export const PARES = [...PARES_HOME, ...PARES_OUTRAS_TELAS, ...PARES_COMUNS, ...PARES_TELAS_BRASA, ...PARES_CARDAPIO];

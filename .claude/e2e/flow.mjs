@@ -2,7 +2,9 @@
 // Fluxo do pedido de ponta a ponta (SPEC §13.4 e SPEC-material §13.4), com ViaCEP simulado e
 // localStorage limpo. A navegação é pela pílula (Início, Cardápio, Entrar/Perfil) e o carrinho, pelo FAB.
 // O lanche e a bebida entram pela Home: a folha de ingredientes pelo split, o modal e o retorno
-// "Adicionado" no split e no botão tonal da lista (SPEC-material §13.4 e §7.6).
+// "Adicionado" no split e no botão tonal da lista (SPEC-material §13.4 e §7.6). Antes, o Cheese Bacon
+// entra também pelo Cardápio, com o foco de volta ao split do card de origem (desenho do Cardápio,
+// §5.5.6), e o carrinho volta a zero.
 // uso: node flow.mjs [largura]   (padrão: 390 e depois 1440)
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -74,6 +76,24 @@ for (const w of widths) {
     check(bar.pos === 'fixed' && bar.top >= 0 && bar.bottom <= bar.vh, 'rolado até o fim, a pílula e o FAB continuam à vista', JSON.stringify(bar));
     await page.evaluate(() => window.scrollTo(0, 0));
   }
+
+  // Adicionar pelo Cardápio (desenho do Cardápio, §5.5.6): o modal real, o foco de volta à frente do
+  // split do card de origem, com "Adicionado", e o anúncio. O carrinho volta a zero para o resto do fluxo
+  await page.getByRole('button', { name: 'Adicionar Cheese Bacon', exact: true }).click();
+  await page.waitForTimeout(500);
+  const menuModal = await page.evaluate(() => ({ modal: document.querySelector('dialog').matches(':modal'), prato: !!document.querySelector('dialog[open] .customize__prato .burger-stack') }));
+  check(menuModal.modal && menuModal.prato, 'Cardápio: "Adicionar Cheese Bacon" abre o modal, com o montador no prato', JSON.stringify(menuModal));
+  await page.locator('dialog[open] .dialog__footer button').click();
+  await page.waitForTimeout(400);
+  const menuDepois = await page.evaluate(() => {
+    const b = document.activeElement;
+    return { open: document.querySelector('dialog').open, focus: b.getAttribute('aria-label'), frente: b.classList.contains('m3-dividido__frente'), noCardapio: !!b.closest('.menu-page__grade'), adicionado: b.dataset.adicionado, live: document.querySelector('[data-announcer]').textContent };
+  });
+  check(!menuDepois.open && menuDepois.focus === 'Adicionar Cheese Bacon' && menuDepois.frente && menuDepois.noCardapio && menuDepois.adicionado === 'true', 'Cardápio: o foco volta à frente do split do card de origem, com data-adicionado="true"', JSON.stringify(menuDepois));
+  check(norm(menuDepois.live) === 'Cheese Bacon adicionado ao carrinho. 1 item no carrinho.', 'Cardápio: a região viva anuncia a adição', norm(menuDepois.live));
+  await snap('cardapio-adicionado');
+  await page.evaluate(() => document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart').clearCart());
+  await page.waitForTimeout(1500);
 
   // Adicionar pela Home (SPEC-material §13.4): a folha de ingredientes pela metade de trás do split
   await pill(page, 'Início').click();

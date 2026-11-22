@@ -1,6 +1,7 @@
 // §13.6 Micro-interações, normal e com movimento reduzido. Na Home (SPEC-material §7): a prensa, a
-// troca de forma, o chevron, a folha e o retorno "Adicionado". No Cardápio, até a etapa 6: o flip, o
-// tilt, o montador e o badge do FAB (§7.5). O odômetro saiu com o CartBadge (§7.8).
+// troca de forma, o chevron, a folha e o retorno "Adicionado". No Cardápio (etapa 6): o card sem tilt, o
+// check do checkbox dos ingredientes, o montador, o retorno "Adicionado" no card de origem e o badge do
+// FAB (§7.5). O tilt e o flip saíram com o ProductCard do Cardápio; o odômetro, com o CartBadge (§7.8).
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 let failures = 0;
@@ -79,31 +80,38 @@ for (const reduce of [false, true]) {
   results[`home-${tag}`] = `${chevron.expanded}|${retorno0.attr}|${retorno1}`;
   await page.evaluate(() => document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart').clearCart());
 
-  // ---------- Cardápio (até a etapa 6): tilt, montador, flip e badge ----------
+  // ---------- Cardápio (etapa 6): card sem tilt, checkbox, montador, retorno e badge ----------
   // Carga nova: com só o hash mudando, a caixa do card seria medida antes da volta ao topo
   await page.goto('about:blank');
   await page.goto(BASE + '#/menu');
   await page.waitForLoadState('networkidle');
 
-  // Tilt
-  const card = page.locator('.product-card').first();
+  // O card do M3 não reage a hover: sem tilt, sem transform e sem listener (SPEC-material §7.8)
+  const card = page.locator('.m3-cartao').first();
   const box = await card.boundingBox();
   await page.mouse.move(box.x + 6, box.y + 6);
   await page.waitForTimeout(250);
-  const tilt = await card.evaluate((el) => {
-    const t = getComputedStyle(el).transform;
-    if (t === 'none') return { t, rx: 0, ry: 0 };
-    // ângulos aproximados a partir da matriz (sem a perspectiva)
-    return { t: t.slice(0, 18), rx: Math.abs(parseFloat(el.style.getPropertyValue('--rx')) || 0), ry: Math.abs(parseFloat(el.style.getPropertyValue('--ry')) || 0), listener: el.dataset.tilt };
-  });
-  if (reduce) check(tilt.t === 'none', 'tilt: transform none com movimento reduzido');
-  else check(tilt.rx <= 4 && tilt.ry <= 4 && tilt.rx > 3, 'tilt: ponteiro no canto, ângulo ≤ 4° em cada eixo', `rx=${tilt.rx}° ry=${tilt.ry}°`);
+  const semTilt = await card.evaluate((el) => ({ t: getComputedStyle(el).transform, listener: el.dataset.tilt ?? 'nenhum' }));
+  check(semTilt.t === 'none' && semTilt.listener === 'nenhum', 'card do Cardápio: sem tilt no hover (transform none, nenhum listener)', JSON.stringify(semTilt));
   await page.mouse.move(700, 880);
 
   // Montador
   await page.getByRole('button', { name: 'Adicionar Cheese Bacon' }).click();
   await page.waitForTimeout(500);
   await page.locator('dialog[open] label', { hasText: 'Tomate' }).click();
+  // Check do checkbox (desenho do Cardápio, §5.5.2): o desmarcado some por opacidade; com movimento,
+  // fica também em scale(0); com movimento reduzido, nenhum transform. O marcado fica em none
+  await page.waitForTimeout(400);
+  const caixas = await page.evaluate(() => {
+    const ler = (texto) => {
+      const linha = [...document.querySelectorAll('dialog[open] .ingredients-list__label')].find((l) => l.querySelector('.ingredients-list__name').textContent.trim() === texto);
+      const c = getComputedStyle(linha.querySelector('.ingredients-list__check'));
+      return { t: c.transform, escala: c.transform === 'none' ? 1 : new DOMMatrix(c.transform).a, o: c.opacity, marcado: linha.querySelector('input').checked };
+    };
+    return { tomate: ler('Tomate'), queijo: ler('Queijo') };
+  });
+  check(!caixas.tomate.marcado && caixas.tomate.o === '0' && (reduce ? caixas.tomate.t === 'none' : caixas.tomate.escala === 0), `checkbox: o check do desmarcado some ${reduce ? 'só por opacidade' : 'com scale(0)'}`, JSON.stringify(caixas.tomate));
+  check(caixas.queijo.marcado && caixas.queijo.o === '1' && caixas.queijo.t === 'none', 'checkbox: o check do marcado em opacidade 1 e transform none', JSON.stringify(caixas.queijo));
   await page.getByRole('button', { name: 'Aumentar Bacon' }).click();
   await page.getByRole('button', { name: 'Aumentar Ovo' }).click();
   await page.waitForTimeout(600);
@@ -119,20 +127,15 @@ for (const reduce of [false, true]) {
   await page.screenshot({ path: `./shots/final/micro-montador-${tag}.png`, clip: await page.locator('dialog .customize__visual').boundingBox() });
   await page.locator('dialog[open] .dialog__footer button').click();
 
-  // Flip
-  await page.waitForTimeout(120);
-  const mid = await page.evaluate(() => {
-    const inner = document.querySelector('.add-btn__inner');
-    const t = getComputedStyle(inner).transform;
-    const deg = t === 'none' ? 0 : Math.abs(Math.atan2(new DOMMatrix(t).m23, new DOMMatrix(t).m22) * 180 / Math.PI);
-    return { t: t === 'none' ? 'none' : 'matrix', deg, back: getComputedStyle(document.querySelector('.add-btn__face--back')).opacity, front: getComputedStyle(document.querySelector('.add-btn__face--front')).opacity };
-  });
-  if (reduce) check(mid.t === 'none' && Number(mid.back) > 0, 'flip: sem rotação, as faces trocam por opacidade', `back=${mid.back} front=${mid.front}`);
-  else check(mid.deg > 0 && mid.deg < 180, 'flip: transform intermediário durante o giro', `${mid.deg.toFixed(1)}°`);
-  await page.screenshot({ path: `./shots/final/micro-flip-${tag}.png`, clip: await page.locator('.product-card').first().boundingBox() });
-  await page.waitForTimeout(1700);
-  const end = await page.evaluate(() => getComputedStyle(document.querySelector('.add-btn__inner')).transform);
-  check(end === 'none', 'flip: volta a none depois de ~1,7 s', end);
+  // Retorno no Cardápio (§7.6): o foco volta à frente do split do card de origem, com "Adicionado"
+  await page.waitForTimeout(100);
+  const retornoMenu = await page.evaluate(() => ({ nome: document.activeElement.getAttribute('aria-label'), attr: document.activeElement.dataset.adicionado, check: getComputedStyle(document.activeElement.querySelector('.m3-dividido__check')).transform }));
+  check(retornoMenu.nome === 'Adicionar Cheese Bacon' && retornoMenu.attr === 'true', 'retorno no Cardápio: foco na frente do split de origem, com data-adicionado', JSON.stringify(retornoMenu));
+  if (reduce) check(retornoMenu.check === 'none', 'retorno no Cardápio: o check sem escala com movimento reduzido', retornoMenu.check);
+  await page.screenshot({ path: `./shots/final/micro-adicionado-cardapio-${tag}.png`, clip: await page.locator('.m3-cartao').first().boundingBox() });
+  await page.waitForTimeout(1600);
+  const retornoFim = await page.evaluate(() => document.querySelectorAll('[data-adicionado]').length);
+  check(retornoFim === 0, 'retorno no Cardápio: data-adicionado ausente depois de ~1,45 s', String(retornoFim));
 
   // Badge do FAB (SPEC-material §7.5): de 0 para 1 entra com escala (normal) ou só opacidade (reduzido)
   // A store do carrinho pela instância do Pinia no #app
@@ -170,8 +173,8 @@ const tctx = await browser.newContext({ viewport: { width: 390, height: 844 }, h
 const tp = await tctx.newPage();
 await tp.goto(BASE + '#/menu');
 await tp.waitForLoadState('networkidle');
-const touch = await tp.locator('.product-card').first().evaluate((el) => ({ t: getComputedStyle(el).transform, listener: el.dataset.tilt ?? 'nenhum' }));
-check(touch.t === 'none' && touch.listener === 'nenhum', 'tilt com toque emulado: nenhum transform e nenhum listener', JSON.stringify(touch));
+const touch = await tp.locator('.m3-cartao').first().evaluate((el) => ({ t: getComputedStyle(el).transform, listener: el.dataset.tilt ?? 'nenhum' }));
+check(touch.t === 'none' && touch.listener === 'nenhum', 'card com toque emulado: nenhum transform e nenhum listener', JSON.stringify(touch));
 await tctx.close();
 
 check(results['montador-normal'] === results['montador-reduzido'] && results['badge-normal'] === results['badge-reduzido'] && results['home-normal'] === results['home-reduzido'], 'movimento reduzido: conteúdo e resultado iguais (legenda, contagem, rótulo, folha e retorno)', `${results['montador-reduzido']} | ${results['badge-reduzido']} | ${results['home-reduzido']}`);

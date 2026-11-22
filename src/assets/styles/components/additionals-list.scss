@@ -1,31 +1,53 @@
-// Adicionais do modal (SPEC §5.4): nome, preço e QuantityStepper de 0 a 5.
+// Adicionais do modal Personalizar (desenho do Cardápio, §5.5.3): lista segmentada [66][81], com blocos
+// em surface-container-lowest, vão de 2 px e cantos de fora de 20 e de dentro de 4 pela posição, como o
+// M3ItemLista [8]. A linha não é ação: o estado é o número do QuantityStepper (0 a 5), que a linha não
+// repete com cor.
+@use "../base/m3" as *;
+
 .additionals-list {
   display: flex;
   flex-direction: column;
+  gap: var(--m3-vao-segmento);
 }
 
 .additionals-list__item {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding-block: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima)
+    var(--m3-item-canto-baixo) var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
 
-  & + & {
-    border-top: 1px solid var(--color-border);
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  }
+
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
   }
 }
 
 .additionals-list__info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .additionals-list__name {
-  font-weight: 500;
+  @include tipo(body-l);
+
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
 .additionals-list__price {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
