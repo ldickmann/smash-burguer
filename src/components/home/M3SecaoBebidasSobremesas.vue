@@ -9,13 +9,7 @@
     <div v-for="grupo in grupos" :key="grupo.chave" class="m3-acompanha__grupo">
       <h3 :id="`m3-grupo-${grupo.chave}`" class="m3-acompanha__subtitulo">{{ grupo.rotulo }}</h3>
       <ul class="m3-acompanha__lista" role="list" :aria-labelledby="`m3-grupo-${grupo.chave}`">
-        <M3ItemLista
-          v-for="produto in grupo.itens"
-          :key="produto.id"
-          :produto="produto"
-          :forma="grupo.forma"
-          :apoio="grupo.apoio"
-        />
+        <M3ItemLista v-for="produto in grupo.itens" :key="produto.id" :produto="produto" :forma="grupo.forma" />
       </ul>
     </div>
 
@@ -25,11 +19,11 @@
 
 <script setup>
 import { computed } from "vue";
-import { contar, useCardapio } from "@/composables/useCardapio";
+import { useCardapio } from "@/composables/useCardapio";
 import { TEXTOS } from "@/utils/textosLoja";
 import M3ItemLista from "@/components/ui/M3ItemLista.vue";
 
-const { categorias, adicionais } = useCardapio();
+const { categorias } = useCardapio();
 
 const FORMAS = { drinks: "circulo", desserts: "flor" };
 const categoriaDe = (chave) => categorias.value.find((c) => c.chave === chave);
@@ -37,10 +31,10 @@ const categoriaDe = (chave) => categorias.value.find((c) => c.chave === chave);
 // "Bebidas e sobremesas", composto dos rótulos reais das categorias (textosLoja.js)
 const titulo = computed(() => `${categoriaDe("drinks").rotulo} e ${categoriaDe("desserts").rotulo.toLowerCase()}`);
 
-const grupos = computed(() => {
-  const quantos = adicionais.value.sobremesa.length;
-  const apoioSobremesa = quantos ? contar(quantos, [TEXTOS.adicional, TEXTOS.adicionais]) : "";
-  return ["drinks", "desserts"]
+// Sem a contagem dos adicionais na sobremesa (etapa 5a): os chips da seção Adicionais, logo acima, já
+// mostram quais são
+const grupos = computed(() =>
+  ["drinks", "desserts"]
     .map(categoriaDe)
     .filter((categoria) => !categoria.vazia)
     .map((categoria) => ({
@@ -48,9 +42,8 @@ const grupos = computed(() => {
       rotulo: categoria.rotulo,
       itens: categoria.itens,
       forma: FORMAS[categoria.chave],
-      apoio: categoria.chave === "desserts" ? apoioSobremesa : "",
-    }));
-});
+    }))
+);
 </script>
 
 <style scoped lang="scss">

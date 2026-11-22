@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { PARES, lerTokens, medirPar } from '@/utils/contraste';
+import { PARES, PARES_HOME, lerTokens, medirPar } from '@/utils/contraste';
 
 const RAIZ = fileURLToPath(new URL('../../', import.meta.url));
 const lerArquivo = (caminho) => readFileSync(`${RAIZ}${caminho}`, 'utf8').replace(/\r\n/g, '\n');
@@ -26,6 +26,14 @@ describe('contraste dos tokens de base', () => {
       .filter(({ medido, minimo }) => medido === null || medido < minimo)
       .map(({ frente, fundo, minimo, medido, onde }) => `${frente} sobre ${fundo}: ${medido === null ? 'sem cor' : duasCasas(medido)} < ${minimo} (${onde})`);
     expect(reprovados).toEqual([]);
+  });
+
+  it('o nome e o acréscimo dos chips dos adicionais têm par de texto (etapa 5a)', () => {
+    const doChip = PARES_HOME.filter(({ fundo, onde }) => fundo === 'm3-surface-container-high' && onde.includes('chips'));
+    expect(doChip.map(({ frente, minimo }) => [frente, minimo])).toEqual([
+      ['m3-on-surface', 4.5],
+      ['m3-on-surface-variant', 4.5],
+    ]);
   });
 
   it('papéis com os valores do SPEC', () => {

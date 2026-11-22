@@ -30,15 +30,16 @@ describe('textosLoja', () => {
     expect(textos.RODAPE).not.toHaveProperty('copyright');
   });
 
-  it('a microcopy da Home, revisada (§8.2): só o título da seção "onde" muda', () => {
+  it('a microcopy da Home, revisada (§8.2 e etapa 5a): os títulos de "onde" e dos adicionais mudam', () => {
     expect(textos.TEXTOS).toEqual({
       ingredientes: 'Ingredientes',
       vazio: 'Nada nesta categoria por enquanto',
-      adicional: 'adicional',
-      adicionais: 'adicionais',
       ondeTitulo: 'Horário e contato',
       email: 'E-mail',
       whatsapp: 'WhatsApp',
+      monteTitulo: 'Adicionais',
+      monteLanche: 'No hambúrguer',
+      monteSobremesa: 'Na sobremesa',
     });
   });
 });

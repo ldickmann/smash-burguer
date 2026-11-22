@@ -9,6 +9,7 @@
 
     <M3SecaoHero />
     <M3SecaoLanches />
+    <M3SecaoMonte />
     <div class="m3-faixa container">
       <M3SecaoBebidasSobremesas />
       <M3SecaoOnde />
@@ -30,6 +31,7 @@ import M3Rodape from "./componentes/M3Rodape.vue";
 import M3SecaoBebidasSobremesas from "./secoes/M3SecaoBebidasSobremesas.vue";
 import M3SecaoHero from "./secoes/M3SecaoHero.vue";
 import M3SecaoLanches from "./secoes/M3SecaoLanches.vue";
+import M3SecaoMonte from "./secoes/M3SecaoMonte.vue";
 import M3SecaoOnde from "./secoes/M3SecaoOnde.vue";
 
 // Antes de tudo: liga os tokens do estilo ao <html>

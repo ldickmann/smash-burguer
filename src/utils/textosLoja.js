@@ -81,19 +81,23 @@ export const CATEGORIAS = [
 // skill de UX copy. Sem número, prazo, taxa, preço, nota, promessa nem promoção.
 // - ingredientes: a legenda da seção do src/components/ModalAdditional.vue;
 // - vazio: o título do EmptyState do src/views/MenuView.vue;
-// - adicional/adicionais: "7 adicionais" na sobremesa (contagem calculada), a palavra do título
-//   "Adicionais" do modal, onde o "Adicionar" leva;
 // - ondeTitulo: o h2 da seção "onde". Na referência era "Onde e quando", que deixava de fora o WhatsApp
 //   e o e-mail; a lista é a "de horário e contato" do rodapé fora da Home (decisão g), e o endereço
 //   já ficava entre os contatos no rodapé da Brasa (TheFooterContactInfo.vue);
 // - email: o rótulo dos formulários (LoginView, RegisterView e ProfileView);
-// - whatsapp: o CONTATOS[whatsapp].rotulo.
+// - whatsapp: o CONTATOS[whatsapp].rotulo;
+// - monteTitulo: o h2 da seção dos adicionais (etapa 5a), o título "Adicionais" do modal, onde esses
+//   itens se escolhem. Na referência é "Monte o seu", que prometia montar o lanche do zero (o modal só
+//   tira ingredientes e acrescenta adicionais); escolha do usuário em 21/11/2026;
+// - monteLanche e monteSobremesa: os h3 dos dois grupos. "No hambúrguer", e não o rótulo
+//   "Hambúrgueres", que inclui a Batata Frita, sem adicionais no modal.
 export const TEXTOS = {
   ingredientes: "Ingredientes",
   vazio: "Nada nesta categoria por enquanto",
-  adicional: "adicional",
-  adicionais: "adicionais",
   ondeTitulo: "Horário e contato",
   email: "E-mail",
   whatsapp: "WhatsApp",
+  monteTitulo: "Adicionais",
+  monteLanche: "No hambúrguer",
+  monteSobremesa: "Na sobremesa",
 };
