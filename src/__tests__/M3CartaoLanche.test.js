@@ -45,4 +45,18 @@ describe('M3CartaoLanche', () => {
     expect(wrapper.find('.m3-cartao__cookie').exists()).toBe(false);
     expect(wrapper.find('article > .m3-foto--cartao').exists()).toBe(true);
   });
+
+  // Desenho do Cardápio, 6.e: sem ingredientes não há folha, e a descrição aparece também abaixo de md
+  it('sem ingredientes, o card ganha m3-cartao--sem-folha; com eles, não', () => {
+    montar({ produto: { ...PRODUTO, name: 'Copo de Refrigerante', ingredients: [] } });
+    expect(wrapper.find('article').classes()).toContain('m3-cartao--sem-folha');
+    wrapper.unmount();
+
+    montar({ produto: { ...PRODUTO, ingredients: undefined } });
+    expect(wrapper.find('article').classes()).toContain('m3-cartao--sem-folha');
+    wrapper.unmount();
+
+    montar();
+    expect(wrapper.find('article').classes()).not.toContain('m3-cartao--sem-folha');
+  });
 });

@@ -101,3 +101,65 @@ describe('CategoryTabs', () => {
     expect(observadores.every((o) => o.desligado)).toBe(true);
   });
 });
+
+// Grupo conectado com rádios nativos (docs/direcoes/desenho/cardapio.md, §5.2 e §9): escolha
+// exclusiva é rádio na APG [93]; o teclado e o estado vêm do navegador [92][96]
+describe('CategoryTabs: grupo de rádios', () => {
+  const OPCOES = [
+    { value: 'foods', label: 'Hambúrgueres' },
+    { value: 'drinks', label: 'Bebidas' },
+    { value: 'desserts', label: 'Sobremesas' },
+  ];
+  const montarGrupo = (modelValue = 'foods') => {
+    prepararTela(false);
+    return mount(CategoryTabs, { props: { options: OPCOES, modelValue }, attachTo: document.body });
+  };
+
+  it('é um fieldset com a legend "Categorias", escondida', () => {
+    const wrapper = montarGrupo();
+    const legend = wrapper.find('fieldset.category-tabs__grupo > legend');
+    expect(legend.exists()).toBe(true);
+    expect(legend.text()).toBe('Categorias');
+    expect(legend.classes()).toContain('visually-hidden');
+    wrapper.unmount();
+  });
+
+  it('um rádio por opção, no mesmo name, com o do modelValue marcado', () => {
+    const wrapper = montarGrupo('drinks');
+    const radios = wrapper.findAll('input[type="radio"]');
+    expect(radios.map((r) => r.element.value)).toEqual(['foods', 'drinks', 'desserts']);
+    expect(new Set(radios.map((r) => r.attributes('name'))).size).toBe(1);
+    expect(radios.map((r) => r.element.checked)).toEqual([false, true, false]);
+    // Cada rádio tem o rótulo da opção como nome acessível (o label o envolve)
+    const rotulos = wrapper.findAll('label.category-tabs__opcao').map((l) => l.text());
+    expect(rotulos).toEqual(['Hambúrgueres', 'Bebidas', 'Sobremesas']);
+    expect(wrapper.findAll('label.category-tabs__opcao.is-marcada').map((l) => l.text())).toEqual(['Bebidas']);
+    wrapper.unmount();
+  });
+
+  it('as formas de início, meio e fim seguem a posição', () => {
+    const wrapper = montarGrupo();
+    const classes = wrapper.findAll('label.category-tabs__opcao').map((l) => l.classes());
+    expect(classes[0]).toContain('category-tabs__opcao--inicio');
+    expect(classes[1]).toContain('category-tabs__opcao--meio');
+    expect(classes[2]).toContain('category-tabs__opcao--fim');
+    wrapper.unmount();
+  });
+
+  it('o change de um rádio emite update:modelValue com o valor', async () => {
+    const wrapper = montarGrupo();
+    const bebidas = wrapper.find('input[value="drinks"]');
+    bebidas.element.checked = true;
+    await bebidas.trigger('change');
+    expect(wrapper.emitted('update:modelValue')).toEqual([['drinks']]);
+    wrapper.unmount();
+  });
+
+  it('nenhum aria-pressed, nenhum role="group" e nenhum botão', () => {
+    const wrapper = montarGrupo();
+    expect(wrapper.find('[aria-pressed]').exists()).toBe(false);
+    expect(wrapper.find('[role="group"]').exists()).toBe(false);
+    expect(wrapper.find('button').exists()).toBe(false);
+    wrapper.unmount();
+  });
+});
