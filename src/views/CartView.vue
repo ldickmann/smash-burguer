@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toast";
@@ -77,6 +77,25 @@ const listRef = ref(null);
 
 const removeButtons = () => listRef.value?.querySelectorAll("[data-remove]") ?? [];
 
+// A reserva do aviso no scroll-padding protege o foco de quem usa o teclado, que vê o anel. Quem toca ou
+// clica não vê o anel, e o foco rolado faria a página pular: a última entrada decide se a página rola
+let ultimaPorPonteiro = false;
+const marcarPonteiro = () => {
+  ultimaPorPonteiro = true;
+};
+const marcarTeclado = () => {
+  ultimaPorPonteiro = false;
+};
+onMounted(() => {
+  document.addEventListener("pointerdown", marcarPonteiro, true);
+  document.addEventListener("keydown", marcarTeclado, true);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("pointerdown", marcarPonteiro, true);
+  document.removeEventListener("keydown", marcarTeclado, true);
+});
+const focar = (elemento) => elemento?.focus({ preventScroll: ultimaPorPonteiro });
+
 // Tira o item na hora e oferece "Desfazer" por 5 s, devolvendo-o à mesma posição
 const removeItem = async (index) => {
   const removed = cartStore.removeItem(index);
@@ -93,7 +112,7 @@ const removeItem = async (index) => {
       onClick: async () => {
         cartStore.restoreItem(removed, index);
         await nextTick();
-        removeButtons()[Math.min(index, cartStore.items.length - 1)]?.focus();
+        focar(removeButtons()[Math.min(index, cartStore.items.length - 1)]);
       },
     },
   });
@@ -102,7 +121,7 @@ const removeItem = async (index) => {
   await nextTick();
   const buttons = removeButtons();
   const next = buttons[Math.min(index, buttons.length - 1)];
-  (next ?? titleRef.value)?.focus();
+  focar(next ?? titleRef.value);
 };
 </script>
 

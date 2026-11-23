@@ -3,7 +3,7 @@
 // da categoria), o resumo com os CTAs de quem entrou e do visitante e o EmptyState. Remover tira na
 // hora e oferece "Desfazer" no aviso; o "Desfazer" devolve o item à mesma posição e o foco ao
 // "Remover" dele (§5.2 e §8, "Lógica"). O AppToast não é montado aqui: a ação roda pela store.
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { createMemoryHistory, createRouter } from 'vue-router';
@@ -150,6 +150,37 @@ describe('CartView (Carrinho do Material 3)', () => {
     expect(carrinho.items.map((item) => item.name)).toEqual(['Cheese Bacon', 'Coca Cola Lata', 'Sorvete de Pote']);
     expect(toasts.toasts).toEqual([]);
     expect(focado().getAttribute('aria-label')).toBe('Remover Coca Cola Lata');
+  });
+
+  // A reserva do aviso no scroll-padding protege o foco de quem usa o teclado. Quem toca ou clica não vê
+  // o anel: o foco muda sem rolar a página (o /code-review mediu um pulo de ~300 px no celular)
+  it('pelo toque ou pelo mouse, o foco muda sem rolar a página; pelo teclado, rola', async () => {
+    await montarCarrinho();
+    const focar = vi.spyOn(HTMLElement.prototype, 'focus');
+    try {
+      removers()[1].element.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+      await removers()[1].trigger('click');
+      await flushPromises();
+      expect(focado().getAttribute('aria-label')).toBe('Remover Sorvete de Pote');
+      expect(focar).toHaveBeenLastCalledWith({ preventScroll: true });
+
+      // O "Desfazer" clicado também não rola
+      document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+      const toasts = useToastStore();
+      toasts.runAction(toasts.toasts[0].id);
+      await flushPromises();
+      expect(focado().getAttribute('aria-label')).toBe('Remover Coca Cola Lata');
+      expect(focar).toHaveBeenLastCalledWith({ preventScroll: true });
+
+      // Pelo teclado (Enter no "Remover"), o foco rola para fora do aviso
+      removers()[0].element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await removers()[0].trigger('click');
+      await flushPromises();
+      expect(focado().getAttribute('aria-label')).toBe('Remover Coca Cola Lata');
+      expect(focar).toHaveBeenLastCalledWith({ preventScroll: false });
+    } finally {
+      focar.mockRestore();
+    }
   });
 
   it('quando o último item sai, o foco vai ao h1 e aparece o carrinho vazio', async () => {
