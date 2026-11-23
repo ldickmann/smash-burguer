@@ -1216,6 +1216,7 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
   - cada item do carrinho ganha a borda dos modos de contraste (`reserva-de-sombra`), porque o fundo e o vão de 2 px somem nas cores forçadas;
   - a 2ª linha do item quebra quando não cabe (`flex-wrap`, com o "Remover" no fim), para não vazar com a fonte maior em 320 px;
   - as checagens do `keyboard.mjs` passaram a distinguir: as setas conferem a opção marcada, e não só a focada; o Shift+Tab parte de uma opção em parte coberta; em 1440, a checagem confere que a página não pula.
+  - **`/code-review` da branch (pedido do usuário):** o foco depois de remover e de desfazer rolava a página também para quem toca ou clica, que não vê o anel; no celular, tocar no "Remover" na metade de baixo da tela fazia a página pular uns 350 px. Agora o `CartView` guarda a última entrada (`pointerdown` ou `keydown`) e foca com `preventScroll` quando ela foi de ponteiro; pelo teclado, a rolagem continua. Mutação: com o `focus()` sem `preventScroll`, o clique de mouse perto do pé leva a página de 136 para 492 px; com a correção, ela fica em 136.
   - **Fica para a etapa 10:** com dois ou três avisos empilhados, um "Remover" que já estava na área útil não rola e pode ficar sob o aviso mais antigo (risco aceito no §11).
 - **Ajustes do construtor:**
   - o controle do rádio usa `forced-color-adjust: none` com as cores forçadas, só com cores do sistema, porque o modo forçado troca o fundo do autor;
