@@ -108,10 +108,11 @@ const xl = 'var(--m3-forma-xl)';
 const xs = 'var(--m3-forma-xs)';
 
 describe('token e mixin novos (§8)', () => {
-  it('a reserva de um aviso (toast) é um token de layout', () => {
-    // Pelo lerTokens: um "--m3-…:" escrito aqui contaria na busca dos papéis fora dos tokens (§13.2)
+  it('a reserva de um aviso (toast) é um token de layout, medido na captura', () => {
+    // Pelo lerTokens: um "--m3-…:" escrito aqui contaria na busca dos papéis fora dos tokens (§13.2).
+    // Medido em 390: o aviso tem de 72 a 92 px (3 linhas); com o anel de 5 px do foco e um vão, 104 px
     const { tokens: declarados } = lerTokens(tokens);
-    expect(declarados.get('m3-toast-reserva')).toBe('6rem');
+    expect(declarados.get('m3-toast-reserva')).toBe('6.5rem');
   });
 
   it('o mixin altura-min existe em _breakpoints.scss, ao lado do up() e do below()', () => {
