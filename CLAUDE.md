@@ -18,13 +18,14 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 553 testes
+npx vitest run                             # 555 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
 
 - **Preview:** o servidor cai quando o container hiberna; suba de novo antes de testes no navegador.
 - **Rede:** o container não acessa `*.github.io`. Para ver o deploy, use a API ou as ferramentas do GitHub (Actions).
+- **Worktrees:** o Vitest e o ESLint ignoram `.claude/worktrees/`. Rode os testes de um worktree dentro da pasta dele, que usa a config e o alias `@` do próprio branch.
 
 ## Git e deploy
 

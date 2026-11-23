@@ -33,7 +33,7 @@ cp .claude/e2e/*.mjs $E2E/ && cd $E2E
 npm init -y >/dev/null && npm i --ignore-scripts playwright@1.65.0 axe-core@4.10.3
 ```
 
-- **Vitest no Node 26:** os testes com `localStorage` precisam de `NODE_OPTIONS=--no-experimental-webstorage`.
+- **Vitest no Node 26:** o `vitest.config.js` já passa `--no-experimental-webstorage` aos workers (`execArgv`), então os testes com `localStorage` não precisam mais do `NODE_OPTIONS`.
 - **Porta 5173 ocupada** (servidor de desenvolvimento de outra sessão): para conferir algo no `yarn dev`, suba o Vite com `--port <outra> --strictPort`.
 
 ## Dados que os scripts semeiam
