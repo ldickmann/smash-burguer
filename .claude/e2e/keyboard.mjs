@@ -306,11 +306,12 @@ const cobertoPor = () => {
   const anel = s.outlineStyle === 'none' ? 0 : Math.max(0, parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset));
   const b = el.getBoundingClientRect();
   const r = { left: b.left - anel, right: b.right + anel, top: b.top - anel, bottom: b.bottom + anel };
-  const cruza = (x) => { const q = x.getBoundingClientRect(); return Math.min(r.right, q.right) > Math.max(r.left, q.left) && Math.min(r.bottom, q.bottom) > Math.max(r.top, q.top); };
+  const cruza = (x, a = r) => { const q = x.getBoundingClientRect(); return Math.min(a.right, q.right) > Math.max(a.left, q.left) && Math.min(a.bottom, q.bottom) > Math.max(a.top, q.top); };
   const barra = document.querySelector('.m3-ferramentas');
   const avisos = [...document.querySelectorAll('.toast-region .toast')];
   const nome = (el.getAttribute('aria-label') || el.querySelector?.('input')?.value || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28);
-  return { nome, valor: document.activeElement.value, barra: !!barra && getComputedStyle(barra).position === 'fixed' && cruza(barra), aviso: avisos.some(cruza), avisos: avisos.length, topo: Math.round(r.top), base: Math.round(r.bottom) };
+  // aviso: o retângulo com o anel cruza um aviso; avisoCaixa: o próprio elemento, sem o anel
+  return { nome, valor: document.activeElement.value, marcado: document.querySelector('input[name="payment-method"]:checked')?.value, barra: !!barra && getComputedStyle(barra).position === 'fixed' && cruza(barra), aviso: avisos.some((x) => cruza(x)), avisoCaixa: avisos.some((x) => cruza(x, b)), avisos: avisos.length, topo: Math.round(r.top), base: Math.round(r.bottom), rolagem: Math.round(scrollY) };
 };
 const CART3 = { items: [
   { productId: 1, category: 'foods', name: 'Cheese Bacon', image: '/images/foods/cheese-bacon', unitPrice: 25.99, quantity: 1, removedIngredients: ['Tomate'], additionals: [], observation: '' },
@@ -344,26 +345,52 @@ const SEM_ENDERECO = { ...USER, address: {} };
     await p.waitForTimeout(60);
     passos.push(await p.evaluate(cobertoPor));
   }
-  const marcados = passos.map((x) => x.valor).join(' → ');
-  check(marcados === 'credit → debit → pix → cash → credit', 'pagamento: Tab no primeiro rádio, setas até o Dinheiro e volta ao primeiro', marcados);
+  // O foco e a marcação andam juntos: a seta marca a opção que recebe o foco
+  const focados = passos.map((x) => x.valor).join(' → ');
+  const marcados = passos.slice(1).map((x) => x.marcado).join(' → ');
+  check(focados === 'credit → debit → pix → cash → credit' && marcados === 'debit → pix → cash → credit' && !passos[0].marcado, 'pagamento: Tab no primeiro rádio (nenhum marcado), setas que marcam até o Dinheiro e voltam ao primeiro', `focados ${focados}; marcados ${marcados}`);
   const sob = passos.filter((x) => x.barra).map((x) => `${x.valor} (${x.topo}–${x.base})`);
   check(sob.length === 0, `pagamento em 390×${ALTURA}: nenhuma opção focada pelas setas cruza a toolbar`, sob.join(' | '));
   const anelOpcao = await p.evaluate(ringOf);
   check(anelOpcao.ok && anelOpcao.tag === 'LABEL', 'pagamento: o anel de 3 px fica no label da opção', anelOpcao.outline);
 
-  // Shift+Tab vindo de baixo, sem forma marcada: o foco cai num rádio do grupo (o último em alguns
-  // navegadores [88]; o Chromium escolhe o primeiro), fora da toolbar
+  // Shift+Tab vindo de baixo, sem forma marcada: o foco cai num rádio do grupo (o primeiro ou o último,
+  // conforme o navegador [88]). A opção que o navegador escolhe é posta antes em parte sob a toolbar
+  // (24 px dentro da reserva do pé): com o rádio de 1 × 1 px no meio do label, nada rolaria e a opção
+  // ficaria coberta; com o rádio do tamanho do label, a rolagem a tira de lá
+  // O goto para a mesma URL não recarrega a página, e o rádio marcado pelas setas continuaria marcado:
+  // recarrega e confere que nenhuma forma está marcada
   await openRoute(p, '#/payment', 'Finalizar pedido');
-  await p.evaluate(() => {
+  await p.reload();
+  await p.waitForLoadState('networkidle');
+  await p.waitForTimeout(250);
+  check(await p.locator('input[name="payment-method"]:checked').count() === 0, `pagamento em 390×${ALTURA}: recarregado, nenhuma forma marcada antes do Shift+Tab`);
+  // Só no teste: um espaço acima da página, para a opção poder ficar perto do pé (no topo da página, ela
+  // fica acima da reserva e não dá para rolar acima do início)
+  await p.evaluate(() => { document.querySelector('.payment-page').style.paddingTop = `${innerHeight}px`; });
+  const focarDepoisDoGrupo = () => p.evaluate(() => {
     const radios = [...document.querySelectorAll('input[name="payment-method"]')];
     const focaveis = [...document.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])')];
-    const depois = focaveis.find((el) => radios.at(-1).compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && !radios.includes(el));
-    depois.focus();
+    focaveis.find((el) => radios.at(-1).compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && !radios.includes(el)).focus({ preventScroll: true });
   });
+  // 1ª passada: descobre qual rádio o navegador escolhe
+  await focarDepoisDoGrupo();
+  await p.keyboard.press('Shift+Tab');
+  const escolhido = await p.evaluate(() => document.activeElement.value);
+  // 2ª passada: essa opção começa em parte sob a toolbar
+  await focarDepoisDoGrupo();
+  const inicio = await p.evaluate((valor) => {
+    const opcao = document.querySelector(`input[name="payment-method"][value="${valor}"]`).closest('label');
+    scrollBy(0, opcao.getBoundingClientRect().bottom - (innerHeight - 96 + 24));
+    const o = opcao.getBoundingClientRect();
+    const t = document.querySelector('.m3-ferramentas').getBoundingClientRect();
+    return { base: Math.round(o.bottom), cobre: Math.min(o.bottom, t.bottom) > Math.max(o.top, t.top) && Math.min(o.right, t.right) > Math.max(o.left, t.left) };
+  }, escolhido);
+  check(inicio.cobre, `pagamento em 390×${ALTURA}: antes do Shift+Tab, a opção escolhida (${escolhido}) fica em parte sob a toolbar`, `base em ${inicio.base}`);
   await p.keyboard.press('Shift+Tab');
   await p.waitForTimeout(60);
   const ultimo = await p.evaluate(cobertoPor);
-  check(['credit', 'cash'].includes(ultimo.valor) && !ultimo.barra, `pagamento em 390×${ALTURA}: Shift+Tab sem marcado cai no grupo, fora da toolbar`, `${ultimo.valor} (${ultimo.topo}–${ultimo.base})`);
+  check(['credit', 'cash'].includes(ultimo.valor) && !ultimo.marcado && !ultimo.barra, `pagamento em 390×${ALTURA}: Shift+Tab sem marcado cai no grupo e tira a opção de baixo da toolbar`, `${ultimo.valor} (${ultimo.topo}–${ultimo.base})`);
   await c.close();
 
   // Foco não coberto também no carrinho do visitante e no pagamento sem endereço
@@ -383,9 +410,10 @@ const SEM_ENDERECO = { ...USER, address: {} };
 
 // "Remover" vizinho contra o aviso (desenho do Carrinho, §4): remover um item deixa o foco no "Remover"
 // do item seguinte, e ele não pode ficar sob o aviso nem sob a toolbar. Em 390, perto do pé (o aviso
-// fica acima da toolbar), com o 5º de seis itens; em 1024 e 1440, perto do topo (o aviso fica no topo
-// à direita), com o 2º
-for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abacaxi', 'X-Salada'], [1024, 768, 'topo', 'Coca Cola Lata', 'Sorvete de Pote'], [1440, 900, 'topo', 'Coca Cola Lata', 'Sorvete de Pote']]) {
+// fica acima da toolbar), com o 5º de seis itens; em 1024, perto do topo (o aviso fica no topo à
+// direita e cruza a coluna da lista), com o 2º. Em 1440, o aviso começa depois do "Remover": a página
+// não pula, e o botão (sem o anel, que encosta 2 px) fica fora do aviso
+for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abacaxi', 'X-Salada'], [1024, 768, 'topo', 'Coca Cola Lata', 'Sorvete de Pote'], [1440, 900, 'largo', 'Coca Cola Lata', 'Sorvete de Pote']]) {
   const c = await browser.newContext({ viewport: { width: w, height: h } });
   await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
   const p = await c.newPage();
@@ -399,13 +427,18 @@ for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abac
   }, [onde, 96]);
   await alvo.evaluate((el) => el.focus({ preventScroll: true }));
   const antes = await p.evaluate(() => Math.round(document.activeElement.getBoundingClientRect().top));
+  const rolagemAntes = await p.evaluate(() => Math.round(scrollY));
   const destino = onde === 'pe' ? h - 96 - 44 - 8 : 100;
   check(Math.abs(antes - destino) <= 2, `${w}×${h}: o "Remover ${removido}" começa ${onde === 'pe' ? 'perto do pé' : 'perto do topo'}`, `em ${antes}, alvo ${destino}`);
   await p.keyboard.press('Enter');
   await p.waitForTimeout(400);
   const depois = await p.evaluate(cobertoPor);
   check(depois.nome === `Remover ${vizinho}` && depois.avisos === 1, `${w}×${h}: depois de remover, o foco fica no "Remover" vizinho, com o aviso na tela`, `${depois.nome}, ${depois.avisos} aviso(s)`);
-  check(!depois.aviso && !depois.barra, `${w}×${h}: o "Remover" vizinho focado não fica sob o aviso nem sob a toolbar (${onde === 'pe' ? 'perto do pé' : 'perto do topo'})`, `antes em ${antes}, depois ${depois.topo}–${depois.base}`);
+  if (onde === 'largo') {
+    check(!depois.avisoCaixa && depois.rolagem === rolagemAntes, `${w}×${h}: sem pulo da página, e o "Remover" vizinho fica fora do aviso`, `rolagem ${rolagemAntes} → ${depois.rolagem}; ${depois.topo}–${depois.base}`);
+  } else {
+    check(!depois.aviso && !depois.barra, `${w}×${h}: o "Remover" vizinho focado não fica sob o aviso nem sob a toolbar (${onde === 'pe' ? 'perto do pé' : 'perto do topo'})`, `antes em ${antes}, depois ${depois.topo}–${depois.base}`);
+  }
   await c.close();
 }
 
