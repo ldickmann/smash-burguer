@@ -1,7 +1,8 @@
 // Confirmação no M3 (docs/direcoes/desenho/carrinho-pagamento.md, §5.9 e §9): uma pilha de dois
 // segmentos (a faixa primary-container com o h1 e os dados do pedido numa dl, e o resumo somente
-// leitura) e as duas ações. O h1 recebe o foco ao montar. "Pedido #1001 · PIX" virou a dl "Pedido" /
-// "Forma de pagamento", sem o "·" (troca confirmada pelo usuário em 22/11/2026).
+// leitura) e as duas ações. O h1 recebe o foco ao montar. A linha antiga, com o número e a forma do pedido
+// separados por "·", virou a dl "Pedido" / "Forma de pagamento" (troca confirmada pelo usuário em
+// 22/11/2026).
 import { afterEach, describe, expect, it } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
@@ -87,7 +88,7 @@ describe('ConfirmationView (Confirmação do Material 3)', () => {
   it('o número e a forma do pedido numa dl, sem "·"', async () => {
     await montarConfirmacao();
     expect(dados()).toEqual([
-      ['Pedido', '#1001'],
+      ['Pedido', `#${PEDIDO.id}`],
       ['Forma de pagamento', 'PIX'],
     ]);
     expect(wrapper.find('.confirmation-page__status').text()).not.toContain('·');
