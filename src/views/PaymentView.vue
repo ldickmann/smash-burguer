@@ -1,11 +1,14 @@
+<!-- Pagamento (desenho do Carrinho, §3 e §5.6 a §5.8): "Entrega" e "Forma de pagamento" em contêineres
+     surface-container-low, cada uma com o seu h2, e o resumo compacto com o CTA. A seção da forma de
+     pagamento não vira região: o grupo já é nomeado pela legend, e o nome seria lido três vezes. -->
 <template>
   <div class="payment-page container">
     <h1 class="payment-page__title">Finalizar pedido</h1>
 
     <div class="payment-page__layout">
       <div class="payment-page__sections">
-        <section class="payment-page__card" aria-labelledby="entrega-titulo">
-          <h2 id="entrega-titulo" class="payment-page__section-title">Entrega</h2>
+        <section class="payment-page__secao" aria-labelledby="entrega-titulo">
+          <h2 id="entrega-titulo">Entrega</h2>
 
           <template v-if="address">
             <address class="payment-page__address">
@@ -14,30 +17,31 @@
               <span>{{ address.city }}/{{ address.state }}</span>
               <span v-if="cep">CEP {{ cep }}</span>
             </address>
-            <RouterLink to="/profile" class="payment-page__link">Alterar no perfil</RouterLink>
+            <BaseButton variant="ghost" to="/profile" class="payment-page__alterar">Alterar no perfil</BaseButton>
           </template>
 
-          <div v-else class="payment-page__warning">
-            <p class="payment-page__warning-text">
-              <font-awesome-icon :icon="['fas', 'circle-exclamation']" aria-hidden="true" />
+          <!-- Sem papel ARIA: o aviso já está na página ao carregar, e a frase volta como ajuda do CTA -->
+          <div v-else class="payment-page__aviso">
+            <p class="payment-page__aviso-texto">
+              <span class="payment-page__aviso-icone" aria-hidden="true">
+                <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+              </span>
               Cadastre um endereço para receber o pedido.
             </p>
-            <RouterLink to="/profile" class="payment-page__link">Adicionar endereço</RouterLink>
+            <BaseButton size="sm" to="/profile">Adicionar endereço</BaseButton>
           </div>
         </section>
 
-        <section class="payment-page__card">
+        <section class="payment-page__secao">
+          <h2>Forma de pagamento</h2>
           <PaymentMethodPicker v-model="paymentMethod" />
         </section>
       </div>
 
-      <OrderSummary
-        :items="cartStore.items"
-        variant="compact"
-        class="payment-page__card payment-page__summary"
-      >
+      <OrderSummary :items="cartStore.items" variant="compact" class="payment-page__resumo">
         <template #cta>
           <BaseButton
+            class="payment-page__cta"
             size="lg"
             block
             :disabled="!canSubmit"
@@ -58,7 +62,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cart";
 import { useUserStore } from "@/stores/userStore";
@@ -111,7 +115,14 @@ const submit = async () => {
       message: "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.",
       variant: "info",
     });
-    if (!cartStore.items.length) router.push("/cart");
+    if (!cartStore.items.length) {
+      router.push("/cart");
+      return;
+    }
+    // Com o aviso na tela, o scroll-padding da rota soma a altura dele: o elemento focado (o CTA,
+    // pelo teclado) rola para fora de baixo do aviso. O jsdom não tem scrollIntoView
+    await nextTick();
+    document.activeElement?.scrollIntoView?.({ block: "nearest" });
     return;
   }
 

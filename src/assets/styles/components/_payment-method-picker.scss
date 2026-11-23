@@ -1,75 +1,177 @@
-// PaymentMethodPicker (SPEC §4.1): o <label> de cada rádio é um card de 64px.
+// PaymentMethodPicker (desenho do Carrinho, §5.7): lista segmentada vertical [66][81] de opções de 64 px
+// em surface-container-lowest, com cantos de fora de 20 e de dentro de 4 pela posição [8] e o vão de
+// 2 px; a seção da página é a bandeja (low). A marcada fica em secondary-container e troca de forma
+// (os quatro cantos de 20) [54][107]; o controle passa de círculo vazio a primary com o check [113]. A
+// cor sozinha não é sinal (1,29:1): os sinais são o controle e a forma [99]. Troca direta de fundo,
+// contorno e cantos; só o check e a camada de estado mudam por opacidade.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
-.payment-picker__legend {
-  margin-bottom: var(--space-4);
+// O padrão do fieldset é min-content
+.payment-picker {
+  min-inline-size: 0;
+  margin: 0;
   padding: 0;
-  font-size: var(--text-lg);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  border: 0;
 }
 
 .payment-picker__options {
-  display: grid;
-  gap: var(--space-3);
-
-  @include up(sm) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--m3-vao-segmento);
 }
 
 .payment-option {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
+  // Camada de 8% no hover e 10% no pressionado, na cor do conteúdo [12]
+  @include camada-de-estado;
+
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: 4rem;
   padding: var(--space-2) var(--space-4);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima) var(--m3-item-canto-baixo)
+    var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
   cursor: pointer;
 
-  @include hover-capable {
-    &:hover {
-      border-color: var(--color-border-strong);
-    }
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
   }
 
-  // Foco no card inteiro
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+  }
+
+  // O rádio fica escondido: o anel vai no label, por dentro, porque as opções ficam encostadas
   &:has(:focus-visible) {
     outline: var(--focus-width) solid var(--color-focus);
-    outline-offset: var(--focus-offset);
+    outline-offset: calc(-1 * var(--focus-width));
   }
 
-  &.is-checked {
-    border-color: var(--color-accent);
-    background: var(--color-accent-soft);
+  // O fundo some com as cores forçadas: a borda devolve o limite de cada opção
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--m3-outline);
   }
 }
 
-.payment-option__icon {
+// Marcada: em qualquer posição, os quatro cantos de 20; a camada de estado fica na cor dela
+.payment-option.is-checked {
+  --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+
+  @media (forced-colors: active) {
+    border: 2px solid Highlight;
+  }
+}
+
+// O rádio escondido ganha o retângulo do label (o label é posicionado pela camada de estado). O recorte
+// do .visually-hidden continua: ele segue invisível e fora do clique, mas a rolagem do foco usa o
+// retângulo de layout, e não o ponto de 1 px (pendência da etapa 4, com 800 e 830 px de altura)
+.payment-option__input {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+}
+
+.payment-option__controle {
+  display: grid;
   flex-shrink: 0;
-  width: 1.25rem;
-  color: var(--color-ink-muted);
-  font-size: 1.25rem;
+  place-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--m3-on-surface-variant);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-primary);
+  font-size: var(--m3-body-m);
+
+  // Só cores do sistema, mantidas com o ajuste desligado: contorno em CanvasText e, na marcada, o
+  // círculo cheio em CanvasText com o check em Canvas, como o checkbox do material-web [114]
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+    background: Canvas;
+    color: Canvas;
+    forced-color-adjust: none;
+  }
+}
+
+.payment-option.is-checked .payment-option__controle {
+  border-color: var(--m3-primary);
+  background: var(--m3-primary);
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+    background: CanvasText;
+    color: Canvas;
+  }
+}
+
+// O check fica no DOM e entra por opacidade, ligado ao estado (nunca por @keyframes)
+.payment-option__check {
+  opacity: 0;
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.payment-option.is-checked .payment-option__check {
+  opacity: 1;
 }
 
 .payment-option__text {
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-width: 0;
 }
 
 .payment-option__name {
-  font-weight: 600;
+  @include tipo(body-l);
+
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
 .payment-option__desc {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
-.payment-option__check {
+// O ícone da forma é apoio, solto no fim, sem o círculo tonal (sumiria na marcada)
+.payment-option__icon {
   flex-shrink: 0;
-  color: var(--color-accent);
+  width: 1.25rem;
+  color: var(--m3-on-surface-variant);
   font-size: 1.25rem;
+}
+
+.payment-option.is-checked .payment-option__desc,
+.payment-option.is-checked .payment-option__icon {
+  color: var(--m3-on-secondary-container);
+}
+
+// Com movimento, o check entra também com a mola espacial rápida, como o do "Adicionado" (§7.6)
+@include motion-ok {
+  .payment-option__check {
+    transform: scale(0);
+    transition:
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .payment-option.is-checked .payment-option__check {
+    transform: none;
+  }
 }

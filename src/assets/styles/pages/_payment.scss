@@ -1,13 +1,37 @@
-// Pagamento (SPEC §5.6): seções à esquerda e resumo compacto fixo à direita a partir de lg.
+// Pagamento (desenho do Carrinho, §3 e §5.6 a §5.8): seções em contêineres surface-container-low à
+// esquerda e o resumo compacto à direita, na grade 8/12 e 4/12 do SPEC.md a partir de lg. O resumo só
+// gruda em janelas com altura para ele (48rem): abaixo disso, rola com a página (§5.3).
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
+// Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do
+// foco soma a altura de um aviso, no pé abaixo de md e no topo a partir dele. É o que tira o CTA de baixo
+// do aviso da conferência com o cardápio. A etapa 10 (AppToast) herda ou absorve a regra (§4)
+:global(html:has(.payment-page):has(.toast-region .toast)) {
+  @include below(md) {
+    scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
+  }
+
+  @include up(md) {
+    scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
+  }
+}
+
+// O ritmo do Cardápio: a página a 20 e 40 px do cabeçalho; o h1 (regra global) a 20 e 32 px do conteúdo
 .payment-page {
-  padding-block: var(--space-6) var(--space-8);
+  padding-block: var(--space-5) var(--space-8);
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
 }
 
 .payment-page__title {
   margin-bottom: var(--space-5);
-  font-size: var(--text-page);
+
+  @include up(md) {
+    margin-bottom: var(--space-6);
+  }
 }
 
 .payment-page__layout {
@@ -26,57 +50,97 @@
   gap: var(--space-5);
 }
 
-.payment-page__card {
+// Seções: o h2 pela regra global (headline-s) e o conteúdo a 12 px dele
+.payment-page__secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
 
-  @include up(lg) {
+  @include up(sm) {
     padding: var(--space-5);
   }
 }
 
-.payment-page__summary {
+.payment-page__address {
+  @include tipo(body-l);
+
+  display: flex;
+  flex-direction: column;
+  color: var(--m3-on-surface);
+  font-style: normal;
+  letter-spacing: var(--m3-body-l-tracking);
+  overflow-wrap: anywhere;
+}
+
+// Text button alinhado ao texto do endereço (o padding dele é de 12)
+.payment-page__alterar {
+  align-self: flex-start;
+  margin-inline-start: calc(-1 * var(--space-3));
+}
+
+// Aviso sem endereço: aviso sobre aviso-container, com o filled S "Adicionar endereço" dentro (o tonal
+// sumiria no aviso, 1,00:1). Borda nos modos de contraste, onde o fundo some
+.payment-page__aviso {
+  @include reserva-de-sombra;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-aviso-container);
+  color: var(--m3-aviso);
+}
+
+.payment-page__aviso-texto {
+  @include tipo(body-l);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  letter-spacing: var(--m3-body-l-tracking);
+}
+
+// O ícone de 20 px centrado na altura da primeira linha do texto
+.payment-page__aviso-icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--m3-body-l-linha);
+  font-size: 1.25rem;
+}
+
+// O contêiner do resumo fica na página, e não no OrderSummary (o perfil vai sem caixa)
+.payment-page__resumo {
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+
+  @include up(sm) {
+    padding: var(--space-5);
+  }
+
   @include up(lg) {
-    position: sticky;
-    top: calc(var(--navbar-h) + var(--space-5));
+    @include altura-min(resumo-grudado) {
+      position: sticky;
+      top: calc(var(--navbar-h) + var(--space-5));
+    }
   }
 }
 
-.payment-page__section-title {
-  margin-bottom: var(--space-3);
-}
-
-.payment-page__address {
-  display: flex;
-  flex-direction: column;
-  font-style: normal;
-}
-
-.payment-page__warning {
-  color: var(--color-warning);
-}
-
-.payment-page__warning-text {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-// Link de ação fora de texto corrido: alvo de 44px
-.payment-page__link {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--target-min);
-  color: var(--color-ink);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+// O rótulo do CTA quebra linha: totais de quatro dígitos e janelas de 320 px não cabem numa só
+.payment-page__resumo .payment-page__cta {
+  white-space: normal;
 }
 
 .payment-page__help {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
   text-align: center;
 }

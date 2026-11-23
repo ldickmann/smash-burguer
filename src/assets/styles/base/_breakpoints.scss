@@ -32,6 +32,23 @@ $breakpoints: (
   }
 }
 
+// Alturas mínimas de janela (desenho do Carrinho, §5.3): o resumo do pagamento só gruda quando a
+// janela tem altura para a coluna das seções e o cabeçalho (cerca de 706 px; 48rem deixa folga)
+$alturas: (
+  "resumo-grudado": 48rem,
+);
+
+// @include altura-min(resumo-grudado) { … } → @media (min-height: 48rem)
+@mixin altura-min($altura) {
+  @if not map.has-key($alturas, $altura) {
+    @error "Altura `#{$altura}` não existe em $alturas.";
+  }
+
+  @media (min-height: map.get($alturas, $altura)) {
+    @content;
+  }
+}
+
 // Só em dispositivos com mouse ou trackpad
 @mixin hover-capable {
   @media (hover: hover) and (pointer: fine) {
