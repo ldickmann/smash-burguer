@@ -1,3 +1,6 @@
+<!-- Carrinho (desenho do Carrinho, §3 e §5.1 a §5.5): o h1 na superfície; a lista numa bandeja
+     surface-container-low de cantos concêntricos, nomeada por um h2 escondido; o resumo num contêiner
+     da página, com os CTAs de quem entrou ou do visitante. Sem itens, o EmptyState. -->
 <template>
   <div class="cart-page container">
     <h1 ref="titleRef" class="cart-page__title" tabindex="-1">Seu carrinho</h1>
@@ -14,8 +17,9 @@
     </EmptyState>
 
     <div v-else class="cart-page__layout">
-      <section class="cart-page__card cart-page__list-card" aria-label="Itens do carrinho">
-        <ul ref="listRef" class="cart-page__list" role="list">
+      <section class="cart-page__lista" aria-labelledby="itens-titulo">
+        <h2 id="itens-titulo" class="visually-hidden">Itens do carrinho</h2>
+        <ul ref="listRef" class="cart-page__itens" role="list">
           <CartItem
             v-for="(item, index) in cartStore.items"
             :key="`${item.productId}-${item.category}-${index}`"
@@ -27,7 +31,7 @@
         </ul>
       </section>
 
-      <OrderSummary :items="cartStore.items" variant="cart" class="cart-page__card cart-page__summary">
+      <OrderSummary :items="cartStore.items" variant="cart" class="cart-page__resumo">
         <template #cta>
           <template v-if="userStore.isAuthenticated">
             <BaseButton size="lg" block to="/payment">Finalizar pedido</BaseButton>
@@ -71,6 +75,8 @@ const toastStore = useToastStore();
 const titleRef = ref(null);
 const listRef = ref(null);
 
+const removeButtons = () => listRef.value?.querySelectorAll("[data-remove]") ?? [];
+
 // Tira o item na hora e oferece "Desfazer" por 5 s, devolvendo-o à mesma posição
 const removeItem = async (index) => {
   const removed = cartStore.removeItem(index);
@@ -83,13 +89,18 @@ const removeItem = async (index) => {
     action: {
       label: "Desfazer",
       icon: "rotate-left",
-      onClick: () => cartStore.restoreItem(removed, index),
+      // O botão "Desfazer" some com o aviso: o foco vai ao "Remover" do item devolvido, e não ao body
+      onClick: async () => {
+        cartStore.restoreItem(removed, index);
+        await nextTick();
+        removeButtons()[Math.min(index, cartStore.items.length - 1)]?.focus();
+      },
     },
   });
 
   // O botão que tinha o foco sumiu: o foco vai para o "Remover" vizinho ou para o título
   await nextTick();
-  const buttons = listRef.value?.querySelectorAll("[data-remove]") ?? [];
+  const buttons = removeButtons();
   const next = buttons[Math.min(index, buttons.length - 1)];
   (next ?? titleRef.value)?.focus();
 };

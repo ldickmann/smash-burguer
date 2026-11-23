@@ -1,60 +1,85 @@
-// CartItem (SPEC §5.5): linha de lista com miniatura, detalhes, total, stepper e "Remover".
+// CartItem (desenho do Carrinho, §5.2): bloco em surface-container-lowest da lista segmentada [66][81],
+// com cantos de fora de 20 e de dentro de 4 pela posição [8] (as variáveis do M3ItemLista) e o vão de
+// 2 px na lista. Nome em body-l, detalhes em body-m e total em title-m 500, os papéis do M3ItemLista.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
 .cart-item {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding-block: var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima) var(--m3-item-canto-baixo)
+    var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
 
-  & + & {
-    border-top: 1px solid var(--color-border);
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  }
+
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+  }
+
+  @include up(sm) {
+    padding: var(--space-3) var(--space-4);
   }
 }
 
 .cart-item__top {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) auto;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
   align-items: start;
   gap: var(--space-3);
 }
 
-.cart-item__thumb {
-  width: 64px;
-  height: 64px;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-3);
+.cart-item__foto {
+  width: 4rem;
 }
 
-.cart-item__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+// O cartão da M3Foto passa a 28 a partir de md, quase um círculo em 64 px, e confundiria o hambúrguer
+// com a bebida. A regra vai na raiz do filho, onde fica o border-radius (o escopo deste componente
+// também está nela), e vence a da M3Foto pela especificidade, sem :deep()
+.cart-item__foto.m3-foto--cartao {
+  border-radius: var(--m3-forma-l);
 }
 
 .cart-item__info {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
 }
 
+// O nome inteiro e a observação fazem parte da conferência: quebram em qualquer ponto, sem corte
 .cart-item__name {
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-l-tracking);
+  overflow-wrap: anywhere;
 }
 
 .cart-item__detail {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
+  overflow-wrap: anywhere;
 }
 
 .cart-item__total {
-  font-weight: 700;
+  @include tipo(title-m, 500);
+
+  color: var(--m3-on-surface);
   white-space: nowrap;
 }
 
+// 2ª linha: o stepper no início e o "Remover" no fim; a partir de sm, recuada até o nome
 .cart-item__bottom {
   display: flex;
   align-items: center;
@@ -62,6 +87,6 @@
   gap: var(--space-3);
 
   @include up(sm) {
-    padding-left: calc(64px + var(--space-3));
+    padding-inline-start: calc(4rem + var(--space-3));
   }
 }

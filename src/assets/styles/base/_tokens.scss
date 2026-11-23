@@ -150,6 +150,10 @@
   // Barra do grupo de categorias do Cardápio: a opção de 44 px e o respiro em cima e embaixo (68 px).
   // Entra no scroll-padding-top da rota (desenho do Cardápio, §4)
   --m3-categorias-altura: calc(var(--target-min) + 2 * var(--space-3));
+  // Um aviso (toast) de até 3 linhas e o vão. No carrinho e no pagamento, soma-se ao scroll-padding
+  // enquanto há aviso na tela, para o foco não ficar debaixo dele (desenho do Carrinho, §4). A etapa 10
+  // (AppToast) herda ou absorve esta reserva
+  --m3-toast-reserva: 6rem;
 
   // ---------- Tokens do projeto que ficam (SPEC-material §2.1) ----------
   // Espaçamento e layout

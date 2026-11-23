@@ -1,23 +1,32 @@
-// OrderSummary (SPEC §4.1): itens, divisor, Subtotal, Total e CTA.
+// OrderSummary (desenho do Carrinho, §5.3): título, linhas, Subtotal, Total e CTA. Sem contêiner: ele
+// fica na página (carrinho, pagamento e confirmação), e o perfil (etapa 8) recebe só a tipografia. O
+// título segue a regra global do h2 (headline-s). Linhas em body-l (body-m no compacto, para caber mais
+// na coluna grudada); Total em headline-s 500 tabular, a ênfase pelo peso e pelo tamanho [1].
+@use "../base/m3" as *;
+
 .order-summary {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.order-summary__title {
-  font-family: var(--font-text);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  text-transform: none;
-  letter-spacing: 0;
-}
-
 .order-summary__items {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
+}
+
+.order-summary__item {
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-l-tracking);
+}
+
+.order-summary--compact .order-summary__item {
+  @include tipo(body-m);
+
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .order-summary__line {
@@ -27,51 +36,60 @@
   gap: var(--space-3);
 }
 
+// Nome longo e observação sem espaço quebram; o total da linha fica à direita, na primeira linha
 .order-summary__name {
-  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .order-summary__line-total {
-  font-weight: 700;
   white-space: nowrap;
 }
 
 .order-summary__detail {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
-}
+  @include tipo(body-m);
 
-.order-summary--compact {
-  .order-summary__items {
-    gap: var(--space-2);
-    font-size: var(--text-sm);
-  }
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
+  overflow-wrap: anywhere;
 }
 
 .order-summary__totals {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+}
+
+// Divisor decorativo só quando há linhas acima (compacto e somente leitura); a estrutura vem da dl
+.order-summary__items + .order-summary__totals {
   padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--m3-outline-variant);
 }
 
 .order-summary__row {
+  @include tipo(body-l);
+
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
-  color: var(--color-ink-muted);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
 .order-summary__row--total {
-  color: var(--color-ink);
-  font-weight: 700;
+  color: var(--m3-on-surface);
+
+  dt {
+    @include tipo(title-m, 500);
+
+    letter-spacing: var(--m3-title-m-tracking);
+  }
 
   .order-summary__value {
-    font-size: var(--text-xl);
-    line-height: var(--leading-tight);
+    @include tipo(headline-s, 500);
+
+    letter-spacing: var(--m3-headline-s-tracking);
   }
 }
 
