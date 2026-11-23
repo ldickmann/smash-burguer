@@ -30,14 +30,16 @@
 
   // Micro-interações do M3 (SPEC-material §3, item 6, e §7): prensa, chevron, folha, checks e badge.
   // O .btn__check é o check do retorno do BaseButton (o .m3-botao__check da Home); o
-  // .ingredients-list__check é o do checkbox dos ingredientes no modal Personalizar
+  // .ingredients-list__check é o do checkbox dos ingredientes no modal Personalizar; o
+  // .payment-option__check, o do rádio marcado da forma de pagamento
   .m3-prensa__disco,
   .m3-dividido__seta--baixo,
   .m3-folha,
   .m3-dividido__check,
   .m3-badge,
   .btn__check,
-  .ingredients-list__check {
+  .ingredients-list__check,
+  .payment-option__check {
     transform: none;
   }
 }

@@ -80,10 +80,29 @@ const SCENARIOS = {
     },
     { name: 'modal-ingrediente-removido', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.locator('dialog[open] .ingredients-list__label', { hasText: 'Tomate' }).click(); await p.waitForTimeout(300); await exigir(p, 'dialog[open] .ingredients-list__label.is-removed', 'modal-ingrediente-removido'); } },
     { name: 'modal-adicional', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.getByRole('button', { name: 'Aumentar Bacon' }).click(); await p.waitForTimeout(400); const bacon = await p.locator('dialog[open] .additionals-list .stepper__value').first().textContent(); if (bacon.trim() !== '1') throw new Error(`modal-adicional: o Bacon ficou em "${bacon.trim()}"`); } },
-    { name: 'cart-vazio', hash: '#/cart' },
-    { name: 'cart-itens', hash: '#/cart', storage: { 'smash-burger:cart:v1': CART } },
-    { name: 'payment', hash: '#/payment', storage: LOGGED },
-    { name: 'confirmation', hash: '#/confirmation', storage: LOGGED },
+    // Carrinho, pagamento e confirmação (desenho do Carrinho, §9): cada estado confere o seletor dele
+    { name: 'cart-vazio', hash: '#/cart', full: true, act: async (p) => { await exigir(p, '.cart-page .empty-state', 'cart-vazio'); } },
+    { name: 'cart-itens', hash: '#/cart', storage: { 'smash-burger:cart:v1': CART }, full: true, act: async (p) => { await exigir(p, '.cart-page__notice', 'cart-itens'); } },
+    { name: 'cart-logado', hash: '#/cart', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.cart-page__resumo a:has-text("Finalizar pedido")', 'cart-logado'); } },
+    { name: 'cart-desfazer', hash: '#/cart', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Remover Cheese Bacon' }).click(); await p.waitForTimeout(300); await exigir(p, '.toast button:has-text("Desfazer")', 'cart-desfazer'); } },
+    { name: 'payment', hash: '#/payment', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.payment-page address', 'payment'); } },
+    {
+      name: 'payment-sem-endereco', hash: '#/payment', full: true,
+      storage: { ...LOGGED, 'smash-burger:session': { ...SESSION, user: { ...USER, address: {} } }, 'smash-burger:account': { ...USER, address: {} } },
+      act: async (p) => { await exigir(p, '.payment-page__aviso', 'payment-sem-endereco'); },
+    },
+    { name: 'payment-marcada', hash: '#/payment', storage: LOGGED, act: async (p) => { await p.locator('input[name="payment-method"][value="pix"]').check({ force: true }); await p.waitForTimeout(300); await exigir(p, '.payment-option.is-checked', 'payment-marcada'); } },
+    {
+      // A espera simulada de 800 ms é esticada só nesta página, para o axe medir o estado carregando
+      name: 'payment-enviando', hash: '#/payment', storage: LOGGED, act: async (p) => {
+        await p.locator('input[name="payment-method"][value="pix"]').check({ force: true });
+        await p.evaluate(() => { const original = window.setTimeout; window.setTimeout = (fn, ms, ...resto) => original(fn, ms === 800 ? 60000 : ms, ...resto); });
+        await p.getByRole('button', { name: /Confirmar pedido/ }).click();
+        await p.waitForTimeout(300);
+        await exigir(p, '.order-summary__cta [aria-busy="true"]', 'payment-enviando');
+      },
+    },
+    { name: 'confirmation', hash: '#/confirmation', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.confirmation-page__status h1', 'confirmation'); } },
     { name: 'login', hash: '#/login' },
     { name: 'login-erro', hash: '#/login', storage: { 'smash-burger:account': USER }, act: async (p) => { await p.fill('#email', USER.email); await p.fill('#password', 'errada123'); await p.getByRole('button', { name: 'Entrar', exact: true }).click(); await p.waitForTimeout(1600); } },
     { name: 'register', hash: '#/register' },

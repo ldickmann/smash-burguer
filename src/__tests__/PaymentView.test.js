@@ -41,8 +41,8 @@ const burger = () => {
   };
 };
 
-const mountPayment = async (items) => {
-  useUserStore().setUser(USER);
+const mountPayment = async (items, { method = 'pix', user = USER, attachTo } = {}) => {
+  useUserStore().setUser(user);
   const cart = useCartStore();
   items.forEach((item) => cart.addItem(item));
 
@@ -56,14 +56,17 @@ const mountPayment = async (items) => {
   await router.push('/payment');
 
   const wrapper = mount(PaymentView, {
+    attachTo,
     global: {
       plugins: [pinia, router],
-      stubs: { 'font-awesome-icon': { template: '<svg />' } },
+      stubs: { 'font-awesome-icon': { props: ['icon'], template: '<svg :data-icon="[].concat(icon).join(\'-\')" />' } },
     },
   });
-  await wrapper.find('input[type="radio"][value="pix"]').setValue();
+  if (method) await wrapper.find(`input[type="radio"][value="${method}"]`).setValue();
   return { wrapper, router };
 };
+
+const ctaOf = (wrapper) => wrapper.find('.payment-page__resumo .order-summary__cta button');
 
 // Confirma e avança a espera simulada do envio
 const confirm = async (wrapper) => {
@@ -155,5 +158,136 @@ describe('PaymentView', () => {
     expect(useUserStore().orderHistory).toEqual([]);
     expect(useCartStore().items).toEqual([]);
     expect(router.currentRoute.value.path).toBe('/cart');
+  });
+});
+
+// Pagamento no M3 (docs/direcoes/desenho/carrinho-pagamento.md, §5.6 a §5.8 e §9). As setas do grupo
+// de rádios são do navegador [92][96] e não andam no jsdom: ficam no keyboard.mjs.
+describe('PaymentView (Pagamento do Material 3)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    pinia = createPinia();
+    setActivePinia(pinia);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('"Entrega" e "Forma de pagamento" em seções com h2; só a Entrega vira região nomeada', async () => {
+    const { wrapper } = await mountPayment([burger()], { method: null });
+    const secoes = wrapper.findAll('section.payment-page__secao');
+    expect(secoes.map((secao) => secao.find('h2').text())).toEqual(['Entrega', 'Forma de pagamento']);
+    expect(secoes[0].attributes('aria-labelledby')).toBe('entrega-titulo');
+    expect(secoes[0].find('h2').attributes('id')).toBe('entrega-titulo');
+    expect(secoes[1].attributes('aria-labelledby')).toBeUndefined();
+    expect(secoes[1].find('h2').classes()).not.toContain('visually-hidden');
+  });
+
+  it('um fieldset com a legend escondida e quatro rádios no mesmo name, nenhum marcado ao abrir', async () => {
+    const { wrapper } = await mountPayment([burger()], { method: null });
+    const grupo = wrapper.find('section.payment-page__secao fieldset.payment-picker');
+    const legenda = grupo.find('legend');
+    expect(legenda.text()).toBe('Forma de pagamento');
+    expect(legenda.classes()).toContain('visually-hidden');
+
+    const radios = grupo.findAll('input[type="radio"]');
+    expect(radios.map((radio) => radio.element.value)).toEqual(['credit', 'debit', 'pix', 'cash']);
+    expect(new Set(radios.map((radio) => radio.attributes('name')))).toEqual(new Set(['payment-method']));
+    expect(radios.some((radio) => radio.element.checked)).toBe(false);
+    expect(radios.every((radio) => radio.classes().includes('payment-option__input'))).toBe(true);
+  });
+
+  it('cada opção tem o controle com o check no início e o ícone da forma no fim; a marcada fica is-checked', async () => {
+    const { wrapper } = await mountPayment([burger()]);
+    const opcoes = wrapper.findAll('label.payment-option');
+    expect(opcoes).toHaveLength(4);
+    for (const opcao of opcoes) {
+      const filhos = [...opcao.element.children].map((el) => el.getAttribute('class'));
+      expect(filhos[0]).toContain('payment-option__input');
+      expect(filhos[1]).toContain('payment-option__controle');
+      expect(filhos.at(-1)).toContain('payment-option__icon');
+      const controle = opcao.find('.payment-option__controle');
+      expect(controle.attributes('aria-hidden')).toBe('true');
+      expect(controle.find('.payment-option__check').attributes('data-icon')).toBe('fas-check');
+    }
+    expect(opcoes.map((opcao) => opcao.classes().includes('is-checked'))).toEqual([false, false, true, false]);
+    expect(wrapper.find('[data-icon="fas-circle-check"]').exists()).toBe(false);
+  });
+
+  it('com endereço: o address e "Alterar no perfil" como text button para /profile', async () => {
+    const { wrapper } = await mountPayment([burger()], { method: null });
+    expect(wrapper.find('.payment-page address').text()).toContain('Rua Beira da Praia');
+    expect(wrapper.find('.payment-page address').text()).toContain('CEP 88370-000');
+    const alterar = wrapper.findAll('a').find((a) => a.text() === 'Alterar no perfil');
+    expect(alterar.attributes('href')).toBe('/profile');
+    expect(alterar.classes()).toContain('m3-botao--texto');
+  });
+
+  it('sem endereço: o aviso e "Adicionar endereço" em filled S para /profile; o CTA fica desabilitado', async () => {
+    const { wrapper } = await mountPayment([burger()], { user: { ...USER, address: {} } });
+    const aviso = wrapper.find('.payment-page__aviso');
+    expect(aviso.text()).toContain('Cadastre um endereço para receber o pedido.');
+    const adicionar = aviso.find('a');
+    expect(adicionar.text()).toBe('Adicionar endereço');
+    expect(adicionar.attributes('href')).toBe('/profile');
+    expect(adicionar.classes()).toEqual(expect.arrayContaining(['m3-botao--filled', 'btn--sm']));
+
+    // Com a forma marcada, o CTA continua desabilitado pela falta do endereço
+    const cta = ctaOf(wrapper);
+    expect(cta.attributes('disabled')).toBeDefined();
+    expect(cta.attributes('aria-describedby')).toBe('pagamento-ajuda');
+    expect(wrapper.find('#pagamento-ajuda').text()).toBe('Cadastre um endereço para receber o pedido.');
+  });
+
+  it('o CTA fica desabilitado até marcar uma forma; marcar habilita e tira a ajuda', async () => {
+    const { wrapper } = await mountPayment([burger()], { method: null });
+    const cta = ctaOf(wrapper);
+    expect(cta.classes()).toEqual(expect.arrayContaining(['payment-page__cta', 'm3-botao--filled', 'btn--lg', 'btn--block']));
+    expect(cta.attributes('disabled')).toBeDefined();
+    expect(cta.attributes('aria-describedby')).toBe('pagamento-ajuda');
+    expect(wrapper.find('#pagamento-ajuda').text()).toBe('Escolha uma forma de pagamento');
+
+    await wrapper.find('input[type="radio"][value="cash"]').setValue();
+    expect(ctaOf(wrapper).attributes('disabled')).toBeUndefined();
+    expect(ctaOf(wrapper).attributes('aria-describedby')).toBeUndefined();
+    expect(wrapper.find('#pagamento-ajuda').exists()).toBe(false);
+    expect(ctaOf(wrapper).text()).toBe(`Confirmar pedido · ${formatPrice(2 * 29.49)}`);
+  });
+
+  it('"Enviando pedido…" com aria-busy durante os 800 ms', async () => {
+    const { wrapper } = await mountPayment([burger()]);
+    await ctaOf(wrapper).trigger('click');
+
+    expect(ctaOf(wrapper).text()).toBe('Enviando pedido…');
+    expect(ctaOf(wrapper).attributes('aria-busy')).toBe('true');
+    await vi.advanceTimersByTimeAsync(799);
+    expect(ctaOf(wrapper).attributes('aria-busy')).toBe('true');
+
+    await vi.advanceTimersByTimeAsync(1);
+    await flushPromises();
+    expect(useUserStore().orderHistory).toHaveLength(1);
+  });
+
+  it('depois do aviso da conferência, o elemento focado rola para a vista (block: nearest)', async () => {
+    const rolar = vi.fn();
+    HTMLElement.prototype.scrollIntoView = rolar;
+    try {
+      const { wrapper } = await mountPayment(
+        [{ ...burger(), unitPrice: -500, additionals: [{ name: 'Bacon', price: 0, quantity: 1 }] }],
+        { attachTo: document.body }
+      );
+      ctaOf(wrapper).element.focus();
+      await confirm(wrapper);
+
+      expect(useToastStore().toasts).toHaveLength(1);
+      expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+      expect(rolar.mock.contexts.at(-1)).toBe(document.activeElement);
+      wrapper.unmount();
+    } finally {
+      delete HTMLElement.prototype.scrollIntoView;
+    }
   });
 });

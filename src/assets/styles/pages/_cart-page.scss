@@ -1,13 +1,42 @@
-// Carrinho (SPEC §5.5): lista e resumo em cards; 8/12 + 4/12 a partir de lg.
+// Carrinho (desenho do Carrinho, §3 e §5.1 a §5.5): o h1 na superfície, a lista numa bandeja
+// surface-container-low e o resumo num contêiner da mesma cor, na grade 8/12 e 4/12 do SPEC.md a
+// partir de lg, com o resumo grudado.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
+// Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do
+// foco soma a altura de um aviso, no pé abaixo de md (o aviso fica acima da toolbar) e no topo de md a
+// xl (o aviso fica no topo à direita e cruza a coluna da lista). A partir de xl, o aviso começa depois
+// do "Remover" (só o anel encosta), e a reserva só faria a página pular. Depende das classes e da
+// posição do AppToast de hoje: a etapa 10 herda ou absorve a regra (desenho do Carrinho, §4)
+:global(html:has(.cart-page):has(.toast-region .toast)) {
+  @include below(md) {
+    scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
+  }
+
+  @include up(md) {
+    @include below(xl) {
+      scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
+    }
+  }
+}
+
+// O ritmo do Cardápio: a página a 20 e 40 px do cabeçalho; o h1 (regra global: --text-page, 500) a 20
+// e 32 px do conteúdo
 .cart-page {
-  padding-block: var(--space-6) var(--space-8);
+  padding-block: var(--space-5) var(--space-8);
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
 }
 
 .cart-page__title {
   margin-bottom: var(--space-5);
-  font-size: var(--text-page);
+
+  @include up(md) {
+    margin-bottom: var(--space-6);
+  }
 }
 
 .cart-page__layout {
@@ -20,22 +49,30 @@
   }
 }
 
-.cart-page__card {
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
+// Bandeja: os itens brancos se perderiam na superfície (1,04:1). Com o padding de 8, os cantos ficam
+// concêntricos (28 = 20 + 8)
+.cart-page__lista {
+  padding: var(--space-2);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+}
 
-  @include up(lg) {
+.cart-page__itens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m3-vao-segmento);
+}
+
+// O contêiner do resumo fica na página, e não no OrderSummary: no perfil (etapa 8) ele vai sem caixa
+.cart-page__resumo {
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+
+  @include up(sm) {
     padding: var(--space-5);
   }
-}
 
-.cart-page__list-card {
-  padding-block: 0;
-}
-
-.cart-page__summary {
   @include up(lg) {
     position: sticky;
     top: calc(var(--navbar-h) + var(--space-5));
@@ -43,5 +80,8 @@
 }
 
 .cart-page__notice {
-  color: var(--color-ink-muted);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
