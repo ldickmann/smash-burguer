@@ -1200,3 +1200,25 @@ src/utils/contraste.js                       PARES_CARRINHO (13 pares), os "onde
 - os 6rem do `--m3-toast-reserva`;
 - as posições do aviso em 1280 e 1024;
 - as três inferências: o rádio do tamanho do `label` com 800 e 830 px, o `focus()` com o `scroll-padding` e a reserva de um aviso só.
+
+**Construção (sessão C, 23/11/2026):**
+- **Sticky (5.3):** a coluna das seções do pagamento mede 622 px com endereço (o desenho estimou 618). O resumo compacto mede 377 px com um lanche de três detalhes, 553 com três e 641 com quatro; com quatro, passa da coluna e rola com a página, com o CTA à vista no fim, em 1440×900 e 1024×768. Em 1440×760 (abaixo de 48rem), o resumo fica no fluxo. No carrinho, com dez itens em 1024×768, o resumo (288 px) gruda a 88 px do topo.
+- **Rótulo do CTA (5.8):** em 1024, o botão tem 264 px; "Confirmar pedido · R$ 29,49" cabe numa linha, e "Confirmar pedido · R$ 1.948,00" (duas linhas de R$ 974,00) quebra em duas, com o botão nos 56 px do M.
+- **`--m3-toast-reserva`: 6,5rem, e não 6.** Em 390, o aviso da remoção, com "Desfazer", tem 72 px, e o da conferência com o cardápio, em 3 linhas, 92 px. Com 6rem (96 px), o anel de 5 px do CTA encostaria 1 px no aviso de 92 px; com 6,5rem (104 px), sobra um vão de 7 px.
+- **Posições do aviso (§4):** em 1440, o aviso vai de x 872 a 1288 e o "Remover" termina em 869; em 1280, de 792 a 1208, contra 789: os 3 px de folga da conta. Em 1024, o aviso vai de 576 a 992 e cruza 56 px do "Remover" (521 a 632) na horizontal; a soma no topo a partir de `md` resolve.
+- **As três inferências, no Chromium (`keyboard.mjs`):**
+  - **rádio com o retângulo do `label`:** em 390, com 844, 830 e 800 px de altura, as setas descem até o Dinheiro sem a opção focada cruzar a toolbar. A pendência da etapa 4 está resolvida;
+  - **`focus()` com o `scroll-padding`:** o Chromium respeita a reserva, e o `CartView` não precisou da rolagem extra do §11. Quando o elemento focado está inteiro dentro da reserva, ele o centraliza na área útil; quando está só em parte, alinha-o à borda dela. Em 1024×768, o "Remover" vizinho, a 100 px do topo antes da remoção, termina em 431–485 (com o anel);
+  - **reserva de um aviso:** em 390, com o 5º de seis itens perto do pé (696 px em 844 de altura), o "Remover" vizinho termina centrado (335–389), fora do aviso e da toolbar.
+- **Shift+Tab sem forma marcada (5.7):** o Chromium põe o foco no último rádio (o Dinheiro), como [88] descreve para "alguns navegadores". O `keyboard.mjs` recarrega a página, confere que nada está marcado, descobre o rádio escolhido, põe essa opção em parte sob a toolbar e confere que o Shift+Tab a tira de lá. Com o rádio de volta ao ponto de 1 × 1 px (mutação), a opção fica coberta, em 844 e em 800 px de altura. Nas primeiras rodadas, o script não recarregava a página, o primeiro rádio continuava marcado pelas setas, e o foco ia para ele.
+- **Revisão final (subagente, 23/11/2026):** nenhum crítico. Corrigidos na mesma passada:
+  - **a reserva do topo do carrinho vale de `md` a `xl`, e não de `md` para cima** (desvio desta seção 4 e do 12.i). A partir de 1280 px, o aviso começa depois do "Remover", e só o anel encosta; com a reserva, remover pelo mouse um item perto do topo fazia a página pular 336 px. No pagamento, a reserva continua de `md` para cima, porque o aviso cruza a coluna do resumo em qualquer largura;
+  - cada item do carrinho ganha a borda dos modos de contraste (`reserva-de-sombra`), porque o fundo e o vão de 2 px somem nas cores forçadas;
+  - a 2ª linha do item quebra quando não cabe (`flex-wrap`, com o "Remover" no fim), para não vazar com a fonte maior em 320 px;
+  - as checagens do `keyboard.mjs` passaram a distinguir: as setas conferem a opção marcada, e não só a focada; o Shift+Tab parte de uma opção em parte coberta; em 1440, a checagem confere que a página não pula.
+  - **Fica para a etapa 10:** com dois ou três avisos empilhados, um "Remover" que já estava na área útil não rola e pode ficar sob o aviso mais antigo (risco aceito no §11).
+- **Ajustes do construtor:**
+  - o controle do rádio usa `forced-color-adjust: none` com as cores forçadas, só com cores do sistema, porque o modo forçado troca o fundo do autor;
+  - o ícone do aviso sem endereço fica num `span` da altura da linha de body-l, para ficar centrado na primeira linha sem margem literal;
+  - a chave do mixin `altura-min` é `resumo-grudado`;
+  - a `design:ux-copy` manteve os rótulos da `dl` ("Pedido" e "Forma de pagamento").

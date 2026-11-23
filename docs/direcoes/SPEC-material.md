@@ -668,9 +668,9 @@ Os dossiês não cobrem todos os componentes do M3. Onde não há fonte, a forma
 | `ui/EmptyState.vue` | **Não encontrei** componente de estado vazio nos dossiês. Recomendação: ícone em `on-surface-variant`, título title-l 500, texto body-m `on-surface-variant` e a ação como botão filled M | — | **a desenhar** |
 | `ui/BaseDialog.vue` | **Não encontrei** fonte de diálogo nos dossiês. Pelos apelidos, já fica `surface-container`, `forma-xl` (28), `elevacao-3` e `scrim` | — | **a desenhar** (pesquisa antes); comportamento igual (`showModal()`, foco, Esc) |
 | `FormGroup.vue` | **Não encontrei** fonte de text field nos dossiês. Pelos apelidos: fundo `surface-container-highest`, borda `outline` (3,48:1) e erro em `error` | — | **a desenhar** (pesquisa antes) |
-| `PaymentMethodPicker.vue` | Recomendação: lista segmentada de rádios (cantos 20/4, vão de 2 px), com o marcado em `secondary-container`, como o item atual da pílula | [66], [81] | **a desenhar** |
-| `CartItem.vue` | Recomendação: item de lista segmentada, como o `M3ItemLista`, com o `QuantityStepper` e o "Remover" | [66], [81] | **a desenhar** |
-| `OrderSummary.vue` | Recomendação: contêiner `surface-container-low` de canto 28, como as listas da Home | [66], [26] | **a desenhar** |
+| `PaymentMethodPicker.vue` | Lista segmentada de rádios numa coluna (cantos 20/4, vão de 2 px), com o controle de 24 px no início da linha [107] e o marcado em `secondary-container`, como o item atual da pílula | [66], [81], [107], [113] | Desenhado e construído na etapa 7 (`docs/direcoes/desenho/carrinho-pagamento.md`, §5.7): rádios nativos num `fieldset` com a `legend` escondida (o `h2` fica na seção), sem marcado ao abrir; controle vazio na desmarcada e `primary` com check na marcada, que passa aos quatro cantos de 20; o rádio escondido tem o retângulo do `label` (foco não coberto) |
+| `CartItem.vue` | Item de lista segmentada, como o `M3ItemLista`, com o `QuantityStepper` e o "Remover" | [66], [81] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.2): blocos `surface-container-lowest` de cantos 20/4 numa bandeja `surface-container-low` de padding 8 (cantos concêntricos); `M3Foto` de 64 px na forma da Home (círculo, flor e o cartão de canto 16 nos hambúrgueres); o "Remover" fica com a forma da Brasa até a etapa 10 |
+| `OrderSummary.vue` | Contêiner `surface-container-low` de canto 28, como as listas da Home | [66], [26] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.3): o contêiner fica nas páginas (carrinho, pagamento e confirmação), e o componente muda só a tipografia (linhas em body-l, body-m no compacto; Total em headline-s 500), o divisor só com linhas e o `overflow-wrap: anywhere`. O perfil (etapa 8) recebe só a tipografia, sem caixa |
 | `CartBadge.vue` | Badge do FAB da `M3BarraFerramentas`: badge grande do M3 [35], 16 px, cor de erro | [35] | Pronto (vem da Home) |
 | `ProductCard.vue` (`admin`) | Filled card [63] com o slot de ações | [63] | **a desenhar** com o admin |
 | `IngredientsList.vue`, `AdditionalsList.vue` | Linhas de checkbox do M3 [113] num bloco branco, com a linha de 48 px como alvo [111], e lista segmentada dos adicionais [66][81] | [66], [81], [111], [113] | Desenhado e construído na etapa 6 (desenho do Cardápio, §5.5.2 e §5.5.3) |
@@ -742,7 +742,7 @@ Valores em tokens. A base é 390 px; o resto é acréscimo a partir do breakpoin
 - **A partir de `lg`:** cabeçalho sticky, opaco, com `--navbar-h`, a pílula e o FAB à direita, estáticos e sem elevação.
 - **Sem animação:** a barra não entra animada nem some ao rolar. O Photos para iOS também não esconde a dele [83].
 - **O que sai:** o botão de menu, o painel do menu mobile e a trava de rolagem do menu. Com três links, todos ficam visíveis [H14].
-- **Elementos fixos das outras telas:** as `CategoryTabs` grudam em `top: 0` abaixo de `lg` (§4.3); o `OrderSummary` sticky do carrinho e do pagamento (a partir de `lg`) continua com `top: calc(var(--navbar-h) + var(--space-5))`.
+- **Elementos fixos das outras telas:** as `CategoryTabs` grudam em `top: 0` abaixo de `lg` (§4.3); o `OrderSummary` sticky do carrinho e do pagamento (a partir de `lg`) continua com `top: calc(var(--navbar-h) + var(--space-5))`; no pagamento, só em janelas com 48rem de altura ou mais (mixin `altura-min`, etapa 7).
 
 ### 5.2 Home
 
@@ -780,19 +780,22 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 - **Antes da etapa 6:** o layout da Brasa (`BaseDialog`, `BurgerStack`, ingredientes, adicionais, observação, CTA "Adicionar · R$ x"), com as cores M3 pelos apelidos. É assim que ele aparece na Home aprovada.
 - **Recomendação:** desenhar o modal pela decisão (f), mantendo o fluxo e os textos da §5.4 do `SPEC.md`. O CTA vira filled M (`size="lg"`). Ao confirmar, o foco volta para a frente do split que abriu o modal, que mostra o retorno "Adicionado" (§7.6).
 
-### 5.5 Carrinho — a desenhar
+### 5.5 Carrinho — desenhado na etapa 7
 
-- **Recomendação:** `h1` "Seu carrinho" em display-s; itens numa lista segmentada (§4.2), com miniatura em `M3Foto` de 64 px, nome, detalhes, total da linha, `QuantityStepper` e "Remover"; `OrderSummary` num contêiner `surface-container-low` de canto 28; CTA filled M "Finalizar pedido" (logado) ou "Entrar e finalizar" (visitante), como no `SPEC.md`.
+- **Desenho e construção (etapa 7):** `docs/direcoes/desenho/carrinho-pagamento.md`, §5.1 a §5.5. O `h1` segue a regra global (`--text-page`, de display-s a display-m), com o ritmo do Cardápio; a lista é uma bandeja `surface-container-low` de canto 28 e padding 8, nomeada por um `h2` escondido, com os itens da lista segmentada (§4.2); o resumo fica num contêiner da página, na grade 8/12 e 4/12 do `SPEC.md`, grudado a partir de `lg`; o visitante vê o aviso, "Entrar e finalizar" (filled M) e "Criar conta" (tonal); o "Desfazer" devolve o foco ao "Remover" do item devolvido; enquanto há aviso (toast), o `scroll-padding` da rota soma `--m3-toast-reserva` (no pé abaixo de `md` e no topo de `md` a `xl`, onde o aviso cruza a coluna da lista); cada item ganha borda nos modos de contraste.
+- **Recomendação (antes do desenho):** `h1` "Seu carrinho" em display-s; itens numa lista segmentada (§4.2), com miniatura em `M3Foto` de 64 px, nome, detalhes, total da linha, `QuantityStepper` e "Remover"; `OrderSummary` num contêiner `surface-container-low` de canto 28; CTA filled M "Finalizar pedido" (logado) ou "Entrar e finalizar" (visitante), como no `SPEC.md`.
 - **Fica do `SPEC.md`:** remover com "Desfazer" no toast, carrinho vazio com `EmptyState`, links do visitante.
 
-### 5.6 Pagamento — a desenhar
+### 5.6 Pagamento — desenhado na etapa 7
 
-- **Recomendação:** seções "Entrega" e "Forma de pagamento" em contêineres `surface-container-low`; `PaymentMethodPicker` como lista segmentada de rádios (§4.2); aviso de endereço em `aviso` sobre `aviso-container` (5,03:1); CTA filled M "Confirmar pedido · R$ x", desabilitado até ser válido.
+- **Desenho e construção (etapa 7):** desenho do Carrinho, §5.6 a §5.8. Cada seção tem o seu `h2` (a da forma de pagamento sem `aria-labelledby`); "Alterar no perfil" é text button; sem endereço, o aviso fica em `aviso-container` com o "Adicionar endereço" em filled S; o rótulo do CTA quebra linha; o resumo só gruda com 48rem de altura (mixin `altura-min`); depois do aviso da conferência, o elemento focado rola para a vista. O desabilitado e o `loading` do filled são da etapa 10.
+- **Recomendação (antes do desenho):** seções "Entrega" e "Forma de pagamento" em contêineres `surface-container-low`; `PaymentMethodPicker` como lista segmentada de rádios (§4.2); aviso de endereço em `aviso` sobre `aviso-container` (5,03:1); CTA filled M "Confirmar pedido · R$ x", desabilitado até ser válido.
 - **Fica do `SPEC.md`:** guards, `loading` "Enviando pedido…", conferência com o cardápio e o pedido.
 
-### 5.7 Confirmação — a desenhar
+### 5.7 Confirmação — desenhado na etapa 7
 
-- **Recomendação:** um contêiner `primary-container` com o `h1` "Pedido recebido" (que recebe o foco) e o ícone de check em `on-primary-container` (7,25:1); a linha "Pedido #1001 · PIX" e o `OrderSummary` somente leitura abaixo. Sem prensa: o momento expressivo da loja é um só, o do hero (desenho, resumo).
+- **Desenho e construção (etapa 7):** desenho do Carrinho, §5.9. Uma pilha de dois segmentos numa coluna central de 40rem: a faixa `primary-container` (cantos 28/28/4/4) com o check, o `h1` em headline-m 500 e os dados do pedido, colada ao resumo `surface-container-low` (cantos 4/4/28/28); as ações ficam na superfície. **Desvio registrado desta seção:** os dados do pedido entram na faixa, e não abaixo dela, e a linha "Pedido #1001 · PIX" vira a lista de definição "Pedido" / "#1001" e "Forma de pagamento" / "PIX", sem o "·" (troca confirmada pelo usuário em 22/11/2026).
+- **Recomendação (antes do desenho):** um contêiner `primary-container` com o `h1` "Pedido recebido" (que recebe o foco) e o ícone de check em `on-primary-container` (7,25:1); a linha "Pedido #1001 · PIX" e o `OrderSummary` somente leitura abaixo. Sem prensa: o momento expressivo da loja é um só, o do hero (desenho, resumo).
 - **Ações:** filled "Voltar ao cardápio" e tonal "Ver meus pedidos".
 
 ### 5.8 Login e cadastro — a desenhar
@@ -852,7 +855,7 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 | `CategoryTabs` (etapa 6) | grupo conectado [54]: desmarcada em `surface-container` / `on-surface-variant`; marcada em pílula `primary` / `on-primary` | camada no fundo composto | anel interno no `label` (`on-primary` na marcada) | troca de forma por opacidade [54] | `checked` nativo; pílula inteira | — | — |
 | `QuantityStepper` | **a desenhar** | via botão | via botão | via botão | — | no limite: `disabled` real | — |
 | `FormGroup` | fundo `surface-container-highest`, borda `outline` | **a desenhar** | borda `primary` + anel com `outline-offset: 0` | — | — | prop `disabled`/`readonly` | ajuda com spinner (CEP) |
-| `PaymentMethodPicker` | **a desenhar** | camada | anel no item (`:has(:focus-visible)`) | camada 10% | `secondary-container` + check | — | — |
+| `PaymentMethodPicker` | `surface-container-lowest`, cantos 20/4; controle vazio de 24 px (2 px `on-surface-variant`) | camada | anel interno no item (`:has(:focus-visible)`) | camada 10% | `secondary-container`, quatro cantos de 20, controle `primary` com check (etapa 7) | — | — |
 | `AppToast` | **a desenhar** (`inverse-surface`) | pausa o tempo | anel no fechar | — | — | — | — |
 | Item da sidebar admin | **a desenhar** | camada | anel interno | camada 10% | `secondary-container` | — | — |
 
