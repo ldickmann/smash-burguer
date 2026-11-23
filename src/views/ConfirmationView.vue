@@ -1,21 +1,36 @@
+<!-- Confirmação (desenho do Carrinho, §5.9): uma pilha de dois segmentos numa coluna central [66][8]. A
+     faixa primary-container diz o estado (o check, o h1 e o número e a forma do pedido numa dl) e se
+     cola ao resumo somente leitura. Sem prensa, disco nem foto: não repete o hero da Home. Nada se move.
+     Os dados do pedido dentro da faixa são desvio registrado da SPEC-material §5.7. -->
 <template>
   <div class="confirmation-page container">
-    <div v-if="order" class="confirmation-page__card">
-      <font-awesome-icon
-        :icon="['fas', 'circle-check']"
-        class="confirmation-page__icon"
-        aria-hidden="true"
-      />
-      <h1 ref="titleRef" class="confirmation-page__title" tabindex="-1">Pedido recebido</h1>
-      <p class="confirmation-page__meta">
-        Pedido <span class="tabular">#{{ order.id }}</span> · {{ order.paymentMethod }}
-      </p>
+    <div v-if="order" class="confirmation-page__coluna">
+      <div class="confirmation-page__pilha">
+        <div class="confirmation-page__status">
+          <font-awesome-icon
+            :icon="['fas', 'circle-check']"
+            class="confirmation-page__icone"
+            aria-hidden="true"
+          />
+          <h1 ref="titleRef" class="confirmation-page__title" tabindex="-1">Pedido recebido</h1>
+          <dl class="confirmation-page__dados">
+            <div>
+              <dt>Pedido</dt>
+              <dd class="tabular">#{{ order.id }}</dd>
+            </div>
+            <div>
+              <dt>Forma de pagamento</dt>
+              <dd>{{ order.paymentMethod }}</dd>
+            </div>
+          </dl>
+        </div>
 
-      <OrderSummary :items="order.items" variant="readonly" class="confirmation-page__summary" />
+        <OrderSummary :items="order.items" variant="readonly" class="confirmation-page__resumo" />
+      </div>
 
-      <div class="confirmation-page__actions">
-        <BaseButton to="/menu">Voltar ao cardápio</BaseButton>
-        <BaseButton variant="secondary" to="/profile">Ver meus pedidos</BaseButton>
+      <div class="confirmation-page__acoes">
+        <BaseButton size="lg" to="/menu">Voltar ao cardápio</BaseButton>
+        <BaseButton variant="secondary" size="lg" to="/profile">Ver meus pedidos</BaseButton>
       </div>
     </div>
   </div>

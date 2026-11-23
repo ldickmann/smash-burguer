@@ -1,46 +1,88 @@
-// Confirmação (SPEC §5.7): card central, abaixo da navbar.
+// Confirmação (desenho do Carrinho, §5.9): coluna central de 40rem com a pilha de dois segmentos (a
+// faixa primary-container de cantos 28/28/4/4 e o resumo low de cantos 4/4/28/28, colados pelo vão de
+// 2 px da lista segmentada [8][66]) e as ações na superfície. Nada se move.
+@use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
 .confirmation-page {
-  padding-block: var(--space-7) var(--space-8);
+  padding-block: var(--space-5) var(--space-8);
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
 }
 
-.confirmation-page__card {
+.confirmation-page__coluna {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.confirmation-page__pilha {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  max-width: 560px;
-  margin-inline: auto;
-  padding: var(--space-6);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
-  text-align: center;
+  gap: var(--m3-vao-segmento);
 }
 
-.confirmation-page__icon {
-  color: var(--color-success);
+// A faixa: o ícone no início, alinhado ao topo do h1; a dl abaixo do h1, na mesma coluna
+.confirmation-page__status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--m3-forma-xl) var(--m3-forma-xl) var(--m3-forma-xs) var(--m3-forma-xs);
+  background: var(--m3-primary-container);
+  color: var(--m3-on-primary-container);
+}
+
+.confirmation-page__icone {
+  grid-row: 1 / span 2;
   font-size: 2.5rem;
 }
 
+// headline-m, e não display: o display dentro de um primary-container é o hero da Home abaixo de md
 .confirmation-page__title {
-  font-size: var(--text-page);
+  @include tipo(headline-m, 500);
+
+  grid-column: 2;
+  letter-spacing: var(--m3-headline-m-tracking);
 }
 
-.confirmation-page__meta {
-  color: var(--color-ink-muted);
-}
-
-.confirmation-page__summary {
-  width: 100%;
-  margin-top: var(--space-3);
-  text-align: left;
-}
-
-.confirmation-page__actions {
+// Os dois pares lado a lado; uma forma de pagamento longa desce para a linha de baixo
+.confirmation-page__dados {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  grid-column: 2;
+  gap: var(--space-2) var(--space-5);
+
+  dt {
+    @include tipo(body-m);
+
+    letter-spacing: var(--m3-body-m-tracking);
+  }
+
+  dd {
+    @include tipo(title-m, 500);
+
+    letter-spacing: var(--m3-title-m-tracking);
+  }
+}
+
+// O resumo é o segundo segmento: o contêiner fica na página, e não no OrderSummary
+.confirmation-page__resumo {
+  padding: var(--space-5);
+  border-radius: var(--m3-forma-xs) var(--m3-forma-xs) var(--m3-forma-xl) var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+}
+
+// Ações na superfície: uma coluna em 390, o filled primeiro; lado a lado a partir de sm, no início
+.confirmation-page__acoes {
+  display: grid;
   gap: var(--space-3);
-  margin-top: var(--space-3);
+  margin-top: var(--space-5);
+
+  @include up(sm) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
