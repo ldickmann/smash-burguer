@@ -95,6 +95,8 @@ describe('CartView (Carrinho do Material 3)', () => {
       'Remover Sorvete de Pote',
     ]);
     expect(itens[0].findAll('.cart-item__detail').map((d) => d.text())).toEqual(['Sem tomate', '+1 bacon']);
+    // O "Remover" leva a classe da parcial que o empurra para o fim quando a linha quebra
+    expect(removers().every((botao) => botao.classes().includes('cart-item__remover'))).toBe(true);
   });
 
   it('a miniatura é a M3Foto de 64 px na forma da categoria, sem alt', async () => {

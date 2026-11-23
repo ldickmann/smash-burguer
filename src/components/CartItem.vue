@@ -34,6 +34,7 @@
         @update:model-value="$emit('update-quantity', index, $event)"
       />
       <BaseButton
+        class="cart-item__remover"
         variant="danger"
         icon-start="trash-can"
         :aria-label="`Remover ${item.name}`"

@@ -28,6 +28,7 @@ const DESDE_SM = '@media (min-width: 480px)';
 const DESDE_MD = '@media (min-width: 768px)';
 const DESDE_LG = '@media (min-width: 1024px)';
 const ABAIXO_MD = '@media (max-width: 767.98px)';
+const DE_MD_A_XL = '@media (min-width: 768px) and (max-width: 1279.98px)';
 const GRUDADO = '@media (min-width: 1024px) and (min-height: 48rem)';
 const MOVIMENTO_OK = '@media (prefers-reduced-motion: no-preference)';
 const MOVIMENTO_REDUZIDO = '@media (prefers-reduced-motion: reduce)';
@@ -123,18 +124,28 @@ describe('token e mixin novos (§8)', () => {
 });
 
 describe('foco não coberto pelo aviso (§4, decisão i)', () => {
+  const comAviso = (raiz) => `html:has(.${raiz}):has(.toast-region .toast)`;
+  const RESERVA_TOPO = 'calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva))';
+
   it.each([
     ['carrinho', 'cart-page', 'CartView.vue'],
     ['pagamento', 'payment-page', 'PaymentView.vue'],
-  ])('%s: com aviso na tela, o scroll-padding soma a reserva (no pé abaixo de md, no topo a partir dele)', (nome, raiz, arquivo) => {
+  ])('%s: com aviso na tela, o scroll-padding do pé soma a reserva abaixo de md', (nome, raiz, arquivo) => {
     const code = escopado(css[nome], arquivo);
-    const seletor = `html:has(.${raiz}):has(.toast-region .toast)`;
-    expect(valor(code, seletor, 'scroll-padding-bottom', ABAIXO_MD)).toBe(
+    expect(valor(code, comAviso(raiz), 'scroll-padding-bottom', ABAIXO_MD)).toBe(
       'calc(var(--m3-barra-reserva) + var(--m3-toast-reserva))'
     );
-    expect(valor(code, seletor, 'scroll-padding-top', DESDE_MD)).toBe(
-      'calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva))'
-    );
+  });
+
+  it('pagamento: a reserva do topo vale a partir de md (o aviso cruza a coluna do resumo em qualquer largura)', () => {
+    const code = escopado(css.pagamento, 'PaymentView.vue');
+    expect(valor(code, comAviso('payment-page'), 'scroll-padding-top', DESDE_MD)).toBe(RESERVA_TOPO);
+  });
+
+  it('carrinho: a reserva do topo vale de md a xl; a partir de xl o aviso não cruza a coluna da lista, e a página não pula', () => {
+    const code = escopado(css.carrinho, 'CartView.vue');
+    expect(valor(code, comAviso('cart-page'), 'scroll-padding-top', DE_MD_A_XL)).toBe(RESERVA_TOPO);
+    expect(valor(code, comAviso('cart-page'), 'scroll-padding-top', DESDE_MD)).toBeUndefined();
   });
 });
 
@@ -182,6 +193,16 @@ describe('Carrinho (§3, §5.2 a §5.4)', () => {
     expect(valor(css.item, '.cart-item', 'padding')).toBe('var(--space-3)');
     expect(valor(css.item, '.cart-item', 'padding', DESDE_SM)).toBe('var(--space-3) var(--space-4)');
     expect(css.item).not.toMatch(/border-top/);
+  });
+
+  it('cores forçadas e mais contraste: cada item ganha borda, porque o fundo e o vão de 2 px somem', () => {
+    expect(valor(css.item, '.cart-item', 'border', CORES_FORCADAS)).toBe('1px solid CanvasText');
+    expect(valor(css.item, '.cart-item', 'border', MAIS_CONTRASTE)).toBe('1px solid var(--m3-outline)');
+  });
+
+  it('a 2ª linha quebra quando não cabe (fonte maior em 320 px), com o "Remover" no fim', () => {
+    expect(valor(css.item, '.cart-item__bottom', 'flex-wrap')).toBe('wrap');
+    expect(valor(css.item, '.cart-item__remover', 'margin-inline-start')).toBe('auto');
   });
 
   it('o cartão da miniatura fica com canto 16 em todas as larguras, por uma regra na raiz da M3Foto', () => {

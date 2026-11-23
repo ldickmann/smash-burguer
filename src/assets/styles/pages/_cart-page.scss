@@ -5,16 +5,19 @@
 @use "../base/m3" as *;
 
 // Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do
-// foco soma a altura de um aviso, no pé abaixo de md (o aviso fica acima da toolbar) e no topo a
-// partir dele (o aviso fica no topo à direita). Depende das classes e da posição do AppToast de hoje:
-// a etapa 10 herda ou absorve a regra (desenho do Carrinho, §4)
+// foco soma a altura de um aviso, no pé abaixo de md (o aviso fica acima da toolbar) e no topo de md a
+// xl (o aviso fica no topo à direita e cruza a coluna da lista). A partir de xl, o aviso começa depois
+// do "Remover" (só o anel encosta), e a reserva só faria a página pular. Depende das classes e da
+// posição do AppToast de hoje: a etapa 10 herda ou absorve a regra (desenho do Carrinho, §4)
 :global(html:has(.cart-page):has(.toast-region .toast)) {
   @include below(md) {
     scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
   }
 
   @include up(md) {
-    scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
+    @include below(xl) {
+      scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
+    }
   }
 }
 

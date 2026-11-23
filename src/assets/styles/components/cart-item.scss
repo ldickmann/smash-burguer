@@ -8,6 +8,9 @@
   --m3-item-canto-cima: var(--m3-forma-xs);
   --m3-item-canto-baixo: var(--m3-forma-xs);
 
+  // Nas cores forçadas o fundo e o vão de 2 px somem: a borda separa os itens
+  @include reserva-de-sombra;
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -79,9 +82,11 @@
   white-space: nowrap;
 }
 
-// 2ª linha: o stepper no início e o "Remover" no fim; a partir de sm, recuada até o nome
+// 2ª linha: o stepper no início e o "Remover" no fim; a partir de sm, recuada até o nome. Com a fonte
+// maior numa tela estreita, quebra em vez de vazar, e o "Remover" continua no fim
 .cart-item__bottom {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
@@ -89,4 +94,8 @@
   @include up(sm) {
     padding-inline-start: calc(4rem + var(--space-3));
   }
+}
+
+.cart-item__remover {
+  margin-inline-start: auto;
 }
