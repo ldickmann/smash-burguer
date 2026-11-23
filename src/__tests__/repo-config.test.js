@@ -5,6 +5,8 @@ import { copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vitestConfig from '../../vitest.config.js';
+import eslintConfig from '../../eslint.config.js';
 
 // Regressão das proteções do CI e do repositório: escrita só no job que publica,
 // actions fixadas por SHA, Yarn conferido pelo hash, --check-cache e .gitignore
@@ -51,6 +53,22 @@ describe('workflow de deploy', () => {
     // Com a versão na linha de comando (corepack yarn@x.y.z), o Corepack não confere o hash
     expect(Object.values(jobs).join('')).not.toMatch(/corepack\s+yarn@/);
     expect(jobs.build).toMatch(/^ {8}run: corepack yarn install --immutable --check-cache$/m);
+  });
+});
+
+// Os worktrees ficam dentro do checkout principal, em .claude/worktrees/. Sem a exclusão, o Vitest
+// da raiz roda os testes deles com o alias @ da raiz, e cada módulo carrega em duas cópias
+describe('config do Vitest e do ESLint', () => {
+  it('o Vitest não coleta os testes dos worktrees e passa aos workers a flag do webstorage', () => {
+    expect(vitestConfig.test.exclude).toContain('.claude/worktrees/**');
+    // A partir do Node 25, o localStorage do Node toma o lugar do jsdom
+    expect(vitestConfig.test.execArgv).toContain('--no-experimental-webstorage');
+  });
+
+  it('o ESLint não lê os arquivos dos worktrees', () => {
+    const ignorados = eslintConfig.find((bloco) => bloco.name === 'app/files-to-ignore');
+
+    expect(ignorados.ignores).toContain('**/.claude/worktrees/**');
   });
 });
 

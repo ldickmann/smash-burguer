@@ -7,7 +7,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/**'],
+      // Os worktrees ficam em .claude/worktrees/: rodados daqui, usariam o alias @ da raiz
+      exclude: [...configDefaults.exclude, 'e2e/**', '.claude/worktrees/**'],
+      // A partir do Node 25, o localStorage do Node toma o lugar do jsdom; a flag o desliga nos workers
+      execArgv: ['--no-experimental-webstorage'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       // Configurações de cobertura
       coverage: {

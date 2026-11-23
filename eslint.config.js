@@ -12,7 +12,8 @@ export default [
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
+    // Os worktrees (.claude/worktrees/) são cópias de outros branches, com o próprio lint
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/.claude/worktrees/**'],
   },
 
   js.configs.recommended,
