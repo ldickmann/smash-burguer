@@ -442,6 +442,23 @@ for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abac
   await c.close();
 }
 
+// Pelo mouse (e pelo toque), a reserva do aviso não vale: quem clica não vê o anel, e o foco no
+// "Remover" vizinho muda sem rolar a página (/code-review da etapa 7). Em 390, perto do pé, com o mouse
+{
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await openRoute(p, '#/cart', 'Seu carrinho');
+  const alvo = p.getByRole('button', { name: 'Remover Suco de Abacaxi' });
+  await alvo.evaluate((el) => { const r = el.getBoundingClientRect(); scrollBy(0, r.top - (innerHeight - 96 - r.height - 8)); });
+  const rolagemAntes = await p.evaluate(() => Math.round(scrollY));
+  await alvo.click();
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(() => ({ foco: document.activeElement.getAttribute('aria-label'), rolagem: Math.round(scrollY), avisos: document.querySelectorAll('.toast-region .toast').length }));
+  check(depois.foco === 'Remover X-Salada' && depois.avisos === 1 && depois.rolagem === rolagemAntes, `390×${ALTURA}: pelo mouse, o foco vai ao "Remover" vizinho sem rolar a página`, `rolagem ${rolagemAntes} → ${depois.rolagem}; foco ${depois.foco}`);
+  await c.close();
+}
+
 // Janela de 360 px (desenho do Cardápio, §5.2): o grupo de categorias cabe numa linha, sem rolagem, e o
 // foco que volta pela grade não fica sob ele
 {
