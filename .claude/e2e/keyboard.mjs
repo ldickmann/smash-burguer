@@ -2,7 +2,9 @@
 // §13.5 Teclado: só Tab, Shift+Tab, Enter, Espaço, setas e Esc (SPEC-material §13.5 e §13.3, item 6).
 // No Cardápio (etapa 6): o grupo de categorias com rádios nativos (uma parada no Tab, setas que marcam e
 // a volta do último ao primeiro), o foco não coberto pelo grupo grudado e pelo cabeçalho (1440, 390 e
-// 360) e o grupo numa linha em 360 px.
+// 360) e o grupo numa linha em 360 px. No carrinho e no pagamento (etapa 7): as setas do pagamento em
+// 390 com a altura de KB_ALTURA (rode com 844, 830 e 800), o Shift+Tab sem forma marcada, o foco não
+// coberto no carrinho do visitante e no pagamento sem endereço, e o "Remover" vizinho contra o aviso.
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 // Altura das telas da checagem do foco não coberto (padrão 844, a da matriz da §13.3)
@@ -293,6 +295,120 @@ for (const w of [1440, 390]) {
   check(menuOpen === 'menuitem' && second2 === 'Configurações' && back2, 'menu de perfil do admin: Enter abre, setas navegam, Esc fecha');
   await actx.close();
 }
+// Carrinho e pagamento (desenho do Carrinho, §4, §5.2, §5.7 e §9). O foco, com o anel, não cruza a
+// toolbar flutuante nem um aviso (toast) na tela. Vale só no Chromium (Playwright): as três inferências
+// do desenho (o rádio com o retângulo do label, o focus() com o scroll-padding e a reserva de um aviso)
+// ficam provadas só nele
+const cobertoPor = () => {
+  let el = document.activeElement;
+  if (el.matches('input.visually-hidden')) el = el.closest('label') ?? el;
+  const s = getComputedStyle(el);
+  const anel = s.outlineStyle === 'none' ? 0 : Math.max(0, parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset));
+  const b = el.getBoundingClientRect();
+  const r = { left: b.left - anel, right: b.right + anel, top: b.top - anel, bottom: b.bottom + anel };
+  const cruza = (x) => { const q = x.getBoundingClientRect(); return Math.min(r.right, q.right) > Math.max(r.left, q.left) && Math.min(r.bottom, q.bottom) > Math.max(r.top, q.top); };
+  const barra = document.querySelector('.m3-ferramentas');
+  const avisos = [...document.querySelectorAll('.toast-region .toast')];
+  const nome = (el.getAttribute('aria-label') || el.querySelector?.('input')?.value || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 28);
+  return { nome, valor: document.activeElement.value, barra: !!barra && getComputedStyle(barra).position === 'fixed' && cruza(barra), aviso: avisos.some(cruza), avisos: avisos.length, topo: Math.round(r.top), base: Math.round(r.bottom) };
+};
+const CART3 = { items: [
+  { productId: 1, category: 'foods', name: 'Cheese Bacon', image: '/images/foods/cheese-bacon', unitPrice: 25.99, quantity: 1, removedIngredients: ['Tomate'], additionals: [], observation: '' },
+  { productId: 2, category: 'drinks', name: 'Coca Cola Lata', image: '/images/drinks/coca-cola-lata', unitPrice: 4.99, quantity: 1, removedIngredients: [], additionals: [], observation: '' },
+  { productId: 1, category: 'desserts', name: 'Sorvete de Pote', image: '/images/desserts/sorvete-pote', unitPrice: 12.9, quantity: 1, removedIngredients: [], additionals: [], observation: '' },
+] };
+// Seis itens: em 390, o "Remover" do 5º começa abaixo do ponto perto do pé, e a página rola até ele
+const linha = (productId, category, name, image, unitPrice) => ({ productId, category, name, image, unitPrice, quantity: 1, removedIngredients: [], additionals: [], observation: '' });
+const CART6 = { items: [
+  ...CART3.items,
+  linha(2, 'foods', 'Smash Burger', '/images/foods/smash-burger', 22.5),
+  linha(3, 'drinks', 'Suco de Abacaxi', '/images/drinks/suco-abacaxi', 7.99),
+  linha(4, 'foods', 'X-Salada', '/images/foods/x-salada', 20.9),
+] };
+const SEM_ENDERECO = { ...USER, address: {} };
+{
+  console.log(`=== carrinho e pagamento em 390×${ALTURA}`);
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART, 'smash-burger:account': USER });
+  const p = await c.newPage();
+
+  // Setas do pagamento (pendência da etapa 4): o Tab entra no primeiro rádio, o Espaço marca, as setas
+  // descem até o Dinheiro e voltam ao primeiro; a opção focada nunca cruza a toolbar
+  await openRoute(p, '#/payment', 'Finalizar pedido');
+  await p.getByRole('link', { name: 'Alterar no perfil' }).focus();
+  await p.keyboard.press('Tab');
+  const passos = [await p.evaluate(cobertoPor)];
+  await p.keyboard.press('Space');
+  for (let i = 0; i < 4; i++) {
+    await p.keyboard.press('ArrowDown');
+    await p.waitForTimeout(60);
+    passos.push(await p.evaluate(cobertoPor));
+  }
+  const marcados = passos.map((x) => x.valor).join(' → ');
+  check(marcados === 'credit → debit → pix → cash → credit', 'pagamento: Tab no primeiro rádio, setas até o Dinheiro e volta ao primeiro', marcados);
+  const sob = passos.filter((x) => x.barra).map((x) => `${x.valor} (${x.topo}–${x.base})`);
+  check(sob.length === 0, `pagamento em 390×${ALTURA}: nenhuma opção focada pelas setas cruza a toolbar`, sob.join(' | '));
+  const anelOpcao = await p.evaluate(ringOf);
+  check(anelOpcao.ok && anelOpcao.tag === 'LABEL', 'pagamento: o anel de 3 px fica no label da opção', anelOpcao.outline);
+
+  // Shift+Tab vindo de baixo, sem forma marcada: o foco cai num rádio do grupo (o último em alguns
+  // navegadores [88]; o Chromium escolhe o primeiro), fora da toolbar
+  await openRoute(p, '#/payment', 'Finalizar pedido');
+  await p.evaluate(() => {
+    const radios = [...document.querySelectorAll('input[name="payment-method"]')];
+    const focaveis = [...document.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])')];
+    const depois = focaveis.find((el) => radios.at(-1).compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && !radios.includes(el));
+    depois.focus();
+  });
+  await p.keyboard.press('Shift+Tab');
+  await p.waitForTimeout(60);
+  const ultimo = await p.evaluate(cobertoPor);
+  check(['credit', 'cash'].includes(ultimo.valor) && !ultimo.barra, `pagamento em 390×${ALTURA}: Shift+Tab sem marcado cai no grupo, fora da toolbar`, `${ultimo.valor} (${ultimo.topo}–${ultimo.base})`);
+  await c.close();
+
+  // Foco não coberto também no carrinho do visitante e no pagamento sem endereço
+  const vctx = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(vctx, { 'smash-burger:cart:v1': CART3 });
+  const vp = await vctx.newPage();
+  check(await openRoute(vp, '#/cart', 'Seu carrinho'), 'carrinho do visitante abre');
+  await focusNotCovered(vp, `Carrinho do visitante em 390×${ALTURA}`);
+  await vctx.close();
+  const sctx = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(sctx, { 'smash-burger:session': { ...SESSION, user: SEM_ENDERECO }, 'smash-burger:cart:v1': CART, 'smash-burger:account': SEM_ENDERECO });
+  const sp = await sctx.newPage();
+  check(await openRoute(sp, '#/payment', 'Finalizar pedido') && await sp.locator('.payment-page__aviso').count() === 1, 'pagamento sem endereço abre com o aviso');
+  await focusNotCovered(sp, `Pagamento sem endereço em 390×${ALTURA}`);
+  await sctx.close();
+}
+
+// "Remover" vizinho contra o aviso (desenho do Carrinho, §4): remover um item deixa o foco no "Remover"
+// do item seguinte, e ele não pode ficar sob o aviso nem sob a toolbar. Em 390, perto do pé (o aviso
+// fica acima da toolbar), com o 5º de seis itens; em 1024 e 1440, perto do topo (o aviso fica no topo
+// à direita), com o 2º
+for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abacaxi', 'X-Salada'], [1024, 768, 'topo', 'Coca Cola Lata', 'Sorvete de Pote'], [1440, 900, 'topo', 'Coca Cola Lata', 'Sorvete de Pote']]) {
+  const c = await browser.newContext({ viewport: { width: w, height: h } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await openRoute(p, '#/cart', 'Seu carrinho');
+  const alvo = p.getByRole('button', { name: `Remover ${removido}` });
+  // Leva o "Remover" do meio para perto do pé (acima da reserva da toolbar) ou para logo abaixo do aviso
+  await alvo.evaluate((el, [lugar, barraReserva]) => {
+    const r = el.getBoundingClientRect();
+    const destino = lugar === 'pe' ? innerHeight - barraReserva - r.height - 8 : 100;
+    scrollBy(0, r.top - destino);
+  }, [onde, 96]);
+  await alvo.evaluate((el) => el.focus({ preventScroll: true }));
+  const antes = await p.evaluate(() => Math.round(document.activeElement.getBoundingClientRect().top));
+  const destino = onde === 'pe' ? h - 96 - 44 - 8 : 100;
+  check(Math.abs(antes - destino) <= 2, `${w}×${h}: o "Remover ${removido}" começa ${onde === 'pe' ? 'perto do pé' : 'perto do topo'}`, `em ${antes}, alvo ${destino}`);
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(cobertoPor);
+  check(depois.nome === `Remover ${vizinho}` && depois.avisos === 1, `${w}×${h}: depois de remover, o foco fica no "Remover" vizinho, com o aviso na tela`, `${depois.nome}, ${depois.avisos} aviso(s)`);
+  check(!depois.aviso && !depois.barra, `${w}×${h}: o "Remover" vizinho focado não fica sob o aviso nem sob a toolbar (${onde === 'pe' ? 'perto do pé' : 'perto do topo'})`, `antes em ${antes}, depois ${depois.topo}–${depois.base}`);
+  await c.close();
+}
+
 // Janela de 360 px (desenho do Cardápio, §5.2): o grupo de categorias cabe numa linha, sem rolagem, e o
 // foco que volta pela grade não fica sob ele
 {

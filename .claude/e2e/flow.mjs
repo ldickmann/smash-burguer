@@ -214,9 +214,10 @@ for (const w of widths) {
 
   // Confirmação
   console.log('Confirmação');
-  const conf = await page.evaluate(() => ({ focus: document.activeElement.tagName + ':' + document.activeElement.textContent.trim(), meta: document.querySelector('.confirmation-page__meta')?.textContent, badge: !!document.querySelector('.m3-fab .m3-badge') }));
+  // O número e a forma do pedido numa dl dentro da faixa, sem o "·" (desenho do Carrinho, §5.9)
+  const conf = await page.evaluate(() => ({ focus: document.activeElement.tagName + ':' + document.activeElement.textContent.trim(), dados: [...document.querySelectorAll('dl.confirmation-page__dados > div')].map((par) => `${par.querySelector('dt').textContent.trim()}=${par.querySelector('dd').textContent.trim()}`).join(' | '), faixa: document.querySelector('.confirmation-page__status')?.textContent ?? '', badge: !!document.querySelector('.m3-fab .m3-badge') }));
   check(conf.focus === 'H1:Pedido recebido', 'o foco está no h1 "Pedido recebido"', conf.focus);
-  check(norm(conf.meta) === 'Pedido #1001 · PIX', 'mostra "Pedido #1001 · PIX"', norm(conf.meta));
+  check(conf.dados === 'Pedido=#1001 | Forma de pagamento=PIX' && !conf.faixa.includes('·'), 'a faixa mostra "Pedido" #1001 e "Forma de pagamento" PIX, sem "·"', conf.dados);
   check(!conf.badge, 'o badge some (carrinho esvaziado)');
   await snap('confirmation');
 
@@ -267,8 +268,10 @@ for (const w of widths) {
   await snap('remover');
   await page.getByRole('button', { name: 'Desfazer' }).click();
   await page.waitForTimeout(250);
-  const restored = await page.evaluate(() => document.querySelectorAll('.cart-item').length);
-  check(restored === 1, 'desfazer devolve o item', `${restored} item(ns)`);
+  const restored = await page.evaluate(() => ({ itens: document.querySelectorAll('.cart-item').length, foco: document.activeElement?.getAttribute('aria-label') }));
+  check(restored.itens === 1, 'desfazer devolve o item', `${restored.itens} item(ns)`);
+  // O "Desfazer" some com o aviso: o foco vai ao "Remover" do item devolvido, e não ao body (§5.2)
+  check(restored.foco === 'Remover Coca Cola Lata', 'depois do "Desfazer", o foco fica no "Remover" do item devolvido', restored.foco);
 
   // Rotas
   console.log('Rotas');

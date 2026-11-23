@@ -80,9 +80,10 @@ console.log('=== §5.7 / §8 / §2.5');
   await seed(ctx, { 'smash-burger:session': SESSION, 'smash-burger:account': USER });
   const page = await ctx.newPage();
   await go(page, '#/confirmation');
-  const pad = await page.evaluate(() => getComputedStyle(document.querySelector('.confirmation-page__card')).padding);
+  // Desenho do Carrinho, §5.9: a faixa de estado tem padding --space-5 (24px), e o card de 32 saiu
+  const pad = await page.evaluate(() => getComputedStyle(document.querySelector('.confirmation-page__status')).padding);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-  check(pad === '32px', 'confirmação em 390: padding --space-6 (32px)', `${pad}, overflow=${overflow}`);
+  check(pad === '24px' && overflow === 0, 'confirmação em 390: faixa com padding --space-5 (24px), sem rolagem lateral', `${pad}, overflow=${overflow}`);
   await page.screenshot({ path: './shots/lacunas/confirmacao-390.png', fullPage: true });
   await ctx.close();
 }
