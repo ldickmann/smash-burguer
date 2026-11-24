@@ -136,6 +136,47 @@ describe('ModalProducts', () => {
     });
   });
 
+  // Desenho do admin, §5.8 e §9: Preço e Quantidade num par; o seletor de imagem como mais um campo
+  it('Preço e Quantidade ficam no mesmo div.modal-product__par, na ordem do Tab', () => {
+    const wrapper = mountModal();
+    const par = wrapper.find('div.modal-product__par');
+    expect(par.exists()).toBe(true);
+    expect(par.findAll('input').map((input) => input.attributes('id'))).toEqual(['price', 'quantity']);
+    const ordem = wrapper.findAll('form input, form select').map((el) => el.attributes('id'));
+    expect(ordem).toEqual(['productType', 'name', 'price', 'quantity', 'description', 'image']);
+  });
+
+  it('o seletor: rótulo "Imagem" sem id, o botão e o nome dentro da caixa .file-picker__campo', () => {
+    const wrapper = mountModal();
+    const rotulo = wrapper.find('.file-picker > .file-picker__label');
+    expect(rotulo.text()).toBe('Imagem');
+    expect(rotulo.attributes('id')).toBeUndefined();
+    const caixa = wrapper.find('.file-picker > .file-picker__campo');
+    expect(caixa.find('label.file-picker__button[for="image"] > input#image').exists()).toBe(true);
+    expect(caixa.find('.file-picker__name').text()).toBe('Nenhuma imagem escolhida');
+  });
+
+  it('sem erro, a ajuda descreve o campo da imagem', () => {
+    const wrapper = mountModal();
+    expect(wrapper.find('#image-ajuda').text()).toBe('PNG, JPEG ou WebP, com até 300 kB.');
+    expect(wrapper.find('#image-erro').exists()).toBe(false);
+    expect(wrapper.find('input#image').attributes('aria-describedby')).toBe('image-ajuda');
+    expect(wrapper.find('.file-picker').classes()).not.toContain('has-error');
+  });
+
+  it('com erro, o erro toma o lugar da ajuda no DOM e no aria-describedby, com o ícone num span', async () => {
+    const wrapper = mountModal();
+    await submit(wrapper);
+
+    expect(wrapper.find('input#image').attributes('aria-describedby')).toBe('image-erro');
+    expect(wrapper.find('#image-ajuda').exists()).toBe(false);
+    expect(wrapper.find('.file-picker.has-error > .file-picker__campo').exists()).toBe(true);
+    const icone = wrapper.find('#image-erro > span.file-picker__icone');
+    expect(icone.attributes('aria-hidden')).toBe('true');
+    expect(icone.find('svg').exists()).toBe(true);
+    expect(wrapper.find('#image-erro').text()).toBe('Escolha uma imagem para o produto.');
+  });
+
   it('sem espaço no navegador para a imagem, não salva e mostra o erro no campo da imagem', async () => {
     const wrapper = mountModal();
     useProductsStore().addProduct({ category: 'drinks', name: 'Grande', price: 1, image: `data:image/png;base64,${'A'.repeat(UPLOAD_BUDGET)}` });

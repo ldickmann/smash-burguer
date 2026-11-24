@@ -8,6 +8,7 @@ import OrderManagement from '../views/admin/OrderManagement.vue';
 import ProductManagement from '../views/admin/ProductManagement.vue';
 import AdminSettings from '../views/admin/AdminSettings.vue';
 import AdminProfile from '../views/admin/AdminProfile.vue';
+import SalesReports from '../views/admin/SalesReports.vue';
 import TheNavbarAdmin from '../components/admin/layout/TheNavbarAdmin.vue';
 import { CATALOG_VERSION, UPLOAD_BUDGET, useProductsStore } from '../stores/products';
 import { useAdminOrdersStore } from '../stores/adminOrders';
@@ -47,7 +48,7 @@ const mountAdmin = async (component, path) => {
         'font-awesome-icon': { template: '<svg />' },
         BaseDialog: { props: ['open', 'title'], template: '<div v-if="open" class="dialog-stub"><h2>{{ title }}</h2><slot /><slot name="footer" /></div>' },
         ModalProducts: { name: 'ModalProducts', props: ['mode', 'product'], emits: ['submit', 'close', 'cancel'], template: '<div class="modal-stub" />' },
-        ProductCard: { props: ['product'], template: '<article class="card-stub"><h2>{{ product.name }}</h2><slot name="actions" /></article>' },
+        M3CartaoProduto: { props: ['produto'], template: '<article class="card-stub"><h2>{{ produto.name }}</h2><slot name="acoes" /></article>' },
       },
     },
   });
@@ -178,7 +179,7 @@ describe('telas do painel', () => {
   it('a busca (?q=) acha produtos de qualquer categoria, sem diferença de acento, e "Limpar busca" a tira', async () => {
     const { wrapper, router } = await mountAdmin(ProductManagement, '/admin/products?q=COCA');
     expect(names(wrapper)).toEqual(['Coca Cola Lata']);
-    expect(wrapper.find('[role="status"]').text()).toContain('1 produto para “COCA”.');
+    expect(wrapper.find('[role="status"]').text()).toBe('1 produto para “COCA”.');
 
     await router.replace('/admin/products?q=hamburguer%20de%20soja');
     expect(names(wrapper)).toEqual(['Veggie Burger']);
@@ -190,12 +191,17 @@ describe('telas do painel', () => {
     await flushPromises();
     expect(router.currentRoute.value.query).toEqual({});
     expect(names(wrapper)).toHaveLength(4);
+    // A região fica no DOM, vazia, para anunciar a próxima busca; o "Limpar busca" sai
+    expect(wrapper.find('[role="status"]').exists()).toBe(true);
+    expect(wrapper.find('[role="status"]').text()).toBe('');
+    expect(buttonByText(wrapper, 'Limpar busca')).toBeUndefined();
   });
 
   it('pedidos: a busca acha pelo cliente, pelo número e pelo item; "Detalhes" mostra o pedido', async () => {
     const { wrapper, router } = await mountAdmin(OrderManagement, '/admin/orders?q=maria');
     expect(wrapper.findAll('.orders-list > li')).toHaveLength(1);
     expect(wrapper.text()).toContain('Maria de Souza');
+    expect(wrapper.find('[role="status"]').text()).toBe('1 pedido para “maria”.');
 
     await router.replace('/admin/orders?q=%231');
     expect(wrapper.findAll('.orders-list > li')).toHaveLength(1);
@@ -203,6 +209,7 @@ describe('telas do painel', () => {
     expect(wrapper.find('.empty-state').text()).toContain('Nenhum pedido encontrado');
 
     await router.replace('/admin/orders');
+    expect(wrapper.find('[role="status"]').text()).toBe('');
     await buttonByText(wrapper, 'Detalhes').trigger('click');
     const dialog = wrapper.find('.dialog-stub');
     expect(dialog.find('h2').text()).toBe('Pedido #1');
@@ -252,6 +259,34 @@ describe('telas do painel', () => {
     expect(router.currentRoute.value.path).toBe('/admin/profile');
   });
 
+  it('Relatórios: os três KPIs numa lista, e o card dos mais vendidos fora dela, numerado', async () => {
+    const { wrapper } = await mountAdmin(SalesReports, '/admin/reports');
+    const kpis = wrapper.find('ul.sales-reports__kpis');
+    expect(kpis.attributes('role')).toBe('list');
+    const itens = kpis.findAll(':scope > li');
+    expect(itens.map((li) => li.find('.admin-card--kpi .admin-card__title').text())).toEqual([
+      'Vendas totais',
+      'Total de pedidos',
+      'Ticket médio',
+    ]);
+    const top = wrapper.find('.sales-reports__top');
+    expect(top.find('.admin-card__title').text()).toBe('Produtos mais vendidos');
+    expect(kpis.element.contains(top.element)).toBe(false);
+    expect(top.findAll('ol.top-products > li')).toHaveLength(4);
+  });
+
+  it('Configurações: as ações do card ficam no início, e as do diálogo, no fim', async () => {
+    const { wrapper } = await mountAdmin(AdminSettings, '/admin/settings');
+    const card = wrapper.find('.admin-settings__card');
+    expect(card.find('.admin-settings__actions').classes()).not.toContain('admin-settings__actions--fim');
+
+    await buttonByText(wrapper, 'Restaurar cardápio original').trigger('click');
+    const dialogo = wrapper.find('.dialog-stub');
+    expect(dialogo.find('.admin-settings__dialog-text').text()).toContain('Não é possível desfazer.');
+    const acoes = dialogo.find('.admin-settings__actions--fim');
+    expect(acoes.findAll('button').map((b) => b.text())).toEqual(['Cancelar', 'Restaurar']);
+  });
+
   it('Configurações restaura o cardápio e os pedidos, depois da confirmação', async () => {
     const { wrapper } = await mountAdmin(AdminSettings, '/admin/settings');
     const products = useProductsStore();
@@ -282,6 +317,8 @@ describe('telas do painel', () => {
 
     expect(wrapper.text()).toContain('Gerente Teste');
     expect(wrapper.text()).toContain('gerente@example.com');
+    expect(wrapper.find('.admin-profile__card .admin-card__title').text()).toBe('Administrador');
+    expect(wrapper.findAll('.admin-profile__info dt').map((dt) => dt.text())).toEqual(['Nome', 'E-mail', 'Função']);
 
     await buttonByText(wrapper, 'Sair').trigger('click');
     await flushPromises();

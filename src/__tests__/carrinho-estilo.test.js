@@ -420,10 +420,10 @@ describe('pares do Carrinho e do Pagamento (§8)', () => {
     expect(duasCasas(medirPar(ler, par))).toBe(medido);
   });
 
-  it('saem da Brasa o aviso sem endereço e o ícone de sucesso; o item selecionado fica para a sidebar do admin', () => {
+  it('saem da Brasa o aviso sem endereço e o ícone de sucesso; o item selecionado da sidebar saiu na etapa 9', () => {
     const onde = PARES_TELAS_BRASA.map((par) => par.onde);
     expect(onde).not.toContain('aviso sem endereço');
     expect(onde).not.toContain('ícone e texto de sucesso');
-    expect(PARES_TELAS_BRASA.find((par) => par.fundo === 'm3-primary-container')?.onde).toMatch(/sidebar do admin/);
+    expect(PARES_TELAS_BRASA.find((par) => par.fundo === 'm3-primary-container')).toBeUndefined();
   });
 });
