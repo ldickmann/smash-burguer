@@ -1,40 +1,64 @@
-// Perfil do admin (SPEC §5.11): avatar com iniciais e menu role="menu".
+// Avatar e menu do perfil do painel (desenho do admin, §5.2): o alvo de 44 px com a camada de estado e,
+// dentro dele, o círculo de 32 px em secondary-container (um controle; o avatar da top app bar tem
+// 32 dp). O menu em surface-container (nem a página nem os cards), canto 16, elevação 2; os itens na
+// anatomia da navegação, com 44 px; a linha antes do "Sair" é o ::after dele (o ::before é a camada).
 @use "../../../base/breakpoints" as *;
+@use "../../../base/m3" as *;
 
 .navbar-profile {
   position: relative;
 }
 
-// Avatar circular: o único uso de --radius-round (§2.5)
 .navbar-profile__avatar {
+  @include camada-de-estado;
+
   display: grid;
   place-items: center;
   width: var(--target-min);
   height: var(--target-min);
-  border-radius: var(--radius-round);
-  background: var(--color-surface-3);
-  color: var(--color-ink);
-  font-size: var(--text-sm);
-  font-weight: 700;
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface-variant);
+}
 
-  @include hover-capable {
-    &:hover {
-      background: var(--color-surface-4);
-    }
-  }
+.navbar-profile__circulo {
+  @include tipo(label-l, 500);
+
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--m3-forma-full);
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+  letter-spacing: var(--m3-label-l-tracking);
 }
 
 .navbar-profile__menu {
+  @include reserva-de-sombra;
+
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
   display: flex;
   flex-direction: column;
   min-width: 13rem;
+  max-width: min(20rem, calc(100vw - 2 * var(--gutter)));
   padding: var(--space-2);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-3);
-  box-shadow: var(--elev-2);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-surface-container);
+  box-shadow: var(--m3-elevacao-2);
+  color: var(--m3-on-surface);
+}
+
+// Só opacidade, igual com e sem movimento reduzido (opacidade não conta como movimento)
+.navbar-profile-menu-enter-active,
+.navbar-profile-menu-leave-active {
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+}
+
+.navbar-profile-menu-enter-from,
+.navbar-profile-menu-leave-to {
+  opacity: 0;
 }
 
 .navbar-profile__items {
@@ -43,32 +67,50 @@
 }
 
 .navbar-profile__name {
+  @include tipo(label-l, 500);
+
   padding: var(--space-2) var(--space-3) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--m3-outline-variant);
   margin-bottom: var(--space-1);
-  font-weight: 700;
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-label-l-tracking);
+  overflow-wrap: anywhere;
 }
 
 .navbar-profile__item {
+  @include camada-de-estado;
+  @include anel-interno;
+  @include tipo(label-l, 500);
+
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-height: var(--target-min);
   padding-inline: var(--space-3);
-  border-radius: var(--radius-sm);
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-align: left;
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-label-l-tracking);
+  text-align: start;
+}
 
-  @include hover-capable {
-    &:hover {
-      background: var(--color-surface-4);
-      color: var(--color-ink);
-    }
-  }
+.navbar-profile__icone {
+  flex-shrink: 0;
+  width: 1.25rem;
+  font-size: 1.25rem;
+  color: var(--m3-on-surface-variant);
+}
 
-  &:focus-visible {
-    color: var(--color-ink);
+// Os dois primeiros itens levam a uma tela; o "Sair" sai do painel. A linha fica no vão acima dele,
+// recuada 12 px dos lados, sem filho no DOM (o role="menu" só tem menuitem)
+.navbar-profile__sair {
+  margin-block-start: var(--space-2);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: var(--space-3);
+    bottom: calc(100% + var(--space-1));
+    border-block-start: 1px solid var(--m3-outline-variant);
+    pointer-events: none;
   }
 }

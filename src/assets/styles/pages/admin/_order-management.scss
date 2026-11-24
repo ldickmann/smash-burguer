@@ -1,13 +1,18 @@
-// Pedidos do admin (SPEC §5.11): filtro com rótulo e status em português.
+// Pedidos do painel (docs/direcoes/desenho/admin.md, §5.6): um filled card por pedido, em 1, 2 e 3
+// colunas, com o rótulo de status (M3RotuloStatus) no cabeçalho, os h3 "Cliente" e "Itens" em title-s,
+// um divisor só, acima do Total, e o diálogo "Detalhes" com a dl sem caixa alta.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
 .order-management__title {
   margin-bottom: var(--space-5);
 }
 
+// O li estica até a altura da linha, e o AdminCard o preenche: as ações alinham no pé
 .orders-list {
   display: grid;
+  align-items: stretch;
   gap: var(--space-4);
 
   @include up(md) {
@@ -19,31 +24,19 @@
   }
 }
 
-// Chip de status: --radius-sm, --text-xs 700
-.status-chip {
-  flex-shrink: 0;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--color-info-soft);
-  color: var(--color-info);
-  font-size: var(--text-xs);
-  font-weight: 700;
-}
-
-.status-chip--pending {
-  background: var(--color-warning-soft);
-  color: var(--color-warning);
-}
-
-.status-chip--completed {
-  background: var(--color-success-soft);
-  color: var(--color-success);
+// O "#1" do h2 "Pedido #1" (o título do AdminCard) tabular
+.orders-list :deep(.admin-card__title) {
+  font-variant-numeric: tabular-nums;
 }
 
 .order-info {
+  @include tipo(body-m);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .order-info__block {
@@ -52,16 +45,22 @@
   gap: var(--space-1);
 }
 
+// Títulos de verdade, e não rótulos acima do conteúdo: title-s (label-l 500), on-surface (13,93)
 .order-info__title {
-  color: var(--color-ink-muted);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  @include tipo(label-l, 500);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-label-l-tracking);
 }
 
+// Endereço e telefone em on-surface-variant (7,56 sobre o card); quebram em qualquer ponto
 .order-info__muted {
-  color: var(--color-ink-muted);
+  color: var(--m3-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.order-info__name {
+  overflow-wrap: anywhere;
 }
 
 .order-info__items {
@@ -70,30 +69,60 @@
   gap: var(--space-1);
 }
 
-.order-info__item,
-.order-info__total {
+// "2× Smash Burger" e o unitário com "cada": o nome quebra, o preço fica na linha
+.order-info__item {
   display: flex;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
-.order-info__total {
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-border);
-  font-weight: 700;
+.order-info__item-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
+.order-info__item-price {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+// O único divisor do card (decorativo, 1,38): "Total" em label-l 500 e o valor em title-m 500
+.order-info__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--m3-outline-variant);
+  color: var(--m3-on-surface);
+}
+
+.order-info__total-label {
+  @include tipo(label-l, 500);
+
+  letter-spacing: var(--m3-label-l-tracking);
+}
+
+.order-info__total-value {
+  @include tipo(title-m, 500);
+
+  letter-spacing: var(--m3-title-m-tracking);
+  white-space: nowrap;
+}
+
+// "Atualizar status" (tonal) e "Detalhes" (texto), nessa ordem, no início
 .order-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
 
-// Diálogo "Detalhes": dados do cliente, itens com preço unitário e total da linha
+// Diálogo "Detalhes": dados do cliente, itens com o unitário e o total da linha
 .order-details {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  color: var(--m3-on-surface);
 }
 
 .order-details__info {
@@ -104,16 +133,20 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  // Sem caixa alta: dt em body-m (7,97 sobre o surface-container do diálogo), dd em body-l (14,68)
   dt {
-    color: var(--color-ink-muted);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    @include tipo(body-m);
+
+    color: var(--m3-on-surface-variant);
+    letter-spacing: var(--m3-body-m-tracking);
   }
 
   dd {
+    @include tipo(body-l);
+
     margin-top: var(--space-1);
+    color: var(--m3-on-surface);
+    letter-spacing: var(--m3-body-l-tracking);
     overflow-wrap: anywhere;
   }
 }
@@ -126,12 +159,15 @@
 
 // No celular: nome e total na linha de cima, o preço unitário embaixo
 .order-details__item {
+  @include tipo(body-l);
+
   display: grid;
   grid-template-areas:
     "name line"
     "unit unit";
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-1) var(--space-3);
+  letter-spacing: var(--m3-body-l-tracking);
 
   @include up(sm) {
     grid-template-areas: "name unit line";
@@ -141,16 +177,20 @@
 
 .order-details__name {
   grid-area: name;
+  overflow-wrap: anywhere;
 }
 
 .order-details__unit {
+  @include tipo(body-m);
+
   grid-area: unit;
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .order-details__line {
   grid-area: line;
+  white-space: nowrap;
 }
 
 .order-details__actions {

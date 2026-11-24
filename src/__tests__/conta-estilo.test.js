@@ -404,17 +404,15 @@ describe('Perfil (§4, §5.6 a §5.8)', () => {
     expect(valor(css.perfil, '.profile-order__status', 'margin-inline-start')).toBe('auto');
   });
 
-  it('o rótulo de status: info sobre info-container, forma-s, label-l 500, sem cursor nem camada', () => {
+  // O visual do rótulo de status mora no M3RotuloStatus (m3-rotulo-status-estilo.test.js; desenho do
+  // admin, §5.5): no perfil, a regra fica só com a margem
+  it('o rótulo de status: no perfil, só a margem; o visual é do M3RotuloStatus', () => {
     const status = '.profile-order__status';
-    expect(valor(css.perfil, status, 'color')).toBe('var(--m3-info)');
-    expect(valor(css.perfil, status, 'background')).toBe('var(--m3-info-container)');
-    expect(valor(css.perfil, status, 'border-radius')).toBe('var(--m3-forma-s)');
-    expect(valor(css.perfil, status, 'padding')).toBe('var(--space-1) var(--space-2)');
-    expect(valor(css.perfil, status, 'font-size')).toBe('var(--m3-label-l)');
-    expect(valor(css.perfil, status, 'font-weight')).toBe('500');
-    expect(valor(css.perfil, status, 'cursor')).toBeUndefined();
-    expect(valor(css.perfil, `${status}::before`, 'content')).toBeUndefined();
-    expect(valor(css.perfil, status, 'border', CORES_FORCADAS)).toBe('1px solid CanvasText');
+    expect(valor(css.perfil, status, 'margin-inline-start')).toBe('auto');
+    for (const propriedade of ['color', 'background', 'border-radius', 'padding', 'font-size', 'letter-spacing']) {
+      expect(valor(css.perfil, status, propriedade)).toBeUndefined();
+    }
+    expect(valor(css.perfil, status, 'border', CORES_FORCADAS)).toBeUndefined();
   });
 
   it('"Ver itens" com cara de text button: 44 px, canto full, label-l 500 em primary, camada e anel por dentro', () => {

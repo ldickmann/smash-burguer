@@ -1,5 +1,8 @@
-// Busca do admin (SPEC §5.11): foco com o anel global, sem borda dourada.
+// Busca do painel (desenho do admin, §5.2): o campo outlined do sistema (o FormGroup, etapa 8) na
+// medida densa de 48 px, e não a search bar em pílula. Sem fundo: toma a surface do cabeçalho. A lupa
+// fica centrada na altura sem translate (o projeto só transforma dentro de motion-ok).
 @use "../../../base/breakpoints" as *;
+@use "../../../base/m3" as *;
 
 .navbar-search {
   position: relative;
@@ -10,31 +13,52 @@
 
 .navbar-search__icon {
   position: absolute;
-  top: 50%;
-  left: var(--space-3);
-  color: var(--color-ink-subtle);
+  inset-block: 0;
+  inset-inline-start: var(--space-3);
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-block: auto;
+  color: var(--m3-on-surface-variant);
+  font-size: 1.25rem;
   pointer-events: none;
-  translate: 0 -50%;
 }
 
+// 12 da ponta, a lupa de 20 e 16 até o texto: o valor começa a 48 px
 .navbar-search__input {
+  @include tipo(body-l);
+
   width: 100%;
-  min-height: var(--target-min);
-  padding: 0 var(--space-3) 0 calc(var(--space-3) + 1.5rem);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background: var(--color-input);
-  color: var(--color-ink);
-  font-size: var(--text-md);
+  min-height: 3rem;
+  padding-block: 0;
+  padding-inline: calc(var(--space-3) + 1.25rem + var(--space-4)) var(--space-4);
+  border: 1px solid var(--m3-outline);
+  border-radius: var(--m3-forma-m);
+  background-color: transparent;
+  color: var(--m3-on-surface);
+  caret-color: var(--m3-primary);
+  letter-spacing: var(--m3-body-l-tracking);
 
   &::placeholder {
-    color: var(--color-ink-subtle);
+    color: var(--m3-on-surface-variant);
     opacity: 1;
+  }
+
+  // Também no :focus do mouse; o anel encostado vem da regra de campo do _a11y.scss
+  &:focus {
+    border-color: var(--m3-primary);
   }
 
   @include hover-capable {
     &:hover:not(:focus) {
-      border-color: var(--color-ink-muted);
+      border-color: var(--m3-on-surface);
     }
+  }
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+
+  @media (prefers-contrast: more) {
+    border-color: var(--m3-on-surface-variant);
   }
 }

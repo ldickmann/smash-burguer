@@ -154,6 +154,9 @@
   // No carrinho e no pagamento, soma-se ao scroll-padding enquanto há aviso na tela, para o foco não
   // ficar debaixo dele (desenho do Carrinho, §4). A etapa 10 (AppToast) herda ou absorve esta reserva
   --m3-toast-reserva: 6.5rem;
+  // Navegação do painel: a coluna fixa a partir de lg e a gaveta abaixo dele, com a mesma largura
+  // (240 px: o mínimo da folha da gaveta e dentro dos 220 a 360 do rail expandido; desenho do admin, §4.1)
+  --m3-navegacao-largura: 15rem;
 
   // ---------- Tokens do projeto que ficam (SPEC-material §2.1) ----------
   // Espaçamento e layout

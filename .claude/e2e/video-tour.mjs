@@ -251,11 +251,11 @@ if (isPhone) {
   await page.keyboard.type(ADMIN.password, { delay: 60 });
   await press(page.getByRole('button', { name: 'Entrar', exact: true }));
   await wait(2600);
-  for (const name of ['Gestão de Produtos', 'Gestão de Pedidos', 'Relatórios de Vendas']) {
-    await press(page.getByRole('link', { name }));
+  for (const name of ['Produtos', 'Pedidos', 'Relatórios']) {
+    await press(page.getByRole('link', { name, exact: true }));
     await wait(1800);
   }
-  await press(page.getByRole('link', { name: 'Gestão de Produtos' }));
+  await press(page.getByRole('link', { name: 'Produtos', exact: true }));
   await wait(900);
   await press(page.getByRole('button', { name: 'Novo produto' }));
   await wait(1800);

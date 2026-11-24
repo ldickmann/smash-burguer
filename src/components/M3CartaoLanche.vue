@@ -1,7 +1,7 @@
 <!-- Filled card do feed [63][64] (cópia de produção do M3CartaoLanche da Home, SPEC-material §4.1):
      comum (foto 4:3 com canto 28) ou destaque (foto quadrada no cookie, na horizontal a partir de md).
      Sem sombra e sem hover: só os botões reagem. "Adicionar" abre o modal Personalizar real; a metade
-     de trás abre a folha de ingredientes do próprio produto. Substitui o ProductCard menu e compact.
+     de trás abre a folha de ingredientes do próprio produto. Substitui o card da Brasa (menu e compact).
      Sem ingredientes não há folha, e a descrição aparece também abaixo de md (m3-cartao--sem-folha,
      desenho do Cardápio, 6.e).
      No destaque, a camada dos lobos (§10.3) fica atrás da foto: o prato claro da foto encostava no

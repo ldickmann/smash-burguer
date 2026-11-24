@@ -4,6 +4,15 @@ import { createPinia, setActivePinia } from 'pinia';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import ProductManagement from '../views/admin/ProductManagement.vue';
 import { useProductsStore } from '../stores/products';
+import EmptyState from '../components/ui/EmptyState.vue';
+import { TEXTOS } from '../utils/textosLoja';
+
+// O card real é testado à parte (M3CartaoProduto.test.js); aqui ele mostra o nome e as ações
+const CartaoStub = {
+  name: 'M3CartaoProduto',
+  props: ['produto', 'nivelTitulo'],
+  template: '<article class="card-stub"><h2>{{ produto.name }}</h2><slot name="acoes" /></article>',
+};
 
 // O modal real é testado à parte; aqui ele só devolve o que o teste mandar
 const ModalStub = {
@@ -30,10 +39,7 @@ const mountPage = async (path = '/admin/products') => {
         ModalProducts: ModalStub,
         // O <dialog> nativo não existe no jsdom: o stub só mostra o conteúdo quando aberto
         BaseDialog: { props: ['open'], template: '<div v-if="open" class="dialog-stub"><slot /><slot name="footer" /></div>' },
-        ProductCard: {
-          props: ['product'],
-          template: '<article class="card-stub"><h2>{{ product.name }}</h2><slot name="actions" /></article>',
-        },
+        M3CartaoProduto: CartaoStub,
       },
     },
   });
@@ -122,5 +128,57 @@ describe('ProductManagement', () => {
     expect(store.drinks).toHaveLength(total - 1);
     expect(store.drinks.some((p) => p.name === 'Coca Cola Lata')).toBe(false);
     expect(names(wrapper)).not.toContain('Coca Cola Lata');
+  });
+
+  it('cada produto vai ao M3CartaoProduto, com o título em h2 e as ações no slot "acoes"', async () => {
+    const { wrapper } = await mountPage();
+    const cartoes = wrapper.findAllComponents(CartaoStub);
+    expect(cartoes).toHaveLength(4);
+    expect(cartoes[0].props('produto')).toHaveProperty('name');
+    expect(Number(cartoes[0].props('nivelTitulo'))).toBe(2);
+    expect(cartoes[0].findAll('button').map((b) => b.text())).toEqual(['Editar', 'Excluir']);
+    expect(wrapper.find('.products-list').attributes('role')).toBe('list');
+  });
+
+  it('a região da busca fica sempre no DOM, com aria-atomic, e o "Limpar busca" fica fora dela', async () => {
+    const semBusca = await mountPage();
+    const vazia = semBusca.wrapper.find('.admin-page__busca > p.admin-page__search-result');
+    expect(vazia.attributes('role')).toBe('status');
+    expect(vazia.attributes('aria-atomic')).toBe('true');
+    expect(vazia.text()).toBe('');
+    expect(buttonsByText(semBusca.wrapper, 'Limpar busca')).toHaveLength(0);
+    semBusca.wrapper.unmount();
+
+    const { wrapper } = await mountPage('/admin/products?q=bacon');
+    const regiao = wrapper.find('.admin-page__busca > [role="status"]');
+    expect(regiao.text()).toMatch(/^\d+ produtos? para “bacon”\.$/);
+    expect(regiao.find('button').exists()).toBe(false);
+    const limpar = wrapper.find('.admin-page__busca > button');
+    expect(limpar.text()).toBe('Limpar busca');
+    expect(limpar.classes()).toEqual(expect.arrayContaining(['btn--ghost', 'btn--sm', 'm3-botao--texto']));
+  });
+
+  it('a categoria esvaziada, sem busca, mostra o aviso de vazio do Cardápio e nenhuma lista', async () => {
+    const { wrapper, store } = await mountPage();
+    for (const { id } of [...store.desserts]) store.removeProduct('desserts', id);
+    await selectCategory(wrapper, 'desserts');
+
+    expect(wrapper.find('.products-list').exists()).toBe(false);
+    const vazio = wrapper.findComponent(EmptyState);
+    expect(vazio.props('title')).toBe(TEXTOS.vazio);
+    expect(vazio.props('title')).toBe('Nada nesta categoria por enquanto');
+    expect(vazio.props('icon')).toBe('utensils');
+
+    // Numa categoria com produtos, a lista volta, sem o aviso
+    await selectCategory(wrapper, 'drinks');
+    expect(wrapper.find('.products-list').exists()).toBe(true);
+    expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
+  });
+
+  it('com busca sem resultado, o aviso é o da busca, e não o da categoria vazia', async () => {
+    const { wrapper } = await mountPage('/admin/products?q=zzz');
+    const vazio = wrapper.findComponent(EmptyState);
+    expect(vazio.props('title')).toBe('Nenhum produto encontrado');
+    expect(wrapper.find('.products-list').exists()).toBe(false);
   });
 });

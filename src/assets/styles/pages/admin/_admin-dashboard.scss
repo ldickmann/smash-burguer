@@ -1,5 +1,7 @@
-// Dashboard (SPEC §5.11): quatro KPIs e o estado vazio do gráfico.
+// Painel (docs/direcoes/desenho/admin.md, §5.9): o h1, os quatro KPIs numa grade de 1, 2 e 4 colunas e o
+// estado vazio do gráfico num filled card do painel.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
 .admin-page__title {
@@ -8,6 +10,7 @@
 
 .dashboard__kpis {
   display: grid;
+  align-items: stretch;
   gap: var(--space-4);
 
   @include up(sm) {
@@ -19,9 +22,13 @@
   }
 }
 
+// A seção ocupa o lugar do gráfico: o card diz que aquele é um espaço do painel, e o vazio fica dentro
+// dele (textos 13,93 e 7,56 sobre o high). Borda nos modos de contraste, onde o fundo some
 .dashboard__chart {
+  @include reserva-de-sombra;
+
   margin-top: var(--space-5);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
+  padding: var(--space-5);
+  border-radius: var(--m3-forma-m);
+  background: var(--m3-surface-container-high);
 }

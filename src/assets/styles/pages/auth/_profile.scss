@@ -170,17 +170,10 @@
   letter-spacing: var(--m3-body-m-tracking);
 }
 
-// Rótulo de status: texto num contêiner tonal, sem camada, cursor nem foco (não se parece com controle)
+// Rótulo de status: o visual é do M3RotuloStatus (desenho do admin, §5.5); aqui, só o empurrão para o
+// fim da linha
 .profile-order__status {
-  @include reserva-de-sombra;
-  @include tipo(label-l, 500);
-
   margin-inline-start: auto;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--m3-forma-s);
-  background: var(--m3-info-container);
-  color: var(--m3-info);
-  letter-spacing: var(--m3-label-l-tracking);
 }
 
 // "Ver itens": a forma e a tinta do text button da loja, alinhado ao texto de cima pelo recuo de 12.

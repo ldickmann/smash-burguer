@@ -1,11 +1,12 @@
 import { mount, flushPromises } from '@vue/test-utils';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import OrderManagement from '../views/admin/OrderManagement.vue';
 import TheNavbarAdmin from '../components/admin/layout/TheNavbarAdmin.vue';
 import { useAdminOrdersStore } from '../stores/adminOrders';
 import { useToastStore } from '../stores/toast';
+import { formatPrice } from '../utils/formatters';
 
 const Blank = { template: '<div />' };
 
@@ -20,7 +21,14 @@ const mountWithRouter = async (component, path = '/admin/orders') => {
   const wrapper = mount(component, {
     global: {
       plugins: [pinia, router],
-      stubs: { 'font-awesome-icon': { template: '<svg />' } },
+      stubs: {
+        'font-awesome-icon': { template: '<svg />' },
+        // O <dialog> nativo não existe no jsdom: o stub só mostra o conteúdo quando aberto
+        BaseDialog: {
+          props: ['open', 'title'],
+          template: '<div v-if="open" class="dialog-stub"><h2>{{ title }}</h2><slot /><slot name="footer" /></div>',
+        },
+      },
     },
   });
   return { wrapper, router, store: useAdminOrdersStore(), toast: useToastStore() };
@@ -28,7 +36,11 @@ const mountWithRouter = async (component, path = '/admin/orders') => {
 
 const mountPage = (path) => mountWithRouter(OrderManagement, path);
 
-const chips = (wrapper) => wrapper.findAll('.status-chip').map((chip) => chip.text());
+const chips = (wrapper) => wrapper.findAll('.orders-list .m3-status').map((chip) => chip.text());
+// O tom do rótulo de status (M3RotuloStatus): a classe m3-status--{tom}
+const tom = (rotulo) => rotulo.classes().find((c) => c.startsWith('m3-status--'))?.replace('m3-status--', '');
+const rotulos = (wrapper) =>
+  wrapper.findAll('.orders-list .m3-status').map((rotulo) => [rotulo.text(), tom(rotulo)]);
 const updateButtons = (wrapper) => wrapper.findAll('button').filter((b) => b.text() === 'Atualizar status');
 
 describe('OrderManagement', () => {
@@ -102,6 +114,134 @@ describe('OrderManagement', () => {
     const unknown = await mountPage('/admin/orders?status=xyz');
     expect(unknown.wrapper.find('select#statusFilter').element.value).toBe('');
     expect(chips(unknown.wrapper)).toEqual(['Pendente', 'Em preparo']);
+  });
+});
+
+describe('OrderManagement no M3 (desenho do admin, §5.5, §5.6 e §4.6)', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    delete Element.prototype.scrollIntoView;
+    document.body.innerHTML = '';
+  });
+
+  it('o status é o M3RotuloStatus, um p sem papel, com o tom de cada status', async () => {
+    const { wrapper } = await mountPage();
+    expect(rotulos(wrapper)).toEqual([
+      ['Pendente', 'aviso'],
+      ['Em preparo', 'info'],
+    ]);
+    const primeiro = wrapper.find('.orders-list .m3-status');
+    expect(primeiro.element.tagName).toBe('P');
+    expect(primeiro.attributes('role')).toBeUndefined();
+    expect(primeiro.attributes('tabindex')).toBeUndefined();
+    // O rótulo fica no cabeçalho do card, junto do título
+    expect(primeiro.element.closest('.admin-card__header')).not.toBeNull();
+    expect(wrapper.find('.status-chip').exists()).toBe(false);
+
+    await updateButtons(wrapper)[0].trigger('click');
+    await updateButtons(wrapper)[0].trigger('click');
+    expect(rotulos(wrapper)[0]).toEqual(['A caminho', 'info']);
+    await updateButtons(wrapper)[0].trigger('click');
+    expect(rotulos(wrapper)[0]).toEqual(['Concluído', 'sucesso']);
+  });
+
+  it('no diálogo "Detalhes", o mesmo rótulo com o tom do status, e o h3 "Itens"', async () => {
+    const { wrapper } = await mountPage();
+    await wrapper.findAll('button').find((b) => b.text() === 'Detalhes').trigger('click');
+    const dialogo = wrapper.find('.dialog-stub');
+    const rotulo = dialogo.find('dd .m3-status');
+    expect(rotulo.text()).toBe('Pendente');
+    expect(tom(rotulo)).toBe('aviso');
+    expect(dialogo.findAll('h3').map((h) => h.text())).toEqual(['Itens']);
+    expect(dialogo.findAll('dt').map((dt) => dt.text())).toEqual(['Status', 'Cliente', 'Endereço', 'Telefone']);
+  });
+
+  it('cada card tem o h2 "Pedido #{id}" e os h3 "Cliente" e "Itens"', async () => {
+    const { wrapper } = await mountPage();
+    const cards = wrapper.findAll('.orders-list > li');
+    expect(cards.map((card) => card.find('h2').text())).toEqual(['Pedido #1', 'Pedido #2']);
+    for (const card of cards) {
+      expect(card.findAll('h3').map((h) => h.text())).toEqual(['Cliente', 'Itens']);
+    }
+  });
+
+  it('a linha do item no card mostra "{preço} cada", também na quantidade 1, sem o total da linha', async () => {
+    const { wrapper } = await mountPage();
+    const linhas = wrapper
+      .findAll('.orders-list > li')[0]
+      .findAll('.order-info__item')
+      .map((li) => li.findAll(':scope > span').map((span) => span.text().replace(/\s+/g, ' ')));
+    expect(linhas).toEqual([
+      ['2× Smash Burger', `${formatPrice(25.9)} cada`.replace(/\s+/g, ' ')],
+      ['1× Coca-Cola', `${formatPrice(8)} cada`.replace(/\s+/g, ' ')],
+    ]);
+    // O card não calcula preço: o total da linha (2 × 25,90) só aparece no diálogo
+    expect(wrapper.find('.orders-list').text()).not.toContain(formatPrice(51.8));
+    expect(wrapper.find('.orders-list .order-info__total-value').text()).toBe(formatPrice(59.8));
+  });
+
+  it('a região da busca fica sempre no DOM, com aria-atomic, e o "Limpar busca" fica fora dela', async () => {
+    const semBusca = await mountPage();
+    const vazia = semBusca.wrapper.find('.admin-page__busca > p.admin-page__search-result');
+    expect(vazia.attributes('role')).toBe('status');
+    expect(vazia.attributes('aria-atomic')).toBe('true');
+    expect(vazia.text()).toBe('');
+    expect(semBusca.wrapper.findAll('button').some((b) => b.text() === 'Limpar busca')).toBe(false);
+
+    const { wrapper, router } = await mountPage('/admin/orders?q=maria');
+    const regiao = wrapper.find('.admin-page__busca > [role="status"]');
+    expect(regiao.text()).toBe('1 pedido para “maria”.');
+    expect(regiao.find('button').exists()).toBe(false);
+    const limpar = wrapper.find('.admin-page__busca > button');
+    expect(limpar.text()).toBe('Limpar busca');
+    expect(limpar.classes()).toEqual(expect.arrayContaining(['btn--ghost', 'btn--sm', 'm3-botao--texto']));
+
+    await limpar.trigger('click');
+    await flushPromises();
+    expect(router.currentRoute.value.query).toEqual({});
+    expect(wrapper.find('.admin-page__busca > [role="status"]').text()).toBe('');
+  });
+
+  it('pelo teclado, depois do aviso, o "Atualizar status" focado rola para a vista; pelo ponteiro, não', async () => {
+    const rolar = vi.fn();
+    Element.prototype.scrollIntoView = rolar;
+    const { wrapper, toast } = await mountPage();
+    document.body.appendChild(wrapper.element);
+
+    // Enter no botão do pedido #2 ("Em preparo" → "A caminho"): ele continua na lista e habilitado
+    const botao = updateButtons(wrapper)[1];
+    botao.element.focus();
+    botao.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await botao.trigger('click');
+    await flushPromises();
+    expect(toast.toasts.at(-1).message).toBe('Pedido #2: A caminho.');
+    expect(document.activeElement).toBe(botao.element);
+    expect(rolar).toHaveBeenCalledTimes(1);
+    expect(rolar.mock.contexts[0]).toBe(botao.element);
+    expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+
+    // Pelo ponteiro, a página não pula
+    rolar.mockClear();
+    const outro = updateButtons(wrapper)[0];
+    outro.element.focus();
+    outro.element.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    await outro.trigger('click');
+    await flushPromises();
+    expect(toast.toasts.at(-1).message).toBe('Pedido #1: Em preparo.');
+    expect(rolar).not.toHaveBeenCalled();
+
+    wrapper.unmount();
+  });
+
+  it('ao sair da tela, a view tira os ouvintes da última entrada do document', async () => {
+    const tirar = vi.spyOn(document, 'removeEventListener');
+    const { wrapper } = await mountPage();
+    wrapper.unmount();
+    const tipos = tirar.mock.calls.filter(([, , captura]) => captura === true).map(([tipo]) => tipo);
+    expect(tipos).toEqual(expect.arrayContaining(['pointerdown', 'keydown']));
   });
 });
 

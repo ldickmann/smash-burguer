@@ -2,7 +2,7 @@
   <section class="admin-profile">
     <h1 class="admin-page__title admin-profile__title">Meu perfil</h1>
 
-    <AdminCard title="Administrador">
+    <AdminCard title="Administrador" class="admin-profile__card">
       <dl class="admin-profile__info">
         <div>
           <dt>Nome</dt>

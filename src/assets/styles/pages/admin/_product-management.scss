@@ -1,16 +1,20 @@
-// Produtos do admin (SPEC §5.11): grade de ProductCard variant="admin".
+// Produtos do painel (docs/direcoes/desenho/admin.md, §5.7): a grade de cards do M3CartaoProduto, em 1,
+// 2, 3 e 4 colunas, e o diálogo de exclusão.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
+// 3 colunas já em md: o conteúdo de 1024 (720 px, com a coluna fixa) é quase o de 768 (704)
 .products-list {
   display: grid;
+  align-items: stretch;
   gap: var(--space-4);
 
   @include up(sm) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @include up(lg) {
+  @include up(md) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -19,7 +23,14 @@
   }
 }
 
-// Diálogo de exclusão: "Cancelar" secundário e "Excluir produto" danger
+// Diálogo de exclusão: o texto em body-l; "Cancelar" (o seguro) antes e "Excluir produto" no fim
+.product-delete__text {
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-l-tracking);
+}
+
 .product-delete__actions {
   display: flex;
   justify-content: flex-end;

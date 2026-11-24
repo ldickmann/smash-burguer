@@ -1,18 +1,40 @@
-// Configurações (painel): restaurar o cardápio e os pedidos de exemplo.
+// Configurações (docs/direcoes/desenho/admin.md, §5.10): restaurar o cardápio e os pedidos de exemplo,
+// num card de até 40rem, com as ações no início; no diálogo, o seguro antes e o destrutivo no fim.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
 .admin-settings__title {
   margin-bottom: var(--space-5);
 }
 
-.admin-settings__text {
-  color: var(--color-ink-muted);
+.admin-settings__card {
+  max-width: 40rem;
 }
 
+.admin-settings__text {
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
+}
+
+// No card, as ações ficam sob o texto que elas executam, no início
 .admin-settings__actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: var(--space-3);
+}
+
+// O texto do diálogo em body-l; "Cancelar" e "Restaurar" no fim
+.admin-settings__dialog-text {
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-l-tracking);
+}
+
+.admin-settings__actions--fim {
+  justify-content: flex-end;
 }

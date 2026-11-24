@@ -1,108 +1,141 @@
-// SidebarAdmin (SPEC §5.11): 240px, itens de 44px, ativo com barra de brasa.
+// SidebarAdmin (desenho do admin, §4.1 e §5.1): uma lista só, em dois contêineres. A partir de lg, a
+// coluna fixa em surface, sem canto, sombra nem borda (a gaveta standard e o rail expandido); abaixo
+// de lg, a gaveta modal em surface-container-low, com os cantos de 16 no lado de dentro e a elevação 1,
+// sobre o scrim. Itens de 56 px nas duas; o atual em pílula secondary-container, com o rótulo em 700
+// (a pista além da cor). A largura é o token --m3-navegacao-largura.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 
 .admin-sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: var(--z-navbar);
   display: flex;
   flex-direction: column;
-  width: 240px;
-  border-right: 1px solid var(--color-border);
-  background: var(--color-surface-1);
-}
+  width: var(--m3-navegacao-largura);
+  background: var(--m3-surface);
+  color: var(--m3-on-surface);
 
-// Gaveta abaixo de lg: acima do fundo escurecido
-.admin-sidebar.is-drawer {
-  z-index: var(--z-sidebar);
-  max-width: 85vw;
-  box-shadow: var(--elev-3);
-  animation: admin-sidebar-fade var(--dur-fast) var(--ease-out);
-
-  @include motion-ok {
-    animation: admin-sidebar-in var(--dur-base) var(--ease-out);
+  @include up(lg) {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow-y: auto;
   }
 }
 
-.admin-sidebar__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  height: var(--navbar-h);
-  padding-inline: var(--space-4) var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+// Gaveta abaixo de lg: acima do scrim (--z-overlay) e do cabeçalho (--z-navbar). Entra por opacidade;
+// o deslize só com o movimento liberado. Fecha na hora (some pelo v-show)
+.admin-sidebar.is-drawer {
+  @include reserva-de-sombra;
+
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: var(--z-sidebar);
+  max-width: 85vw;
+  overflow-y: auto;
+  border-start-end-radius: var(--m3-forma-l);
+  border-end-end-radius: var(--m3-forma-l);
+  background: var(--m3-surface-container-low);
+  box-shadow: var(--m3-elevacao-1);
+  animation: admin-sidebar-fade var(--dur-fast) var(--m3-ease-emphasized-decelerate);
+
+  @include motion-ok {
+    animation: admin-sidebar-in var(--dur-base) var(--m3-ease-emphasized-decelerate);
+  }
 }
 
-.admin-sidebar__brand {
-  color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 400;
-  font-synthesis: none;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
+// A nav é a coluna inteira: a cabeça, a lista e o pé
 .admin-sidebar__nav {
   display: flex;
   flex: 1;
   flex-direction: column;
+}
+
+// Na faixa de 64 px do cabeçalho; a marca alinhada aos ícones dos itens (12 de margem e 16 de recuo)
+.admin-sidebar__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: var(--navbar-h);
+  padding-inline: calc(var(--space-3) + var(--space-4)) var(--space-2);
+}
+
+.admin-sidebar__brand {
+  @include tipo(title-l, 500);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-title-l-tracking);
+}
+
+// Empurra o pé para o fim da janela
+.admin-sidebar__lista {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   gap: var(--space-1);
-  padding: var(--space-3) var(--space-2);
-  overflow-y: auto;
+  padding-block: var(--space-2);
 }
 
 .admin-sidebar__item {
-  position: relative;
+  @include camada-de-estado;
+  @include anel-interno;
+  @include tipo(label-l, 500);
+
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  width: 100%;
-  min-height: var(--target-min);
-  padding-inline: var(--space-3);
-  border-radius: var(--radius-sm);
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-align: left;
+  gap: var(--space-2);
+  min-height: 3.5rem;
+  margin-inline: var(--space-3);
+  padding-inline: var(--space-4) var(--space-5);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-label-l-tracking);
+  text-align: start;
+  text-decoration: none;
+  white-space: normal;
 
-  @include hover-capable {
-    &:hover {
-      background: var(--color-surface-3);
-      color: var(--color-ink);
+  // Item atual: o fundo só não passa na 1.4.1; o 700 é a pista além da cor (G182), e o aria-current
+  // leva a informação por programa
+  &[aria-current="page"] {
+    background: var(--m3-secondary-container);
+    color: var(--m3-on-secondary-container);
+    font-weight: 700;
+  }
+
+  @media (forced-colors: active) {
+    &[aria-current="page"] {
+      border: 2px solid Highlight;
     }
   }
 
-  // Ativo: fundo accent-soft, texto ink e barra de 3px à esquerda
-  &[aria-current="page"] {
-    background: var(--color-accent-soft);
-    color: var(--color-ink);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: var(--space-2);
-      bottom: var(--space-2);
-      left: 0;
-      width: 3px;
-      border-radius: var(--radius-sm);
-      background: var(--color-accent);
+  @media (prefers-contrast: more) {
+    &[aria-current="page"] {
+      border: 1px solid var(--m3-outline);
     }
   }
 }
 
+// 20 px, a medida dos ícones de apoio do sistema, numa caixa fixa para os rótulos alinharem
 .admin-sidebar__icon {
   flex-shrink: 0;
-  width: 1.125rem;
+  width: 1.25rem;
+  font-size: 1.25rem;
 }
 
+// O pé: um divisor decorativo recuado 12 px dos lados, 8 px e o "Sair", a 8 px do fim
 .admin-sidebar__footer {
-  padding: var(--space-2);
-  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  padding-block-end: var(--space-2);
+
+  &::before {
+    content: "";
+    margin-inline: var(--space-3);
+    margin-block-end: var(--space-2);
+    border-block-start: 1px solid var(--m3-outline-variant);
+  }
 }
 
 @keyframes admin-sidebar-fade {
@@ -111,9 +144,12 @@
   }
 }
 
-@keyframes admin-sidebar-in {
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
+// O translateX só existe com o movimento liberado (no reduzido, a gaveta só aparece por opacidade)
+@include motion-ok {
+  @keyframes admin-sidebar-in {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
   }
 }

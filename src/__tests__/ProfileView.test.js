@@ -285,10 +285,12 @@ describe('ProfileView no M3', () => {
     expect(pedido.text()).not.toContain('·');
   });
 
-  it('"Recebido" é um rótulo de status: um p, sem papel, sem tabindex e sem ser botão', async () => {
+  it('"Recebido" é um rótulo de status (M3RotuloStatus info): um p, sem papel, sem tabindex e sem ser botão', async () => {
     const { wrapper } = await comPedido();
     const status = wrapper.find('.profile-order__status');
     expect(status.element.tagName).toBe('P');
+    expect(status.classes()).toEqual(expect.arrayContaining(['m3-status', 'm3-status--info']));
+    expect(status.text()).toBe('Recebido');
     expect(status.attributes('role')).toBeUndefined();
     expect(status.attributes('tabindex')).toBeUndefined();
     expect(status.find('button, a, svg').exists()).toBe(false);
