@@ -13,7 +13,7 @@ if (!fs.existsSync(CONTRASTE)) {
   console.error(`Não achei ${CONTRASTE}. Rode da raiz do repositório ou informe a raiz em REPO=<pasta>.`);
   process.exit(2);
 }
-const { PARES, lerTokens, medirPar, razao, lerCor } = await import(pathToFileURL(CONTRASTE).href);
+const { PARES, lerTokens, medirPar } = await import(pathToFileURL(CONTRASTE).href);
 const { ler } = lerTokens(fs.readFileSync(path.join(REPO, 'src/assets/styles/base/_tokens.scss'), 'utf8'));
 const duasCasas = (valor) => (Math.floor(valor * 100) / 100).toFixed(2);
 
@@ -25,8 +25,9 @@ for (const par of PARES) {
   const valor = medido === null ? 'sem cor' : `${duasCasas(medido).padStart(5)}:1`;
   console.log(`${ok ? '✓' : '✗'} ${par.frente.padEnd(28)} / ${par.fundo.padEnd(32)} ${valor} (mín. ${par.minimo})  ${par.onde}`);
 }
-// Informativo (isento de contraste): o texto desabilitado sobre o campo
-const desabilitado = razao(lerCor(ler('color-ink-disabled')), lerCor(ler('m3-surface-container-highest')));
-console.log(`\nInformativo (isento): color-ink-disabled / m3-surface-container-highest = ${duasCasas(desabilitado)}:1`);
+// Informativo (isento de contraste): o rótulo do botão desabilitado, on-surface a 38% sobre o contêiner
+// on-surface a 10% sobre a surface (os dois em rgba, compostos)
+const desabilitado = medirPar(ler, { frente: 'm3-desabilitado-conteudo', fundo: 'm3-desabilitado-container', sobre: 'm3-surface' });
+console.log(`\nInformativo (isento): m3-desabilitado-conteudo / m3-desabilitado-container / m3-surface = ${duasCasas(desabilitado)}:1`);
 console.log(falhas ? `FALHAS: ${falhas}` : `TODOS OS ${PARES.length} PARES OK`);
 process.exitCode = falhas ? 1 : 0;

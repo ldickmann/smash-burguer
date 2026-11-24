@@ -34,6 +34,23 @@ const LOGGED = { user: SESSION, 'smash-burger:session': SESSION, 'smash-burger:a
 // do axe, para não medir a tela errada
 const marcar = async (p, nome) => { await p.getByRole('radio', { name: nome, exact: true }).check({ force: true }); await p.waitForTimeout(200); };
 const exigir = async (p, seletor, estado) => { if (!(await p.locator(seletor).count())) throw new Error(`${estado}: o estado não abriu (${seletor})`); };
+// Falha simulada da gravação no navegador (desenho dos componentes base, §9): o setItem e o removeItem
+// lançam erro só com window.__falharGravacao ligado, logo antes do clique. A camada simulada não muda
+const FALHA = () => {
+  for (const metodo of ['setItem', 'removeItem']) {
+    const original = Storage.prototype[metodo];
+    Storage.prototype[metodo] = function falhar(...args) {
+      if (window.__falharGravacao) throw new Error('falha simulada');
+      return original.apply(this, args);
+    };
+  }
+};
+const CART3 = { items: [
+  ORDER.items[0],
+  { productId: 2, category: 'drinks', name: 'Coca Cola Lata', image: '/images/drinks/coca-cola-lata', unitPrice: 4.99, quantity: 1, removedIngredients: [], additionals: [], observation: '' },
+  { productId: 1, category: 'desserts', name: 'Sorvete de Pote', image: '/images/desserts/sorvete-pote', unitPrice: 12.9, quantity: 1, removedIngredients: [], additionals: [], observation: '' },
+] };
+const ADMIN_SESSAO = { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } };
 const abrirModal = async (p, nome) => { await p.getByRole('button', { name: `Adicionar ${nome}`, exact: true }).click(); await p.waitForTimeout(600); };
 const SCENARIOS = {
   loja: [
@@ -64,7 +81,7 @@ const SCENARIOS = {
         await p.waitForLoadState('networkidle').catch(() => {});
         await p.waitForTimeout(300);
         await marcar(p, 'Sobremesas');
-        await exigir(p, '.menu-page__regiao .empty-state', 'menu-vazio');
+        await exigir(p, '.menu-page [role="status"] .empty-state', 'menu-vazio');
       },
     },
     { name: 'menu-folha', hash: '#/menu', act: async (p) => { await p.getByRole('button', { name: 'Ingredientes de Cheese Bacon', exact: true }).click(); await p.waitForTimeout(600); await exigir(p, '#m3-ingredientes-1:visible', 'menu-folha'); } },
@@ -86,6 +103,26 @@ const SCENARIOS = {
     { name: 'cart-logado', hash: '#/cart', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.cart-page__resumo a:has-text("Finalizar pedido")', 'cart-logado'); } },
     { name: 'cart-desfazer', hash: '#/cart', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Remover Cheese Bacon' }).click(); await p.waitForTimeout(300); await exigir(p, '.toast button:has-text("Desfazer")', 'cart-desfazer'); } },
     { name: 'payment', hash: '#/payment', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.payment-page address', 'payment'); } },
+    { name: 'payment-sem-forma', hash: '#/payment', storage: LOGGED, act: async (p) => { await exigir(p, '.order-summary__cta .btn[aria-disabled="true"]', 'payment-sem-forma'); } },
+    { name: 'cart-seletor-minimo', hash: '#/cart', storage: LOGGED, act: async (p) => { await exigir(p, '.stepper button[aria-disabled="true"]', 'cart-seletor-minimo'); } },
+    {
+      name: 'cart-tres-avisos', hash: '#/cart', storage: { ...LOGGED, 'smash-burger:cart:v1': CART3 }, act: async (p) => {
+        for (const nome of ['Cheese Bacon', 'Coca Cola Lata', 'Sorvete de Pote']) {
+          await p.getByRole('button', { name: `Remover ${nome}` }).click();
+          await p.waitForTimeout(250);
+        }
+        await exigir(p, '.toast-region .toast + .toast + .toast', 'cart-tres-avisos');
+      },
+    },
+    {
+      name: 'modal-bebida-maximo', hash: '#/menu', act: async (p) => {
+        await marcar(p, 'Bebidas');
+        await abrirModal(p, 'Copo de Refrigerante');
+        for (let i = 0; i < 9; i++) await p.locator('dialog[open]').getByRole('button', { name: 'Aumentar Copo de Refrigerante' }).click();
+        await p.waitForTimeout(200);
+        await exigir(p, 'dialog[open] .stepper button[aria-disabled="true"]', 'modal-bebida-maximo');
+      },
+    },
     {
       name: 'payment-sem-endereco', hash: '#/payment', full: true,
       storage: { ...LOGGED, 'smash-burger:session': { ...SESSION, user: { ...USER, address: {} } }, 'smash-burger:account': { ...USER, address: {} } },
@@ -99,7 +136,7 @@ const SCENARIOS = {
         await p.evaluate(() => { const original = window.setTimeout; window.setTimeout = (fn, ms, ...resto) => original(fn, ms === 800 ? 60000 : ms, ...resto); });
         await p.getByRole('button', { name: /Confirmar pedido/ }).click();
         await p.waitForTimeout(300);
-        await exigir(p, '.order-summary__cta [aria-busy="true"]', 'payment-enviando');
+        await exigir(p, '.order-summary__cta .btn.is-loading', 'payment-enviando');
       },
     },
     { name: 'confirmation', hash: '#/confirmation', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.confirmation-page__status h1', 'confirmation'); } },
@@ -135,8 +172,26 @@ const SCENARIOS = {
       storage: { ...LOGGED, 'smash-burger:session': { ...SESSION, orderHistory: [], lastOrderId: null, nextOrderId: 1001 } },
       act: async (p) => { await exigir(p, '.profile-page .empty-state', 'profile-sem-pedidos'); },
     },
-    { name: 'profile-salvo', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Salvar alterações' }).click(); await p.locator('.toast', { hasText: 'Dados salvos.' }).waitFor({ timeout: 4000 }).catch(() => {}); await exigir(p, '.toast:has-text("Dados salvos.")', 'profile-salvo'); } },
-    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); await exigir(p, 'dialog[open] #excluir-conta-titulo', 'profile-excluir'); } },
+    { name: 'profile-salvo', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Salvar alterações' }).click(); await p.locator('.toast', { hasText: 'Dados salvos.' }).waitFor({ timeout: 4000 }).catch(() => {}); await exigir(p, '.toast-region__list--status .toast:has-text("Dados salvos.")', 'profile-salvo'); } },
+    {
+      name: 'profile-salvar-erro', hash: '#/profile', storage: LOGGED, init: FALHA, act: async (p) => {
+        await p.evaluate(() => { window.__falharGravacao = true; });
+        await p.getByRole('button', { name: 'Salvar alterações' }).click();
+        await p.locator('.toast-region__list--alert .toast').waitFor({ timeout: 4000 }).catch(() => {});
+        await exigir(p, '.toast-region__list--alert .toast .toast__icon', 'profile-salvar-erro');
+      },
+    },
+    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); await exigir(p, 'dialog[open][role="alertdialog"] #excluir-conta-titulo', 'profile-excluir'); } },
+    {
+      name: 'profile-excluir-erro', hash: '#/profile', storage: LOGGED, init: FALHA, act: async (p) => {
+        await p.getByRole('button', { name: 'Excluir conta' }).click();
+        await p.waitForTimeout(600);
+        await p.evaluate(() => { window.__falharGravacao = true; });
+        await p.locator('dialog[open]').getByRole('button', { name: 'Excluir conta' }).click();
+        await p.locator('dialog[open] .profile-delete__erro').waitFor({ timeout: 4000 }).catch(() => {});
+        await exigir(p, 'dialog[open] .profile-delete__erro', 'profile-excluir-erro');
+      },
+    },
     // A observação do modal Personalizar, com texto (o FormGroup novo no diálogo)
     { name: 'modal-observacao', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.fill('dialog[open] #observacao', 'Bem passado, sem sal'); await exigir(p, 'dialog[open] #observacao', 'modal-observacao'); } },
     { name: '404', hash: '#/rota-inexistente' },
@@ -167,13 +222,23 @@ const SCENARIOS = {
         await exigir(p, '#image-erro', 'admin-modal-erro');
       },
     },
-    { name: 'admin-excluir', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Excluir', exact: true }).first().click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #excluir-produto-titulo', 'admin-excluir'); } },
+    { name: 'admin-excluir', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Excluir', exact: true }).first().click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open][role="alertdialog"] #excluir-produto-titulo', 'admin-excluir'); } },
     { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, full: true, act: async (p) => { await exigir(p, '.orders-list .m3-status', 'admin-pedidos'); } },
     { name: 'admin-pedidos-filtro', hash: '#/admin/orders?status=pending', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { if ((await p.locator('#statusFilter').inputValue()) !== 'pending') throw new Error('admin-pedidos-filtro: o filtro não ficou em pending'); } },
     { name: 'admin-detalhes', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Detalhes', exact: true }).first().click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #pedido-detalhes-titulo', 'admin-detalhes'); } },
     { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.top-products', 'admin-relatorios'); } },
     { name: 'admin-perfil', hash: '#/admin/profile', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.admin-profile__info', 'admin-perfil'); } },
-    { name: 'admin-configuracoes', hash: '#/admin/settings', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Restaurar cardápio original' }).click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #restaurar-titulo', 'admin-configuracoes'); } },
+    { name: 'admin-configuracoes', hash: '#/admin/settings', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Restaurar cardápio original' }).click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open][role="alertdialog"] #restaurar-titulo', 'admin-configuracoes'); } },
+    { name: 'admin-aviso', hash: '#/admin/orders', storage: ADMIN_SESSAO, act: async (p) => { await p.getByRole('button', { name: 'Atualizar status' }).first().click(); await p.locator('.toast-region .toast', { hasText: 'Pedido #1' }).waitFor({ timeout: 3000 }).catch(() => {}); await p.waitForTimeout(500); await exigir(p, '.toast-region .toast:has-text("Pedido #1")', 'admin-aviso'); } },
+    { name: 'admin-pedidos-vazio', hash: '#/admin/orders?status=completed', storage: ADMIN_SESSAO, act: async (p) => { await exigir(p, '.order-management [role="status"] .empty-state', 'admin-pedidos-vazio'); } },
+    { name: 'admin-pedidos-busca-vazia', hash: '#/admin/orders?q=zzz', storage: ADMIN_SESSAO, act: async (p) => { await exigir(p, '.order-management .empty-state', 'admin-pedidos-busca-vazia'); } },
+    { name: 'admin-grafico', hash: '#/admin', storage: ADMIN_SESSAO, act: async (p) => { await exigir(p, '.empty-state', 'admin-grafico'); } },
+    {
+      name: 'admin-status-desabilitado', hash: '#/admin/orders', storage: ADMIN_SESSAO, act: async (p) => {
+        for (let i = 0; i < 3; i++) { await p.getByRole('button', { name: 'Atualizar status' }).first().click(); await p.waitForTimeout(150); }
+        await exigir(p, '.orders-list button:disabled', 'admin-status-desabilitado');
+      },
+    },
     {
       name: 'admin-gaveta', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => {
         // Só abaixo de lg: em 1440 a coluna é fixa, e o estado mede a moldura de novo
@@ -204,6 +269,7 @@ for (const w of VPS) {
     const ctx = await browser.newContext({ viewport: { width: w, height: w === 390 ? 844 : 900 }, reducedMotion: REDUCE ? 'reduce' : 'no-preference' });
     await ctx.route('https://viacep.com.br/**', (r) => r.fulfill({ json: { logradouro: 'Rua Beira da Praia', bairro: 'Centro', localidade: 'Navegantes', uf: 'SC' } }));
     const storage = Object.fromEntries(Object.entries(sc.storage || {}).map(([k, v]) => [k, JSON.stringify(v)]));
+    if (sc.init) await ctx.addInitScript(sc.init);
     await ctx.addInitScript((s) => { if (sessionStorage.getItem('__s')) return; localStorage.clear(); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, v); sessionStorage.setItem('__s', '1'); }, storage);
     const page = await ctx.newPage();
     // Violações da Content-Security-Policy do index.html: o Chromium as escreve no console

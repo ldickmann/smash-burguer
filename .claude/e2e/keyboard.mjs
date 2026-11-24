@@ -4,7 +4,10 @@
 // a volta do último ao primeiro), o foco não coberto pelo grupo grudado e pelo cabeçalho (1440, 390 e
 // 360) e o grupo numa linha em 360 px. No carrinho e no pagamento (etapa 7): as setas do pagamento em
 // 390 com a altura de KB_ALTURA (rode com 844, 830 e 800), o Shift+Tab sem forma marcada, o foco não
-// coberto no carrinho do visitante e no pagamento sem endereço, e o "Remover" vizinho contra o aviso.
+// coberto no carrinho do visitante e no pagamento sem endereço, e o "Remover" vizinho contra o aviso. Nos
+// componentes base (etapa 10): o foco preso nas confirmações e nos "Detalhes" (também a partir do
+// título), o seletor no limite, o "Fechar aviso" pelo teclado, o tempo do "Desfazer", três avisos e o
+// CTA grudado do pagamento contra o aviso.
 import { chromium } from 'playwright';
 const BASE = 'http://localhost:4173/smash-burguer/';
 // Altura das telas da checagem do foco não coberto (padrão 844, a da matriz da §13.3)
@@ -412,37 +415,31 @@ const SEM_ENDERECO = { ...USER, address: {} };
   await sctx.close();
 }
 
-// "Remover" vizinho contra o aviso (desenho do Carrinho, §4): remover um item deixa o foco no "Remover"
-// do item seguinte, e ele não pode ficar sob o aviso nem sob a toolbar. Em 390, perto do pé (o aviso
-// fica acima da toolbar), com o 5º de seis itens; em 1024, perto do topo (o aviso fica no topo à
-// direita e cruza a coluna da lista), com o 2º. Em 1440, o aviso começa depois do "Remover": a página
-// não pula, e o botão (sem o anel, que encosta 2 px) fica fora do aviso
-for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abacaxi', 'X-Salada'], [1024, 768, 'topo', 'Coca Cola Lata', 'Sorvete de Pote'], [1440, 900, 'largo', 'Coca Cola Lata', 'Sorvete de Pote']]) {
+// "Remover" vizinho contra o aviso (desenho do Carrinho, §4, e dos componentes base, §4.5): remover um
+// item deixa o foco no "Remover" do item seguinte, e ele não pode ficar sob o aviso nem sob a toolbar. O
+// aviso fica no pé em todas as larguras: o "Remover" começa perto do pé (acima da reserva da toolbar, de
+// 96 px, abaixo de lg; a 16 px do pé a partir de lg, onde o aviso o cobriria) e sobe acima da reserva do
+// aviso (scroll-padding-bottom de 200 px abaixo de lg e de 120 px a partir dele)
+for (const [w, h, removido, vizinho] of [[390, ALTURA, 'Suco de Abacaxi', 'X-Salada'], [1024, 768, 'Suco de Abacaxi', 'X-Salada'], [1440, 900, 'Suco de Abacaxi', 'X-Salada']]) {
+  const pe = w >= 1024 ? 16 : 96;
   const c = await browser.newContext({ viewport: { width: w, height: h } });
   await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
   const p = await c.newPage();
   await openRoute(p, '#/cart', 'Seu carrinho');
   const alvo = p.getByRole('button', { name: `Remover ${removido}` });
-  // Leva o "Remover" do meio para perto do pé (acima da reserva da toolbar) ou para logo abaixo do aviso
-  await alvo.evaluate((el, [lugar, barraReserva]) => {
+  await alvo.evaluate((el, reserva) => {
     const r = el.getBoundingClientRect();
-    const destino = lugar === 'pe' ? innerHeight - barraReserva - r.height - 8 : 100;
-    scrollBy(0, r.top - destino);
-  }, [onde, 96]);
+    scrollBy(0, r.top - (innerHeight - reserva - r.height - 8));
+  }, pe);
   await alvo.evaluate((el) => el.focus({ preventScroll: true }));
   const antes = await p.evaluate(() => Math.round(document.activeElement.getBoundingClientRect().top));
-  const rolagemAntes = await p.evaluate(() => Math.round(scrollY));
-  const destino = onde === 'pe' ? h - 96 - 44 - 8 : 100;
-  check(Math.abs(antes - destino) <= 2, `${w}×${h}: o "Remover ${removido}" começa ${onde === 'pe' ? 'perto do pé' : 'perto do topo'}`, `em ${antes}, alvo ${destino}`);
+  const destino = h - pe - 44 - 8;
+  check(Math.abs(antes - destino) <= 2, `${w}×${h}: o "Remover ${removido}" começa perto do pé`, `em ${antes}, alvo ${destino}`);
   await p.keyboard.press('Enter');
-  await p.waitForTimeout(400);
+  await p.waitForTimeout(500);
   const depois = await p.evaluate(cobertoPor);
   check(depois.nome === `Remover ${vizinho}` && depois.avisos === 1, `${w}×${h}: depois de remover, o foco fica no "Remover" vizinho, com o aviso na tela`, `${depois.nome}, ${depois.avisos} aviso(s)`);
-  if (onde === 'largo') {
-    check(!depois.avisoCaixa && depois.rolagem === rolagemAntes, `${w}×${h}: sem pulo da página, e o "Remover" vizinho fica fora do aviso`, `rolagem ${rolagemAntes} → ${depois.rolagem}; ${depois.topo}–${depois.base}`);
-  } else {
-    check(!depois.aviso && !depois.barra, `${w}×${h}: o "Remover" vizinho focado não fica sob o aviso nem sob a toolbar (${onde === 'pe' ? 'perto do pé' : 'perto do topo'})`, `antes em ${antes}, depois ${depois.topo}–${depois.base}`);
-  }
+  check(!depois.aviso && !depois.barra, `${w}×${h}: o "Remover" vizinho focado (com o anel) não fica sob o aviso nem sob a toolbar, perto do pé`, `antes em ${antes}, depois ${depois.topo}–${depois.base}`);
   await c.close();
 }
 
@@ -788,6 +785,170 @@ for (const [w, h] of [[1024, 768], [1440, 900]]) {
   await p.waitForTimeout(400);
   const depois = await p.evaluate(sobOPainel);
   check(depois.avisos === 1 && depois.nome.includes('Editar') && !depois.aviso, `painel em 390×${ALTURA}: depois de editar, o "Editar" focado não fica sob o aviso`, JSON.stringify(depois));
+  await c.close();
+}
+
+// Componentes base (desenho dos componentes base, §4.1, §4.3, §4.5, §5.4 e §9)
+// Foco preso nas confirmações: o foco abre no "Cancelar"; Tab e Shift+Tab não saem do <dialog>; a ordem
+// é "Cancelar" → ação → "Fechar" → "Cancelar"; o Esc devolve o foco ao botão de origem
+const dentroDoDialogo = () => !!document.querySelector('dialog[open]')?.contains(document.activeElement);
+async function confirmacaoPresa(p, label, origem, acao) {
+  await origem.evaluate((el) => { el.dataset.origem = '1'; el.focus(); });
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(500);
+  const papel = await p.evaluate(() => document.querySelector('dialog[open]')?.getAttribute('role'));
+  check(papel === 'alertdialog', `${label}: o diálogo é um alertdialog`, papel);
+  check(await nomeFocado(p) === 'Cancelar', `${label}: o foco abre no "Cancelar"`, await nomeFocado(p));
+  const ordem = [await nomeFocado(p)];
+  for (let i = 0; i < 3; i++) { await p.keyboard.press('Tab'); ordem.push(await nomeFocado(p)); }
+  check(ordem.join(' → ') === `Cancelar → ${acao} → Fechar → Cancelar`, `${label}: a ordem do Tab`, ordem.join(' → '));
+  const fora = [];
+  for (const tecla of ['Tab', 'Shift+Tab']) {
+    for (let i = 0; i < 12; i++) {
+      await p.keyboard.press(tecla);
+      if (!(await p.evaluate(dentroDoDialogo))) fora.push(`${tecla} ${await nomeFocado(p)}`);
+    }
+  }
+  check(fora.length === 0, `${label}: 12 Tabs e 12 Shift+Tabs sem sair do diálogo`, fora.join(' | '));
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(400);
+  check(await p.evaluate(() => document.activeElement?.dataset.origem === '1'), `${label}: o Esc devolve o foco ao botão de origem`, await nomeFocado(p));
+}
+for (const w of [1440, 390]) {
+  const h = w === 390 ? ALTURA : 900;
+  console.log(`=== confirmações e diálogos em ${w}×${h}`);
+  const c = await browser.newContext({ viewport: { width: w, height: h } });
+  await seed(c, { ...ADMIN_SESSAO, 'smash-burger:session': SESSAO_PERFIL, 'smash-burger:account': PERFIL });
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/products', 'Produtos');
+  await confirmacaoPresa(p, `"Excluir produto?" em ${w}`, p.getByRole('button', { name: 'Excluir', exact: true }).first(), 'Excluir produto');
+  await openRoute(p, '#/profile', '');
+  await p.locator('.profile-page').waitFor({ timeout: 3000 }).catch(() => {});
+  await confirmacaoPresa(p, `"Excluir conta?" em ${w}`, p.getByRole('button', { name: 'Excluir conta', exact: true }), 'Excluir conta');
+
+  // "Detalhes" do pedido: o foco abre no título (sem controle no corpo); o Shift+Tab a partir dele vai ao
+  // último focável (o "Fechar" do rodapé), e Tabs e Shift+Tabs alternados não saem
+  await abrirPainel(p, '#/admin/orders', 'Pedidos');
+  await p.getByRole('button', { name: 'Detalhes', exact: true }).first().focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(500);
+  const titulo = await p.evaluate(() => document.activeElement.id);
+  check(titulo === 'pedido-detalhes-titulo', `"Detalhes" em ${w}: o foco abre no título`, titulo);
+  await p.keyboard.press('Shift+Tab');
+  const ultimo = await p.evaluate(() => ({ rodape: !!document.activeElement.closest('.dialog__footer'), dentro: !!document.querySelector('dialog[open]')?.contains(document.activeElement) }));
+  check(ultimo.dentro && ultimo.rodape, `"Detalhes" em ${w}: o Shift+Tab a partir do título vai ao último focável (o "Fechar" do rodapé)`, JSON.stringify(ultimo));
+  const saiu = [];
+  for (let i = 0; i < 12; i++) {
+    await p.keyboard.press(i % 2 ? 'Shift+Tab' : 'Tab');
+    if (!(await p.evaluate(dentroDoDialogo))) saiu.push(await nomeFocado(p));
+  }
+  check(saiu.length === 0, `"Detalhes" em ${w}: 12 Tabs e Shift+Tabs alternados sem sair do diálogo`, saiu.join(' | '));
+  await c.close();
+}
+
+// O seletor no limite: o foco fica no botão, com aria-disabled, e o Enter não muda o número
+{
+  console.log('=== seletor de quantidade no limite');
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, { 'smash-burger:cart:v1': { items: [{ ...CART.items[0], quantity: 3 }] } });
+  const p = await c.newPage();
+  await openRoute(p, '#/cart', 'Seu carrinho');
+  await p.getByRole('button', { name: 'Diminuir Cheese Bacon' }).focus();
+  await p.keyboard.press('Enter');
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(200);
+  const limite = await p.evaluate(() => ({ nome: document.activeElement.getAttribute('aria-label'), desabilitado: document.activeElement.getAttribute('aria-disabled'), valor: document.querySelector('.stepper__value').textContent.trim() }));
+  check(limite.nome === 'Diminuir Cheese Bacon' && limite.desabilitado === 'true' && limite.valor === '1', 'seletor: no mínimo, o foco continua no "Diminuir", com aria-disabled', JSON.stringify(limite));
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(200);
+  check((await p.locator('.stepper__value').first().textContent()).trim() === '1' && await nomeFocado(p) === 'Diminuir Cheese Bacon', 'seletor: o Enter no limite não muda o número nem o foco');
+  await c.close();
+}
+
+// O "Fechar aviso" pelo teclado: o foco não cai no body (vai à origem); o aviso com ação não some sozinho
+{
+  console.log('=== aviso pelo teclado');
+  const c = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await openRoute(p, '#/cart', 'Seu carrinho');
+  await p.getByRole('button', { name: 'Remover Cheese Bacon' }).focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(400);
+  let achou = false;
+  for (let i = 0; i < 60 && !achou; i++) {
+    await p.keyboard.press('Tab');
+    achou = (await nomeFocado(p)) === 'Fechar aviso';
+  }
+  check(achou, 'aviso: o Tab chega ao "Fechar aviso"');
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(() => ({ corpo: document.activeElement === document.body, noAviso: !!document.activeElement.closest('.toast-region'), avisos: document.querySelectorAll('.toast-region .toast').length }));
+  check(depois.avisos === 0 && !depois.corpo && !depois.noAviso, 'aviso: depois do "Fechar aviso" pelo teclado, o foco não fica no body (vai à origem)', `${JSON.stringify(depois)} ${await nomeFocado(p)}`);
+
+  // O "Desfazer" fica: depois de 6 s continua na tela; com uma segunda remoção, o primeiro sai cerca de
+  // 10 s depois, e o segundo fica
+  await p.getByRole('button', { name: 'Remover Coca Cola Lata' }).focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(6000);
+  check(await p.locator('.toast .toast__action').count() === 1, 'aviso: o "Desfazer" continua na tela depois de 6 s');
+  await p.getByRole('button', { name: 'Remover Sorvete de Pote' }).focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(9500);
+  const aos95 = await p.locator('.toast .toast__message').allTextContents();
+  await p.waitForTimeout(1200);
+  const aos107 = await p.locator('.toast .toast__message').allTextContents();
+  check(aos95.length === 2 && aos107.length === 1 && aos107[0].includes('Sorvete de Pote'), 'aviso: o primeiro "Desfazer" sai cerca de 10 s depois da segunda remoção, e o segundo fica', `9,5 s: ${aos95.join(' | ')}; 10,7 s: ${aos107.join(' | ')}`);
+  await c.close();
+}
+
+// Três avisos: três remoções seguidas pelo teclado; o "Remover" focado não cruza nenhum aviso nem a
+// toolbar (em 390 e em 900, onde a toolbar ainda flutua)
+for (const w of [390, 900]) {
+  const c = await browser.newContext({ viewport: { width: w, height: ALTURA } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await openRoute(p, '#/cart', 'Seu carrinho');
+  const alvo = p.getByRole('button', { name: 'Remover Coca Cola Lata' });
+  await alvo.evaluate((el) => { const r = el.getBoundingClientRect(); scrollBy(0, r.top - (innerHeight - 96 - r.height - 8)); el.focus({ preventScroll: true }); });
+  const passos = [];
+  for (let i = 0; i < 3; i++) {
+    await p.keyboard.press('Enter');
+    await p.waitForTimeout(500);
+    passos.push(await p.evaluate(cobertoPor));
+  }
+  const ruins = passos.filter((x) => x.aviso || x.barra).map((x) => `${x.nome} ${x.topo}–${x.base} (${x.avisos})`);
+  check(passos.at(-1).avisos === 3 && ruins.length === 0, `três avisos em ${w}×${ALTURA}: o "Remover" focado não cruza nenhum aviso nem a toolbar`, ruins.join(' | ') || passos.map((x) => `${x.nome} ${x.topo}–${x.base}`).join(' | '));
+  await c.close();
+}
+
+// O CTA grudado do pagamento contra o aviso da conferência (no início da coluna a partir de lg): com o
+// carrinho de seis itens e um preço diferente do cardápio, o aviso fica na tela, sem prazo, e o CTA
+// focado (com o anel) não cruza o aviso. O carrinho confere os preços ao carregar: o preço muda pela
+// store (só no teste) depois de a página abrir
+for (const [w, h] of [[1024, 768], [1440, 900]]) {
+  const c = await browser.newContext({ viewport: { width: w, height: h } });
+  await seed(c, { 'smash-burger:session': SESSION, 'smash-burger:cart:v1': CART6, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await openRoute(p, '#/payment', 'Finalizar pedido');
+  await p.locator('input[name="payment-method"][value="pix"]').check({ force: true });
+  await p.evaluate(() => { document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('cart').items[0].unitPrice = 1; });
+  const cta = p.getByRole('button', { name: /Confirmar pedido/ });
+  await cta.focus();
+  await p.keyboard.press('Enter');
+  await p.locator('.toast-region .toast').first().waitFor({ timeout: 4000 }).catch(() => {});
+  await p.waitForTimeout(500);
+  const r = await p.evaluate(() => {
+    const el = document.querySelector('.order-summary__cta .btn');
+    const s = getComputedStyle(el);
+    const anel = s.outlineStyle === 'none' ? 0 : parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset);
+    const b = el.getBoundingClientRect();
+    const t = document.querySelector('.toast-region .toast')?.getBoundingClientRect();
+    const alvo = { left: b.left - anel, right: b.right + anel, top: b.top - anel, bottom: b.bottom + anel };
+    const cruza = !!t && Math.min(alvo.right, t.right) > Math.max(alvo.left, t.left) && Math.min(alvo.bottom, t.bottom) > Math.max(alvo.top, t.top);
+    return { foco: document.activeElement === el ? el.textContent.trim().slice(0, 20) : String(document.activeElement?.tagName), cruza, gruda: getComputedStyle(el.closest('.payment-page__resumo')).position, distanciaX: t ? Math.round(alvo.left - t.right) : null, distanciaY: t ? Math.round(t.top - alvo.bottom) : null, cta: `${Math.round(alvo.left)}–${Math.round(alvo.right)} × ${Math.round(alvo.top)}–${Math.round(alvo.bottom)}`, aviso: t ? `${Math.round(t.left)}–${Math.round(t.right)} × ${Math.round(t.top)}–${Math.round(t.bottom)}` : 'nenhum' };
+  });
+  check(r.aviso !== 'nenhum' && r.foco.startsWith('Confirmar') && !r.cruza, `pagamento em ${w}×${h}: o CTA grudado focado não cruza o aviso da conferência`, JSON.stringify(r));
   await c.close();
 }
 
