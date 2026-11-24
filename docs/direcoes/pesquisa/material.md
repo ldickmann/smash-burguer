@@ -462,3 +462,261 @@ As opacidades da camada de estado vêm de md-sys-state, sem número no arquivo [
 11. **Síntese (recomendação), rebaixada a inferência:** "o nativo vale no celular (A9)". [92] diz que alguns recursos ARIA não funcionam no celular; não fala do rádio nativo.
 
 Ajustes de redação, sem derrubada: A6 (o foco fica no botão "em geral"), A8 ([91] não diz que a ativação manual serve ao painel que demora; diz que, sem conteúdo pré-carregado, a automática deixa o foco lento), A17 (o `checked` e o `onCheckedChange` do multi-select foram conferidos em [102]) e A23 (na referência, trocam de ícone as amostras que têm ícone; a vertical só tem texto).
+
+## Etapa 8: campos de texto e formulários (23/11/2026)
+
+Feita em 23/11/2026, com a verificação no mesmo dia. Um pesquisador abriu as páginas com WebFetch e devolveu 49 afirmações. Depois, um verificador reabriu cada URL e tentou derrubar cada uma, conferindo se a página diz aquilo, com a medida ou o comportamento citado, e se a fonte é da classe declarada. A seção responde às perguntas do desenho da etapa 8 (login, cadastro, perfil e o `FormGroup`): quando usar o campo filled ou o outlined do M3, com que medidas, cores e estados; o que a WCAG e o WAI Forms Tutorial pedem do rótulo, do erro e do anúncio; e como tratar o rótulo de status ("Recebido") e o "Ver itens" do histórico de pedidos. Ela completa a linha `FormGroup` da §4.2 do SPEC-M (`docs/direcoes/SPEC-material.md`), que dizia "Não encontrei fonte de text field nos dossiês". Das 49 afirmações, 43 ficaram inteiras, 6 ficaram em parte e nenhuma caiu inteira. Da síntese do pesquisador, um trecho caiu e dois ficaram em parte. Tudo isso está em "Refutadas na verificação (etapa 8)". O que a verificação achou e o pesquisador não trouxe está marcado "achado na verificação". As fontes que já tinham número mantêm o número ([8], [11], [29], [35], [60] e [98]), e as novas vão de [118] a [159].
+
+### Fontes da etapa 8
+
+| Nº | Tipo | Título | URL | O que sustenta |
+|---|---|---|---|---|
+| [118] | documentação oficial | Configure text fields (Jetpack Compose) | https://developer.android.com/develop/ui/compose/text/user-input | O filled como padrão e o outlined como variante, a escolha entre `TextField` e `BasicTextField`, os limites de linha, os modos de ocultar a senha e a atualização Expressive. |
+| [119] | documentação oficial | TextField (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/TextField.composable | A ênfase do filled; `enabled`, `readOnly`, `isError`, `label` e `placeholder`; os exemplos de erro, de placeholder e de campo denso. |
+| [120] | documentação oficial | OutlinedTextField (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/OutlinedTextField.composable | A ênfase menor do outlined em formulários com muitos campos e o rótulo `Cutout` como padrão. |
+| [121] | documentação oficial | TextFieldLabelPosition (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/TextFieldLabelPosition | As posições `Above`, `Cutout` e `Inside` do rótulo e o `Attached` obsoleto. |
+| [122] | documentação oficial | TextFieldLabelPosition.Above (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/TextFieldLabelPosition.Above | O rótulo acima e fora do contêiner, sempre minimizado. |
+| [123] | documentação oficial | TextFieldDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/TextFieldDefaults | As constantes sem valor escrito, o padding com rótulo, o `roundedShape`, o `tonalColors()` e os parâmetros de cor por estado. |
+| [124] | documentação oficial | OutlinedTextFieldDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/OutlinedTextFieldDefaults | A borda, o contêiner transparente, o recorte feito pelo framework e as versões Expressive. |
+| [125] | documentação oficial | TextFieldDefaults.kt (código-fonte do AndroidX, espelho no GitHub) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/TextFieldDefaults.kt | Os valores de altura, largura e espessura, as formas e as cores tonais do filled e do outlined. |
+| [126] | documentação oficial | SecureTextField (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/SecureTextField.composable | O campo de senha: uma linha, ações de menu desativadas, teclado padrão e o exemplo de mostrar a senha. |
+| [127] | documentação oficial | Show or hide password based on a user toggle (quick guide do Compose) | https://developer.android.com/develop/ui/compose/quick-guides/content/show-hide-password | O ícone de 48 dp no fim do campo que alterna a senha visível. |
+| [128] | documentação oficial | Validate input as the user types (quick guide do Compose) | https://developer.android.com/develop/ui/compose/quick-guides/content/validate-input | A validação durante a digitação, com o campo vazio fora do erro. |
+| [129] | documentação oficial | ExposedDropdownMenuBox (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ExposedDropdownMenuBox.composable | O exposed dropdown só leitura e editável e o ícone final como âncora para a acessibilidade. |
+| [130] | documentação oficial | Menus (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/menu | O `ExposedDropdownMenuBox` como menu preso a um campo de texto. |
+| [131] | documentação oficial | Text field (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/text-field.md | Filled e outlined idênticos no funcionamento, a anatomia, os tipos aceitos, a validação e a nota do `aria-labelledby`. |
+| [132] | documentação oficial | text-field.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/textfield/internal/text-field.ts | O `aria-invalid`, o `aria-describedby` e o `aria-label` do input interno. |
+| [133] | documentação oficial | field.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/field/internal/field.ts | O `role="alert"` do texto de erro, o `reannounceError()`, o rótulo que flutua e a cópia do texto para a descrição. |
+| [134] | documentação oficial | _md-comp-filled-text-field.scss (tokens v0_192 do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-comp-filled-text-field.scss | As cores por papel, as espessuras, a forma e a tipografia do filled em cada estado. |
+| [135] | documentação oficial | _md-comp-outlined-text-field.scss (tokens v0_192 do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-comp-outlined-text-field.scss | As cores por papel, as espessuras e a forma do outlined em cada estado. |
+| [136] | documentação oficial | _md-comp-filled-text-field.scss (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/_md-comp-filled-text-field.scss | O foco sobrescrito para 3 px e os espaços internos do filled. |
+| [137] | documentação oficial | _md-comp-outlined-text-field.scss (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/_md-comp-outlined-text-field.scss | O foco sobrescrito para 3 px e os espaços internos do outlined. |
+| [138] | documentação oficial | _md-comp-filled-field.scss (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/_md-comp-filled-field.scss | Os espaços do filled com e sem rótulo e a posição do texto de apoio. |
+| [139] | documentação oficial | _md-comp-outlined-field.scss (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/_md-comp-outlined-field.scss | Os espaços do outlined, a folga do rótulo no recorte e a posição do texto de apoio. |
+| [140] | documentação oficial | Select (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/select.md | O select filled e outlined, com a mesma anatomia e o mesmo erro do campo. |
+| [141] | documentação oficial | Chips (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/chip.md | Os chip sets como toolbars, o rótulo do conjunto e o foco do chip desabilitado. |
+| [142] | referência técnica | Understanding SC 3.3.1 Error Identification (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html | O erro identificado e descrito em texto, as técnicas e os limites da validação nativa. |
+| [143] | referência técnica | ARIA21: Using aria-invalid to Indicate An Error Field (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA21 | Quando marcar `aria-invalid` e o teste do texto do erro. |
+| [144] | referência técnica | Understanding SC 3.3.2 Labels or Instructions (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html | O rótulo sempre disponível, as técnicas e a única menção ao placeholder. |
+| [145] | referência técnica | H44: Using label elements to associate text labels with form controls (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/html/H44 | O `label` com `for` e `id`, visível e antes do campo. |
+| [146] | referência técnica | ARIA1: Using the aria-describedby property to provide a descriptive label for user interface controls (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA1 | A descrição programática ligada ao campo. |
+| [147] | referência técnica | G83: Providing text descriptions to identify required fields that were not completed (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/general/G83 | O erro do obrigatório em texto e no título da página, e os dados mantidos depois do erro. |
+| [148] | referência técnica | Understanding SC 3.3.3 Error Suggestion (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html | A sugestão de correção e as técnicas. |
+| [149] | referência técnica | Understanding SC 1.3.5 Identify Input Purpose (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html | O propósito do campo pelo `autocomplete`. |
+| [150] | referência técnica | Understanding SC 3.3.8 Accessible Authentication (Minimum) (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html | A senha como teste cognitivo, o colar e o preenchimento automático. |
+| [151] | referência técnica | Understanding SC 4.1.3 Status Messages (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html | O que é mensagem de status, os papéis `status` e `alert` e o excesso de anúncios. |
+| [152] | referência técnica | ARIA19: Using ARIA role=alert or Live Regions to Identify Errors (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA19 | O contêiner do erro presente desde o carregamento e o `aria-atomic`. |
+| [153] | referência técnica | ARIA22: Using role=status to present status messages (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22 | O `role="status"` com `aria-atomic` explícito e o papel antes da mensagem. |
+| [154] | referência técnica | Forms Tutorial (W3C WAI) | https://www.w3.org/WAI/tutorials/forms/ | Formulários só com o necessário e as sete partes do tutorial. |
+| [155] | referência técnica | Labeling Controls (WAI Forms Tutorial) | https://www.w3.org/WAI/tutorials/forms/labels/ | O rótulo explícito, a posição e o rótulo oculto. |
+| [156] | referência técnica | Form Instructions (WAI Forms Tutorial) | https://www.w3.org/WAI/tutorials/forms/instructions/ | O placeholder que não substitui o rótulo e o lugar das instruções. |
+| [157] | referência técnica | Validating Input (WAI Forms Tutorial) | https://www.w3.org/WAI/tutorials/forms/validation/ | O obrigatório no rótulo e a validação também no servidor. |
+| [158] | referência técnica | User Notifications (WAI Forms Tutorial) | https://www.w3.org/WAI/tutorials/forms/notifications/ | A lista de erros no topo, o foco no primeiro erro e os anúncios ao digitar e ao sair do campo. |
+| [159] | referência técnica | Disclosure (Show/Hide) Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/ | O botão com `aria-expanded`, o teclado e a seta. |
+| [8] | documentação oficial | _md-sys-shape.scss (tokens v0_192 do material-web; rodada 1) | https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-sys-shape.scss | Nesta etapa, aberto pelo endereço raw (https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-sys-shape.scss): os raios de corner-extra-small, corner-extra-small-top e corner-medium. |
+| [11] | documentação oficial | _md-sys-state.scss (tokens v0_192 do material-web; rodada 1) | https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-sys-state.scss | Nesta etapa, aberto pelo endereço raw (https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-sys-state.scss): as opacidades da camada de estado. |
+| [29] | documentação oficial | material-components/material-web (GitHub; rodada 1) | https://github.com/material-components/material-web | Nesta etapa, a listagem da pasta `docs/components` (https://github.com/material-components/material-web/tree/main/docs/components), sem badge. |
+| [35] | documentação oficial | Badges (Jetpack Compose; rodada 1) | https://developer.android.com/develop/ui/compose/components/badges | Nesta etapa: o badge que indica status sobre outro composable. |
+| [60] | documentação oficial | Chips (Jetpack Compose; já citada) | https://developer.android.com/develop/ui/compose/components/chip | Nesta etapa: o chip como elemento interativo, com `onClick` nos quatro tipos. |
+| [98] | referência técnica | Understanding SC 1.4.11 Non-text Contrast (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html | Nesta etapa: o contraste da borda, da linha ou do fundo do campo e o cursor como indicador de foco. |
+
+### Campo de texto do M3: filled e outlined
+
+**Quando usar.** Os campos de texto aparecem em geral em formulários e diálogos. O filled tem mais ênfase visual e se destaca no meio de outros conteúdos e componentes [119]. O outlined tem menos ênfase, e, onde muitos campos ficam juntos, como num formulário, essa ênfase menor simplifica o layout [120]. No Compose, o `TextField` é o filled e o `OutlinedTextField`, o outlined. O guia recomenda o `TextField` do Material quando o desenho pede o campo do Material, e o `BasicTextField` quando o desenho dispensa as decorações [118]. O material-web diz que os dois são funcionalmente idênticos e manda às diretrizes do Material para escolher [131]. Nenhuma página aberta diz para não misturar os dois na mesma tela.
+
+**Anatomia.**
+
+- Contêiner, rótulo, placeholder, texto de apoio abaixo do campo, ícones de início e de fim, prefixo e sufixo [119]. No material-web, os ícones ficam em slots e servem para indicar o modo de entrada (como a busca), dar uma função a mais (como limpar) ou sinalizar erro. Há também o contador, quando o campo tem `maxlength`, e o asterisco no rótulo com `required`, que o `no-asterisk` esconde [131].
+- O rótulo pode ser um `label` flutuante, um placeholder ou um rótulo externo [131]. Ele flutua quando o campo está com foco ou preenchido, e a cópia que não aparece fica com `aria-hidden` [133].
+- Tipografia: no Compose, o rótulo usa bodySmall minimizado e bodyLarge expandido, e o placeholder usa bodyLarge [119]. Nos tokens do material-web, o rótulo e o texto digitado usam body-large, e o rótulo preenchido e o apoio usam body-small [134].
+- Placeholder: no overload novo do Compose, aparece com o campo vazio; nos antigos, com o campo vazio e com foco. O exemplo usa `TextFieldLabelPosition.Inside(isAlwaysMinimized = …)` para mostrá-lo também sem foco [119]. No material-web, ele some quando há valor e não flutua [131].
+- O texto de erro substitui o de apoio; com `error-text` vazio, o apoio continua [131].
+
+**Posição do rótulo no Compose.**
+
+| Posição | Onde fica | Padrão de |
+|---|---|---|
+| `Above` | Acima e fora do contêiner, por isso sempre minimizado; alinhado no início por padrão [122]. | nenhum componente aberto |
+| `Inside` | Dentro do contêiner [121]. | `TextField` no overload novo [119] e `SecureTextField` [126] |
+| `Cutout` | Dentro do contêiner quando expandido; minimizado, corta a borda [121]. | `OutlinedTextField` no overload novo [120] |
+| `Attached` | Obsoleto: a página manda usar `Inside` no filled e `Cutout` no outlined [121]. | — |
+
+**Medidas.**
+
+| Medida | Compose | material-web |
+|---|---|---|
+| Altura mínima | 56 dp (`MinHeight`) [125], que se troca com `Modifier.heightIn` [123]. O exemplo de campo denso usa mínimo de 48 dp, padding de 4 dp em cima e embaixo e de 12 dp nas pontas [119]. | Não há token de altura nem de padding nos tokens v0_192 [134]. |
+| Largura mínima | 280 dp (`MinWidth`) [125] | não encontrei |
+| Linha do filled | 1 dp sem foco e 2 dp com foco [125] | 1 px em repouso e no hover e 2 px com foco nos tokens v0_192 [134]. O arquivo do componente sobrescreve o foco para 3 px, com um TODO para quando os tokens de foco chegarem a 3 px ([136], [138]). |
+| Borda do outlined | 1 dp sem foco e 2 dp com foco [125] | 1 px em repouso e no hover e 2 px com foco [135]; 3 px pelo mesmo TODO ([137], [139]). |
+| Cantos | Filled: `FilledTextFieldTokens.ContainerShape`; outlined: `OutlinedTextFieldTokens.ContainerShape`, os dois sem valor no arquivo. Expressive, nos dois: `ShapeKeyTokens.CornerMedium` [125]. | Filled: corner-extra-small-top, 4 px 4 px 0 0, só os cantos de cima ([134], [8]); o doc do componente dá corner-extra-small como padrão do filled [131]. Outlined: corner-extra-small, 4 px ([135], [8]). O corner-medium vale 12 px [8]. |
+| Espaços internos | `TextFieldPadding` e `TextFieldWithLabelVerticalPadding`, sem valor na referência. Com rótulo interno, o padding de cima é o espaço acima do rótulo no estado com foco, e o texto fica logo abaixo do rótulo [123]. | 16 px em cima, embaixo e nas pontas; 12 px na ponta que tem ícone; 16 px entre o ícone e o texto; 2 px entre o prefixo ou o sufixo e o texto ([136], [137]). Filled com rótulo interno: 8 px em cima e 8 px embaixo [138]. Outlined: `outline-label-padding` de 4 px e `label-text-padding-bottom` de 8 px [139]. |
+| Texto de apoio | Abaixo do campo [119]. | 4 px abaixo do campo, com 16 px de recuo dos dois lados ([138], [139]). |
+| Ícones | não encontrei | 24 px ([134], [135]) |
+| Camada de estado | — | 0,08 no hover, 0,12 no foco e 0,12 no pressionado [11]. O filled usa on-surface no hover [134]; o outlined não tem token de camada de hover [135]. |
+
+**Cores por papel e estado (tokens v0_192 do material-web [134][135]).**
+
+| Estado | Filled | Outlined |
+|---|---|---|
+| Repouso | Contêiner surface-container-highest; linha on-surface-variant de 1 px; texto on-surface; rótulo, placeholder, apoio e ícones on-surface-variant; cursor primary | Sem token de cor de contêiner; contorno outline de 1 px; texto on-surface; rótulo, placeholder, apoio e ícones on-surface-variant; cursor primary |
+| Hover | Linha on-surface de 1 px; camada on-surface com a opacidade de hover | Contorno on-surface de 1 px; rótulo on-surface |
+| Foco | Linha primary de 2 px (3 px no arquivo do componente [136]); rótulo primary | Contorno primary de 2 px (3 px [137]); rótulo primary |
+| Erro | Linha, rótulo, apoio e ícone final em error | Contorno, rótulo, apoio e ícone final em error; ícone inicial on-surface-variant |
+| Erro com hover | Linha, rótulo e ícone final on-error-container; apoio error; texto on-surface; ícone inicial on-surface-variant | Contorno, rótulo e ícone final on-error-container; apoio error |
+| Erro com foco | Linha, rótulo, apoio, ícone final e cursor em error; texto on-surface; ícone inicial on-surface-variant | Contorno, rótulo, apoio, ícone final e cursor em error; ícone inicial on-surface-variant |
+| Desabilitado | Contêiner on-surface a 0,04; linha on-surface a 0,38; texto, rótulo e ícones on-surface a 0,38; apoio a 0,38 | Contorno on-surface a 0,12; texto, rótulo, apoio e ícones a 0,38 |
+| Somente leitura | Não há token. | Não há token. |
+
+No Compose, `TextFieldDefaults.colors()` só tem parâmetros de foco, sem foco, desabilitado e erro (texto, contêiner, cursor, linha, ícones, rótulo, placeholder, apoio, prefixo e sufixo), todos com `Color.Unspecified` na assinatura: não há cor de hover nem de somente leitura [123]. No contêiner do outlined padrão, as quatro cores são transparentes [125]. Nos overloads antigos, o `isError` pinta o rótulo, a linha e o ícone final na cor de erro [119].
+
+**Expressive.** A versão Expressive do campo funciona igual à padrão e muda o visual, com cantos mais redondos e cores mais tonais. No outlined Expressive, o rótulo fica dentro do contêiner, e não num recorte da borda de cima. O filled pede `TextFieldDefaults.roundedShape` e `TextFieldDefaults.tonalColors()`; o outlined pede os mesmos de `OutlinedTextFieldDefaults` e `labelPosition = TextFieldLabelPosition.Inside()` [118]. A referência descreve o `roundedShape` como a forma recomendada pelo estilo Expressive e pede o `tonalColors()` junto com o rótulo `Inside` ([123], [124]). Os dois `roundedShape` são `CornerMedium` [125], que vale 12 px no material-web [8].
+
+Cores tonais no código-fonte [125] (a coluna do outlined é achado na verificação):
+
+| Papel | Filled tonal | Outlined tonal |
+|---|---|---|
+| Contêiner | SurfaceContainer com e sem foco; ErrorContainer no erro; desabilitado, SurfaceContainer com alpha | Transparente em todos os estados |
+| Linha ou borda | Transparente em todos os estados | OutlineVariant em repouso, com foco e desabilitado; Error no erro |
+| Rótulo | OnSurfaceVariant com e sem foco; Error no erro; desabilitado, OnSurfaceVariant com alpha | OnSurfaceVariant com e sem foco; Error no erro; desabilitado, OnSurfaceVariant com alpha |
+| Texto desabilitado | OnSurface com alpha | OnSurface com alpha |
+| Cursor | não conferido | Primary; Error no erro |
+
+Nas duas versões tonais, o contêiner, a linha ou a borda e o rótulo têm a mesma cor com e sem foco. A função do outlined tonal traz um TODO para trocar os valores pelo token real quando ele existir [125].
+
+**Desabilitado e somente leitura.** No Compose, com `enabled=false`, o campo não responde, aparece desabilitado e fica desabilitado também para os serviços de acessibilidade. Com `readOnly=true`, o texto não pode ser alterado, mas o campo recebe foco e permite copiar; a página diz que o somente leitura costuma servir a formulários pré-preenchidos que o usuário não edita [119]. No material-web, `disabled` e `readonly` só aparecem nas tabelas da API, e campos desabilitados ou somente leitura não validam [131]. Achado na verificação: no `text-field.ts`, o `disabled` tira só a classe visual de erro; o `aria-invalid` continua seguindo o erro [132].
+
+**Senha.**
+
+- O `SecureTextField` é feito para senha. Tem uma linha só, vem com padrões para conteúdo seguro e desativa recortar, copiar e arrastar no menu de contexto. A página não fala de colar nem de preenchimento automático. O teclado padrão não tem autocorreção e usa `KeyboardType.Password`, e a obfuscação padrão é `System`. O exemplo põe no ícone final um `IconButton` que mostra ou esconde a senha, com a descrição "Show password" ou "Hide password" e uma dica (tooltip), e troca o teclado para `PasswordVisible` quando a senha aparece [126].
+- A página Configure text fields recomenda o `SecureTextField` para senha e lista os modos `Hidden` (padrão no desktop), `Visible` e `RevealLastTyped` (padrão no celular) [118].
+- O quick guide usa o `BasicSecureTextField` e um ícone clicável de 48 dp (`requiredSize(48.dp)`) no fim do campo, com a descrição fixa "Toggle password visibility", alternando entre `Visible` e `RevealLastTyped` [127].
+- O material-web aceita o tipo `password` [131]; o doc não fala de botão de mostrar a senha.
+
+**Seleção e várias linhas.**
+
+- O exposed dropdown, também chamado de "spinner" ou "combo box", mostra o item escolhido num campo de texto ao qual o menu se prende. A versão só leitura é um `TextField` com `readOnly=true`, `menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)` e `ExposedDropdownMenuDefaults.TrailingIcon`. A editável serve de autocomplete, e o exemplo recomenda fazer do ícone final um `menuAnchor` do tipo `SecondaryEditable`, para que certos serviços de acessibilidade escolham uma opção sem digitar [129]. A página de menus confirma que o `ExposedDropdownMenuBox` cria um menu preso a um campo de texto [130].
+- No material-web, o select tem as versões `md-filled-select` e `md-outlined-select`, e o doc o compara ao `<select>` nativo. Tem `label`, `supportingText`, `error`, `errorText` (que substitui o apoio), `required` e `noAsterisk`. O contêiner do filled é surface-container-highest, e o contorno do outlined é outline (tokens `--md-filled-select-text-field-*` e `--md-outlined-select-text-field-*`). A seção de acessibilidade está comentada, só com o texto-modelo [140].
+- O campo do material-web aceita text, textarea, email, number, password, search, tel e url; o select não está na lista. O textarea vem com `rows` 2 e `cols` 20 e cresce com `field-sizing: content` nos navegadores que suportam [131].
+- No Compose, o `TextFieldLineLimits.MultiLine(min, max)` cresce até o máximo de linhas e depois rola na vertical; o `SingleLine` tem altura fixa e rola na horizontal [118].
+
+**Erro e anúncio no M3.**
+
+- No overload novo do Compose, o `isError` pinta as partes do campo na cor de erro e anuncia um erro aos serviços de acessibilidade. O exemplo de erro usa `semantics { error(mensagem) }`, o `maxTextLength`, um contador "Limit: n/10" no apoio e um asterisco no rótulo durante o erro [119].
+- O quick guide valida enquanto a pessoa digita: o campo vazio não conta como erro, e o e-mail fica com erro até casar com o padrão inteiro. O exemplo usa `OutlinedTextField` com `isError` e o apoio "Incorrect email format." [128].
+- No material-web, o campo dentro de um `<form>` valida no envio ou no `reportValidity()`, que mostra o erro no texto de apoio; na validação manual, define-se `error` e `error-text` [131]. O input interno recebe `aria-invalid` (de `error` ou do erro nativo), `aria-describedby="description"` e `aria-label` (o `ariaLabel` ou, na falta dele, o `label`) [132]. Achado na verificação: o `field.ts` copia o texto de apoio ou de erro, com o contador, para esse elemento de descrição e o deixa escondido [133].
+- O texto de apoio visível ganha `role="alert"` só quando há `error` e `errorText`. Para anunciar de novo o mesmo erro, o `reannounceError()` tira o papel e o devolve no frame seguinte. O `aria-live` não aparece no arquivo [133].
+- Um campo com rótulo externo precisa de `aria-label`, porque hoje o componente não aceita `aria-labelledby` (bug b/276484803) [131].
+
+**Leitura da verificação (inferência).** Para formulários com muitos campos, como o cadastro e o perfil, o caso documentado é o outlined, de ênfase menor [120]. O `FormGroup` de hoje já tem contorno e rótulo acima e fora, o que corresponde ao outlined com o rótulo `Above` ([121], [122]). Se o desenho seguir o Expressive, os cantos sobem para corner-medium, 12 px ([125], [8]), e, no outlined tonal, a borda é OutlineVariant e não muda de cor no foco [125]: o 3:1 e o indicador de foco precisam ser medidos nos tokens do projeto [98]. O somente leitura do Compose continua focável e copiável e não tem cor própria ([119], [123]); no `src/assets/styles/components/_form-group.scss` de hoje, `[readonly]` divide a regra com `:disabled`. A escolha fica com o desenho.
+
+### Rótulo, instruções, erro e propósito do campo (WCAG e W3C)
+
+| Critério | Nível | O que pede | Técnicas | Fonte |
+|---|---|---|---|---|
+| 3.3.1 Error Identification | A | O item com erro é identificado e o erro é descrito em texto. Reexibir o formulário sem nenhum aviso de falha não basta. Sinais visuais podem vir junto do texto. Um dado obrigatório omitido conta como erro de entrada. O critério não impõe o jeito de mostrar: lista no início do formulário, erro junto ao campo, alerta ou diálogo. | Suficientes: G83 e SCR18 (campos obrigatórios); ARIA18, G84, G85, SCR18 e SCR32 (formato ou valores permitidos). De apoio: G139 e G199. | [142] |
+| 3.3.2 Labels or Instructions | A | Vale para todos os campos, obrigatórios ou opcionais. Rótulos e instruções precisam ficar sempre disponíveis; em muitos casos, o melhor é deixá-los visíveis na interface, e às vezes cabem sob pedido. | Suficientes: G131 com ARIA1, ARIA9, ARIA17, G89, G184, G162, G83 ou H90; H44, H71 e G167 (último recurso). De apoio: G13 e ARIA2 (`aria-required`). Falha: F82. | [144] |
+| 3.3.3 Error Suggestion | AA | Quando o erro é detectado e a correção é conhecida, a sugestão aparece, salvo se comprometer a segurança ou o propósito do conteúdo. | Suficientes: ARIA18, G85 e G177 (formato); ARIA18, G84 e G177 (conjunto de valores). De apoio: G139, G199, SCR18 e SCR32. | [148] |
+| 1.3.5 Identify Input Purpose | AA | Nos campos que coletam dados do próprio usuário, o propósito precisa ser determinável por programa; com o `autocomplete`, o navegador pode preencher. Exemplos: `given-name` e `family-name`. O `type` descreve o tipo do campo, não necessariamente o propósito, e a heurística do navegador não basta. | Suficiente: H98. Falha: F107 (valor de `autocomplete` errado). | [149] |
+| 3.3.8 Accessible Authentication (Minimum) | AA | Lembrar a senha do site é teste cognitivo: precisa de outro método sem teste ou de um mecanismo de ajuda, como o gerenciador de senhas ou o copiar e colar. Bloquear o preenchimento automático ou o colar reprova, salvo com alternativa. Com a 1.3.5 e o nome acessível da 4.1.2, o gerenciador reconhece e preenche os campos. Mostrar a senha, como opção, melhora a chance de sucesso de algumas pessoas; não é exigência. | Suficientes: G218 (link por e-mail) e H100 (e-mail e senha bem marcados). Falha: F109 (impedir que a senha ou o código seja inserido de novo no mesmo formato). | [150] |
+
+**Técnicas de campo.**
+
+- **H44 [145]:** o `label` se liga ao campo pelo `for` igual ao `id`. Em texto, `select` e `textarea`, o rótulo vem antes do campo; em checkbox e rádio, depois. Para a 3.3.2, o `label` precisa estar visível. Clicar no rótulo ativa o campo, o que aumenta a área de clique.
+- **ARIA1 [146]:** o `aria-describedby` dá ao controle uma informação descritiva determinável por programa e precisa apontar para um elemento do mesmo documento. É suficiente para a 3.3.2 com a G131 e de apoio para a 1.3.1.
+- **ARIA21 [143]:** o `aria-invalid` marca o campo que falhou na validação e não deve ser "true" antes de a validação rodar; "false" equivale a não ter o atributo. A página diz que nenhum documento Understanding cita a técnica. O teste confere se o rótulo ou a instrução associados explicam o erro.
+- **G83 [147]:** é suficiente para a 3.3.1, para a 3.3.2 com a G131 e para a 4.1.3 com a ARIA19. Também ajuda pôr o aviso de erro no título da página. No exemplo em que um script muda o rótulo ao sair do campo vazio, a página avisa que alguns leitores de tela podem não notar a mudança. O teste pede que os dados já digitados voltem preenchidos, salvo os de segurança, como a senha.
+
+**Placeholder.** O Form Instructions diz que o placeholder costuma ter contraste menor que o texto digitado, some quando a pessoa começa a digitar e não é tratado como rótulo pelos leitores de tela; para a página, ele não substitui o rótulo [156]. A 3.3.2 só cita o placeholder num exemplo de chat, como reforço quando visível [144]. A H44 [145], o Labeling Controls [155] e a 1.4.11 [98] não falam dele.
+
+**1.4.11 no campo [98].** Quando a borda, a linha inferior ou o fundo é o que mostra o campo, essa marca precisa de 3:1 contra a cor vizinha. Passam uma linha inferior #767676 e um campo só de fundo com 3:1 contra o fundo ao lado. Reprova uma borda #AAA sobre branco, abaixo de 3:1, num campo sem rótulo. O indicador de foco é obrigatório: o cursor de texto padrão pode bastar, mas um cursor próprio abaixo de 3:1 reprova. Componentes inativos, como um controle HTML desabilitado, ficam isentos. A página não fala de campo de texto desabilitado, de somente leitura nem de placeholder.
+
+**Mensagens de status (4.1.3, nível AA).**
+
+- Mensagem de status é a mudança de conteúdo que informa resultado, espera, progresso ou erro sem levar o foco até ela; o que muda de contexto, como mover o foco, fica fora do critério. Exemplos da página: "5 errors on page" depois de um envio que falhou, "Invalid entry" acima do campo, "Saved in 'Wedding' album" e um indicador de ocupado [151].
+- O `role="status"` serve a sucesso e resultado (ARIA22); para progresso, a página lista ARIA23, ARIA25, ARIA22 com G193 e ARIA27. O `role="alert"` serve a sugestão, aviso ou erro (ARIA19), só quando não há mudança de contexto. O erro num diálogo que recebe o foco não é mensagem de status. Acordeão e disclosure já ficam com a 4.1.2, que cobre o anúncio de expandido e recolhido [151].
+- A página alerta para a interface "tagarela" para quem usa leitor de tela e pede teste com usuários. As falhas são a F103 e, ainda sem número, o `role="alert"` ou o `aria-live="assertive"` em conteúdo que não é importante nem urgente [151].
+- ARIA19: o contêiner do erro precisa estar no DOM desde o carregamento para a maioria dos leitores de tela o anunciar, e o `aria-atomic="true"` é necessário para o VoiceOver do iOS ler o erro depois de mais de um envio inválido [152].
+- ARIA22: o `role="status"` tem `aria-live` polite e `aria-atomic` true implícitos, mas a página aconselha declarar o `aria-atomic="true"`, porque alguns ambientes não o tratam como atômico. O teste confere se o contêiner tem o papel antes de a mensagem aparecer. Os exemplos são uma contagem de resultados de busca e o status de um carrinho [153].
+
+**WAI Forms Tutorial.**
+
+- **Geral [154]:** pedir só o necessário para concluir a tarefa. As partes são rótulos, agrupamento, instruções, validação, notificações, formulários de várias páginas e controles próprios.
+- **Rótulos [155]:** a ligação explícita é a mais bem suportada pelas tecnologias assistivas. Nos campos de texto, o rótulo fica à esquerda ou logo acima, e acima reduz a rolagem horizontal para quem tem baixa visão e no celular. Em alguns casos, o contexto visual deixa o propósito claro e o rótulo pode ser escondido só visualmente. O `title` é menos confiável e não é recomendado.
+- **Instruções [156]:** as instruções gerais vêm antes do `<form>`, para o leitor de tela as ler antes do modo de formulário. O que o `aria-describedby` aponta é lido depois do rótulo. Obrigatórios e formatos podem ir no texto do rótulo.
+- **Validação [157]:** o `required` com "(required)" no rótulo e o `aria-required` redundante, para navegadores que não repassam o `required`. A validação no cliente não garante segurança, e o servidor tem de validar de novo. A página não fala do momento da validação nem do `aria-invalid`.
+- **Notificações [158]:** a lista de erros vai no topo, antes do formulário, com um título que se distinga. Cada item cita o rótulo do campo, descreve o erro, ensina a corrigir e tem link para o campo. Quando a lista aparece sem recarregar a página, o contêiner leva `role="alert"`. O campo pode se ligar à mensagem por `aria-describedby`. Depois do envio, é conveniente levar o foco ao primeiro campo com erro; a página não fala de levar o foco ao resumo. Ao digitar, o exemplo usa `aria-live="polite"`, lido uma vez quando a pessoa para de digitar; ao sair do campo, `aria-live="assertive"`, que interrompe o leitor. Ao voltar à página com erros, a palavra "erro" e o número de erros no título ajudam (o exemplo é "3 Errors – Billing Address").
+
+### Rótulo de status e "Ver itens"
+
+**Chips.** O chip é um elemento compacto e interativo, que pode ser marcável, dispensável ou clicável. Os quatro composables (assist, filter, input e suggestion) recebem `onClick`. O suggestion chip é informativo, mas ainda recebe `onClick`. No Expressive, o assist e o suggestion foram fundidos aos botões [60]. No material-web, os chip sets são toolbars e levam `aria-label` ou `aria-labelledby`; o chip desabilitado não recebe foco pelo teclado, e o soft-disabled recebe. O doc só trata dos quatro tipos interativos, sem chip estático, rótulo de status ou badge [141].
+
+**Badge.** O badge é um pequeno elemento visual que indica status ou um número sobre outro composable. Um dos usos citados é o status de uma tarefa ("complete", "in progress", "failed"). O `BadgedBox` sobrepõe o badge a um conteúdo, em geral um `Icon`, e o `Badge` sem conteúdo é um pequeno círculo vermelho [35]. Nenhuma página aberta traz um rótulo de status solto, fora de outro elemento. A listagem de `docs/components` do material-web não mostra badge, mas termina em "View all files" [29].
+
+**Disclosure.** O elemento que mostra e esconde o conteúdo tem o papel `button`, com `aria-expanded` true quando o conteúdo aparece e false quando some; o `aria-controls` é opcional. Com o foco no botão, Enter e Espaço alternam o conteúdo. A seta costuma apontar para a direita com o conteúdo fechado e para baixo com ele aberto, como orientação de estilo. A página não fala de `details` nem de `summary` [159]. A 4.1.3 manda o acordeão e o disclosure para a 4.1.2 [151].
+
+**Leitura da verificação (inferência).** "Recebido" é texto de estado sem ação. O caso documentado mais perto é o badge de status, mas ele fica sobre outro elemento [35], e o chip promete interação ([60], [141]); um rótulo estático, sem papel interativo nem foco, em que o texto carrega o estado, evita os dois. Para o "Ver itens", a APG não cita o `details` [159]; o que fica é a 4.1.2 [151], e a etapa 6 registrou que os controles HTML padrão já a cumprem quando usados conforme a especificação [96]. Como o `details`/`summary` é anunciado em cada leitor de tela não foi conferido.
+
+### Riscos da etapa 8
+
+- **Rótulo que some:** o placeholder não substitui o rótulo, tem contraste menor, some ao digitar e não é tratado como rótulo [156]. A 3.3.2 pede rótulos sempre disponíveis, em geral visíveis [144], e a H44 pede o `label` visível [145]. No Compose, com o rótulo `Inside`, o placeholder só aparece com o rótulo minimizado, salvo com `isAlwaysMinimized` [119].
+- **Rótulo externo no material-web:** o componente não aceita `aria-labelledby` e pede `aria-label` [131]. Com um `<input>` nativo, vale o `label` com `for` e `id` ([145], [155]).
+- **Erro só pela cor:** no visual, o `isError` e os tokens de erro só trocam cores ([119], [134], [135]). A 3.3.1 exige o erro em texto, com os sinais visuais junto [142]. O `isError` do overload novo do Compose também anuncia o erro [119].
+- **Contraste da marca do campo:** a borda, a linha ou o fundo que mostram o campo precisam de 3:1 contra a cor vizinha; a borda #AAA sobre branco reprova [98]. No filled, a marca é a linha on-surface-variant ou o contêiner contra a página [134]; no outlined, o outline [135]; no outlined tonal, o OutlineVariant [125]. Componentes inativos ficam isentos [98].
+- **Foco nas cores tonais:** o indicador de foco é obrigatório; o cursor padrão pode bastar, mas um cursor próprio abaixo de 3:1 como único sinal reprova [98]. Nas cores tonais, o contêiner, a borda e o rótulo não mudam com o foco [125]. Nas cores padrão, o foco é de 2 dp no Compose [125] e de 3 px no material-web ([136], [137]).
+- **Erro anunciado cedo demais:** o `aria-invalid` não deve ser "true" antes de a validação rodar [143]. O quick guide valida ao digitar e deixa o e-mail com erro até casar com o padrão completo [128]. O tutorial anuncia o erro da digitação com `aria-live="polite"`, lido quando a pessoa para de digitar [158].
+- **Erro anunciado tarde ou nunca:** o contêiner do erro tem de estar no DOM desde o carregamento para a maioria dos leitores o anunciar [152]. A mudança do rótulo ao sair do campo pode não ser notada por alguns leitores [147]. As mensagens da validação nativa podem não ser permanentes, não acompanham o zoom, são genéricas e mostram só o primeiro erro [142].
+- **Anúncios em excesso:** a 4.1.3 alerta para a interface tagarela e lista como falha o `alert` ou o `assertive` em conteúdo que não é importante nem urgente [151]. Inferência: o banner com `role="alert"` e a mensagem do campo focado podem ser lidos duas vezes.
+- **Foco perdido:** depois do envio, o tutorial leva o foco ao primeiro campo com erro, não ao resumo [158]. O campo desabilitado fica desabilitado também para a acessibilidade, e o somente leitura continua focável [119]. O chip desabilitado sai do Tab, e o soft-disabled continua nele [141].
+- **`aria-invalid` no campo desabilitado:** no material-web, o `disabled` tira só a classe visual de erro, e o `aria-invalid` continua [132] (achado na verificação).
+- **Login (3.3.8):** bloquear o colar ou o preenchimento automático reprova, salvo com alternativa; campos bem marcados pela 1.3.5 e com nome pela 4.1.2 deixam o gerenciador de senhas preencher [150], e o `autocomplete` é a técnica da 1.3.5 [149]. O `SecureTextField` desativa recortar, copiar e arrastar e não diz nada do colar [126].
+- **Nome do botão de mostrar a senha:** o exemplo do `SecureTextField` troca a descrição entre "Show password" e "Hide password" [126]; o quick guide usa uma descrição fixa [127]. A APG chama de crítico que o rótulo de um toggle com `aria-pressed` não mude com o estado [90]. Inferência: ou o nome muda e o botão não usa `aria-pressed`, ou o nome fica fixo e o estado vai no `aria-pressed`.
+- **Chip como status:** o chip é interativo, com `onClick` nos quatro tipos [60], e o chip set é uma toolbar [141]. Inferência: "Recebido" em forma de chip promete uma ação que não existe.
+- **Spinner do CEP:** o contêiner com `role="status"` precisa ter o papel antes de a mensagem aparecer [153]. Inferência: hoje o parágrafo de ajuda só existe com `helper` ou `loading` (`src/components/FormGroup.vue`), então um papel posto nele nasceria junto com a mensagem.
+- **Divergência no material-web:** o doc do campo dá corner-extra-small como forma do filled [131], e o token v0_192 dá corner-extra-small-top [134].
+- **Medidas de antes do Expressive:** as medidas e as cores dos tokens v0_192 são do material-web, que está em manutenção e não cita o Expressive [29]. Para o Expressive, só há fonte da forma e das cores tonais ([118], [125]). Inferência: as medidas são do M3, não necessariamente do Expressive.
+
+### Não encontrei (etapa 8)
+
+- Recomendação do M3 de não misturar filled e outlined na mesma tela; o material-web diz só que são funcionalmente idênticos [131].
+- Altura do contêiner e padding no material-web [134]; os valores de `TextFieldPadding` e `TextFieldWithLabelVerticalPadding` [123]; a forma padrão do filled e do outlined do Compose em dp [125]; a largura mínima no material-web.
+- Cores ou estilo de somente leitura no Compose e no material-web; cor de hover no Compose ([123], [134], [135]).
+- A cor do cursor no filled tonal: não foi conferida [125].
+- Fala sobre placeholder na H44, em Labeling Controls e na 1.4.11, e na 3.3.2 além do exemplo de chat; só o Form Instructions trata do assunto ([145], [155], [98], [144], [156]).
+- A ARIA21 como técnica de algum Understanding: a própria página diz que nenhum a cita [143].
+- Exemplo de campo de texto desabilitado, somente leitura ou com placeholder na 1.4.11 [98].
+- O momento da validação em Validating Input [157]; ele aparece em User Notifications [158].
+- O que o `SecureTextField` faz com o colar e o preenchimento automático [126].
+- Exemplo de e-mail ou de data na 3.3.3: o exemplo é de nome de mês [148]. Exemplo de "salvo" na ARIA22 [153].
+- Botão de mostrar a senha no material-web [131].
+- Orientação de acessibilidade publicada no doc do select do material-web: a seção está comentada [140].
+- Componente M3 não interativo para rótulo de status solto, além do badge sobre outro elemento [35]; badge no material-web, na parte visível da listagem [29].
+- `details` e `summary` na APG Disclosure [159].
+
+### Não abriu (etapa 8)
+
+| URL | Motivo |
+|---|---|
+| https://m3.material.io/components/text-fields/overview (e as páginas de chips, badges e menus) | Só funciona com JavaScript; não foi tentado. |
+| Links "View Source" do cs.android.com (TextField.kt, SecureTextField.kt, ExposedDropdownMenu.kt) | Não foram abertos; os valores vieram do espelho no GitHub [125]. |
+| https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/TextFieldDefaults.kt | O WebFetch corta em 100 000 dos 128 924 caracteres. A pesquisa leu só a primeira parte; a verificação leu as duas, e as funções tonais estão na primeira. |
+| Arquivos com os valores de `TextFieldPadding`, `TextFieldWithLabelVerticalPadding`, `FilledTextFieldTokens` e `OutlinedTextFieldTokens` | Não foram abertos. |
+| https://developer.android.com/reference/kotlin/androidx/compose/material3/OutlinedSecureTextField.composable | Citada em [120] e [126]; não foi aberta. |
+| https://developer.android.com/reference/kotlin/androidx/compose/foundation/text/BasicSecureTextField.composable | Citada em [127]; não foi aberta. |
+| Iframes de dependências das quick guides [127] e [128] | Não foram abertos. |
+| https://github.com/material-components/material-web/tree/main/docs/components | Abriu em parte: a listagem termina em "View all files" [29]. |
+| Bug b/276484803 | Citado em [131]; não foi aberto. |
+
+### Refutadas na verificação (etapa 8)
+
+1. **A11:** os ícones servem para "dar uma ação (limpar, mostrar a senha)". [131] dá o ícone de limpar como exemplo e não fala de mostrar a senha. O "5 / 10" do contador está só no texto alternativo de uma figura.
+2. **A15:** "com foco, tudo fica em error, inclusive o cursor". No erro com foco, o texto digitado fica on-surface e o ícone inicial, on-surface-variant; ficam em error a linha, o rótulo, o apoio, o ícone final e o cursor [134].
+3. **A31:** as mensagens da validação nativa "podem sumir rápido". [142] diz que podem não ser permanentes nem rolar com a página.
+4. **A32:** "o exemplo liga cada mensagem ao campo por `aria-describedby`". Em [143], só o exemplo 2 liga uma mensagem (a do PIN) por `aria-describedby`; o exemplo 1 usa um resumo com `aria-live="assertive"`.
+5. **A40:** o `role="status"` "serve a ... progresso", e o `alert` ou `assertive` em conteúdo não urgente "também é falha", sem ressalva. Para progresso, [151] lista ARIA23, ARIA25, ARIA22 com G193 e ARIA27; a falha do `alert` está na lista, mas ainda sem número.
+6. **A41:** "muitos leitores de tela" e "a cada envio que falha". [152] diz "a maioria" dos leitores e "depois de mais de um envio inválido".
+7. **Síntese (componentes):** "material-web `type=password` e ícone final" para a senha. [131] aceita o tipo password, mas não fala de ícone de mostrar a senha.
+8. **Síntese (riscos), em parte:** "`isError` e tokens só recolorem". No overload novo do Compose, o `isError` também anuncia o erro aos serviços de acessibilidade [119]; o "só recolorem" vale para o visual.
+9. **Síntese (recomendação), em parte:** o nome "Mostrar senha"/"Ocultar senha" apoiado em A22 e A23. Só [126] troca o nome; [127] usa um nome fixo.
+
+Ajustes de redação, sem derrubada: A8 (o padding de cima é o espaço acima do rótulo no estado com foco, e não um espaço contado a partir do rótulo), A26 (a comparação com o `<select>` nativo é dita do componente em geral, e o prefixo dos tokens é `--md-filled-select-text-field-` ou `--md-outlined-select-text-field-`), A33 ([144] admite rótulos e instruções disponíveis sob pedido em alguns casos), A38 ([149] diz que o `type` descreve o tipo do campo, não necessariamente o propósito) e A45 ([155] diz que, em alguns casos, o contexto visual basta, sem dizer "apenas").
