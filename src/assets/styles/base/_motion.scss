@@ -47,4 +47,12 @@
   .admin-sidebar {
     transform: none;
   }
+
+  // Os componentes base (desenho da etapa 10, §4.4): a escala do aviso, a entrada do diálogo e do
+  // sheet e o arco do carregando. As transições e os @keyframes com transform já só rodam em motion-ok
+  .toast,
+  .dialog,
+  .btn__spinner {
+    transform: none;
+  }
 }

@@ -158,9 +158,14 @@
   }
 }
 
-// Mais contraste: o contorno em on-surface-variant, como o FormGroup; o do erro fica
+// Mais contraste: o contorno em on-surface-variant, como o FormGroup; o do erro fica. O botão ganha a
+// borda outline do tonal do BaseButton (desenho dos componentes base, §4.6 e §5.10)
 @media (prefers-contrast: more) {
   .file-picker:not(.has-error) .file-picker__campo {
     border-color: var(--m3-on-surface-variant);
+  }
+
+  .file-picker__button {
+    border: 1px solid var(--m3-outline);
   }
 }

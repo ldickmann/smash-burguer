@@ -1,5 +1,6 @@
-// QuantityStepper (SPEC §4.1 e §7.5): o número sai e entra na vertical.
-@use "../../base/breakpoints" as *;
+// QuantityStepper (desenho dos componentes base, §5.4): dois botões de ícone tonais redondos de 44 px
+// e o número em title-m 500 tabular. O número troca direto: o odômetro saiu do sistema (SPEC-M §7.8).
+@use "@/assets/styles/base/m3" as *;
 
 .stepper {
   display: inline-flex;
@@ -8,40 +9,8 @@
 }
 
 .stepper__value {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 2ch;
-  height: 1.5em;
-  overflow: hidden;
-  font-weight: 700;
+  @include tipo(title-m, 500);
+
+  min-width: 2ch;
   text-align: center;
-}
-
-.stepper__digit {
-  grid-area: 1 / 1;
-}
-
-// Troca direta com movimento reduzido; com movimento, rola na vertical
-@include motion-ok {
-  .stepper-up-enter-active,
-  .stepper-up-leave-active,
-  .stepper-down-enter-active,
-  .stepper-down-leave-active {
-    transition:
-      transform var(--dur-fast) var(--ease-out),
-      opacity var(--dur-fast) var(--ease-out);
-  }
-
-  .stepper-up-enter-from,
-  .stepper-down-leave-to {
-    transform: translateY(40%);
-    opacity: 0;
-  }
-
-  .stepper-up-leave-to,
-  .stepper-down-enter-from {
-    transform: translateY(-40%);
-    opacity: 0;
-  }
 }

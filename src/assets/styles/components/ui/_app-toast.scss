@@ -1,28 +1,31 @@
-// AppToast (SPEC §4.1): acima da navbar; topo à direita no desktop, base no mobile.
-@use "../../base/breakpoints" as *;
+// AppToast (desenho dos componentes base, §4.5 e §5.1): o snackbar do M3. inverse-surface com o texto
+// em inverse-on-surface, canto 4, elevacao-3 e body-m; a ação é text button em inverse-primary. No pé
+// em todas as larguras: acima da toolbar enquanto ela flutua (abaixo de lg), centrado abaixo de lg e,
+// a partir dele, no início da coluna de conteúdo, para não cruzar o resumo grudado do carrinho e do
+// pagamento. O painel desloca o início para depois da coluna (_admin-layout.scss).
+@use "sass:list";
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
 
 .toast-region {
   position: fixed;
   z-index: var(--z-toast);
-  left: var(--space-4);
-  right: var(--space-4);
+  inset-inline: var(--gutter);
   bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   pointer-events: none;
 
-  @include up(md) {
-    left: auto;
-    bottom: auto;
-    top: calc(var(--navbar-h) + var(--space-3));
-    // Alinhado à direita do container
-    right: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)));
-    width: min(26rem, calc(100vw - 2 * var(--gutter)));
+  @include up(lg) {
+    // A borda do .container
+    inset-inline-start: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)));
   }
 }
 
-// Na loja, abaixo de md, a toolbar flutua no pé: o toast sobe acima dela, como o snackbar do M3 acima do
-// FAB, em vez de cobrir a navegação. O painel, sem toolbar, continua com o toast no pé. O seletor
-// inteiro fica no :global(), que no Vue torna global a regra toda (o .toast-region só existe aqui)
-@include below(md) {
+// Na loja, abaixo de lg, a toolbar flutua no pé: o aviso sobe acima dela, como o snackbar acima do
+// FAB. O seletor inteiro fica no :global(), que no Vue torna global a regra toda
+@include below(lg) {
   :global(body:has(.m3-ferramentas) .toast-region) {
     bottom: calc(var(--m3-barra-reserva) + env(safe-area-inset-bottom));
   }
@@ -34,56 +37,44 @@
   align-items: center;
   gap: var(--space-2);
 
-  @include up(md) {
-    align-items: stretch;
+  @include up(lg) {
+    align-items: flex-start;
   }
 }
 
 .toast {
+  @include tipo(body-m);
+
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   width: 100%;
-  max-width: 30rem;
-  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
-  border-left: 3px solid var(--color-info);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-3);
-  box-shadow: var(--elev-2);
-  color: var(--color-ink);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
+  max-width: min(37.5rem, 100%);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-4);
+  border-radius: var(--m3-forma-xs);
+  background: var(--m3-inverse-surface);
+  box-shadow: var(--m3-elevacao-3);
+  color: var(--m3-inverse-on-surface);
+  letter-spacing: var(--m3-body-m-tracking);
   pointer-events: auto;
-}
 
-.toast--success {
-  border-left-color: var(--color-success);
+  @include reserva-de-sombra;
 
-  .toast__icon {
-    color: var(--color-success);
+  // A partir de sm, a largura do conteúdo, até 600 px
+  @include up(sm) {
+    width: auto;
   }
 }
 
-.toast--error {
-  border-left-color: var(--color-danger);
-
-  .toast__icon {
-    color: var(--color-danger);
-  }
-}
-
-.toast--info .toast__icon {
-  color: var(--color-info);
-}
-
+// Só o erro tem ícone, na cor do texto: a pista de forma, e não de cor (1.4.1)
 .toast__icon {
   flex-shrink: 0;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
 }
 
 .toast__message {
   flex: 1;
-  padding-block: var(--space-2);
+  padding-block: var(--space-3);
 }
 
 .toast__action,
@@ -91,10 +82,27 @@
   flex-shrink: 0;
 }
 
-// Entrada: opacidade + leve descida; com movimento reduzido, só opacidade
+// Os botões repintados pelo próprio aviso (o .btn a mais vence as variantes do BaseButton): a ação em
+// inverse-primary (7,70) e o "Fechar aviso" na cor do texto; a camada de estado é o currentColor
+.toast .btn.toast__action {
+  color: var(--m3-inverse-primary);
+}
+
+.toast .btn.toast__close {
+  color: var(--m3-inverse-on-surface);
+}
+
+// Anel por dentro, em inverse-on-surface: o secondary mede 2,02 sobre o aviso, e o anel por fora
+// encostaria na página clara
+.toast .btn:is(.toast__action, .toast__close):focus-visible {
+  outline-color: var(--m3-inverse-on-surface);
+  outline-offset: calc(-1 * var(--focus-width));
+}
+
+// Entrada e saída: opacidade; com movimento, também a escala de 0,8 a partir do centro de baixo
 .toast-enter-active,
 .toast-leave-active {
-  transition: opacity var(--dur-fast) var(--ease-out);
+  transition: opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
 }
 
 .toast-enter-from,
@@ -103,14 +111,69 @@
 }
 
 @include motion-ok {
-  .toast-enter-active,
-  .toast-leave-active {
-    transition:
-      opacity var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+  .toast {
+    transform-origin: bottom center;
   }
 
-  .toast-enter-from {
-    transform: translateY(-8px);
+  .toast-enter-active {
+    transition:
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      transform var(--m3-dur-mola-espacial-rapida) var(--m3-mola-espacial-rapida);
+  }
+
+  .toast-leave-active {
+    transition:
+      opacity var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida),
+      transform var(--m3-dur-mola-efeitos-rapida) var(--m3-mola-efeitos-rapida);
+  }
+
+  .toast-enter-from,
+  .toast-leave-to {
+    transform: scale(0.8);
+  }
+}
+
+// A reserva do foco não coberto (2.4.11), absorvida das páginas: uma reserva por aviso na tela (até
+// 3, em uma lista ou nas duas). Entra no scroll-padding-bottom do html e, fora do painel, no
+// padding-bottom do body, para o último controle da página ter para onde subir. O painel soma a mesma
+// reserva no .admin-main (_admin-layout.scss). Cada seletor fica num :global() próprio: o Vue só
+// guarda o primeiro de uma lista dentro de um :global()
+$avisos-na-tela: (
+  1: (":has(.toast-region .toast)"),
+  2: (
+    ":has(.toast-region .toast + .toast)",
+    ":has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast)",
+  ),
+  3: (
+    ":has(.toast-region .toast + .toast + .toast)",
+    ":has(.toast-region__list--status .toast + .toast):has(.toast-region__list--alert .toast)",
+    ":has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast + .toast)",
+  ),
+);
+
+@function globais($prefixo, $condicoes, $sufixo: "") {
+  $lista: ();
+
+  @each $condicao in $condicoes {
+    $lista: list.append($lista, ":global(#{$prefixo}#{$condicao}#{$sufixo})", comma);
+  }
+
+  @return $lista;
+}
+
+@each $n, $condicoes in $avisos-na-tela {
+  #{globais("html", $condicoes)} {
+    scroll-padding-bottom: calc(var(--space-4) + #{$n} * var(--m3-toast-reserva));
+  }
+
+  #{globais("html:not(:has(.admin-layout))", $condicoes, " body")} {
+    padding-bottom: calc(var(--space-4) + #{$n} * var(--m3-toast-reserva));
+  }
+
+  // Na loja abaixo de lg, o pé do aviso é a reserva da toolbar
+  @include below(lg) {
+    #{globais("html:has(.m3-ferramentas)", $condicoes)} {
+      scroll-padding-bottom: calc(var(--m3-barra-reserva) + #{$n} * var(--m3-toast-reserva));
+    }
   }
 }

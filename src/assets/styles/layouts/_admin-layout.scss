@@ -1,6 +1,7 @@
 // AdminLayout (desenho do admin, §3, §4.6 e §5.1): uma superfície só na moldura. Abaixo de lg, o
 // cabeçalho grudado e a gaveta modal sobre o scrim; a partir de lg, a grade com a coluna fixa à
 // esquerda, na altura toda, e o cabeçalho e o main à direita. A ordem do DOM não muda.
+@use "sass:list";
 @use "../base/breakpoints" as *;
 @use "../base/m3" as *;
 
@@ -72,26 +73,46 @@
   --m3-barra-reserva: 0rem;
 }
 
-// O aviso (toast) no pé, em todas as larguras do painel (§4.6): no topo, ele cobriria as ações das
-// páginas, como o "Novo produto" focado em 1024. Vence a regra com escopo do AppToast a partir de md
-// (0,2,0) pela especificidade 0,2,1, sem mexer no right e na width dela. A etapa 10 herda ou absorve
-// esta regra. O seletor inteiro fica no :global(), que no Vue torna global a regra toda
-:global(html:has(.admin-layout) .toast-region) {
-  top: auto;
-  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+// O aviso (toast) fica no pé, como na loja (_app-toast.scss); a partir de lg, começa depois da coluna,
+// alinhado ao h1, sem cruzar o "Sair" do pé dela (desenho dos componentes base, §4.5). Vence a regra
+// com escopo do AppToast (0,2,0) pela especificidade 0,2,1. O seletor inteiro fica no :global()
+@include up(lg) {
+  :global(html:has(.admin-layout) .toast-region) {
+    inset-inline-start: calc(var(--m3-navegacao-largura) + var(--gutter));
+  }
 }
 
-// Enquanto há aviso, a rolagem do foco para acima dele: um aviso de até 3 linhas e o vão do pé
-// (2.4.11, técnica C43; a regra do Carrinho, etapa 7)
-:global(html:has(.admin-layout):has(.toast-region .toast)) {
-  scroll-padding-bottom: calc(var(--m3-toast-reserva) + var(--space-4));
-}
+// A reserva do aviso no pé do main, uma por aviso na tela (até 3): sem ela, o último botão da página
+// não tem para onde subir (a página acaba antes), e o aviso o cobre ("Atualizar status" em 390). No
+// body, a página ficaria mais alta que a coluna grudada. O espaço entra embaixo, e nada acima se move.
+// Cada seletor num :global() próprio, como no _app-toast.scss
+$avisos-no-painel: (
+  1: (":has(.toast-region .toast)"),
+  2: (
+    ":has(.toast-region .toast + .toast)",
+    ":has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast)",
+  ),
+  3: (
+    ":has(.toast-region .toast + .toast + .toast)",
+    ":has(.toast-region__list--status .toast + .toast):has(.toast-region__list--alert .toast)",
+    ":has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast + .toast)",
+  ),
+);
 
-// A mesma reserva no pé do main enquanto há aviso: sem ela, o último botão da página não tem para onde
-// subir (a página acaba antes), e o aviso o cobre (medido no keyboard.mjs, "Atualizar status" em 390).
-// O espaço entra embaixo, e nada acima dele se move
-:global(html:has(.admin-layout):has(.toast-region .toast) .admin-main) {
-  padding-bottom: calc(var(--m3-toast-reserva) + var(--space-4));
+@each $n, $condicoes in $avisos-no-painel {
+  $seletores: ();
+
+  @each $condicao in $condicoes {
+    $seletores: list.append(
+      $seletores,
+      ":global(html:has(.admin-layout)#{$condicao} .admin-main)",
+      comma
+    );
+  }
+
+  #{$seletores} {
+    padding-bottom: calc(var(--space-4) + #{$n} * var(--m3-toast-reserva));
+  }
 }
 
 @keyframes admin-fade {

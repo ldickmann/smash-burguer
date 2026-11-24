@@ -10,7 +10,7 @@
     @pointerdown="handlePointerDown"
     @click="handleBackdropClick"
   >
-    <div class="dialog__panel">
+    <div class="dialog__panel" :class="{ 'is-rolado': rolado, 'tem-mais': temMais }">
       <header class="dialog__header">
         <slot name="header">
           <h2 :id="titleId" ref="titleRef" class="dialog__title" tabindex="-1">{{ title }}</h2>
@@ -25,21 +25,32 @@
         />
       </header>
 
-      <div ref="bodyRef" class="dialog__body">
+      <div
+        ref="bodyRef"
+        class="dialog__body"
+        :class="{ 'dialog__body--sem-rodape': !$slots.footer }"
+        @scroll.passive="medirRolagem"
+      >
         <slot />
       </div>
 
       <footer v-if="$slots.footer" class="dialog__footer">
         <slot name="footer" />
       </footer>
+
+      <!-- Região de anúncio do diálogo: com o modal aberto, a página atrás é inerte, e a região do
+           App.vue não anuncia (o rótulo de carregamento dos botões vem para cá) -->
+      <p class="visually-hidden" role="status" aria-atomic="true">{{ anuncio }}</p>
     </div>
   </dialog>
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from "vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
+import { CHAVE_ANUNCIADOR } from "@/composables/useAnnouncer";
 import { useScrollLock } from "@/composables/useScrollLock";
+import { useToastStore } from "@/stores/toast";
 
 const props = defineProps({
   open: {
@@ -66,10 +77,25 @@ const emit = defineEmits(["close"]);
 const dialogRef = ref(null);
 const titleRef = ref(null);
 const bodyRef = ref(null);
+const rolado = ref(false);
+const temMais = ref(false);
+const anuncio = ref("");
 const { lock, unlock } = useScrollLock();
+const toastStore = useToastStore();
 
 let opener = null;
 let pointerStartedOnBackdrop = false;
+// Se este diálogo segura os avisos (segurar() ao abrir, soltar() ao fechar ou desmontar aberto)
+let segurando = false;
+let observador = null;
+
+const anunciar = async (texto) => {
+  // Limpa antes para que a mesma frase seja anunciada de novo
+  anuncio.value = "";
+  await nextTick();
+  anuncio.value = texto;
+};
+provide(CHAVE_ANUNCIADOR, anunciar);
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -84,7 +110,8 @@ const focusInitial = () => {
   target?.focus({ preventScroll: false });
 };
 
-// O Tab circula entre o primeiro e o último controle, sem sair para o navegador
+// O Tab circula entre o primeiro e o último controle, sem sair para o navegador. O Shift+Tab também
+// fica preso quando o foco está fora da lista (o título com tabindex="-1", o próprio <dialog>)
 const trapFocus = (event) => {
   const focusables = [...dialogRef.value.querySelectorAll(FOCUSABLE)].filter(
     (el) => el.getClientRects().length > 0
@@ -93,7 +120,7 @@ const trapFocus = (event) => {
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
   const active = document.activeElement;
-  if (event.shiftKey && (active === first || !dialogRef.value.contains(active))) {
+  if (event.shiftKey && (active === first || !focusables.includes(active))) {
     event.preventDefault();
     last.focus();
   } else if (!event.shiftKey && active === last) {
@@ -102,24 +129,60 @@ const trapFocus = (event) => {
   }
 };
 
+// Divisores só com rolagem: o de cima quando o corpo saiu do topo, o de baixo quando há mais conteúdo
+const medirRolagem = () => {
+  const body = bodyRef.value;
+  if (!body) return;
+  rolado.value = body.scrollTop > 0;
+  temMais.value = body.scrollTop + body.clientHeight < body.scrollHeight - 1;
+};
+
+const observarCorpo = () => {
+  if (typeof ResizeObserver === "undefined" || !bodyRef.value) return;
+  observador = new ResizeObserver(medirRolagem);
+  observador.observe(bodyRef.value);
+};
+
+const pararDeObservar = () => {
+  observador?.disconnect();
+  observador = null;
+};
+
+const soltarAvisos = () => {
+  if (!segurando) return;
+  segurando = false;
+  toastStore.soltar();
+};
+
 const openDialog = async () => {
   const dialog = dialogRef.value;
   if (!dialog || dialog.open) return;
   opener = document.activeElement;
   dialog.showModal();
   lock();
+  if (!segurando) {
+    segurando = true;
+    toastStore.segurar();
+  }
+  rolado.value = false;
+  temMais.value = false;
+  anuncio.value = "";
   await nextTick();
   if (bodyRef.value) bodyRef.value.scrollTop = 0;
+  medirRolagem();
+  observarCorpo();
   focusInitial();
 };
 
 const closeDialog = () => {
   const dialog = dialogRef.value;
   unlock();
+  pararDeObservar();
   if (dialog?.open) dialog.close();
   // O foco volta para quem abriu
   if (opener && document.contains(opener)) opener.focus();
   opener = null;
+  soltarAvisos();
 };
 
 const requestClose = () => emit("close");
@@ -148,9 +211,12 @@ onMounted(() => {
   if (props.open) openDialog();
 });
 
+// Desmontado aberto (o ModalProducts com v-if, o perfil que sai com a rota): fecha e solta os avisos
 onBeforeUnmount(() => {
   if (dialogRef.value?.open) closeDialog();
   unlock();
+  pararDeObservar();
+  soltarAvisos();
 });
 </script>
 

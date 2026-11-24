@@ -5,22 +5,6 @@
 @use "../../base/breakpoints" as *;
 @use "../../base/m3" as *;
 
-// Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do foco
-// soma a altura de um aviso, no pé abaixo de md (o aviso fica acima da toolbar) e no topo de md a lg (o
-// aviso fica no topo à direita e cruza a coluna única). A partir de lg, ele fica sobre "Seus pedidos" e
-// não cruza "Seus dados". A etapa 10 (AppToast) herda ou absorve a regra (desenho da Conta, §4)
-:global(html:has(.profile-page):has(.toast-region .toast)) {
-  @include below(md) {
-    scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
-  }
-
-  @include up(md) {
-    @include below(lg) {
-      scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
-    }
-  }
-}
-
 // O ritmo do carrinho: a página a 20 e 40 px do cabeçalho; o h1 (regra global) a 20 e 32 px do conteúdo
 .profile-page {
   padding-block: var(--space-5) var(--space-8);
@@ -106,6 +90,37 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
+}
+
+// Erro da exclusão dentro do diálogo (desenho dos componentes base, §5.2): a região de alerta fica no
+// DOM desde a abertura; o banner tem o visual do .auth-alert (error-container, canto 16, 7,23)
+.profile-delete__anuncio:not(:empty) {
+  margin-block-start: var(--space-4);
+}
+
+.profile-delete__erro {
+  @include tipo(body-l);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-error-container);
+  color: var(--m3-on-error-container);
+  letter-spacing: var(--m3-body-l-tracking);
+
+  @include reserva-de-sombra;
+}
+
+// O ícone de 20 px na altura da primeira linha (4,99 sobre o contêiner)
+.profile-delete__erro-icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--m3-body-l-linha);
+  color: var(--m3-error);
+  font-size: 1.25rem;
 }
 
 // Histórico: lista segmentada, como a do carrinho
