@@ -1,16 +1,16 @@
 /*
- * Verifica se um email é fornecido e se segue o formato esperado.
+ * Verifica se um e-mail é fornecido e se segue o formato esperado.
  *
  * @param {string} email - email para ser validado
  * @returns {object} - objeto com isValid e uma mensagem de erro se aplicável.
  */
 export const validateEmail = (email) => {
-  if (!email) return { isValid: false, message: "O email é obrigatório" };
+  if (!email) return { isValid: false, message: "O e-mail é obrigatório" };
   // Aceita "+" e "%" antes do @ (como em nome+loja@example.com) e domínios de topo longos
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return {
     isValid: emailRegex.test(email),
-    message: emailRegex.test(email) ? "" : "Email inválido",
+    message: emailRegex.test(email) ? "" : "E-mail inválido. Use o formato voce@exemplo.com",
   };
 };
 
