@@ -720,3 +720,306 @@ Nas duas versões tonais, o contêiner, a linha ou a borda e o rótulo têm a me
 9. **Síntese (recomendação), em parte:** o nome "Mostrar senha"/"Ocultar senha" apoiado em A22 e A23. Só [126] troca o nome; [127] usa um nome fixo.
 
 Ajustes de redação, sem derrubada: A8 (o padding de cima é o espaço acima do rótulo no estado com foco, e não um espaço contado a partir do rótulo), A26 (a comparação com o `<select>` nativo é dita do componente em geral, e o prefixo dos tokens é `--md-filled-select-text-field-` ou `--md-outlined-select-text-field-`), A33 ([144] admite rótulos e instruções disponíveis sob pedido em alguns casos), A38 ([149] diz que o `type` descreve o tipo do campo, não necessariamente o propósito) e A45 ([155] diz que, em alguns casos, o contexto visual basta, sem dizer "apenas").
+
+## Etapa 9: navegação do painel (24/11/2026)
+
+Feita em 24/11/2026, com a verificação no mesmo dia. Um pesquisador abriu as páginas com WebFetch e devolveu 58 afirmações, com uma síntese de componentes, riscos e recomendação. Depois, um verificador reabriu cada URL e tentou derrubar cada afirmação, conferindo se a página diz aquilo, com a medida ou o comportamento citado, e se a fonte é da classe declarada. A seção responde às perguntas do desenho da etapa 9 (o painel admin): quando usar a navigation drawer, o navigation rail ou o rail largo do M3 Expressive, por largura de janela, e como desenhar o item ativo; como a top app bar pequena recebe o botão de menu; e o que a APG e a WCAG pedem da gaveta modal, do menu do perfil, do item atual, dos landmarks e do contador. Ela completa as linhas "Admin" da §4.2 e da §5.11 do SPEC-M (`docs/direcoes/SPEC-material.md`), que diziam que os dossiês não cobrem navigation drawer nem rail. Das 58 afirmações, 56 ficaram inteiras (8 delas com ajuste de redação), 2 ficaram em parte e nenhuma caiu inteira. Da síntese do pesquisador, três trechos caíram em parte. Tudo isso está em "Refutadas na verificação (etapa 9)". O que a verificação achou e o pesquisador não trouxe está marcado "achado na verificação". As fontes que já tinham número mantêm o número ([26], [61], [78], [79], [90], [98] e [159]), e as novas vão de [160] a [214].
+
+### Fontes da etapa 9
+
+| Nº | Tipo | Título | URL | O que sustenta |
+|---|---|---|---|---|
+| [160] | documentação oficial | Navigation drawer (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/drawer | Os dois tipos, os usos, a abertura por gesto ou pelo ícone de menu, o `gesturesEnabled` e o exemplo com seções, divisor e badge. |
+| [161] | documentação oficial | Navigation drawer (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/NavigationDrawer.md | A nota de descontinuação no Expressive, o standard e o modal, as medidas, as cores, o scrim e a acessibilidade da gaveta em Views. |
+| [162] | documentação oficial | Commit ee334daeca (diff, material-components-android) | https://github.com/material-components/material-components-android/commit/ee334daeca.diff | A nota de descontinuação e a seção "M3 Expressive update" como linhas novas. |
+| [163] | documentação oficial | Histórico de commits de NavigationDrawer.md (API do GitHub) | https://api.github.com/repos/material-components/material-components-android/commits?path=docs/components/NavigationDrawer.md&per_page=30 | As datas do commit ee334daeca e do commit que pôs o Esc no doc. |
+| [164] | documentação oficial | NavigationDrawerTokens.kt (AndroidX, VERSION v0_210) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationDrawerTokens.kt | Largura, indicador, cores por estado, tipografia, forma e elevação da gaveta. |
+| [165] | documentação oficial | NavigationDrawer.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/NavigationDrawer.kt | A largura mínima da folha, o padding do item, o `Role.Tab`, o scrim, o `paneTitle`, o `dismiss`, o Esc e o voltar preditivo. |
+| [166] | documentação oficial | ScrimTokens.kt (AndroidX, VERSION v0_117) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ScrimTokens.kt | O papel scrim e a opacidade de 0,32. |
+| [167] | documentação oficial | ModalNavigationDrawer (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ModalNavigationDrawer.composable | O modal sobre o conteúdo e o exemplo que fecha no item e devolve o foco ao botão. |
+| [168] | documentação oficial | NavigationDrawerItem (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/NavigationDrawerItem.composable | O item nas três gavetas, o badge no fim, a forma do indicador e o `ItemPadding`. |
+| [169] | documentação oficial | Navigation rail (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/navigation-rail | Quando usar o rail, a atualização Expressive (rail largo, modal e dispensável) e a nota dos mais de quatro destinos. |
+| [170] | documentação oficial | Navigation rail (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/NavigationRail.md | O rail expandido no lugar da gaveta, as medidas do Expressive, o indicador, os modos de rótulo e o `android:title`. |
+| [171] | documentação oficial | Commit 2921b9c311 (diff, material-components-android) | https://github.com/material-components/material-components-android/commit/2921b9c311.diff | A frase do rail expandido que substitui a gaveta, como linha nova. |
+| [172] | documentação oficial | Histórico de commits de NavigationRail.md (API do GitHub) | https://api.github.com/repos/material-components/material-components-android/commits?path=docs/components/NavigationRail.md&per_page=15 | A data do commit 2921b9c311. |
+| [173] | documentação oficial | NavigationRailCollapsedTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailCollapsedTokens.kt | Largura, espaços, cor, forma e elevação do rail recolhido. |
+| [174] | documentação oficial | NavigationRailExpandedTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailExpandedTokens.kt | Largura, forma e elevação do rail expandido e do modal. |
+| [175] | documentação oficial | NavigationRailVerticalItemTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailVerticalItemTokens.kt | O item com o ícone em cima: indicador, espaço e rótulo. |
+| [176] | documentação oficial | NavigationRailHorizontalItemTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailHorizontalItemTokens.kt | O item com o ícone no início: indicador, espaços e rótulo. |
+| [177] | documentação oficial | NavigationRailBaselineItemTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailBaselineItemTokens.kt | A altura do item, a forma do indicador, o ícone e o espaço do cabeçalho. |
+| [178] | documentação oficial | NavigationRailColorTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/NavigationRailColorTokens.kt | As cores do item do rail e das camadas de estado. |
+| [179] | documentação oficial | WideNavigationRail (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/WideNavigationRail.composable | O rail largo, o cabeçalho, o número de itens por estado e o botão de menu com dica e estado anunciado. |
+| [180] | documentação oficial | ModalWideNavigationRail (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/ModalWideNavigationRail.composable | O modal expandido com scrim, o `hideOnCollapse` e o `expandedHeaderTopPadding`. |
+| [181] | documentação oficial | WideNavigationRail.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/WideNavigationRail.kt | O scrim, o `paneTitle`, o Esc, o voltar, a falta de controle de foco, o `selectableGroup()`, o padding e a altura do item e as cores padrão. |
+| [182] | documentação oficial | WideNavigationRailItem (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/WideNavigationRailItem.composable | O rótulo sempre visível e a posição do ícone em cada estado. |
+| [183] | documentação oficial | NavigationRailItem (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/NavigationRailItem.composable | O rótulo do rail clássico e o `alwaysShowLabel`. |
+| [184] | documentação oficial | NavigationRail (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/NavigationRail.composable | De três a sete destinos, o cabeçalho com FAB ou logo e o uso em tablet e desktop. |
+| [185] | documentação oficial | Build adaptive navigation (Android Developers) | https://developer.android.com/develop/ui/compose/layouts/adaptive/build-adaptive-navigation | A escolha padrão do `NavigationSuiteScaffold` e o exemplo de gaveta permanente em janela expandida. |
+| [186] | documentação oficial | NavigationSuiteType (androidx.compose.material3.adaptive.navigationsuite) | https://developer.android.com/reference/kotlin/androidx/compose/material3/adaptive/navigationsuite/NavigationSuiteType | Os tipos de navegação e as recomendações de troca. |
+| [187] | documentação oficial | NavigationSuiteScaffold.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3-adaptive-navigation-suite/src/commonMain/kotlin/androidx/compose/material3/adaptive/navigationsuite/NavigationSuiteScaffold.kt | A escolha recomendada e a antiga do tipo de navegação por janela. |
+| [188] | documentação oficial | NavigationSuiteScaffold (androidx.compose.material3.adaptive.navigationsuite) | https://developer.android.com/reference/kotlin/androidx/compose/material3/adaptive/navigationsuite/NavigationSuiteScaffold.composable | O exemplo de escolha própria por largura e o `primaryActionContent`. |
+| [189] | documentação oficial | Use window size classes (Android Developers) | https://developer.android.com/develop/ui/compose/layouts/adaptive/use-window-size-classes | Os limites das classes de largura e de altura e o aviso contra a lógica de "isTablet". |
+| [190] | documentação oficial | material-web, pasta `labs` (API do GitHub) | https://api.github.com/repos/material-components/material-web/contents/labs | O drawer, a bar e a tab experimentais, sem rail. |
+| [191] | documentação oficial | README da pasta `labs` (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/labs/README.md | Recursos experimentais, fora da produção e sem garantia de versão. |
+| [192] | documentação oficial | navigation-drawer-modal.ts (material-web labs) | https://raw.githubusercontent.com/material-components/material-web/main/labs/navigationdrawer/internal/navigation-drawer-modal.ts | O `role="dialog"`, os atributos opcionais, o Esc, o scrim e a falta de controle de foco. |
+| [193] | documentação oficial | Roadmap do material-web | https://raw.githubusercontent.com/material-components/material-web/main/docs/roadmap.md | Drawer, rail, bar e top app bar não feitos, e nenhum trabalho previsto na manutenção. |
+| [194] | documentação oficial | TopAppBar (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/TopAppBar.composable | As peças da barra pequena, a rolagem, o título e os exemplos com o botão de menu. |
+| [195] | documentação oficial | AppBarSmallTokens.kt (AndroidX, VERSION 14_0_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/AppBarSmallTokens.kt | A altura e a tipografia da barra pequena. |
+| [196] | documentação oficial | AppBarTokens.kt (AndroidX, VERSION 14_0_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/AppBarTokens.kt | Cores, elevação, forma, ícones, avatar e espaços da barra. |
+| [197] | documentação oficial | Top app bar (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/TopAppBar.md | A atualização Expressive da barra, o lift on scroll e as descrições para o TalkBack. |
+| [198] | documentação oficial | ElevationTokens.kt (AndroidX, VERSION v0_103) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ElevationTokens.kt | Os níveis de elevação em dp (achado na verificação). |
+| [199] | referência técnica | Dialog (Modal) Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ | O fundo inerte, o teclado, o foco ao abrir e ao fechar, os papéis e quando marcar como modal. |
+| [200] | referência técnica | H102: Creating modal dialogs with the HTML dialog element (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/html/H102 | O que o navegador faz com o `<dialog>` modal: foco, inércia, Esc e volta do foco. |
+| [201] | referência técnica | Understanding SC 2.4.3 Focus Order (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html | O foco no diálogo modal e no não modal, as técnicas e as falhas. |
+| [202] | referência técnica | F85: Failure of SC 2.4.3 due to using dialogs or menus that are not adjacent to their trigger control (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/failures/F85 | Quando o foco de um diálogo ou menu reprova, na abertura e no fechamento. |
+| [203] | referência técnica | Example Disclosure Navigation Menu (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/ | A navegação sem o papel `menu`, o `aria-current`, o Esc e as teclas opcionais. |
+| [204] | referência técnica | Navigation Menubar Example (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/ | O aviso contra o menubar na navegação típica e o `aria-current`. |
+| [205] | referência técnica | Menu and Menubar Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/menubar/ | O teclado dentro do menu, os papéis, o rótulo e o foco. |
+| [206] | referência técnica | Navigation Menu Button Example (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/ | O menu button com itens que são links. |
+| [207] | referência técnica | Accessible Rich Internet Applications (WAI-ARIA) 1.2 (W3C) | https://www.w3.org/TR/wai-aria-1.2/ | A definição do `aria-current`. |
+| [208] | referência técnica | Menu Structure (WAI Tutorials, atualizado em 13/05/2024) | https://www.w3.org/WAI/tutorials/menus/structure/ | O item atual e o rótulo do menu. |
+| [209] | referência técnica | G128: Indicating current location within navigation bars (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/general/G128 | Os sinais da posição atual e os dois exemplos. |
+| [210] | referência técnica | Landmark Regions (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/ | Os landmarks repetidos, os rótulos, o `nav`, o `aside`, o banner e o main. |
+| [211] | referência técnica | ARIA11: Using ARIA landmarks to identify regions of a page (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA11 | Os nomes dos landmarks repetidos e o teste. |
+| [212] | documentação oficial | BadgedBox (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/BadgedBox.composable | O badge de informação dinâmica e as descrições do exemplo. |
+| [213] | documentação oficial | BadgeDrawable (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/BadgeDrawable.md | A descrição do badge para o TalkBack e os limites de texto e de número. |
+| [214] | referência técnica | Understanding SC 2.5.3 Label in Name (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html | O texto visível dentro do nome acessível. |
+| [79] | referência técnica | Menu Button Pattern (WAI-ARIA APG; já citada) | https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/ | Nesta etapa, reaberta: o teclado do botão, os papéis e a falta de aviso sobre navegação. |
+| [26] | autor do estilo | Expressive Material Design: Google research (Google Design; rodada 1) | https://design.google/library/expressive-material-design-google-research | Nesta etapa, pelo que o dossiê já registra (não reaberta): tirar rótulos de texto piorou a usabilidade. |
+| [61] | documentação oficial | Navigation bar (Jetpack Compose; já citada) | https://developer.android.com/develop/ui/compose/components/navigation-bar | Nesta etapa, pelo que o dossiê já registra (não reaberta): a barra para três a cinco destinos. |
+| [78] | referência técnica | Understanding SC 2.5.8 Target Size (Minimum) (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html | Nesta etapa, pelo que o dossiê já registra (não reaberta): o alvo de 24×24 px CSS. |
+| [90] | referência técnica | Button Pattern (WAI-ARIA APG; já citada) | https://www.w3.org/WAI/ARIA/apg/patterns/button/ | Nesta etapa, pelo que o dossiê já registra (não reaberta): o rótulo do toggle com `aria-pressed` que não muda com o estado. |
+| [98] | referência técnica | Understanding SC 1.4.11 Non-text Contrast (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html | Nesta etapa, pelo que o dossiê já registra (não reaberta): o 3:1 de componentes e estados. |
+| [159] | referência técnica | Disclosure (Show/Hide) Pattern (WAI-ARIA APG; já citada) | https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/ | Nesta etapa, pelo que o dossiê já registra (não reaberta): o botão com `aria-expanded` e o `aria-controls` opcional. |
+
+### Drawer, rail e rail largo do Expressive
+
+**O que o Expressive muda.**
+
+- Uma nota no topo do doc da gaveta no Material Components for Android diz que ela "is being deprecated in the Material 3 expressive update". Para quem já atualizou, a nota manda usar o rail expandido, que tem quase a mesma função e se adapta melhor às classes de largura. A seção "M3 Expressive update" repete a orientação [161].
+- A nota entrou como linhas novas no commit ee334daeca [162], de 26/06/2025 (data do autor; integrado em 27/06) [163]. A página não traz data própria. Achado na verificação: o commit 1f10e0bbb9, de 08/07/2025, mandou as demos fecharem a gaveta com o Esc e pôs essa orientação no doc [163].
+- O doc do rail diz que o rail expandido "is meant to replace the navigation drawer" [170]. A frase entrou no commit 2921b9c311 [171], de 29/07/2025 [172]. O rail original passa a se chamar rail recolhido, que é o estado padrão; expandido, ele funciona como uma gaveta. Na modalidade do expandido, a página registra "Non-modal", com transição para o rail recolhido [170].
+- No Compose, o Expressive traz o `WideNavigationRail` e o `ModalWideNavigationRail`, com os estados recolhido e expandido, ao lado do `NavigationRail` padrão. Um estado vira o outro quando o usuário aciona o botão de menu [169]. As referências dos dois e do `WideNavigationRailItem` dizem "Added in 1.5.0" ([179], [180], [182]).
+- O `NavigationSuiteType` recomenda o `WideNavigationRailExpanded` no lugar do tipo `NavigationDrawer` (uma `PermanentDrawerSheet`), o `WideNavigationRailCollapsed` no lugar do `NavigationRail` e o `ShortNavigationBarCompact` no lugar da `NavigationBar` [186].
+
+**Quando usar cada um.**
+
+| Componente | Quando usar | Fonte |
+|---|---|---|
+| Gaveta standard | Divide a tela com o conteúdo, e a pessoa mexe nos dois ao mesmo tempo. Serve a tablet e desktop; o MDC diz que não serve ao celular, pela tela pequena. | [160], [161] |
+| Gaveta modal | Fica sobre o conteúdo, bloqueia o resto do app com um scrim, fica elevada e não altera o grid. É sobretudo para celular e pode dar lugar à standard no tablet e no desktop. | [160], [161], [167] |
+| Rail clássico (`NavigationRail`) | De três a sete destinos, com FAB ou logo opcional no cabeçalho, em telas de tablet e desktop. | [184] |
+| Rail no Compose (guia) | Destinos de topo que precisam estar acessíveis em qualquer lugar do app, de três a sete, em layouts de tablet ou desktop. | [169] |
+| Rail largo (`WideNavigationRail`) | Destinos primários em tablet e desktop. Cabeçalho opcional com botão de menu, FAB e/ou logo, sempre no topo; itens arrumados no topo por padrão. Começa recolhido. Recolhido, deve mostrar de três a sete itens; expandido, pelo menos três. | [179] |
+| Rail largo modal (`ModalWideNavigationRail`) | Recolhido, funciona como o rail largo recolhido. Expandido, bloqueia o resto do app com um scrim, fica elevado e não altera o grid. Com `hideOnCollapse`, sai da tela ao recolher e entra pela borda, em vez de virar o rail recolhido. | [180] |
+
+- A página do rail no Compose diz que o rail expandido pode ser standard ou modal, e que o modal fica sobre o conteúdo e abre por um ícone de menu. Uma nota sugere o rail expandido modal quando há mais de quatro destinos. A versão dispensável (`hideOnCollapse = true`) responde ao voltar preditivo [169].
+- Os usos citados da gaveta são organizar conteúdo, gerenciar a conta e descobrir recursos [160].
+- Achado na verificação: o texto das demos do rail largo e do modal diz que, em qualquer dimensão compacta, se usa a navigation bar ([179], [180]).
+
+**Navegação adaptativa por largura de janela.**
+
+| Classe | Largura | Altura |
+|---|---|---|
+| Compacta | menos de 600 dp | menos de 480 dp |
+| Média | de 600 dp a menos de 840 dp | de 480 dp a menos de 900 dp |
+| Expandida | de 840 dp a menos de 1200 dp | 900 dp ou mais |
+| Grande | de 1200 dp a menos de 1600 dp | — |
+| Extragrande | 1600 dp ou mais (telas de desktop) | — |
+
+As classes valem pela janela disponível ao app, não pelo aparelho, e a página diz que não servem para a lógica de "isTablet". A largura costuma pesar mais que a altura. As classes compacta, média e expandida correspondem às do Material; a grande e a extragrande foram acrescentadas para desktop e telas conectadas. A página não liga as classes a componentes de navegação [189].
+
+| Escolha automática | Largura compacta | Tabletop ou altura compacta | Outros casos | Fonte |
+|---|---|---|---|---|
+| `navigationSuiteType` (a recomendada) | `ShortNavigationBarCompact` | `ShortNavigationBarMedium` | `WideNavigationRailCollapsed` | [187] |
+| `calculateFromAdaptiveInfo` (a antiga) | `NavigationBar` | `NavigationBar` | `NavigationRail` | [185], [187] |
+
+- A escolha recomendada nunca dá o rail expandido. O comentário da função antiga manda usar a nova, mas ela não está marcada como obsoleta [187].
+- O guia "Build adaptive navigation" ainda descreve a escolha antiga (navigation bar com largura ou altura compacta ou em tabletop, rail no resto) e mostra uma gaveta permanente nas janelas expandidas, para um app com um único painel grande de feed [185].
+- O exemplo de escolha própria do `NavigationSuiteScaffold` usa o rail largo recolhido nas larguras compacta e média, a `ShortNavigationBarMedium` com altura compacta e o rail largo expandido na largura expandida. O `primaryActionContent`, em geral um FAB, entra no cabeçalho dos componentes verticais e acima dos horizontais [188].
+
+**Anatomia e medidas da gaveta.**
+
+| Peça | Compose | Material Components for Android (Views) |
+|---|---|---|
+| Largura | Folha de 240 dp no mínimo [165] a 360 dp no máximo (`ContainerWidth`) ([164], [165]) | 280 dp no máximo [161] |
+| Contêiner | Modal: SurfaceContainerLow, Level1. Standard: Surface, Level0. Forma `CornerLargeEnd`, só o lado final arredondado [164] | colorSurfaceContainerLow; canto de 16 dp [161] |
+| Item | Indicador de 336×56 dp, `CornerFull` [164]; altura mínima igual à do indicador; padding interno de 16 dp no início e 24 dp no fim [165]; recuo externo de 12 dp na horizontal (`ItemPadding`), que os exemplos aplicam por fora ([165], [168]) | Forma `Corner.Full`; recuo de 12 dp no início e no fim [161] |
+| Ícone | 24 dp [164] | não encontrei |
+| Rótulo | LabelLarge [164] | textAppearanceLabelLarge, com negrito no ativo ligado por padrão [161] |
+| Título de seção | TitleSmall em OnSurfaceVariant [164]; o exemplo do guia usa titleLarge no título da gaveta, titleMedium nas seções e `HorizontalDivider` entre elas [160] | textAppearanceTitleSmall [161] |
+| Badge | No lado final do item [168]; rótulo do badge grande em OnSurfaceVariant e LabelLarge [164]; o exemplo usa um badge de texto ("20") [160] | não encontrei |
+| Semântica | Item com `Role.Tab` [165] | — |
+
+**Anatomia e medidas do rail.**
+
+| Peça | Recolhido | Expandido |
+|---|---|---|
+| Largura | 96 dp; versão estreita de 80 dp [173]. No MDC, o Expressive levou a largura de 80 para 96 dp [170] | De 220 a 360 dp [174]; indicador com largura que abraça o conteúdo ("HUG") [170] |
+| Contêiner | Surface, `CornerNone`, Level0 [173] | Standard: `CornerNone`, Level0 [174], com a mesma cor padrão do recolhido [181]. Modal: SurfaceContainer, Level2, `CornerLarge` [174] |
+| Espaços | 4 dp entre itens; 44 dp no topo (`TopSpace`) [173]; mínimo de 40 dp no cabeçalho [177] | 44 dp no topo [174] |
+| Item | Altura de 64 dp [177]; no MDC, a altura mínima foi de 60 para 64 dp [170]. Ícone acima do rótulo ([175], [182]) | Altura mínima pelo tamanho mínimo de acessibilidade, sem valor no arquivo; padding horizontal de 20 dp [181]. Ícone no início do rótulo [182] |
+| Indicador | 56×32 dp ([170], [175]); `CornerFull` [177] | 56 dp de altura ([170], [176]); margem horizontal de 20 dp e padding de 16 dp nos quatro lados no MDC [170]; 16 dp no início e 8 dp entre ícone e rótulo nos tokens [176] |
+| Ícone e rótulo | Ícone de 24 dp [177]; 4 dp entre ícone e rótulo; rótulo em LabelMedium [175] | 8 dp entre ícone e rótulo; rótulo em LabelLarge [176] |
+| Semântica | O rail aplica `selectableGroup()` [181] | o mesmo [181] |
+
+Achado na verificação: no ElevationTokens.kt, o Level0 vale 0 dp, o Level1, 1 dp, e o Level2, 3 dp [198].
+
+**Item ativo e cores.**
+
+| Papel | Gaveta (Compose) [164] | Gaveta (MDC) [161] | Rail [178] |
+|---|---|---|---|
+| Indicador ativo | SecondaryContainer | colorSecondaryContainer | SecondaryContainer |
+| Ícone ativo | OnSecondaryContainer | colorOnSecondaryContainer | OnSecondaryContainer |
+| Rótulo ativo | OnSecondaryContainer | colorOnSecondaryContainer | Secondary |
+| Ícone e rótulo inativos | OnSurfaceVariant; OnSurface no hover, no foco e no pressionado | colorOnSurfaceVariant | OnSurfaceVariant |
+| Camada de estado | não encontrei | não encontrei | OnSecondaryContainer no hover, no foco e no pressionado, ativo ou não |
+| Indicador de foco | Secondary | não encontrei | não encontrei |
+
+- Nos exemplos do rail, o item selecionado usa o ícone preenchido, e os outros, o contornado ([169], [179], [184]).
+- O `WideNavigationRailItem` recomenda que todo item tenha rótulo de texto e mostra o rótulo selecionado ou não [182].
+- No rail clássico, o item selecionado sempre mostra o rótulo, e os outros dependem do `alwaysShowLabel`; com false, só o selecionado mostra [183].
+- No MDC, o modo AUTO, que é o padrão, mostra todos os rótulos com até 3 itens e só o do selecionado com 4 ou mais; há também SELECTED, LABELED e UNLABELED. A página pede um `android:title` em cada item, para o TalkBack anunciar o destino [170].
+
+**O modal: scrim, abertura e fechamento.**
+
+| Ponto | Gaveta modal (Compose) | Gaveta (MDC) | Rail largo modal (Compose) |
+|---|---|---|---|
+| Scrim | Papel scrim com opacidade de 0,32 ([165], [166]); tem descrição (`Strings.CloseDrawer`) e fecha no clique, só com a gaveta aberta [165] | Preto a 60% [161] | Papel scrim com opacidade de 0,32 ([166], [181]); tem descrição (`Strings.CloseRail`) e o clique recolhe o rail [181] |
+| Abrir | Gesto a partir da borda ou toque no ícone de menu; o `gesturesEnabled` liga ou desliga o arrasto; no exemplo, o `navigationIcon` da `TopAppBar` abre e fecha pelo `DrawerState` [160] | — | Botão de menu do cabeçalho ([169], [179]); com `hideOnCollapse`, entra pela borda [180] |
+| Fechar | Esc ao soltar a tecla; ação semântica `dismiss` com a gaveta aberta [165]; no exemplo, o clique no item fecha [167] | Esc pelo teclado; toque num item ou no scrim [161] | Esc ao soltar a tecla; o voltar chama o `onDismissRequest`, que recolhe [181] |
+| Voltar preditivo | Só nas folhas que recebem o `drawerState` (`ModalDrawerSheet` e `DismissibleDrawerSheet`) [165] | Vem pronto dentro do `DrawerLayout` [161] | Sim ([169], [181]) |
+| Nome do painel | `paneTitle` com `Strings.NavigationMenu` [165] | — | `paneTitle` com `Strings.WideNavigationRailPaneTitle` [181] |
+| Foco | O exemplo devolve o foco ao botão que abriu quando a gaveta fecha [167] | Os controles que abrem a gaveta precisam de alvo mínimo de 48 dp e de rótulo [161] | O arquivo não tem nenhum controle de foco [181] |
+| Cabeçalho | — | — | O `expandedHeaderTopPadding` alinha o conteúdo entre os dois estados [180] |
+
+**Na web.** O material-web não tem rail: a pasta `labs` tem só `navigationdrawer`, `navigationbar` e `navigationtab` [190], e o README da pasta diz que ali ficam recursos experimentais, não recomendados para produção, que podem quebrar sem mudar a versão major [191]. O roadmap põe navigation drawer, navigation rail, navigation bar e top app bar entre os componentes não feitos, e diz que não há trabalho previsto enquanto a biblioteca estiver em manutenção [193].
+
+**Leitura da verificação (inferência).** O painel tem 4 destinos (`src/components/admin/layout/SidebarAdmin.vue`). As fontes divergem na janela compacta: a escolha recomendada do Compose dá a navigation bar curta [187], e as demos do rail largo mandam usar a navigation bar [179]; o exemplo próprio do `NavigationSuiteScaffold` põe o rail recolhido também ali [188]; e a página do rail sugere o expandido modal com mais de quatro destinos [169]. A navigation bar serve de três a cinco destinos [61], o que cobre os 4 do painel. O MDC diz que a gaveta modal é sobretudo para celular, mas a marca como em descontinuação [161]. Na largura média, o padrão é o rail recolhido [187]; na expandida, o rail expandido entra só por escolha própria [188] e é o substituto recomendado da gaveta permanente [186]. O corte de hoje, 1024 px (`src/layouts/AdminLayout.vue`), cai dentro da classe expandida, de 840 a 1200 [189], lendo dp como px CSS. Usar 840 segue a fonte; manter 1024 é decisão do projeto. No item ativo, a pílula em secondary-container e o ícone em on-secondary-container valem para a gaveta e para o rail, mas o rótulo ativo diverge ([164], [178]).
+
+### Barra superior com o botão de menu
+
+- **Peças.** A top app bar pequena tem título, subtítulo opcional, ícone de navegação e ações. O ícone de navegação fica no início e em geral é um `IconButton` ou um `IconToggleButton`; as ações ficam no fim, em geral `IconButton`s, numa `Row`. O título fica no início por padrão ou no centro, pelo `titleHorizontalAlignment` [194].
+- **Botão de menu.** Nos exemplos, o ícone de menu tem a descrição "Menu" e uma dica (tooltip) [194]. No exemplo da gaveta, o `navigationIcon` da barra abre e fecha a gaveta [160]. Achado na verificação: os exemplos da barra e do rail largo trazem um TODO sobre um bug em que o texto da dica não é anunciado pelos leitores de tela ([179], [194]).
+- **Rolagem.** Com o `PinnedScrollBehavior`, a cor do contêiner muda quando o conteúdo rola por baixo; com o `enterAlways`, a barra recolhe e volta com a rolagem [194]. No MDC, o lift on scroll vem ligado por padrão, com a cor colorSurfaceContainer [197].
+- **Expressive.** No MDC, a nova search app bar aceita ícones dentro e fora do campo e texto centralizado, e abre a search view quando selecionada. As versões flexíveis substituem a medium e a large, que estão em descontinuação, e a small ganha as mesmas melhorias [197].
+- **Acessibilidade.** O MDC pede descrição para o ícone de navegação e para as ações, para o TalkBack anunciar o propósito; diz que o uso é opcional, mas muito encorajado [197]. A página não diz quantas ações cabem antes do menu de estouro; os exemplos usam `showAsAction="ifRoom"` [197].
+
+| Medida ou papel | Valor | Fonte |
+|---|---|---|
+| Altura | 64 dp | [195] |
+| Título | TitleLarge, em OnSurface | [195], [196] |
+| Subtítulo | LabelMedium, em OnSurfaceVariant | [195], [196] |
+| Contêiner | Surface, Level0, `CornerNone`; ao rolar, SurfaceContainer com Level2 | [196] |
+| Ícone inicial (navegação) | OnSurface | [196] |
+| Ícones finais (ações) | OnSurfaceVariant | [196] |
+| Ícone e avatar | 24 dp e 32 dp | [196] |
+| Espaços | 4 dp no início e no fim; 0 dp entre os botões de ícone | [196] |
+
+**Leitura da verificação (inferência).** Hoje a barra do painel é um `nav` "Ferramentas do painel" dentro do `header`, com a busca (`role="search"`), os contadores e o menu do perfil (`TheNavbarAdmin.vue`, `navbar/SearchBar.vue`). Os 32 dp do avatar são a medida do desenho [196]; o alvo precisa de pelo menos 24 px CSS [78], e o MDC pede 48 dp nos controles que abrem a gaveta [161].
+
+### Gaveta modal, menu do perfil e item atual (W3C)
+
+**Diálogo modal.**
+
+| Ponto | O que pedem | Fonte |
+|---|---|---|
+| Fundo | O que fica fora do diálogo é inerte e costuma ficar escurecido ou encoberto. | [199] |
+| Quando marcar como modal | Só quando o código impede qualquer interação fora dele e o visual encobre o resto. O `aria-modal` pode impedir que pessoas com algumas tecnologias assistivas percebam o conteúdo de fora. | [199] |
+| Papéis | `role="dialog"`, `aria-modal="true"` e `aria-labelledby` apontando para um título visível, ou `aria-label`; `aria-describedby` opcional. | [199] |
+| Foco ao abrir | Em geral, no primeiro elemento focável; com conteúdo grande, num elemento estático do topo com `tabindex="-1"`. No `<dialog>` modal, o navegador põe o foco no primeiro focável do DOM. | [199], [200] |
+| Teclado | Tab e Shift+Tab dão a volta nas pontas sem sair do diálogo; o Esc fecha. No `<dialog>` modal, o navegador limita o foco ao diálogo e à interface do próprio navegador, deixa o resto inerte e escondido das tecnologias assistivas e fecha com o Esc. | [199], [200] |
+| Foco ao fechar | Volta a quem abriu, salvo se esse elemento sumiu ou se o fluxo tornar outro destino mais lógico. Na H102, volta a quem abriu se ele ainda estiver na página. Na 2.4.3, volta ao botão ou ao elemento logo depois dele. | [199], [200], [201] |
+| Falha F85 | Reprova se o foco não vai ao diálogo ou menu (ou a um descendente focável lógico) e ele também não é o próximo na ordem do Tab. Reprova se, ao fechar, o foco não volta ao gatilho; se o gatilho sumiu, conta o elemento interativo logo antes ou logo depois dele. Levar o foco a outro controle lógico não é falha. | [202] |
+| Clique no fundo | A H102 não fala de fechar pelo clique no fundo. | [200] |
+
+- A 2.4.3 é de nível A. No não modal, os controles entram na ordem logo depois do botão. Entre as técnicas suficientes estão a H102, a SCR26 e a C27; as falhas são a F44 e a F85 [201].
+- O drawer modal experimental do material-web usa `role="dialog"`, mas o `aria-modal` e o `aria-label` só aparecem se o desenvolvedor os definir. O Esc fecha só com o foco dentro da gaveta, e o clique no scrim alterna o estado. O arquivo não move, não prende e não devolve o foco [192].
+- **Gaveta como diálogo ou como disclosure.** A APG do diálogo não cita gaveta, painel lateral nem "hamburger" [199]. O exemplo de disclosure cobre listas de links que abrem numa barra [203]. Não encontrei fonte do W3C que decida entre os dois para a gaveta.
+
+**Navegação, menu button e menu.**
+
+- **Disclosure de navegação [203]:** o exemplo não usa o papel `menu`, porque a navegação típica de site não precisa de todo o teclado do menu e do menubar. O link da página exibida leva `aria-current="page"`. Os botões usam `aria-expanded` e `aria-controls`. O Esc fecha a lista aberta e põe o foco no botão dela. As setas, o Home e o End são opcionais e complementam o Tab, sem substituí-lo. A lista fica num landmark de navegação com nome.
+- **Menubar de navegação [204]:** a página avisa que o menubar exige uma funcionalidade complexa, desnecessária na navegação típica de site, e indica o disclosure para a maioria dos sites. O `aria-current="page"` fica no link cuja URL é a da página, e sai dos outros.
+- **Menu button [79]:** Enter e Espaço abrem o menu e focam o primeiro item; a seta para baixo (opcional) abre e foca o primeiro, e a seta para cima (opcional), o último. O botão tem papel `button`, `aria-haspopup` igual a `menu` ou `true` e `aria-expanded` `true` ou `false`; o `aria-controls` é opcional. O contêiner tem `role="menu"`. O padrão não traz aviso sobre navegação.
+- **Menu [205]:** o Enter ativa o item e fecha o menu; o Esc fecha e devolve o foco a quem abriu. As setas movem o foco, com volta opcional nas pontas; o Home e o End vão ao primeiro e ao último item quando as setas não dão a volta. A busca por letra é opcional. O Tab sai do menu e fecha todos os menus. Ao abrir, o foco vai ao primeiro item. Papéis: `menu`, com `menuitem`, `menuitemcheckbox` ou `menuitemradio`. O `aria-labelledby` do menu aponta para o botão ou item que o controla, ou o menu leva `aria-label`. O foco usa `tabindex="-1"` nos itens ou `aria-activedescendant`. A página não proíbe o padrão na navegação; desaconselha só o item que executa uma função e abre submenu.
+- **Menu button com links [206]:** os itens são links, mantêm o comportamento de link e levam `role="menuitem"` e `tabindex="-1"`. O Esc fecha e devolve o foco ao botão; o Home, o End e a busca por letra funcionam. A página diz que o código não é para produção, e a lista de teclas não cita o Tab.
+
+**Item atual.**
+
+- **`aria-current` [207]:** indica o item atual num contêiner ou conjunto de elementos relacionados; o valor `page` marca a página atual num conjunto de páginas. Só um elemento do conjunto deve ser marcado. Ele não deve substituir o `aria-selected` nos widgets em que este tem o mesmo sentido. Ausente ou vazio, vale false, e o estado não deve ser exposto.
+- **Menu Structure [208]:** o item atual se marca com texto oculto, lido pelo leitor de tela, ou com `aria-current="page"`. O tutorial sugere tirar o `<a>` do item atual quando der, e manter o link com `aria-current` quando não der. O menu se rotula com um título, `aria-label` ou `aria-labelledby`, como no exemplo `<nav aria-labelledby>`.
+- **G128 [209]:** técnica ligada à 2.4.8 Location. A posição atual se indica com um ícone, com texto ou com a mudança de estado do item. No exemplo de lista, o link atual fica desativado; no de abas, além da cor de fundo, aparece um ícone de check com texto alternativo.
+
+**Landmarks.**
+
+- **APG [210]:** todo o conteúdo perceptível fica em algum landmark. Um papel repetido precisa de rótulo único em cada instância. O nome do papel não entra no rótulo: um `nav` chamado "Site Navigation" é lido "Site Navigation Navigation", e o rótulo certo é "Site". Com título no começo da área, rotule por `aria-labelledby`; sem título, por `aria-label`. A navegação usa o `nav`. O complementary (`aside`) é uma seção de apoio ao conteúdo principal e fica no nível de topo. O banner (no máximo um por página) e o main (um por página) também ficam no topo.
+- **ARIA11 [211]:** serve à 1.3.1, à 1.3.6 e à 2.4.1. Papéis iguais repetidos devem ter nome. Nos exemplos, duas navegações se chamam "Site" e "Related Topics" (por `aria-labelledby`) ou "Site" e "Tags" (por `aria-label`). O teste confere se cada landmark repetido tem um nome único e com sentido.
+
+**Contador no nome do botão.**
+
+- **BadgedBox [212]:** o badge mostra informação dinâmica, como o número de solicitações pendentes numa navigation bar, e pode ser só ícone ou ter texto curto. No exemplo, o badge numérico recebe a descrição "$badgeNumber new notifications", também com "999+", e o badge sem número, "New notification"; o ícone âncora mantém a própria descrição ("Favorite").
+- **BadgeDrawable [213]:** a descrição do badge vem do número ou do texto exibido. A página lista métodos para trocá-la (para texto, plural por quantidade, número acima do máximo e badge sem número), sem explicar cada um. Os limites são o `maxCharacterCount` e o `maxNumber`. A página não fala da descrição do elemento âncora.
+- **2.5.3 Label in Name [214]:** nível A. Quando o controle tem rótulo de texto visível, o nome acessível contém esse texto, e a boa prática é pô-lo no início do nome. Texto usado como símbolo não conta como rótulo. Sem rótulo de texto visível, o critério não se aplica. A página não fala de contadores nem de badges.
+
+**Leitura da verificação (inferência).**
+
+- **Gaveta de hoje (`src/layouts/AdminLayout.vue`):** o Esc e o botão "Fechar" devolvem o foco ao botão de menu; o clique no fundo e a troca de rota chamam `closeSidebar()` sem devolver o foco, e o link focado some com o `v-show`. Não há `inert`, `aria-modal` nem `role="dialog"`: a gaveta é um `aside` "Menu do painel" com um `nav` "Seções do painel" (`SidebarAdmin.vue`). Para marcar como modal, o resto precisa ficar inerte de fato [199], e o `<dialog>` modal faz isso pelo navegador [200]. Na troca de rota, a APG aceita outro destino quando o fluxo o torna mais lógico [199]; o `main` é um candidato.
+- **Menu do perfil (`navbar/UserProfileBar.vue`):** já tem `aria-haspopup="menu"`, `aria-expanded`, `aria-controls`, `role="menu"` e `menuitem`, setas com volta nas pontas, Home e End, Esc que devolve o foco e Tab que fecha, como pedem [79] e [205]. Achado na verificação: o botão abre só pelo clique (Enter e Espaço); a seta para baixo e a seta para cima no botão, opcionais em [79], não estão no código, nem a busca por letra, opcional em [205].
+- **Navegação da gaveta:** os links não devem virar `menu` nem `menubar` ([203], [204]). O comentário do `SidebarAdmin.vue` diz que o `RouterLink` marca `aria-current` só na rota exata, o que bate com um único item atual [207].
+- **Landmarks:** os dois `nav` do painel ("Seções do painel" e "Ferramentas do painel") já têm nomes distintos e sem a palavra "navegação" ([210], [211]). O `aside` em volta do `nav` cria um complementary, que a APG descreve como apoio ao conteúdo principal [210].
+- **Contador:** o nome "Notificações, N pedidos pendentes", com o número visual em `aria-hidden` (`TheNavbarAdmin.vue`, `navbar/NotificationBar.vue`), segue o exemplo do Compose, que descreve o número e a unidade [212]. Nenhuma fonte do W3C aberta trata disso [214].
+
+### Riscos da etapa 9
+
+- **Rótulo que some:** no rail clássico com `alwaysShowLabel=false` [183] e no modo AUTO do MDC com 4 itens ou mais [170], só o selecionado mostra o rótulo. O painel tem 4 destinos. O `WideNavigationRailItem` mostra sempre [182], e tirar rótulos de texto piorou a usabilidade na pesquisa do Google [26].
+- **Foco perdido ao fechar:** a APG, a H102, a 2.4.3 e a F85 pedem a volta do foco ao gatilho ou, se ele sumiu, a um vizinho ([199], [200], [201], [202]). O exemplo do Compose faz isso [167], mas o `WideNavigationRail.kt` não tem controle de foco [181], nem o drawer do material-web [192]. Inferência: no painel, o clique no fundo e a troca de rota não devolvem o foco.
+- **Fundo que não fica inerte:** o modal exige o resto inerte e o Tab preso ([199], [200]). Sem bloqueio real, o `aria-modal` pode esconder o conteúdo de fora de algumas tecnologias assistivas [199].
+- **`menu` na navegação:** a navegação típica não precisa do padrão menu, e a APG indica o disclosure ([203], [204]). O menu do perfil é um menu button, que a APG cobre, inclusive com itens que são links ([79], [206]), desde que tenha o teclado do menu [205].
+- **Contador só visual:** o exemplo do Compose descreve o número e a unidade [212], e o MDC deriva a descrição do número [213]. A 2.5.3 não trata de contadores [214].
+- **Scrim:** 0,32 no Compose ([166], [181]) e 60% de preto no MDC [161]. A APG só pede o fundo escurecido ou encoberto [199]. Não encontrei regra de contraste para o scrim. Inferência: a borda da folha e o indicador seguem a 1.4.11 [98].
+- **Alvo pequeno:** os controles que abrem a gaveta precisam de 48 dp no MDC [161], e a WCAG pede 24 px CSS [78]. O avatar da barra tem 32 dp de desenho [196]; inferência: o alvo precisa ser maior que o desenho.
+- **Fonte desatualizada:** o guia "Build adaptive navigation" ainda mostra a gaveta permanente nas janelas expandidas [185], enquanto a referência e o MDC recomendam o rail expandido ([161], [170], [186]).
+- **Fontes divergentes na janela compacta:** navigation bar na escolha recomendada [187] e nas demos do rail largo [179]; rail recolhido no exemplo próprio [188]; rail expandido modal com mais de quatro destinos [169].
+- **Rótulo ativo com duas cores:** Secondary no rail [178] e OnSecondaryContainer na gaveta ([161], [164]).
+- **Nada pronto para a web:** o drawer do material-web é experimental e não cuida do foco, e o rail, a bar e a top app bar não existem ([190], [191], [192], [193]).
+- **Dica que não é anunciada:** os exemplos do Compose marcam como bug o texto da dica que os leitores de tela não anunciam ([179], [194]).
+- **Nome que muda junto com o estado:** o Compose troca "Expand rail" por "Collapse rail" e ainda anuncia o estado ([179], [180]). A APG pede que o rótulo de um toggle com `aria-pressed` não mude com o estado [90]. Inferência: na web, com `aria-expanded` [159], um nome que também muda repete a informação.
+- **Datas:** as datas da descontinuação são de commits do doc do MDC ([163], [172]), não de um anúncio do M3.
+
+### Não encontrei (etapa 9)
+
+- Fonte do W3C (APG, WCAG ou tutoriais) que trate a gaveta de navegação ou o "hamburger" como diálogo modal ou como disclosure ([199], [203]).
+- Quantas ações cabem na top app bar pequena antes do menu de estouro [197].
+- Data nas páginas do Compose e nas referências Kotlin; elas só dizem em que versão a API entrou. As datas desta seção são de commits do MDC ([163], [172]).
+- A altura mínima do item no rail expandido em dp: o arquivo só cita o tamanho mínimo de acessibilidade pelo nome [181].
+- Os textos de `Strings.CloseDrawer`, `Strings.NavigationMenu`, `Strings.CloseRail` e `Strings.WideNavigationRailPaneTitle` ([165], [181]).
+- Regra de contraste ou de opacidade mínima para o scrim.
+- Scrim e elevação do rail expandido modal no MDC, que só traz o expandido não modal [170].
+- Camada de estado e cor do foco na gaveta do MDC; cor do indicador de foco no rail ([161], [178]).
+- Medidas do badge dentro do item da gaveta e do rail.
+- Orientação do W3C sobre anunciar o número de um badge ou contador [214].
+- Implementação oficial de rail ou de top app bar para a web [193].
+- Indicação de API experimental nas páginas do `WideNavigationRail` e do `ModalWideNavigationRail`, que só dizem "Added in 1.5.0" ([179], [180]).
+
+### Não abriu (etapa 9)
+
+| URL | Motivo |
+|---|---|
+| https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/TopAppBarSmallTokens.kt | HTTP 404, na pesquisa e na verificação; o arquivo certo é o AppBarSmallTokens.kt [195]. |
+| https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/Badge.md | HTTP 404, na pesquisa e na verificação; o doc certo é o BadgeDrawable.md [213]. |
+| https://www.w3.org/TR/wai-aria-1.2/ | Abriu em parte: página grande, lida em trechos. A pesquisa não leu de 100 000 a 270 000; a verificação leu a partir do 360 000, onde está o `aria-current` [207]. |
+| https://api.github.com/repos/androidx/androidx/contents/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens | Lida só até o caractere 100 000 na pesquisa, para achar os nomes dos arquivos de token; não foi reaberta. |
+| https://github.com/material-components/material-components-android/commit/fca1418bf4.diff | Abriu na pesquisa, mas só renomeia imagens; não foi reaberto. |
+| Strings.kt do Material 3 (textos das strings da gaveta e do rail) | Não foi aberto. |
+| m3.material.io (navigation drawer, navigation rail, top app bar, window size classes) | Só funciona com JavaScript; não foi tentado. |
+
+### Refutadas na verificação (etapa 9)
+
+1. **A10:** "o voltar preditivo só existe na versão `ModalDrawerSheet(drawerState, …)`". [165] dá o mesmo tratamento à `DismissibleDrawerSheet(drawerState, …)`; só as versões sem o `drawerState` não tratam o voltar.
+2. **A53:** "no exemplo de lista, o link atual fica desativado e muda de fundo". Em [209], a mudança de fundo desse exemplo é estilo de hover e de foco; o sinal da posição é o link desativado.
+3. **Síntese (componentes), em parte:** a gaveta "foi marcada como em descontinuação pelo Expressive em 26/06/2025". A data é a do commit que pôs a nota no doc do MDC ([162], [163]); a página não tem data própria, e nenhuma fonte aberta data a decisão do M3.
+4. **Síntese (riscos e recomendação), em parte:** "o [90] e o [159] mantêm o rótulo fixo". O dossiê registra a regra do rótulo fixo só para o toggle com `aria-pressed` [90]; o [159] trata do `aria-expanded` e não fala do rótulo.
+5. **Síntese (recomendação), em parte:** abaixo de 600 px, "uma gaveta modal dispensável ... no formato do rail expandido modal com `hideOnCollapse` (A14, A25)". As duas páginas citadas descrevem o rail largo para tablet e desktop ([169], [180]), e a escolha recomendada e as demos dão a navigation bar na janela compacta ([179], [187]). Fica como inferência e decisão do projeto, com as fontes divergentes em "Riscos da etapa 9".
+
+Ajustes de redação, sem derrubada: A2 (a página não traz medidas da especificação, mas o código tem paddings de 16 dp e 12 dp), A14 (a página do rail não diz que o modal dispensável sai da tela; isso está em [180]), A41 (a search app bar abre a search view "quando selecionada", e a página chama as descrições de opcionais e muito encorajadas), A43 (a H102 descreve o foco limitado ao diálogo e à interface do navegador e o resto inerte e escondido das tecnologias assistivas, sem dizer "inoperável"), A44 (as técnicas suficientes incluem também a G59, a SCR27 e a PDF3), A45 (com o gatilho removido, conta o elemento interativo logo antes ou logo depois dele, e o foco em outro controle lógico não é falha), A56 (a página fala de solicitações pendentes numa navigation bar, não de pedidos), A57 (a página só lista os métodos, e os limites estão na tabela de propriedades) e a síntese sobre a barra superior (ela já fica dentro do `header` e já tem nome distinto).
