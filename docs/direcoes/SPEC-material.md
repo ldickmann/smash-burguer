@@ -289,7 +289,7 @@ A tabela completa é a de `src/direcoes/estilos/material/contraste.js` (34 pares
 | `m3-secondary` | `m3-secondary-container` | 3 | 5,00 | Anel no item atual da pílula |
 | `m3-outline` | `m3-surface` | 3 | 4,28 | Borda com `prefers-contrast: more` |
 
-Pares que entram com as outras telas (medidos agora, ainda fora do `contraste.js`): `m3-outline` sobre `m3-surface-container-highest` (borda de campo, 3,48; desde a etapa 8, o campo não tem fundo, e o contorno mede 4,06 sobre `m3-surface-container-low` e 3,85 sobre `m3-surface-container`, em `PARES_CONTA`), `m3-error` sobre `m3-surface` (texto de erro, 6,16), `m3-on-error-container` sobre `m3-error-container` (7,24), os três estados sobre os próprios containers (5,01 a 5,03) e `m3-inverse-on-surface` sobre `m3-inverse-surface` (11,54).
+Pares que entram com as outras telas (medidos agora, ainda fora do `contraste.js`): `m3-outline` sobre `m3-surface-container-highest` (borda de campo, 3,48; desde a etapa 8, o campo não tem fundo, e o contorno mede 4,06 sobre `m3-surface-container-low`, em `PARES_CARRINHO`, e, desde a etapa 10, 3,65 sobre `m3-surface-container-high` (o diálogo a partir de `md`), em `PARES_COMPONENTES`; o par de 3,85 sobre `m3-surface-container` saiu com o fundo antigo do diálogo), `m3-error` sobre `m3-surface` (texto de erro, 6,16), `m3-on-error-container` sobre `m3-error-container` (7,24), os três estados sobre os próprios containers (5,01 a 5,03) e `m3-inverse-on-surface` sobre `m3-inverse-surface` (11,54).
 
 #### Regras de uso
 
