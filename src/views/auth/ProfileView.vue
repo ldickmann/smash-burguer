@@ -6,7 +6,7 @@
     </header>
 
     <div class="profile-page__layout">
-      <section class="profile-page__card" aria-labelledby="seus-dados">
+      <section class="profile-page__secao" aria-labelledby="seus-dados">
         <h2 id="seus-dados" class="profile-page__section-title">Seus dados</h2>
 
         <form ref="formRef" class="profile-page__form" novalidate @submit.prevent="handleUpdateProfile">
@@ -60,6 +60,7 @@
             :error="cepError"
             :helper="cep.loading.value ? 'Buscando endereço…' : 'Consultamos o CEP no ViaCEP para preencher rua, bairro, cidade e UF.'"
             :loading="cep.loading.value"
+            live
             required
             @blur="touch('CEP')"
           />
@@ -84,7 +85,7 @@
             <FormGroup id="state" v-model="userInfo.address.state" label="UF" readonly />
           </div>
 
-          <BaseButton type="submit" variant="secondary" :loading="saving">
+          <BaseButton type="submit" variant="secondary" block :loading="saving">
             {{ saving ? "Salvando…" : "Salvar alterações" }}
           </BaseButton>
         </form>
@@ -93,28 +94,42 @@
           <p class="profile-delete__text">
             Excluir a conta apaga deste navegador seus dados, o histórico de pedidos e o carrinho.
           </p>
-          <BaseButton variant="ghost" icon-start="trash-can" @click="deleteOpen = true">
+          <BaseButton variant="danger" icon-start="trash-can" @click="deleteOpen = true">
             Excluir conta
           </BaseButton>
         </div>
       </section>
 
-      <section class="profile-page__card" aria-labelledby="seus-pedidos">
+      <section class="profile-page__secao" aria-labelledby="seus-pedidos">
         <h2 id="seus-pedidos" class="profile-page__section-title">Seus pedidos</h2>
 
         <ul v-if="orders.length" class="profile-orders" role="list">
           <li v-for="order in orders" :key="order.id" class="profile-order">
+            <!-- O total na linha do número; data, contagem e status em parágrafos, sem "·" (regra 7.g) -->
             <div class="profile-order__head">
               <p class="profile-order__number">Pedido <span class="tabular">#{{ order.id }}</span></p>
-              <span class="profile-order__status">{{ order.status }}</span>
+              <p class="profile-order__total tabular">{{ formatPrice(order.total) }}</p>
             </div>
-            <p class="profile-order__meta">
-              <time :datetime="order.date" class="tabular">{{ formatDate(order.date) }}</time>
-              · {{ formatItemCount(countItems(order)) }} ·
-              <span class="tabular">{{ formatPrice(order.total) }}</span>
-            </p>
+            <div class="profile-order__meta">
+              <p><time :datetime="order.date" class="tabular">{{ formatDate(order.date) }}</time></p>
+              <p>{{ formatItemCount(countItems(order)) }}</p>
+              <!-- Rótulo de status, e não chip: não é controle (sem foco, camada nem cursor) -->
+              <p class="profile-order__status">{{ order.status }}</p>
+            </div>
             <details class="profile-order__details">
-              <summary class="profile-order__summary">Ver itens</summary>
+              <summary class="profile-order__summary">
+                <font-awesome-icon
+                  :icon="['fas', 'chevron-right']"
+                  class="profile-order__chevron profile-order__chevron--fechado"
+                  aria-hidden="true"
+                />
+                <font-awesome-icon
+                  :icon="['fas', 'chevron-down']"
+                  class="profile-order__chevron profile-order__chevron--aberto"
+                  aria-hidden="true"
+                />
+                Ver itens
+              </summary>
               <OrderSummary :items="order.items" variant="readonly" :show-title="false" />
             </details>
           </li>
@@ -152,7 +167,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toast";
 import { useAuthHandlers } from "@/handlers/authHandlers";
@@ -204,6 +219,24 @@ const { errors, touch, validateAll, firstInvalid } = useFormValidation(userInfo,
 
 const formRef = ref(null);
 const saving = ref(false);
+
+// A reserva do aviso no scroll-padding protege o foco de quem usa o teclado, que vê o anel. Quem toca ou
+// clica não vê o anel, e o foco rolado faria a página pular: a última entrada decide (como no CartView)
+let ultimaPorPonteiro = false;
+const marcarPonteiro = () => {
+  ultimaPorPonteiro = true;
+};
+const marcarTeclado = () => {
+  ultimaPorPonteiro = false;
+};
+onMounted(() => {
+  document.addEventListener("pointerdown", marcarPonteiro, true);
+  document.addEventListener("keydown", marcarTeclado, true);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("pointerdown", marcarPonteiro, true);
+  document.removeEventListener("keydown", marcarTeclado, true);
+});
 const deleteOpen = ref(false);
 const deleting = ref(false);
 
@@ -297,6 +330,12 @@ const handleUpdateProfile = async () => {
     saving.value = true;
     await userStore.updateProfile(userInfo.value);
     toastStore.show({ message: "Dados salvos.", variant: "success" });
+    // Com o aviso na tela, o botão focado pelo teclado rola para fora de baixo dele (a reserva fica no
+    // scroll-padding). O jsdom não tem scrollIntoView
+    if (!ultimaPorPonteiro) {
+      await nextTick();
+      document.activeElement?.scrollIntoView?.({ block: "nearest" });
+    }
   } catch {
     toastStore.show({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
   } finally {

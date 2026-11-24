@@ -1,20 +1,47 @@
-// Perfil (SPEC §5.9): "Seus dados" (5/12) e "Seus pedidos" (7/12) a partir de lg.
+// Perfil (desenho da Conta, §4 e §5.6 a §5.8): "Seus dados" (5/12) e "Seus pedidos" (7/12) a partir de
+// lg, nessa ordem em todas as larguras, em contêineres surface-container-low de canto 28, como as seções
+// do pagamento. O histórico é uma lista segmentada; "Recebido" é rótulo de status, e não chip; "Ver
+// itens" é o details nativo com cara de text button.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 
-.profile-page {
-  padding-block: var(--space-6) var(--space-8);
+// Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do foco
+// soma a altura de um aviso, no pé abaixo de md (o aviso fica acima da toolbar) e no topo de md a lg (o
+// aviso fica no topo à direita e cruza a coluna única). A partir de lg, ele fica sobre "Seus pedidos" e
+// não cruza "Seus dados". A etapa 10 (AppToast) herda ou absorve a regra (desenho da Conta, §4)
+:global(html:has(.profile-page):has(.toast-region .toast)) {
+  @include below(md) {
+    scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
+  }
+
+  @include up(md) {
+    @include below(lg) {
+      scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
+    }
+  }
 }
 
+// O ritmo do carrinho: a página a 20 e 40 px do cabeçalho; o h1 (regra global) a 20 e 32 px do conteúdo
+.profile-page {
+  padding-block: var(--space-5) var(--space-8);
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
+}
+
+// Com zoom, o "Sair" quebra para a linha de baixo, alinhado ao início
 .profile-page__header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   margin-bottom: var(--space-5);
-}
 
-.profile-page__title {
-  font-size: var(--text-page);
+  @include up(md) {
+    margin-bottom: var(--space-6);
+  }
 }
 
 .profile-page__layout {
@@ -27,19 +54,21 @@
   }
 }
 
-.profile-page__card {
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
+// Seções: o h2 pela regra global (headline-s) e o conteúdo a 12 px dele. Borda nos modos de contraste
+.profile-page__secao {
+  @include reserva-de-sombra;
 
-  @include up(lg) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+
+  @include up(sm) {
     padding: var(--space-5);
   }
-}
-
-.profile-page__section-title {
-  margin-bottom: var(--space-4);
 }
 
 .profile-page__form {
@@ -51,10 +80,11 @@
 .profile-page__row {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  align-items: start;
   gap: var(--space-4);
 }
 
-// Excluir conta: no fim de "Seus dados", separado do formulário
+// Excluir conta: no fim de "Seus dados", longe do "Salvar alterações" (o divisor e 56 px entre os dois)
 .profile-delete {
   display: flex;
   flex-direction: column;
@@ -62,12 +92,14 @@
   gap: var(--space-3);
   margin-top: var(--space-6);
   padding-top: var(--space-5);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--m3-outline-variant);
 }
 
 .profile-delete__text {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .profile-delete__actions {
@@ -76,55 +108,120 @@
   gap: var(--space-3);
 }
 
-// Lista de pedidos
+// Histórico: lista segmentada, como a do carrinho
 .profile-orders {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--m3-vao-segmento);
 }
 
+// Item em lowest, com cantos de fora de 20 e de dentro de 4 pela posição (as variáveis do M3ItemLista).
+// Nas cores forçadas, o fundo e o vão de 2 px somem: a borda separa os itens
 .profile-order {
+  --m3-item-canto-cima: var(--m3-forma-xs);
+  --m3-item-canto-baixo: var(--m3-forma-xs);
+
+  @include reserva-de-sombra;
+
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  min-width: 0;
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--m3-item-canto-cima) var(--m3-item-canto-cima) var(--m3-item-canto-baixo)
+    var(--m3-item-canto-baixo);
+  background: var(--m3-surface-container-lowest);
+  color: var(--m3-on-surface);
+
+  &:first-child {
+    --m3-item-canto-cima: var(--m3-forma-l-aumentada);
+  }
+
+  &:last-child {
+    --m3-item-canto-baixo: var(--m3-forma-l-aumentada);
+  }
 }
 
+// Linha 1: o número no início e o total no fim, como o nome e o total do item do carrinho
 .profile-order__head {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
-.profile-order__number {
-  font-weight: 700;
+.profile-order__number,
+.profile-order__total {
+  @include tipo(title-m, 500);
+
+  letter-spacing: var(--m3-title-m-tracking);
 }
 
-// Chip "Recebido"
-.profile-order__status {
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--color-info-soft);
-  color: var(--color-info);
-  font-size: var(--text-xs);
-  font-weight: 700;
-}
-
+// Linha 2: a data e a contagem lado a lado; o status empurrado para o fim, sob o total
 .profile-order__meta {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  @include tipo(body-m);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
+// Rótulo de status: texto num contêiner tonal, sem camada, cursor nem foco (não se parece com controle)
+.profile-order__status {
+  @include reserva-de-sombra;
+  @include tipo(label-l, 500);
+
+  margin-inline-start: auto;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--m3-forma-s);
+  background: var(--m3-info-container);
+  color: var(--m3-info);
+  letter-spacing: var(--m3-label-l-tracking);
+}
+
+// "Ver itens": a forma e a tinta do text button da loja, alinhado ao texto de cima pelo recuo de 12.
+// O anel fica por dentro: com o recuo, o de fora passaria da borda do item
 .profile-order__summary {
-  display: list-item;
-  padding-block: var(--space-3);
-  font-weight: 600;
+  @include camada-de-estado;
+  @include anel-interno;
+  @include tipo(label-l, 500);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  min-height: var(--target-min);
+  margin-inline-start: calc(-1 * var(--space-3));
+  padding-inline: var(--space-3);
+  border-radius: var(--m3-forma-full);
+  color: var(--m3-primary);
+  letter-spacing: var(--m3-label-l-tracking);
+  list-style: none;
   cursor: pointer;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
 }
 
+// A seta troca de ícone (para a direita fechado, para baixo aberto), igual com e sem movimento reduzido
+.profile-order__chevron--aberto {
+  display: none;
+}
+
+.profile-order__details[open] .profile-order__chevron--fechado {
+  display: none;
+}
+
+.profile-order__details[open] .profile-order__chevron--aberto {
+  display: inline-block;
+}
+
+// Aberto: o resumo somente leitura abaixo, só com a tipografia (sem caixa)
 .profile-order__details[open] .profile-order__summary {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
