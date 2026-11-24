@@ -203,6 +203,41 @@ describe('ProfileView', () => {
     expect(useCartStore().items).toEqual([]);
     expect(router.currentRoute.value.path).toBe('/');
   });
+
+  it('a confirmação é um alertdialog com a descrição ligada e o foco inicial no "Cancelar"', async () => {
+    const { wrapper } = await mountProfile();
+    await buttonByText(wrapper, 'Excluir conta').trigger('click');
+    const dialog = wrapper.find('.dialog-stub');
+
+    expect(dialog.attributes('role')).toBe('alertdialog');
+    expect(dialog.attributes('aria-describedby')).toBe('excluir-conta-texto');
+    expect(wrapper.find('#excluir-conta-texto').text()).toContain('Não é possível desfazer.');
+    const cancelar = dialog.findAll('button').find((b) => b.text() === 'Cancelar');
+    expect(cancelar.attributes('autofocus')).toBeDefined();
+  });
+
+  it('a falha da exclusão aparece no banner dentro do diálogo (região de alerta), e nenhum aviso nasce', async () => {
+    const { useToastStore } = await import('../stores/toast');
+    const { wrapper } = await mountProfile();
+    vi.spyOn(useUserStore(), 'deleteAccount').mockRejectedValue(new Error('cota'));
+    await buttonByText(wrapper, 'Excluir conta').trigger('click');
+    const dialog = wrapper.find('.dialog-stub');
+    const regiao = dialog.find('.profile-delete__anuncio');
+    expect(regiao.attributes()).toMatchObject({ role: 'alert', 'aria-atomic': 'true' });
+    expect(regiao.text()).toBe('');
+
+    await dialog.findAll('button').find((b) => b.text() === 'Excluir conta').trigger('click');
+    await vi.advanceTimersByTimeAsync(1000);
+    await flushPromises();
+
+    expect(wrapper.find('.dialog-stub .profile-delete__erro').text()).toBe('Não foi possível excluir a conta. Tente de novo.');
+    expect(useToastStore().toasts).toEqual([]);
+
+    // Fechar e abrir de novo limpa o erro
+    await buttonByText(wrapper.find('.dialog-stub'), 'Cancelar').trigger('click');
+    await buttonByText(wrapper, 'Excluir conta').trigger('click');
+    expect(wrapper.find('.profile-delete__erro').exists()).toBe(false);
+  });
 });
 
 // Desenho da Conta (§5.6 a §5.8 e §9): as seções em contêineres, os campos de endereço somente

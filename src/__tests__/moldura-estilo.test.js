@@ -121,17 +121,19 @@ describe('moldura da loja no M3', () => {
     expect(valor(css.abas, '.category-tabs', 'top', DESDE_LG)).toBe('var(--navbar-h)');
   });
 
-  it('abaixo de md, o toast sobe acima da toolbar, só onde ela existe (snackbar acima do FAB)', () => {
+  it('abaixo de lg, o toast sobe acima da toolbar, só onde ela existe (snackbar acima do FAB)', () => {
     // A parcial passa também pelo <style scoped> do AppToast, como no build: o :global() do Vue
     // torna global o seletor inteiro, e um seletor mal escrito perderia o .toast-region
     const { code, errors } = compileStyle({ source: css.toast, filename: 'AppToast.vue', id: 'data-v-teste', scoped: true });
     expect(errors).toEqual([]);
-    // Na base, o toast fica no pé (o painel não tem toolbar); a partir de md ele vai para o topo
+    // O toast fica no pé em todas as larguras (sem o topo de md da Brasa); a toolbar flutua até lg
     expect(valor(code, '.toast-region[data-v-teste]', 'bottom')).toBe('calc(var(--space-4) + env(safe-area-inset-bottom))');
-    expect(valor(code, 'body:has(.m3-ferramentas) .toast-region', 'bottom', ABAIXO_MD)).toBe(
+    expect(valor(code, 'body:has(.m3-ferramentas) .toast-region', 'bottom', ABAIXO_LG)).toBe(
       'calc(var(--m3-barra-reserva) + env(safe-area-inset-bottom))'
     );
+    expect(valor(code, 'body:has(.m3-ferramentas) .toast-region', 'bottom', ABAIXO_MD)).toBeUndefined();
     expect(valor(code, 'body:has(.m3-ferramentas) .toast-region', 'bottom')).toBeUndefined();
+    expect(valor(code, '.toast-region[data-v-teste]', 'top', DESDE_MD)).toBeUndefined();
     expect(code).not.toMatch(/body:has\(\.m3-ferramentas\)\s*\{/);
   });
 

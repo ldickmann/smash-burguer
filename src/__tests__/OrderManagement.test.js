@@ -183,6 +183,25 @@ describe('OrderManagement no M3 (desenho do admin, §5.5, §5.6 e §4.6)', () =>
     expect(wrapper.find('.orders-list .order-info__total-value').text()).toBe(formatPrice(59.8));
   });
 
+  it('o vazio sem busca fica numa região de status sempre no DOM; com busca, fica fora dela', async () => {
+    const comItens = await mountPage('/admin/orders');
+    const regiaoCheia = comItens.wrapper.find('.order-management > div[role="status"]');
+    expect(regiaoCheia.attributes('aria-atomic')).toBe('true');
+    expect(regiaoCheia.text()).toBe('');
+    comItens.wrapper.unmount();
+
+    // Os pedidos de exemplo estão em "pending" e "preparing": nenhum concluído
+    const { wrapper } = await mountPage('/admin/orders?status=completed');
+    expect(wrapper.find('.order-management > div[role="status"] .empty-state').text()).toContain(
+      'Nenhum pedido com esse status'
+    );
+    wrapper.unmount();
+
+    const busca = await mountPage('/admin/orders?q=zzz');
+    expect(busca.wrapper.find('.order-management > div[role="status"]').text()).toBe('');
+    expect(busca.wrapper.find('.empty-state').text()).toContain('Nenhum pedido encontrado');
+  });
+
   it('a região da busca fica sempre no DOM, com aria-atomic, e o "Limpar busca" fica fora dela', async () => {
     const semBusca = await mountPage();
     const vazia = semBusca.wrapper.find('.admin-page__busca > p.admin-page__search-result');

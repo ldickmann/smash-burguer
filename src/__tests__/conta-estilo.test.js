@@ -33,8 +33,6 @@ const PARCIAIS = {
 const DESDE_SM = '@media (min-width: 480px)';
 const DESDE_MD = '@media (min-width: 768px)';
 const DESDE_LG = '@media (min-width: 1024px)';
-const ABAIXO_MD = '@media (max-width: 767.98px)';
-const DE_MD_A_LG = '@media (min-width: 768px) and (max-width: 1023.98px)';
 const HOVER = '@media (hover: hover) and (pointer: fine)';
 const MOVIMENTO_OK = '@media (prefers-reduced-motion: no-preference)';
 const CORES_FORCADAS = '@media (forced-colors: active)';
@@ -332,19 +330,17 @@ describe('painel, banner e aviso do Login e do Cadastro (§5.2, §5.3)', () => {
 });
 
 describe('Perfil (§4, §5.6 a §5.8)', () => {
-  const comAviso = 'html:has(.profile-page):has(.toast-region .toast)';
-
-  it('foco não coberto pelo aviso: a reserva no pé abaixo de md e no topo de md a lg', () => {
+  it('foco não coberto pelo aviso: a reserva saiu do perfil (o AppToast a absorveu, etapa 10)', () => {
     const code = escopado(css.perfil, 'ProfileView.vue');
-    expect(valor(code, comAviso, 'scroll-padding-bottom', ABAIXO_MD)).toBe(
-      'calc(var(--m3-barra-reserva) + var(--m3-toast-reserva))'
-    );
-    expect(valor(code, comAviso, 'scroll-padding-top', DE_MD_A_LG)).toBe(
-      'calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva))'
-    );
-    // A partir de lg, o aviso fica sobre "Seus pedidos" e não cruza "Seus dados"
-    expect(valor(code, comAviso, 'scroll-padding-top', DESDE_MD)).toBeUndefined();
-    expect(valor(code, comAviso, 'scroll-padding-top', DESDE_LG)).toBeUndefined();
+    expect(code).not.toMatch(/toast-region/);
+    expect(code).not.toMatch(/m3-toast-reserva/);
+  });
+
+  it('o erro da exclusão dentro do diálogo: o banner com o visual do .auth-alert', () => {
+    expect(valor(css.perfil, '.profile-delete__erro', 'background')).toBe('var(--m3-error-container)');
+    expect(valor(css.perfil, '.profile-delete__erro', 'color')).toBe('var(--m3-on-error-container)');
+    expect(valor(css.perfil, '.profile-delete__erro', 'border-radius')).toBe('var(--m3-forma-l)');
+    expect(valor(css.perfil, '.profile-delete__erro-icone', 'color')).toBe('var(--m3-error)');
   });
 
   it('ritmo do carrinho; cabeçalho com o h1 e o "Sair" na mesma linha, que quebra com zoom', () => {
@@ -447,18 +443,15 @@ describe('pares da Conta (§8)', () => {
   const { ler } = lerTokens(readFileSync(`${ESTILOS}base/_tokens.scss`, 'utf8'));
   const duasCasas = (n) => Math.floor(n * 100) / 100;
   const ESPERADOS = [
-    ['m3-outline', 'm3-surface-container', undefined, 3, 3.85],
     ['m3-error', 'm3-surface-container-low', undefined, 4.5, 5.84],
-    ['m3-error', 'm3-surface-container', undefined, 4.5, 5.54],
     ['m3-on-error-container', 'm3-surface-container-low', undefined, 4.5, 8.46],
-    ['m3-on-error-container', 'm3-surface-container', undefined, 4.5, 8.02],
     ['m3-primary', 'm3-camada-primary-pressionada', 'm3-surface', 4.5, 5.33],
     ['m3-secondary', 'm3-camada-primary-pressionada', 'm3-surface', 3, 5.34],
     ['m3-primary', 'm3-camada-primary-pressionada', 'm3-surface-container-lowest', 4.5, 5.57],
     ['m3-secondary', 'm3-camada-primary-pressionada', 'm3-surface-container-lowest', 3, 5.59],
   ];
 
-  it('são 9, no grupo PARES_CONTA, todos em PARES', () => {
+  it('são 6, no grupo PARES_CONTA, todos em PARES (os 3 do campo no diálogo em surface-container saíram na etapa 10)', () => {
     expect(PARES_CONTA).toHaveLength(ESPERADOS.length);
     for (const par of PARES_CONTA) expect(PARES).toContain(par);
   });

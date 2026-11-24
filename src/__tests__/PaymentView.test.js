@@ -159,6 +159,31 @@ describe('PaymentView', () => {
     expect(useCartStore().items).toEqual([]);
     expect(router.currentRoute.value.path).toBe('/cart');
   });
+
+  it('com a tela continuando, o aviso da conferência não expira (duration: 0)', async () => {
+    const { wrapper } = await mountPayment([
+      { ...burger(), unitPrice: -500, additionals: [{ name: 'Bacon', price: 0, quantity: 1 }] },
+    ]);
+
+    await confirm(wrapper);
+    await vi.advanceTimersByTimeAsync(60000);
+    expect(useToastStore().toasts.map((toast) => toast.message)).toEqual([
+      'O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.',
+    ]);
+  });
+
+  it('com o carrinho esvaziado pela conferência, o aviso sobrevive à ida ao /cart e sai em 4 s', async () => {
+    const { wrapper, router } = await mountPayment([{ ...burger(), productId: 99 }]);
+
+    await confirm(wrapper);
+    expect(router.currentRoute.value.path).toBe('/cart');
+    expect(useToastStore().toasts).toHaveLength(1);
+
+    await vi.advanceTimersByTimeAsync(3999);
+    expect(useToastStore().toasts).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(useToastStore().toasts).toHaveLength(0);
+  });
 });
 
 // Pagamento no M3 (docs/direcoes/desenho/carrinho-pagamento.md, §5.6 a §5.8 e §9). As setas do grupo
@@ -235,36 +260,44 @@ describe('PaymentView (Pagamento do Material 3)', () => {
     expect(adicionar.attributes('href')).toBe('/profile');
     expect(adicionar.classes()).toEqual(expect.arrayContaining(['m3-botao--filled', 'btn--sm']));
 
-    // Com a forma marcada, o CTA continua desabilitado pela falta do endereço
+    // Com a forma marcada, o CTA continua indisponível pela falta do endereço (aria-disabled: segue no Tab)
     const cta = ctaOf(wrapper);
-    expect(cta.attributes('disabled')).toBeDefined();
+    expect(cta.attributes('aria-disabled')).toBe('true');
+    expect(cta.attributes('disabled')).toBeUndefined();
     expect(cta.attributes('aria-describedby')).toBe('pagamento-ajuda');
     expect(wrapper.find('#pagamento-ajuda').text()).toBe('Cadastre um endereço para receber o pedido.');
   });
 
-  it('o CTA fica desabilitado até marcar uma forma; marcar habilita e tira a ajuda', async () => {
+  it('o CTA fica com aria-disabled (e não disabled) até marcar uma forma; o clique não envia; marcar habilita e tira a ajuda', async () => {
     const { wrapper } = await mountPayment([burger()], { method: null });
     const cta = ctaOf(wrapper);
     expect(cta.classes()).toEqual(expect.arrayContaining(['payment-page__cta', 'm3-botao--filled', 'btn--lg', 'btn--block']));
-    expect(cta.attributes('disabled')).toBeDefined();
+    expect(cta.attributes('aria-disabled')).toBe('true');
+    expect(cta.attributes('disabled')).toBeUndefined();
     expect(cta.attributes('aria-describedby')).toBe('pagamento-ajuda');
     expect(wrapper.find('#pagamento-ajuda').text()).toBe('Escolha uma forma de pagamento');
 
+    await cta.trigger('click');
+    expect(ctaOf(wrapper).classes()).not.toContain('is-loading');
+    await vi.advanceTimersByTimeAsync(800);
+    expect(useUserStore().orderHistory).toEqual([]);
+
     await wrapper.find('input[type="radio"][value="cash"]').setValue();
-    expect(ctaOf(wrapper).attributes('disabled')).toBeUndefined();
+    expect(ctaOf(wrapper).attributes('aria-disabled')).toBeUndefined();
     expect(ctaOf(wrapper).attributes('aria-describedby')).toBeUndefined();
     expect(wrapper.find('#pagamento-ajuda').exists()).toBe(false);
     expect(ctaOf(wrapper).text()).toBe(`Confirmar pedido · ${formatPrice(2 * 29.49)}`);
   });
 
-  it('"Enviando pedido…" com aria-busy durante os 800 ms', async () => {
+  it('"Enviando pedido…" em is-loading, sem aria-busy, durante os 800 ms', async () => {
     const { wrapper } = await mountPayment([burger()]);
     await ctaOf(wrapper).trigger('click');
 
     expect(ctaOf(wrapper).text()).toBe('Enviando pedido…');
-    expect(ctaOf(wrapper).attributes('aria-busy')).toBe('true');
+    expect(ctaOf(wrapper).classes()).toContain('is-loading');
+    expect(ctaOf(wrapper).attributes('aria-busy')).toBeUndefined();
     await vi.advanceTimersByTimeAsync(799);
-    expect(ctaOf(wrapper).attributes('aria-busy')).toBe('true');
+    expect(ctaOf(wrapper).classes()).toContain('is-loading');
 
     await vi.advanceTimersByTimeAsync(1);
     await flushPromises();

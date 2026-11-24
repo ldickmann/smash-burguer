@@ -130,31 +130,69 @@ describe('BaseButton no M3', () => {
     expect(valor('.btn--lg', 'font-size')).toBe('var(--m3-title-m)');
   });
 
-  it('desabilitado, inerte e "a desenhar" vencem a cascata (§6)', () => {
+  it('desabilitado e inerte vencem a cascata (§6; desenho dos componentes base, §5.8)', () => {
     // Desabilitado: os três fundos das camadas também viram o do desabilitado, senão o ::before
-    // pintaria a cor da variante por cima
-    for (const seletor of ['.btn:disabled', '.btn[aria-disabled=true]']) {
-      expect(fundos(seletor)).toEqual(Array(3).fill('var(--color-surface-4)'));
-      expect(valor(seletor, 'color')).toBe('var(--color-ink-disabled)');
-    }
+    // pintaria a cor da variante por cima; contêiner on-surface a 10% e conteúdo a 38%
+    const desabilitado = '.btn:is(:disabled, [aria-disabled=true])';
+    expect(fundos(desabilitado)).toEqual(Array(3).fill('var(--m3-desabilitado-container)'));
+    expect(valor(desabilitado, 'color')).toBe('var(--m3-desabilitado-conteudo)');
+    const forcado = blocos(css).lista.filter(([c]) => c === '@media (forced-colors: active)').map(([, corpo]) => corpo).join('');
+    expect(valor(desabilitado, 'color', forcado)).toBe('GrayText');
+    expect(valor(desabilitado, 'border-color', forcado)).toBe('GrayText');
     // Inerte (desabilitado ou carregando): o pressionado não troca a forma nem acende a camada
     const inerte = ':is(.m3-botao--filled, .m3-botao--tonal):is(:disabled, [aria-disabled=true], .is-loading):active';
     expect(valor(inerte, 'border-radius')).toBe('var(--m3-botao-forma-repouso)');
     expect(valor(`${inerte}::before`, 'opacity')).toBe('1');
     expect(valor(`${inerte}::after`, 'opacity')).toBe('0');
-    expect(valor('.m3-botao--texto:is(:disabled, [aria-disabled=true], .is-loading)::before', 'opacity')).toBe('0');
-    expect(valor(':where(.btn--legado).btn--primary', 'background-color')).toBe('var(--color-accent)');
+    expect(valor(':is(.m3-botao--texto, .m3-botao--perigo):is(:disabled, [aria-disabled=true], .is-loading)::before', 'opacity')).toBe('0');
+    // Carregando: as cores do repouso, com o hover e o pressionado neutros
+    expect(valor('.m3-botao.is-loading', '--m3-botao-fundo-hover')).toBe('var(--m3-botao-fundo-repouso)');
+    expect(valor('.m3-botao.is-loading', '--m3-botao-fundo-pressionado')).toBe('var(--m3-botao-fundo-repouso)');
 
     // Entre regras de mesma especificidade, a ordem decide
-    expect(posicao('.btn')).toBeLessThan(posicao('.btn--legado'));
-    expect(posicao('.m3-botao--filled')).toBeLessThan(posicao('.btn:disabled'));
-    expect(posicao('.m3-botao.is-retorno')).toBeLessThan(posicao('.btn:disabled'));
-    expect(posicao(':where(.btn--legado).btn--primary')).toBeLessThan(posicao('.btn:disabled'));
+    expect(posicao('.m3-botao--filled')).toBeLessThan(posicao(desabilitado));
+    expect(posicao('.m3-botao.is-retorno')).toBeLessThan(posicao(desabilitado));
+    expect(posicao('.m3-botao--texto.btn--icon-only')).toBeLessThan(posicao(desabilitado));
   });
 
-  it('danger, iconOnly e pressed ficam com a forma de hoje (§4.2, a desenhar)', () => {
-    expect(valor('.btn--legado', 'border-radius')).toBe('var(--radius-sm)');
+  it('o legado da Brasa saiu: sem .btn--legado nem os apelidos de cor (§5.9)', () => {
+    expect(css).not.toMatch(/btn--legado/);
+    expect(css).not.toMatch(/--color-|--radius-|--elev-|--glow-/);
     expect(valor('.btn', 'border-radius')).toBe('var(--m3-forma-full)');
+    expect(css).not.toMatch(/translateY/);
+  });
+
+  it('perigo: text button em error que escurece para on-error-container no hover e no pressionado (§5.5)', () => {
+    expect(valor('.m3-botao--perigo', 'color')).toBe('var(--m3-error)');
+    expect(valor('.m3-botao--perigo', 'padding-inline')).toBe('var(--space-3)');
+    const ativo = '.m3-botao--perigo:active:not(:disabled, [aria-disabled=true], .is-loading)';
+    expect(valor(ativo, 'color')).toBe('var(--m3-on-error-container)');
+    const hover = blocos(css).lista.filter(([c]) => c.includes('hover: hover')).map(([, corpo]) => corpo).join('');
+    expect(valor('.m3-botao--perigo:hover:not(:disabled, [aria-disabled=true], .is-loading)', 'color', hover)).toBe(
+      'var(--m3-on-error-container)'
+    );
+  });
+
+  it('botão de ícone: sm 40 com alvo de 44, md 44 e lg 56; ícone de 20 px (24 no lg); pressionado em forma-s (§5.6)', () => {
+    expect(valor('.btn--icon-only', 'width')).toBe('var(--target-min)');
+    expect(valor('.btn--icon-only', 'padding')).toBe('0');
+    expect(valor('.btn--icon-only .btn__icon', 'font-size')).toBe('1.25rem');
+    expect(valor('.btn--icon-only.btn--sm', 'width')).toBe('2.5rem');
+    expect(valor('.btn--icon-only.btn--sm .btn__face--frente::after', 'inset')).toBe('-2px');
+    expect(valor('.btn--icon-only.btn--lg', 'width')).toBe('3.5rem');
+    expect(valor('.btn--icon-only.btn--lg .btn__icon', 'font-size')).toBe('1.5rem');
+    expect(valor('.btn--icon-only:is(.m3-botao--filled, .m3-botao--tonal)', '--m3-botao-forma-pressionada')).toBe(
+      'var(--m3-forma-s)'
+    );
+    expect(valor('.btn--icon-only:is(.m3-botao--filled, .m3-botao--tonal).btn--lg', '--m3-botao-forma-pressionada')).toBe(
+      'var(--m3-forma-m)'
+    );
+    expect(valor('.m3-botao--texto.btn--icon-only', 'color')).toBe('var(--m3-on-surface-variant)');
+  });
+
+  it('o tonal ganha a borda outline com prefers-contrast: more (§4.6)', () => {
+    const mais = blocos(css).lista.filter(([c]) => c === '@media (prefers-contrast: more)').map(([, corpo]) => corpo).join('');
+    expect(valor('.m3-botao--tonal', 'border', mais)).toBe('1px solid var(--m3-outline)');
   });
 
   it('transform só com movimento liberado', () => {

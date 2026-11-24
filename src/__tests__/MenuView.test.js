@@ -109,6 +109,16 @@ describe('MenuView (Cardápio do Material 3)', () => {
     expect(nomesAdicionar()).toEqual(produtos.desserts.map((p) => p.name));
   });
 
+  it('a região de status em volta do vazio existe sempre: vazia com itens, com o vazio dentro sem itens', async () => {
+    await montarCardapio({ vazias: ['desserts'] });
+    const status = () => regiao().find('div[role="status"]');
+    expect(status().attributes('aria-atomic')).toBe('true');
+    expect(status().text()).toBe('');
+
+    await marcar('desserts');
+    expect(status().find('.empty-state').exists()).toBe(true);
+  });
+
   it('a categoria vazia mostra o EmptyState, ainda dentro da região nomeada', async () => {
     await montarCardapio({ vazias: ['desserts'] });
     await marcar('desserts');

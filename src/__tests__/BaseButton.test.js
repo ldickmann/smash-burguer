@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { describe, it, expect, vi } from 'vitest';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import BaseButton from '../components/ui/BaseButton.vue';
@@ -38,7 +38,7 @@ describe('BaseButton', () => {
     expect(wrapper.find('button').attributes('type')).toBe('submit');
   });
 
-  it('em loading marca aria-busy, mostra o spinner e bloqueia o clique', async () => {
+  it('em loading mostra o spinner, bloqueia o clique, trava a largura e não põe aria-busy', async () => {
     const onClick = vi.fn();
     const wrapper = mountButton({
       props: { loading: true },
@@ -47,10 +47,20 @@ describe('BaseButton', () => {
     });
     const button = wrapper.find('button');
 
-    expect(button.attributes('aria-busy')).toBe('true');
+    expect(button.attributes('aria-busy')).toBeUndefined();
+    expect(button.classes()).toContain('is-loading');
     expect(wrapper.find('.btn__spinner').exists()).toBe(true);
     await button.trigger('click');
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('ao entrar em loading, trava a largura de repouso', async () => {
+    const wrapper = mountButton({ slots: { default: 'Entrar' } });
+    const button = wrapper.find('button');
+    Object.defineProperty(button.element, 'offsetWidth', { configurable: true, value: 120 });
+
+    await wrapper.setProps({ loading: true });
+    expect(button.attributes('style')).toContain('min-width: 120px');
   });
 
   it('desabilitado usa o atributo disabled de verdade e não chama o handler', async () => {
@@ -68,16 +78,6 @@ describe('BaseButton', () => {
     const wrapper = mountButton({ attrs: { onClick }, slots: { default: 'Ok' } });
     await wrapper.find('button').trigger('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('pressed vira aria-pressed; sem a prop, o atributo não aparece', () => {
-    const pressed = mountButton({ props: { pressed: true }, slots: { default: 'Bebidas' } });
-    const notPressed = mountButton({ props: { pressed: false }, slots: { default: 'Bebidas' } });
-    const plain = mountButton({ slots: { default: 'Bebidas' } });
-
-    expect(pressed.find('button').attributes('aria-pressed')).toBe('true');
-    expect(notPressed.find('button').attributes('aria-pressed')).toBe('false');
-    expect(plain.find('button').attributes('aria-pressed')).toBeUndefined();
   });
 
   it('iconOnly usa o label como aria-label e não mostra texto', () => {
@@ -133,20 +133,96 @@ describe('BaseButton', () => {
     expect(button.find('.btn__label').text()).toBe('Adicionar');
   });
 
-  it('variantes geram as classes do mapa M3; danger, iconOnly e pressed ficam com a forma de hoje', () => {
+  it('variantes geram as classes do mapa M3, sem o legado da Brasa', () => {
     const classesDe = (props) => mountButton({ props, slots: { default: 'Ok' } }).find('button').classes();
 
     expect(classesDe({ variant: 'primary' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--filled']));
     expect(classesDe({ variant: 'secondary' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--tonal']));
     expect(classesDe({ variant: 'ghost' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--texto']));
+    expect(classesDe({ variant: 'danger' })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--perigo']));
     // O loading só troca o conteúdo pelo spinner: o botão continua no mapa
     expect(classesDe({ loading: true })).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--filled']));
 
-    const aDesenhar = [{ variant: 'danger' }, { iconOnly: true, label: 'Fechar', iconStart: 'xmark' }, { pressed: false }];
-    for (const props of aDesenhar) {
-      const classes = classesDe(props);
-      expect(classes).toContain('btn--legado');
-      expect(classes.filter((classe) => classe.startsWith('m3-botao'))).toEqual([]);
+    for (const props of [{ variant: 'danger' }, { iconOnly: true, label: 'Fechar', iconStart: 'xmark' }]) {
+      expect(classesDe(props)).not.toContain('btn--legado');
     }
+  });
+
+  it('iconOnly: m3-botao, a forma da variant e btn--icon-only (ghost padrão, secondary tonal, primary filled)', () => {
+    const classesDe = (variant) =>
+      mountButton({ props: { variant, iconOnly: true, label: 'Fechar', iconStart: 'xmark' } }).find('button').classes();
+
+    expect(classesDe('ghost')).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--texto', 'btn--icon-only']));
+    expect(classesDe('secondary')).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--tonal', 'btn--icon-only']));
+    expect(classesDe('primary')).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--filled', 'btn--icon-only']));
+    expect(classesDe('danger')).toEqual(expect.arrayContaining(['m3-botao', 'm3-botao--perigo', 'btn--icon-only']));
+  });
+
+  it('a prop pressed saiu: nenhum aria-pressed sai do botão', () => {
+    expect(BaseButton.props.pressed).toBeUndefined();
+    const wrapper = mountButton({ slots: { default: 'Bebidas' } });
+    expect(wrapper.find('button').attributes('aria-pressed')).toBeUndefined();
+  });
+
+  it('aria-disabled="true" repassado bloqueia o handler, sem pôr disabled (o botão continua focável)', async () => {
+    const onClick = vi.fn();
+    const wrapper = mountButton({ attrs: { onClick, 'aria-disabled': 'true' }, slots: { default: 'Confirmar' } });
+    const button = wrapper.find('button');
+
+    expect(button.attributes('aria-disabled')).toBe('true');
+    expect(button.attributes('disabled')).toBeUndefined();
+    await button.trigger('click');
+    expect(onClick).not.toHaveBeenCalled();
+
+    const livre = mountButton({ attrs: { onClick }, slots: { default: 'Confirmar' } });
+    await livre.find('button').trigger('click');
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('BaseButton: anúncio do rótulo de carregamento', () => {
+  const Rotulo = {
+    components: { BaseButton },
+    props: { carregando: Boolean },
+    template: '<BaseButton :loading="carregando">{{ carregando ? "Entrando…" : "Entrar" }}</BaseButton>',
+  };
+  const Fixo = {
+    components: { BaseButton },
+    props: { carregando: Boolean },
+    template: '<BaseButton :loading="carregando">Salvar</BaseButton>',
+  };
+
+  it('quando o rótulo muda, o texto novo vai ao anunciador (o do App.vue fora de diálogo)', async () => {
+    const { useAnnouncer } = await import('../composables/useAnnouncer');
+    const { message } = useAnnouncer();
+    message.value = '';
+    const wrapper = mount(Rotulo, { global: { plugins: [router], stubs: { 'font-awesome-icon': true } } });
+
+    await wrapper.setProps({ carregando: true });
+    await flushPromises();
+    expect(message.value).toBe('Entrando…');
+  });
+
+  it('quando o rótulo não muda, nada é anunciado', async () => {
+    const { useAnnouncer } = await import('../composables/useAnnouncer');
+    const { message } = useAnnouncer();
+    message.value = '';
+    const wrapper = mount(Fixo, { global: { plugins: [router], stubs: { 'font-awesome-icon': true } } });
+
+    await wrapper.setProps({ carregando: true });
+    await flushPromises();
+    expect(message.value).toBe('');
+  });
+
+  it('dentro de um diálogo, vai ao anunciador fornecido por ele', async () => {
+    const { CHAVE_ANUNCIADOR } = await import('../composables/useAnnouncer');
+    const anunciar = vi.fn();
+    const wrapper = mount(Rotulo, {
+      global: { plugins: [router], stubs: { 'font-awesome-icon': true }, provide: { [CHAVE_ANUNCIADOR]: anunciar } },
+    });
+
+    await wrapper.setProps({ carregando: true });
+    await flushPromises();
+    expect(anunciar).toHaveBeenCalledWith('Entrando…');
   });
 });

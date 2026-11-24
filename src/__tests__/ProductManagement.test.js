@@ -181,4 +181,31 @@ describe('ProductManagement', () => {
     expect(vazio.props('title')).toBe('Nenhum produto encontrado');
     expect(wrapper.find('.products-list').exists()).toBe(false);
   });
+
+  it('o vazio da categoria fica numa região de status sempre no DOM; o da busca fica fora dela', async () => {
+    const { wrapper, store } = await mountPage();
+    const regiao = () => wrapper.find('.product-management > div[role="status"]');
+    expect(regiao().attributes('aria-atomic')).toBe('true');
+    expect(regiao().text()).toBe('');
+
+    for (const { id } of [...store.desserts]) store.removeProduct('desserts', id);
+    await selectCategory(wrapper, 'desserts');
+    expect(regiao().find('.empty-state').text()).toContain('Nada nesta categoria por enquanto');
+    wrapper.unmount();
+
+    const busca = await mountPage('/admin/products?q=zzz');
+    const regiaoBusca = busca.wrapper.find('.product-management > div[role="status"]');
+    expect(regiaoBusca.text()).toBe('');
+    expect(busca.wrapper.find('.empty-state').text()).toContain('Nenhum produto encontrado');
+  });
+
+  it('"Excluir produto?" é um alertdialog com a descrição ligada e o foco inicial no "Cancelar"', async () => {
+    const { wrapper } = await mountPage();
+    await buttonsByText(wrapper, 'Excluir')[0].trigger('click');
+    const dialog = wrapper.find('.dialog-stub');
+    expect(dialog.attributes('role')).toBe('alertdialog');
+    expect(dialog.attributes('aria-describedby')).toBe('excluir-produto-texto');
+    expect(wrapper.find('#excluir-produto-texto').text()).toContain('sai do cardápio salvo neste navegador');
+    expect(buttonsByText(wrapper, 'Cancelar')[0].attributes('autofocus')).toBeDefined();
+  });
 });

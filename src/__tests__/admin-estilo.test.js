@@ -195,18 +195,36 @@ describe('moldura: layout, coluna e gaveta (§4, §5.1)', () => {
     expect(valor(css.layout, '.admin-overlay', 'background')).toBe('var(--m3-scrim)');
   });
 
-  it('o aviso vai ao pé no painel, e a reserva soma ao scroll-padding enquanto há aviso', () => {
+  it('o aviso fica no pé (regra do AppToast); a partir de lg começa depois da coluna, e o main reserva 1 a 3 avisos', () => {
     const code = escopado(css.layout, 'AdminLayout.vue');
-    expect(valor(code, 'html:has(.admin-layout) .toast-region', 'top')).toBe('auto');
-    expect(valor(code, 'html:has(.admin-layout) .toast-region', 'bottom')).toBe('calc(var(--space-4) + env(safe-area-inset-bottom))');
-    expect(valor(code, 'html:has(.admin-layout):has(.toast-region .toast)', 'scroll-padding-bottom')).toBe(
-      'calc(var(--m3-toast-reserva) + var(--space-4))'
+    // A posição e o scroll-padding saíram para o AppToast (desenho dos componentes base, §4.5)
+    expect(valor(code, 'html:has(.admin-layout) .toast-region', 'top')).toBeUndefined();
+    expect(valor(code, 'html:has(.admin-layout) .toast-region', 'bottom')).toBeUndefined();
+    expect(code).not.toMatch(/scroll-padding-bottom/);
+    expect(valor(code, 'html:has(.admin-layout) .toast-region', 'inset-inline-start', DESDE_LG)).toBe(
+      'calc(var(--m3-navegacao-largura) + var(--gutter))'
     );
     expect(valor(code, 'html:has(.admin-layout)', '--m3-barra-reserva')).toBe('0rem');
-    // O último botão da página precisa de onde subir: a reserva também no pé do main
-    expect(valor(code, 'html:has(.admin-layout):has(.toast-region .toast) .admin-main', 'padding-bottom')).toBe(
-      'calc(var(--m3-toast-reserva) + var(--space-4))'
-    );
+    // O último botão da página precisa de onde subir: uma reserva por aviso no pé do main
+    const main = (condicao) => `html:has(.admin-layout)${condicao} .admin-main`;
+    for (const [n, condicoes] of [
+      [1, [':has(.toast-region .toast)']],
+      [2, [':has(.toast-region .toast + .toast)', ':has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast)']],
+      [
+        3,
+        [
+          ':has(.toast-region .toast + .toast + .toast)',
+          ':has(.toast-region__list--status .toast + .toast):has(.toast-region__list--alert .toast)',
+          ':has(.toast-region__list--status .toast):has(.toast-region__list--alert .toast + .toast)',
+        ],
+      ],
+    ]) {
+      for (const condicao of condicoes) {
+        expect(valor(code, main(condicao), 'padding-bottom'), `${condicao}`).toBe(
+          `calc(var(--space-4) + ${n} * var(--m3-toast-reserva))`
+        );
+      }
+    }
   });
 
   it('a coluna em surface (sticky a partir de lg); a gaveta em low, cantos de 16 por dentro e elevação 1', () => {

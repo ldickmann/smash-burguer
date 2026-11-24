@@ -77,7 +77,8 @@ describe('ModalAdditional (Personalizar no M3)', () => {
     expect(foto.find('img').attributes('alt')).toBe('Copo de Refrigerante');
     expect(wrapper.find('#quantidade-titulo').text()).toBe('Quantidade');
     expect(wrapper.find('.stepper__value').text()).toBe('1');
-    expect(wrapper.find('button[aria-label="Diminuir Copo de Refrigerante"]').attributes('disabled')).toBeDefined();
+    // No mínimo, aria-disabled (o botão continua focável), e não disabled
+    expect(wrapper.find('button[aria-label="Diminuir Copo de Refrigerante"]').attributes('aria-disabled')).toBe('true');
     expect(wrapper.find('.ingredients-list').exists()).toBe(false);
     expect(wrapper.find('.additionals-list').exists()).toBe(false);
   });
