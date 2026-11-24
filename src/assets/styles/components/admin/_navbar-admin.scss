@@ -1,4 +1,6 @@
-// Header do admin (SPEC §5.11).
+// Cabeçalho do painel (desenho do admin, §4.4 e §5.1): a faixa de 64 px em surface, sem borda. À
+// esquerda, o "Alternar menu" (só abaixo de lg) e a busca; à direita, os atalhos e o avatar, com 4 px
+// entre os alvos de 44. Os botões de ícone ficam com o BaseButton iconOnly de hoje até a etapa 10.
 @use "../../base/breakpoints" as *;
 
 .navbar-admin {
@@ -7,7 +9,12 @@
   justify-content: space-between;
   gap: var(--space-2);
   height: 100%;
+  // O ☰ a 8 px da borda; a partir de lg, a busca alinha com o h1 do main
   padding-inline: var(--space-2) var(--gutter);
+
+  @include up(lg) {
+    padding-inline: var(--gutter);
+  }
 }
 
 .navbar-admin__left {

@@ -10,43 +10,48 @@
       :aria-label="`Menu de ${userName}`"
       @click="toggleMenu"
     >
-      <span aria-hidden="true">{{ userInitials }}</span>
+      <!-- O alvo é o botão de 44 px; o círculo de 32 px é o desenho do avatar -->
+      <span class="navbar-profile__circulo" aria-hidden="true">{{ userInitials }}</span>
     </button>
 
-    <div v-show="showMenu" class="navbar-profile__menu">
-      <p class="navbar-profile__name">{{ userName }}</p>
-      <div
-        id="menu-perfil-admin"
-        ref="menuRef"
-        class="navbar-profile__items"
-        role="menu"
-        :aria-label="userName"
-        @keydown="handleMenuKeydown"
-      >
-        <button
-          v-for="item in menuItems"
-          :key="item.id"
-          type="button"
-          class="navbar-profile__item"
-          role="menuitem"
-          tabindex="-1"
-          @click="handleMenuSelect(item)"
+    <!-- Só opacidade, igual com e sem movimento reduzido -->
+    <Transition name="navbar-profile-menu">
+      <div v-show="showMenu" class="navbar-profile__menu">
+        <p class="navbar-profile__name">{{ userName }}</p>
+        <div
+          id="menu-perfil-admin"
+          ref="menuRef"
+          class="navbar-profile__items"
+          role="menu"
+          :aria-label="userName"
+          @keydown="handleMenuKeydown"
         >
-          <font-awesome-icon :icon="item.icon" aria-hidden="true" />
-          <span>{{ item.label }}</span>
-        </button>
-        <button
-          type="button"
-          class="navbar-profile__item"
-          role="menuitem"
-          tabindex="-1"
-          @click="handleLogout"
-        >
-          <font-awesome-icon :icon="['fas', 'sign-out-alt']" aria-hidden="true" />
-          <span>Sair</span>
-        </button>
+          <button
+            v-for="item in menuItems"
+            :key="item.id"
+            type="button"
+            class="navbar-profile__item"
+            role="menuitem"
+            tabindex="-1"
+            @click="handleMenuSelect(item)"
+          >
+            <font-awesome-icon :icon="item.icon" class="navbar-profile__icone" aria-hidden="true" />
+            <span>{{ item.label }}</span>
+          </button>
+          <!-- A linha antes do "Sair" é o ::after desta classe: nenhum filho além dos menuitem -->
+          <button
+            type="button"
+            class="navbar-profile__item navbar-profile__sair"
+            role="menuitem"
+            tabindex="-1"
+            @click="handleLogout"
+          >
+            <font-awesome-icon :icon="['fas', 'sign-out-alt']" class="navbar-profile__icone" aria-hidden="true" />
+            <span>Sair</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 

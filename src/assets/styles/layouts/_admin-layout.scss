@@ -1,52 +1,97 @@
-// AdminLayout (SPEC §5.11): mesmos tokens da loja, densidade maior.
+// AdminLayout (desenho do admin, §3, §4.6 e §5.1): uma superfície só na moldura. Abaixo de lg, o
+// cabeçalho grudado e a gaveta modal sobre o scrim; a partir de lg, a grade com a coluna fixa à
+// esquerda, na altura toda, e o cabeçalho e o main à direita. A ordem do DOM não muda.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
 .admin-layout {
   min-height: 100dvh;
-  background: var(--color-surface-sunken);
+  background: var(--m3-surface);
+  color: var(--m3-on-surface);
+
+  @include up(lg) {
+    display: grid;
+    grid-template-columns: var(--m3-navegacao-largura) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
 }
 
+// Grudado em todas as larguras: a busca, os atalhos, o avatar e o "Alternar menu" moram nele. O
+// scroll-padding-top global (_reset.scss) já desconta os 64 px
 .admin-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  right: 0;
-  left: 0;
   z-index: var(--z-navbar);
   height: var(--navbar-h);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface-1);
+  background: var(--m3-surface);
+
+  @include up(lg) {
+    grid-column: 2;
+    grid-row: 1;
+  }
 }
 
+// A coluna ocupa as duas linhas da grade (o posicionamento sticky fica na parcial da sidebar)
+@include up(lg) {
+  .admin-sidebar {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+}
+
+// Só escurece a página, que está inert: nada é texto sobre ele
 .admin-overlay {
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay);
-  background: var(--color-overlay);
-  animation: admin-fade var(--dur-fast) var(--ease-out);
+  background: var(--m3-scrim);
+  animation: admin-fade var(--dur-fast) var(--m3-ease-emphasized-decelerate);
 
   @include motion-ok {
     animation-duration: var(--dur-base);
   }
 }
 
+// No fluxo, sem o padding-top do cabeçalho fixo de antes. Texto base em body-m (a densidade do painel)
 .admin-main {
+  @include tipo(body-m);
+
   min-width: 0;
-  padding: calc(var(--navbar-h) + var(--space-5)) var(--gutter) var(--space-7);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  padding: var(--space-5) var(--gutter) var(--space-8);
+  letter-spacing: var(--m3-body-m-tracking);
+
+  @include up(lg) {
+    grid-column: 2;
+    grid-row: 2;
+  }
 }
 
-// A partir de lg: sidebar fixa à esquerda e conteúdo com margin-left
-@include up(lg) {
-  .admin-layout.is-sidebar-open {
-    .admin-header {
-      left: 240px;
-    }
+// Sem toolbar flutuante no painel: a reserva do pé da loja (_reset.scss, abaixo de lg) sai
+:global(html:has(.admin-layout)) {
+  --m3-barra-reserva: 0rem;
+}
 
-    .admin-main {
-      margin-left: 240px;
-    }
-  }
+// O aviso (toast) no pé, em todas as larguras do painel (§4.6): no topo, ele cobriria as ações das
+// páginas, como o "Novo produto" focado em 1024. Vence a regra com escopo do AppToast a partir de md
+// (0,2,0) pela especificidade 0,2,1, sem mexer no right e na width dela. A etapa 10 herda ou absorve
+// esta regra. O seletor inteiro fica no :global(), que no Vue torna global a regra toda
+:global(html:has(.admin-layout) .toast-region) {
+  top: auto;
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+}
+
+// Enquanto há aviso, a rolagem do foco para acima dele: um aviso de até 3 linhas e o vão do pé
+// (2.4.11, técnica C43; a regra do Carrinho, etapa 7)
+:global(html:has(.admin-layout):has(.toast-region .toast)) {
+  scroll-padding-bottom: calc(var(--m3-toast-reserva) + var(--space-4));
+}
+
+// A mesma reserva no pé do main enquanto há aviso: sem ela, o último botão da página não tem para onde
+// subir (a página acaba antes), e o aviso o cobre (medido no keyboard.mjs, "Atualizar status" em 390).
+// O espaço entra embaixo, e nada acima dele se move
+:global(html:has(.admin-layout):has(.toast-region .toast) .admin-main) {
+  padding-bottom: calc(var(--m3-toast-reserva) + var(--space-4));
 }
 
 @keyframes admin-fade {

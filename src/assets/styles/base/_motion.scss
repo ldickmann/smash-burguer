@@ -42,4 +42,9 @@
   .payment-option__check {
     transform: none;
   }
+
+  // A gaveta do painel: o @keyframes com translateX já só roda em motion-ok (desenho do admin, §5.1)
+  .admin-sidebar {
+    transform: none;
+  }
 }
