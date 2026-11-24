@@ -30,27 +30,30 @@
         required
         @blur="touch('name')"
       />
-      <FormGroup
-        id="price"
-        v-model="localProduct.price"
-        label="Preço"
-        inputmode="decimal"
-        placeholder="Ex.: 25,90"
-        :maxlength="7"
-        :error="errors.price"
-        required
-        @blur="touch('price')"
-      />
-      <FormGroup
-        id="quantity"
-        v-model="localProduct.quantity"
-        label="Quantidade"
-        type="number"
-        inputmode="numeric"
-        placeholder="Opcional"
-        :error="errors.quantity"
-        @blur="touch('quantity')"
-      />
+      <!-- Preço e Quantidade lado a lado a partir de sm: curtos e numéricos. A ordem do Tab não muda -->
+      <div class="modal-product__par">
+        <FormGroup
+          id="price"
+          v-model="localProduct.price"
+          label="Preço"
+          inputmode="decimal"
+          placeholder="Ex.: 25,90"
+          :maxlength="7"
+          :error="errors.price"
+          required
+          @blur="touch('price')"
+        />
+        <FormGroup
+          id="quantity"
+          v-model="localProduct.quantity"
+          label="Quantidade"
+          type="number"
+          inputmode="numeric"
+          placeholder="Opcional"
+          :error="errors.quantity"
+          @blur="touch('quantity')"
+        />
+      </div>
       <FormGroup
         id="description"
         v-model="localProduct.description"
@@ -61,10 +64,12 @@
         @blur="touch('description')"
       />
 
-      <!-- Seletor de arquivo com a cara de um botão secundário -->
+      <!-- Seletor de arquivo alinhado ao FormGroup: o rótulo acima, a caixa com o contorno do campo e o
+           botão tonal dentro. O nome do campo é o texto do label do botão: o rótulo não precisa de id.
+           O erro toma o lugar da ajuda, no DOM e no aria-describedby -->
       <div class="file-picker" :class="{ 'has-error': imageError }">
         <span class="file-picker__label">Imagem</span>
-        <div class="file-picker__row">
+        <div class="file-picker__campo">
           <label for="image" class="file-picker__button">
             <input
               id="image"
@@ -80,11 +85,13 @@
           </label>
           <span class="file-picker__name">{{ fileName || imageStatus }}</span>
         </div>
-        <p id="image-ajuda" class="file-picker__help">{{ IMAGE_HELP }}</p>
         <p v-if="imageError" id="image-erro" class="file-picker__error">
-          <font-awesome-icon :icon="['fas', 'circle-exclamation']" aria-hidden="true" />
+          <span class="file-picker__icone" aria-hidden="true">
+            <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+          </span>
           {{ imageError }}
         </p>
+        <p v-else id="image-ajuda" class="file-picker__help">{{ IMAGE_HELP }}</p>
       </div>
     </form>
 
@@ -185,9 +192,8 @@ const imageStatus = computed(() => {
   return localProduct.value.image ? "Imagem atual" : "Nenhuma imagem escolhida";
 });
 
-const imageDescribedBy = computed(() =>
-  imageError.value ? "image-erro image-ajuda" : "image-ajuda"
-);
+// O erro toma o lugar da ajuda: o campo é descrito por um ou por outro
+const imageDescribedBy = computed(() => (imageError.value ? "image-erro" : "image-ajuda"));
 
 const closeModal = () => emit("close");
 

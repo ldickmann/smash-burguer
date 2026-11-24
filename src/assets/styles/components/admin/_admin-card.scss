@@ -1,45 +1,60 @@
-// AdminCard (SPEC §5.11): surface-2, elev-1, radius-md; densidade maior que a loja.
+// AdminCard (desenho do admin, §5.4): filled card do M3 [63] em surface-container-high, canto 12, sem
+// sombra. O high, e não o highest da SPEC-material §5.11: o "Detalhes" (texto, primary) pressionado dá
+// 4,59 sobre o high e 4,38 sobre o highest (medidos). Sem hover, foco nem cursor: só os botões reagem.
+// Nos modos de contraste, a borda da reserva desenha o card.
+@use "@/assets/styles/base/m3" as *;
+
+// height: 100%: nas grades, o li estica até a altura da linha, e o card o preenche para o rodapé
+// (margin-top: auto) alinhar as ações entre os cards. Fora de grade, o pai tem altura automática
 .admin-card {
+  @include reserva-de-sombra;
+  @include tipo(body-m);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  height: 100%;
   padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
-  font-size: var(--text-sm);
+  border-radius: var(--m3-forma-m);
+  background: var(--m3-surface-container-high);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
+// Título longo quebra: o rótulo de status vai para a linha de baixo
 .admin-card__header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
 }
 
 .admin-card__title {
-  color: var(--color-ink);
-  font-size: var(--text-md);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  @include tipo(title-m, 500);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-title-m-tracking);
 }
 
+// KPI: o título é o rótulo do número, discreto
 .admin-card--kpi .admin-card__title {
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  line-height: var(--leading-compact);
+  @include tipo(label-l, 500);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-label-l-tracking);
 }
 
 .admin-card__content {
   flex: 1;
 }
 
+// Sem divisor: no card de pedido, ele dobrava o divisor do Total
 .admin-card__footer {
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
-}
-
-.admin-card.is-loading {
-  opacity: 0.6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  margin-top: auto;
 }

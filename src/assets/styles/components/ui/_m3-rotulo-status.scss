@@ -1,0 +1,31 @@
+// M3RotuloStatus (desenho do admin, §5.5): label-l 500 num contêiner de canto small (chips em small
+// [7]), 28 px de altura. O par de cada tom fica entre 5,00 e 5,03 (medidos). Nos modos de contraste,
+// a borda da reserva desenha a caixa, e o texto fica. A margem é de quem usa (o perfil empurra o
+// rótulo para o fim da linha).
+@use "@/assets/styles/base/m3" as *;
+
+.m3-status {
+  @include reserva-de-sombra;
+  @include tipo(label-l, 500);
+
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--m3-forma-s);
+  letter-spacing: var(--m3-label-l-tracking);
+  white-space: nowrap;
+}
+
+.m3-status--info {
+  background: var(--m3-info-container);
+  color: var(--m3-info);
+}
+
+.m3-status--aviso {
+  background: var(--m3-aviso-container);
+  color: var(--m3-aviso);
+}
+
+.m3-status--sucesso {
+  background: var(--m3-sucesso-container);
+  color: var(--m3-sucesso);
+}

@@ -1,10 +1,26 @@
-// Modal de produto (SPEC §5.11): BaseDialog, "Salvar" primário e "Cancelar" secundário.
-@use "../../base/breakpoints" as *;
+// Modal de produto (desenho do admin, §5.8): uma coluna, com Preço e Quantidade lado a lado a partir de
+// sm; o seletor de imagem alinhado ao FormGroup (rótulo acima, caixa com o contorno do campo, ajuda e
+// erro com o recuo de 16). "Cancelar" tonal e "Salvar" filled, ao fim. O contêiner é do BaseDialog
+// (etapa 10).
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
 
 .modal-product {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+// Os dois são curtos e numéricos: o diálogo perde uma linha. Cada um no alto da sua célula, para o
+// erro de um não descer o campo do outro
+.modal-product__par {
+  display: grid;
+  align-items: start;
+  gap: var(--space-4);
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .modal-product__actions {
@@ -13,76 +29,138 @@
   gap: var(--space-3);
 }
 
-// Seletor de arquivo: <label> com a cara do botão secundário
+// ---------- Seletor de imagem ----------
+
+// Sem gap, como o FormGroup: o rótulo e as mensagens dão o espaço por margem
 .file-picker {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
 }
 
 .file-picker__label {
-  font-size: var(--text-sm);
-  font-weight: 500;
+  @include tipo(label-l, 500);
+
+  margin-block-end: var(--space-2);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-label-l-tracking);
 }
 
-.file-picker__row {
+// A caixa: o contorno do campo (3,85 sobre o diálogo), 56 px. Não é interativa (sem hover): só o botão
+// dentro. Os 6 px de cima e de baixo comportam o anel do botão também quando o nome quebra
+.file-picker__campo {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
+  min-height: 3.5rem;
+  padding-block: calc((3.5rem - var(--target-min)) / 2);
+  padding-inline: var(--space-2) var(--space-4);
+  border: 1px solid var(--m3-outline);
+  border-radius: var(--m3-forma-m);
 }
 
+// O botão: um label (o clique cai no input de arquivo), com a forma e as cores do tonal md do
+// BaseButton, a troca de forma no pressionado e o anel no :has(:focus-visible)
 .file-picker__button {
+  @include troca-de-forma(var(--m3-forma-full), var(--m3-forma-s));
+  @include tipo(label-l, 500);
+
+  --m3-botao-fundo-repouso: var(--m3-secondary-container);
+  --m3-botao-fundo-hover: var(--m3-secondary-container-hover);
+  --m3-botao-fundo-pressionado: var(--m3-secondary-container-pressed);
+  --m3-botao-fundo: var(--m3-botao-fundo-repouso);
+
   display: inline-flex;
   align-items: center;
   min-height: var(--target-min);
   padding-inline: var(--space-5);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  color: var(--color-ink);
-  font-weight: 600;
+  color: var(--m3-on-secondary-container);
+  letter-spacing: var(--m3-label-l-tracking);
+  white-space: nowrap;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   @include hover-capable {
     &:hover {
-      background: var(--color-surface-3);
+      --m3-botao-fundo: var(--m3-botao-fundo-hover);
     }
   }
 
   &:active {
-    background: var(--color-surface-4);
+    --m3-botao-fundo: var(--m3-botao-fundo-pressionado);
   }
 
   &:has(:focus-visible) {
-    outline: var(--focus-width) solid var(--color-focus);
+    outline: var(--focus-width) solid var(--m3-secondary);
     outline-offset: var(--focus-offset);
   }
 }
 
+// O nome do arquivo quebra para baixo do botão, dentro da caixa, quando é longo
 .file-picker__name {
+  @include tipo(body-m);
+
   min-width: 0;
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
   overflow-wrap: anywhere;
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
 }
 
+// Ajuda e erro: 4 px abaixo da caixa, com o texto alinhado ao dos campos (recuo de 16 dos dois lados)
 .file-picker__help,
 .file-picker__error {
+  @include tipo(body-m);
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
+  margin-block-start: var(--space-1);
+  padding-inline: var(--space-4);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .file-picker__help {
-  color: var(--color-ink-muted);
+  color: var(--m3-on-surface-variant);
 }
 
 .file-picker__error {
-  color: var(--color-danger);
+  color: var(--m3-error);
 }
 
-.file-picker.has-error .file-picker__button {
-  border-color: var(--color-danger);
+// O ícone centrado na altura da primeira linha (o erro de falta de espaço quebra em várias)
+.file-picker__icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--m3-body-m-linha);
+}
+
+.file-picker.has-error {
+  .file-picker__label {
+    color: var(--m3-error);
+  }
+
+  .file-picker__campo {
+    border-color: var(--m3-error);
+  }
+}
+
+// Cores forçadas: a caixa com a cor do texto e o botão com a borda de botão, como os campos e o
+// BaseButton; o erro continua no texto da mensagem
+@media (forced-colors: active) {
+  .file-picker__campo {
+    border-color: CanvasText;
+  }
+
+  .file-picker__button {
+    border: 1px solid ButtonText;
+  }
+}
+
+// Mais contraste: o contorno em on-surface-variant, como o FormGroup; o do erro fica
+@media (prefers-contrast: more) {
+  .file-picker:not(.has-error) .file-picker__campo {
+    border-color: var(--m3-on-surface-variant);
+  }
 }

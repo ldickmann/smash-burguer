@@ -114,7 +114,7 @@
               <p><time :datetime="order.date" class="tabular">{{ formatDate(order.date) }}</time></p>
               <p>{{ formatItemCount(countItems(order)) }}</p>
               <!-- Rótulo de status, e não chip: não é controle (sem foco, camada nem cursor) -->
-              <p class="profile-order__status">{{ order.status }}</p>
+              <M3RotuloStatus class="profile-order__status" tom="info">{{ order.status }}</M3RotuloStatus>
             </div>
             <details class="profile-order__details">
               <summary class="profile-order__summary">
@@ -187,6 +187,7 @@ import FormGroup from "@/components/FormGroup.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
+import M3RotuloStatus from "@/components/ui/M3RotuloStatus.vue";
 import OrderSummary from "@/components/OrderSummary.vue";
 
 const userStore = useUserStore();

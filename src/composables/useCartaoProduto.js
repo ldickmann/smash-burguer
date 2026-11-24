@@ -1,12 +1,12 @@
 // Lógica do card de produto do M3 (cópia de src/direcoes/compartilhado/useCartaoProduto.js, a mesma
-// do ProductCard): imagem responsiva, preço formatado, erro de imagem e o estado "adicionado", que
+// do card da Brasa): imagem responsiva, preço formatado, erro de imagem e o estado "adicionado", que
 // dura --dur-base + --dur-hold e reinicia a cada adição (SPEC-material §7.6).
 import { computed, onBeforeUnmount, ref, toValue } from "vue";
 import { formatPrice } from "@/utils/formatters";
 import { responsiveImage } from "@/composables/useResponsiveImage";
 import { readDurationToken } from "@/utils/tokens";
 
-// Mesmo `sizes` do card compacto do carrossel real (ProductCard.vue)
+// Mesmo `sizes` do card compacto do carrossel da Brasa
 export const TAMANHOS_CARD = "(min-width: 1024px) 380px, (min-width: 480px) 45vw, 92vw";
 
 export function useCartaoProduto(produto, { sizes = TAMANHOS_CARD } = {}) {
