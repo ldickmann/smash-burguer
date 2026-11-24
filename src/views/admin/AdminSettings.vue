@@ -19,17 +19,20 @@
       </template>
     </AdminCard>
 
+    <!-- Confirmação destrutiva: alertdialog com a descrição ligada e o foco no "Cancelar" -->
     <BaseDialog
       :open="Boolean(pending)"
       :title="pending ? RESETS[pending].title : ''"
       title-id="restaurar-titulo"
       max-width="480px"
+      role="alertdialog"
+      aria-describedby="restaurar-texto"
       @close="pending = null"
     >
-      <p v-if="pending" class="admin-settings__dialog-text">{{ RESETS[pending].text }}</p>
+      <p v-if="pending" id="restaurar-texto" class="admin-settings__dialog-text">{{ RESETS[pending].text }}</p>
       <template #footer>
         <div class="admin-settings__actions admin-settings__actions--fim">
-          <BaseButton variant="secondary" @click="pending = null">Cancelar</BaseButton>
+          <BaseButton variant="secondary" autofocus @click="pending = null">Cancelar</BaseButton>
           <BaseButton variant="danger" icon-start="rotate-left" @click="confirmReset">Restaurar</BaseButton>
         </div>
       </template>

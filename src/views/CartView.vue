@@ -12,7 +12,7 @@
       text="Escolha um burger no cardápio para começar."
     >
       <template #action>
-        <BaseButton to="/menu">Ver cardápio</BaseButton>
+        <BaseButton to="/menu" size="lg">Ver cardápio</BaseButton>
       </template>
     </EmptyState>
 
@@ -96,7 +96,8 @@ onBeforeUnmount(() => {
 });
 const focar = (elemento) => elemento?.focus({ preventScroll: ultimaPorPonteiro });
 
-// Tira o item na hora e oferece "Desfazer" por 5 s, devolvendo-o à mesma posição
+// Tira o item na hora e oferece "Desfazer", devolvendo-o à mesma posição. O aviso com ação não some
+// sozinho: sai pela ação, pelo "Fechar aviso", pela troca de rota ou 10 s depois de uma nova remoção
 const removeItem = async (index) => {
   const removed = cartStore.removeItem(index);
   if (!removed) return;
@@ -104,7 +105,6 @@ const removeItem = async (index) => {
   toastStore.show({
     message: `${removed.name} removido.`,
     variant: "info",
-    duration: 5000,
     action: {
       label: "Desfazer",
       icon: "rotate-left",

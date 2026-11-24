@@ -143,20 +143,36 @@
       </section>
     </div>
 
+    <!-- Confirmação destrutiva: alertdialog com a descrição ligada, e o foco abre no "Cancelar", a ação
+         menos destrutiva. O erro da exclusão aparece dentro do diálogo, numa região de alerta que existe
+         desde a abertura: com o modal aberto, o aviso ficaria atrás do fundo (desenho dos componentes
+         base, §5.2) -->
     <BaseDialog
       :open="deleteOpen"
       title="Excluir conta?"
       title-id="excluir-conta-titulo"
       max-width="480px"
+      role="alertdialog"
+      aria-describedby="excluir-conta-texto"
       @close="closeDeleteDialog"
     >
-      <p>
+      <p id="excluir-conta-texto">
         Seus dados, o histórico de pedidos e o carrinho serão apagados deste navegador. Não é possível
         desfazer.
       </p>
+      <div class="profile-delete__anuncio" role="alert" aria-atomic="true">
+        <div v-if="erroExclusao" class="profile-delete__erro">
+          <span class="profile-delete__erro-icone" aria-hidden="true">
+            <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+          </span>
+          <p>{{ erroExclusao }}</p>
+        </div>
+      </div>
       <template #footer>
         <div class="profile-delete__actions">
-          <BaseButton variant="secondary" :disabled="deleting" @click="closeDeleteDialog">Cancelar</BaseButton>
+          <BaseButton variant="secondary" :disabled="deleting" autofocus @click="closeDeleteDialog">
+            Cancelar
+          </BaseButton>
           <BaseButton variant="danger" :loading="deleting" @click="confirmDelete">
             {{ deleting ? "Excluindo…" : "Excluir conta" }}
           </BaseButton>
@@ -240,6 +256,11 @@ onBeforeUnmount(() => {
 });
 const deleteOpen = ref(false);
 const deleting = ref(false);
+// Erro da exclusão, mostrado dentro do diálogo; limpo ao abrir, ao fechar e antes de tentar de novo
+const erroExclusao = ref("");
+watch(deleteOpen, () => {
+  erroExclusao.value = "";
+});
 
 // CEP a que pertence o endereço da tela ("" enquanto não há endereço para o CEP atual)
 const addressCep = ref(
@@ -353,12 +374,13 @@ const closeDeleteDialog = () => {
 };
 
 const confirmDelete = async () => {
+  erroExclusao.value = "";
   deleting.value = true;
   const result = await handleDeleteAccount();
   deleting.value = false;
 
   if (result?.error) {
-    toastStore.show({ message: result.error, variant: "error" });
+    erroExclusao.value = result.error;
     return;
   }
   deleteOpen.value = false;

@@ -44,7 +44,7 @@
             class="payment-page__cta"
             size="lg"
             block
-            :disabled="!canSubmit"
+            :aria-disabled="canSubmit ? undefined : 'true'"
             :loading="submitting"
             :aria-describedby="canSubmit ? undefined : 'pagamento-ajuda'"
             @click="submit"
@@ -111,15 +111,20 @@ const submit = async () => {
   // uma linha saiu, a pessoa confere o total novo antes de confirmar
   if (cartStore.syncWithCatalog()) {
     submitting.value = false;
-    toastStore.show({
+    const aviso = {
       message: "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.",
       variant: "info",
-    });
+    };
+    // Carrinho vazio: os 4 s de sempre, que sobrevivem à troca de rota (um aviso sem prazo sairia
+    // nela); o carrinho vazio mostra o estado
     if (!cartStore.items.length) {
+      toastStore.show(aviso);
       router.push("/cart");
       return;
     }
-    // Com o aviso na tela, o scroll-padding da rota soma a altura dele: o elemento focado (o CTA,
+    // A tela continua: sem prazo, porque a instrução de conferir só está no aviso
+    toastStore.show({ ...aviso, duration: 0 });
+    // Com o aviso na tela, o scroll-padding soma a reserva dele (AppToast): o elemento focado (o CTA,
     // pelo teclado) rola para fora de baixo do aviso. O jsdom não tem scrollIntoView
     await nextTick();
     document.activeElement?.scrollIntoView?.({ block: "nearest" });

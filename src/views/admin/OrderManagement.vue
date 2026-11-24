@@ -69,12 +69,23 @@
       </li>
     </ul>
 
+    <!-- Com busca, o vazio fica fora da região: a linha da busca já diz "0 pedidos para …". Sem busca,
+         ele fica numa região que existe sempre, para ser anunciado depois da escolha do status
+         (desenho dos componentes base, §5.3) -->
     <EmptyState
-      v-else
+      v-if="query && !filteredOrders.length"
       icon="shopping-cart"
-      :title="query ? 'Nenhum pedido encontrado' : 'Nenhum pedido com esse status'"
-      :text="query ? 'Confira o texto da busca ou escolha outro status.' : 'Escolha outro status no filtro.'"
+      title="Nenhum pedido encontrado"
+      text="Confira o texto da busca ou escolha outro status."
     />
+    <div role="status" aria-atomic="true">
+      <EmptyState
+        v-if="!query && !filteredOrders.length"
+        icon="shopping-cart"
+        title="Nenhum pedido com esse status"
+        text="Escolha outro status no filtro."
+      />
+    </div>
 
     <BaseDialog
       :open="Boolean(detailsOrder)"

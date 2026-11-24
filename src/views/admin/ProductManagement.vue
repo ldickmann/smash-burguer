@@ -29,10 +29,14 @@
       text="Confira o texto da busca ou escolha outra categoria."
     />
 
-    <!-- Categoria esvaziada pelo painel, sem busca: o aviso de vazio do Cardápio -->
-    <EmptyState v-else-if="!filteredProducts.length" icon="utensils" :title="TEXTOS.vazio" />
+    <!-- Categoria esvaziada pelo painel, sem busca: o aviso de vazio do Cardápio, dentro de uma região
+         que existe sempre, para ser anunciado depois da escolha da categoria. O vazio da busca fica
+         fora: a linha da busca já diz "0 produtos" (desenho dos componentes base, §5.3) -->
+    <div role="status" aria-atomic="true">
+      <EmptyState v-if="!query && !filteredProducts.length" icon="utensils" :title="TEXTOS.vazio" />
+    </div>
 
-    <ul v-else class="products-list" role="list">
+    <ul v-if="filteredProducts.length" class="products-list" role="list">
       <li v-for="product in filteredProducts" :key="`${product.category}-${product.id}`">
         <M3CartaoProduto :produto="product" :nivel-titulo="2">
           <template #acoes>
@@ -71,20 +75,23 @@
       @cancel="showAddModal = false"
     />
 
+    <!-- Confirmação destrutiva: alertdialog com a descrição ligada e o foco no "Cancelar" -->
     <BaseDialog
       :open="Boolean(productToDelete)"
       title="Excluir produto?"
       title-id="excluir-produto-titulo"
       max-width="480px"
+      role="alertdialog"
+      aria-describedby="excluir-produto-texto"
       @close="productToDelete = null"
     >
-      <p class="product-delete__text">
+      <p id="excluir-produto-texto" class="product-delete__text">
         “{{ productToDelete?.name }}” sai do cardápio salvo neste navegador. Para trazê-lo de
         volta, use Configurações › Restaurar cardápio original.
       </p>
       <template #footer>
         <div class="product-delete__actions">
-          <BaseButton variant="secondary" @click="productToDelete = null">Cancelar</BaseButton>
+          <BaseButton variant="secondary" autofocus @click="productToDelete = null">Cancelar</BaseButton>
           <BaseButton variant="danger" icon-start="trash-can" @click="confirmDelete">
             Excluir produto
           </BaseButton>
