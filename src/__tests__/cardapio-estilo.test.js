@@ -272,10 +272,11 @@ describe('pares novos do Cardápio e do modal (§8)', () => {
   const { ler } = lerTokens(tokens);
   const duasCasas = (n) => Math.floor(n * 100) / 100;
   const ESPERADOS = [
-    ['m3-primary', 'm3-surface-container-lowest', undefined, 3, 6.43],
+    // O mínimo subiu para 4,5 na etapa 8: o primary passou a ser texto (Ver itens, rótulo do campo com foco)
+    ['m3-primary', 'm3-surface-container-lowest', undefined, 4.5, 6.43],
     ['m3-primary', 'm3-camada-pressionada', 'm3-surface-container-lowest', 3, 5.26],
     ['m3-on-surface-variant', 'm3-camada-pressionada', 'm3-surface-container', 4.5, 6.55],
-    ['m3-primary', 'm3-surface-container', undefined, 3, 5.52],
+    ['m3-primary', 'm3-surface-container', undefined, 4.5, 5.52],
     ['m3-outline', 'm3-surface-container-lowest', undefined, 3, 4.48],
     ['m3-on-surface', 'm3-camada-pressionada', 'm3-surface-container-lowest', 4.5, 14.0],
     ['m3-on-surface-variant', 'm3-camada-pressionada', 'm3-surface-container-lowest', 4.5, 7.6],
