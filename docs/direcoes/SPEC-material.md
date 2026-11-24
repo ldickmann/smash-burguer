@@ -296,7 +296,7 @@ Pares que entram com as outras telas (medidos agora, ainda fora do `contraste.js
 - **Um filled por região.** O "Ver cardápio" M (56 px) é o maior controle da página (desenho, §1); no feed, cada card tem o seu split.
 - **Secondary é o anel de foco** [30]. Dentro do disco do hero, o anel vira `on-primary` (6,43:1), pela propriedade local `--m3-prensa-foco`.
 - **A cor do círculo separa informação de ação:** `secondary-container` nos itens com link, `tertiary-container` no horário (desenho, §5.4).
-- **Error só para erro, ação destrutiva e o badge do carrinho** (o badge de carrinho é uso típico citado pelo Compose [35]).
+- **Error só para erro, ação destrutiva e os badges do carrinho e do painel** (o badge de carrinho é uso típico citado pelo Compose [35]; os selos de contagem dos atalhos do painel são badges, e não status: desenho do admin, §5.2).
 - **Desabilitado:** `--color-ink-disabled` (`#a2a79e`, on-surface a 38% sobre surface, já composto; isento de contraste). O fundo do botão desabilitado não tem token M3 ainda (§6).
 
 #### Mapa dos tokens atuais (tabela de migração)
@@ -431,7 +431,7 @@ Escala do M3: none 0, extra-small 4, small 8, medium 12, large 16, large-increas
 | Token | Valor | Uso |
 |---|---|---|
 | `--m3-forma-xs` | `4px` | Cantos de dentro das listas segmentadas e do split |
-| `--m3-forma-s` | `8px` | Marca no cabeçalho; tonal pressionado; chips de status (§5.9) |
+| `--m3-forma-s` | `8px` | Marca no cabeçalho; tonal pressionado; rótulos de status (`M3RotuloStatus`, §5.9 e §5.11) |
 | `--m3-forma-m` | `12px` | Card do feed; filled S pressionado; FAB a partir de `lg` |
 | `--m3-forma-l` | `16px` | Folha de ingredientes; FAB abaixo de `lg`; foto do card abaixo de `md`; filled M pressionado |
 | `--m3-forma-l-aumentada` | `20px` | Cantos de fora das listas segmentadas |
@@ -601,7 +601,7 @@ Props copiadas do código. A produção recebe **cópias** dos componentes, das 
 
 #### `M3CartaoLanche` → `src/components/M3CartaoLanche.vue`
 
-- **Substitui:** o `ProductCard.vue` nas variantes `menu` e `compact`. A variante `admin` fica no `ProductCard` até a §5.11 ser desenhada.
+- **Substitui:** o `ProductCard.vue` nas variantes `menu` e `compact`. A variante `admin` virou o `M3CartaoProduto` na etapa 9 (§5.11).
 - **Props:** `produto` (obrigatório), `destaque` (Boolean), `aberto` (Boolean). Emite `alternar` (id do produto e o botão de trás). Usa `useCartaoProduto` (imagem, preço, `imagemFalhou`, `adicionado`, `contexto` e `atributosAdicionar`) e `usePersonalizar`.
 - **Padrão:** filled card, com um conteúdo coerente por card [63]; no feed, o item maior recebe a atenção [64].
 - **Visual:** `surface-container-highest`, `forma-m`, `padding: var(--space-2)`, sem sombra e sem hover. Comum: foto 4:3 em `forma-xl` (`forma-l` abaixo de `md`) [34]; destaque: foto quadrada no cookie, na horizontal a partir de `md`.
@@ -672,10 +672,10 @@ Os dossiês não cobrem todos os componentes do M3. Onde não há fonte, a forma
 | `CartItem.vue` | Item de lista segmentada, como o `M3ItemLista`, com o `QuantityStepper` e o "Remover" | [66], [81] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.2): blocos `surface-container-lowest` de cantos 20/4 numa bandeja `surface-container-low` de padding 8 (cantos concêntricos); `M3Foto` de 64 px na forma da Home (círculo, flor e o cartão de canto 16 nos hambúrgueres); o "Remover" fica com a forma da Brasa até a etapa 10 |
 | `OrderSummary.vue` | Contêiner `surface-container-low` de canto 28, como as listas da Home | [66], [26] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.3): o contêiner fica nas páginas (carrinho, pagamento e confirmação), e o componente muda só a tipografia (linhas em body-l, body-m no compacto; Total em headline-s 500), o divisor só com linhas e o `overflow-wrap: anywhere`. No perfil (etapa 8), aberto pelo "Ver itens", só com a tipografia, sem caixa |
 | `CartBadge.vue` | Badge do FAB da `M3BarraFerramentas`: badge grande do M3 [35], 16 px, cor de erro | [35] | Pronto (vem da Home) |
-| `ProductCard.vue` (`admin`) | Filled card [63] com o slot de ações | [63] | **a desenhar** com o admin |
+| `ProductCard.vue` (`admin`) → `M3CartaoProduto` | Filled card [63] em `surface-container-high`, canto 12, padding 8, com o `M3Foto` 4:3, nome, descrição em 2 linhas, preço e o slot `acoes`; na horizontal abaixo de `sm` | [63], [34] | desenhado e construído na etapa 9 (desenho do admin, §5.7) |
 | `IngredientsList.vue`, `AdditionalsList.vue` | Linhas de checkbox do M3 [113] num bloco branco, com a linha de 48 px como alvo [111], e lista segmentada dos adicionais [66][81] | [66], [81], [111], [113] | Desenhado e construído na etapa 6 (desenho do Cardápio, §5.5.2 e §5.5.3) |
 | `BannerComponent.vue` (`page`) | Recomendação: título e frase sem foto atrás, porque o texto nunca fica sobre a foto na Home [H5] | [H5] | Decidido na etapa 6 (desenho do Cardápio, 6.a): o banner sai do Cardápio, que passa a um cabeçalho de texto; o componente fica sem uso e sai na etapa 11 (§4.4) |
-| Admin (`SidebarAdmin`, `TheNavbarAdmin`, `AdminCard`, `ModalProducts`) | **Não encontrei** navigation drawer nem rail nos dossiês; a navigation bar serve de três a cinco destinos em janelas compactas [61]. `AdminCard` vira filled card [63] | [61], [63] | **a desenhar** |
+| Admin (`SidebarAdmin`, `TheNavbarAdmin`, `AdminCard`, `ModalProducts`) | A coluna fixa de 240 px a partir de `lg` (gaveta standard e rail expandido) e a gaveta modal abaixo, itens de 56 px com o atual em `secondary-container` e rótulo em 700; `AdminCard` como filled card em `surface-container-high`; `M3RotuloStatus` para os status (pesquisa da etapa 9, [160] a [215]) | [61], [63], [164], [174] | desenhado e construído na etapa 9 (`docs/direcoes/desenho/admin.md`) |
 
 ### 4.3 Arquivos alterados
 
@@ -724,7 +724,7 @@ Removidos no fim (§12, etapa 11), depois de não haver mais referências:
 - **Moldura da Brasa:** `src/components/layout/TheNavbar.vue`, `TheFooter.vue`, `TheFooterContactInfo.vue`, `TheFooterSocialMediaLinks.vue` e as folhas `_navbar.scss`, `_footer.scss`, `_footer-contact.scss` e `_footer-social.scss`.
 - **Carrinho na navbar:** `src/components/CartBadge.vue` e `_cart-badge.scss`.
 - **Home da Brasa:** `src/components/CarouselBurguer.vue` e `_carousel.scss`. O `BannerComponent.vue`, o `_banner.scss`, o `BannerComponent.test.js` e o `--gradient-scrim` também saem: o desenho do Cardápio tirou o banner (etapa 6). A imagem `banner-burger-black` fica.
-- **Card da Brasa:** `src/components/ProductCard.vue` e `_product-card.scss`, depois do admin; `src/composables/useTilt.js`.
+- **Card da Brasa:** `src/components/ProductCard.vue` e `_product-card.scss` (sem uso na produção desde a etapa 9; só o `CarouselBurguer.vue`, também sem uso, ainda o importa); `src/composables/useTilt.js`.
 - **Montador:** `src/components/BurgerStack.vue`, só se a decisão (f) o tirar.
 - **Tokens sem uso:** `--color-sheen`, `--glow-hero`, `--glow-accent`, `--underline-active`, `--dur-stagger` e, se o banner sair, `--gradient-scrim`; os apelidos pela decisão (a).
 - **Exploração:** nada do acervo sai. Só `src/direcoes/estilos/material/`, se a decisão (e) for apagá-la.
@@ -819,17 +819,19 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 - **Linha de direitos:** pela §10.2.
 - **Redes sociais:** saem; voltam só com o perfil real da loja [H25][H26].
 
-### 5.11 Admin — a desenhar
+### 5.11 Admin — desenhado na etapa 9
 
 - **Tema:** pela decisão (d), claro, com os mesmos tokens.
-- **Recomendação:**
-  - **header:** a mesma linguagem do cabeçalho da loja (`surface`, marca em title-l), com o botão de alternar menu como botão de ícone;
-  - **sidebar:** itens de 44 px, com o atual em `secondary-container`, como o item atual da pílula; gaveta abaixo de `lg` sobre o `scrim`, com `elevacao-3`. Os dossiês não cobrem navigation drawer nem rail;
-  - **cards e KPIs:** filled card [63] em `surface-container-highest`, canto 12, sem sombra; valores em headline, tabulares;
-  - **status dos pedidos:** chips em `forma-s` [7], com "Pendente" em `aviso`/`aviso-container`, "Em preparo" e "A caminho" em `info`/`info-container` e "Concluído" em `sucesso`/`sucesso-container`;
-  - **diálogos e `ModalProducts`:** pelo `BaseDialog` (§4.2).
-- **Login admin:** o painel da §5.8 sobre a ilustração de giz com o `scrim` (32%); medir o contraste do texto sobre o painel, não sobre a ilustração.
-- **Fica do `SPEC.md`:** o comportamento das telas, a busca, os filtros no endereço, as notificações e o admin de teste só no `yarn dev`.
+- **Desenho:** `docs/direcoes/desenho/admin.md` (24/11/2026), com a pesquisa de navegação do dossiê ([160] a [215]). Em resumo:
+  - **moldura:** a partir de `lg`, a coluna fixa de `--m3-navegacao-largura` (240 px) em `surface`; abaixo, a mesma lista numa gaveta modal (`div` com `role="dialog"`, `aria-modal` e o resto da página `inert`) em `surface-container-low` sobre o `scrim`; o cabeçalho em `surface`, grudado em todas as larguras, com a busca outlined de 48 px, os atalhos com o badge em `error` e o avatar de 32 px num alvo de 44;
+  - **item da navegação:** 56 px, pílula na largura do item; o atual em `secondary-container` com o rótulo em 700 (a pista além da cor, G182 [215]) e `aria-current`; nenhum item atual em Meu perfil e Configurações;
+  - **cards e KPIs:** filled card [63] em `surface-container-high`, canto 12, sem sombra; valores em headline-m, tabulares; o card de produto é o `M3CartaoProduto`;
+  - **status dos pedidos:** o rótulo `M3RotuloStatus` em `forma-s` [7], com "Pendente" em `aviso`/`aviso-container`, "Em preparo" e "A caminho" em `info`/`info-container` e "Concluído" em `sucesso`/`sucesso-container` (o "Recebido" do perfil também);
+  - **avisos no pé** em todas as larguras do painel, com a reserva no `scroll-padding` e no pé do `main`;
+  - **diálogos e `ModalProducts`:** pelo `BaseDialog` (§4.2), cujo contêiner é da etapa 10.
+- **Desvios aceitos da recomendação anterior** (sessão principal da etapa 9): o card em `surface-container-high`, e não `highest` (o "Detalhes" pressionado daria 4,38 no `highest`); a gaveta em `elevacao-1`, e não `elevacao-3` (Level1 [164]); a marca na cabeça da coluna e da gaveta, e não no cabeçalho ([179], [184]); o item de 56 px, e não 44 ([164], [176]); e o `aside` da sidebar, que virou `div` (o landmark é a `nav` "Seções do painel" [210]).
+- **Login admin:** o painel da §5.8 sobre a ilustração de giz com o `scrim` (32%), o banner junto do botão numa região `role="alert"` sempre no DOM e o "Voltar à loja" como text button; o contraste é medido sobre o painel, não sobre a ilustração.
+- **Fica do `SPEC.md`:** o comportamento das telas, a busca, os filtros no endereço, as notificações e o admin de teste só no `yarn dev`. Os rótulos da navegação passaram a ser os nomes do `h1` ("Painel", "Produtos", "Pedidos", "Relatórios"; decisão do usuário, 24/11/2026).
 
 ---
 
@@ -861,7 +863,7 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 | `FormGroup` (etapa 8) | sem fundo; contorno `outline` de 1 px, canto 12, 56 px; rótulo label-l 500 `on-surface` | contorno `on-surface` (com erro, `on-error-container`) | contorno e rótulo `primary` + anel com `outline-offset: 0`; o somente leitura só com o anel | — | — | `outline-variant` e `--color-ink-disabled`; o somente leitura é tracejado, com o texto inteiro | ajuda com spinner (CEP), numa região `role="status"` (`live`) |
 | `PaymentMethodPicker` | `surface-container-lowest`, cantos 20/4; controle vazio de 24 px (2 px `on-surface-variant`) | camada | anel interno no item (`:has(:focus-visible)`) | camada 10% | `secondary-container`, quatro cantos de 20, controle `primary` com check (etapa 7) | — | — |
 | `AppToast` | **a desenhar** (`inverse-surface`) | pausa o tempo | anel no fechar | — | — | — | — |
-| Item da sidebar admin | **a desenhar** | camada | anel interno | camada 10% | `secondary-container` | — | — |
+| Item da sidebar admin | sem fundo; `on-surface-variant`; 56 px, pílula | camada | anel interno | camada 10% | `aria-current`: `secondary-container` / `on-secondary-container`, rótulo em 700 (desenho do admin, §6) | — | — |
 
 Os estados de vazio e erro das telas (carrinho vazio, filtro sem resultado, banner `role="alert"`) seguem a §6 do `SPEC.md`, com os componentes da §4.2.
 
