@@ -13,7 +13,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 - **Perfil:** os dois blocos em contêineres `low` (o padrão das seções do pagamento); o histórico em lista segmentada; "Recebido" vira rótulo de status, e não chip ([60], [141]); sai o "·" da linha do pedido (regra 7.g); "Ver itens" com chevron e cara de text button; "Excluir conta" passa à variante `danger` que já existe (SPEC-M §4.1).
 - **Foco não coberto:** em 390, o aviso "Dados salvos." cobre inteiro o "Salvar alterações" focado pelo teclado. Resposta: a reserva do aviso da etapa 7 e a rolagem do foco depois do aviso, só pelo teclado, como no carrinho. O banner do login e do cadastro rola o grupo de envio (banner e botão) para a vista, porque com Enter num campo o foco fica longe dele.
 - **Ficam para outras etapas:** a 9 resolve a ilustração e o `scrim` do login do admin, a posição do banner lá, a densidade dos filtros e o seletor de arquivo do `ModalProducts`; a 10, o `loading`, o desabilitado e o `danger` do `BaseButton`, o `BaseDialog` (com o erro de exclusão que hoje fica atrás dele), o `EmptyState` e o `AppToast`; a 11, os pares e os apelidos que ficam sem uso.
-- **Em aberto para o usuário:** o botão de mostrar a senha, a instrução da senha que hoje só existe no placeholder, a âncora de "Ver meus pedidos" e dois textos de validação (seção 12).
+- **Decidido pelo usuário (23/11/2026):** entram o botão de mostrar a senha, a instrução da senha também como ajuda do campo, a âncora de "Ver meus pedidos" e o "E-mail" nos dois textos de validação; os cinco desvios ficam confirmados (seções 12 e 13).
 
 ---
 
@@ -87,7 +87,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
   - **O híbrido da SPEC-M §5.8 sai:** o fundo `highest` dá 1,16 contra o painel e 1,10 contra o diálogo (medidos); quem identifica o campo é o contorno.
 - **48 px e canto 8: trocados.** 56 dp é a altura mínima do campo [125], e é o que o padding de 16 do material-web dá com a linha do body-l ([136], [137], [1]). O canto de 12 é o `roundedShape` do Expressive ([125], [8]).
 - **Ícone de erro dentro do campo: saiu (repetido).** A mensagem já tem ícone e texto, que é o que a 3.3.1 pede [142]; um segundo ícone tira cerca de 40 px da área de texto em 390.
-- **Mostrar a senha: saiu (inventado).** É texto e lógica novos, fora do pacote. Vira pergunta ao usuário, com as fontes ([150], [126], [127], [90]).
+- **Mostrar a senha: saiu (inventado).** É texto e lógica novos, fora do pacote. Vira pergunta ao usuário, com as fontes ([150], [126], [127], [90]). Depois, o usuário escolheu incluir (§13), e o desenho entrou na 5.1.
 - **Login em duas colunas com a marca: saiu (repetição e genérico).** Abaixo de `md`, o hero da Home é um contêiner `primary-container` com o título grande, e a confirmação já tem uma faixa nessa cor; "ilustração decorativa no login" é padrão genérico (critérios do revisor). Entrou o painel único.
 - **Borda de 3 px e foco no banner: trocados.** A borda é da Brasa; o aviso do pagamento já é só tonal. Levar o foco ao banner faria o leitor de tela ouvir a mensagem duas vezes, pelo `role="alert"` e pelo foco. O foco fica onde estava, e a 4.1.3 cobre o anúncio sem foco [151]. O banner vai para junto do botão (5.3).
 - **Somente leitura igual ao desabilitado: trocado (pacote e 1.4.11).** O somente leitura recebe foco [119]: o contorno precisa de 3:1 [98]. Entrou o tracejado em `outline` (4,06) com o texto inteiro.
@@ -551,7 +551,14 @@ O rótulo é `label` com `for` igual ao `id`, antes do campo; clicar nele leva o
 **Os tipos (6.a):**
 
 - **Texto, e-mail, tel e número:** o campo acima. O `type`, o `inputmode`, a máscara e o `autocomplete` de hoje ficam: o `autocomplete` é a técnica da 1.3.5 [149], e não bloquear o colar nem o preenchimento automático é o que a 3.3.8 pede [150] (o filtro de teclas da máscara só vale para celular e CEP, e o colar passa pelo `handleInput`).
-- **Senha:** o mesmo campo, `type="password"`, com o `autocomplete` de hoje (`current-password` no login, `new-password` no cadastro). **Sem botão de mostrar a senha nesta etapa:** é texto e lógica novos, fora do pacote. Se o usuário quiser: a 3.3.8 diz que mostrar a senha, como opção, ajuda algumas pessoas e não é exigência [150]; o Compose põe um botão de ícone no fim do campo ([126], [127]); o nome do botão ou muda com o estado e não usa `aria-pressed`, ou fica fixo e o estado vai no `aria-pressed` ([126], [127], [90]). Fica como pergunta (seção 12).
+- **Senha:** o mesmo campo, `type="password"`, com o `autocomplete` de hoje (`current-password` no login, `new-password` no cadastro), e o **botão de mostrar a senha** (decisão do usuário, 23/11/2026; §13). A 3.3.8 trata mostrar a senha como ajuda opcional, não como exigência [150].
+  - **Onde:** dentro do `FormGroup`, em todo `type="password"`: o login, o cadastro e, por ser o mesmo componente, o login do admin. Sem prop nova: o botão só existe no tipo senha, e quem usa o componente não muda nada.
+  - **Forma:** botão de ícone no fim do campo, dentro do contorno, como o ícone final do Compose ([126], [127]). Alvo de 44 × 44 px, a regra de alvo do projeto (o mínimo da 2.5.8 é 24 [78]). O valor ganha padding no fim, para o texto não passar por baixo do botão. Ícone `eye` com a senha escondida e `eye-slash` com ela visível, 20 px, em `on-surface-variant` (8,41 sobre o `low` e 7,97 sobre o `surface-container`, os pares da seta do `select`). Camada de estado no hover e no pressionado (mixin `camada-de-estado`). Foco com o anel de 3 px em `secondary`; o anel do campo não aparece, porque o foco está no botão.
+  - **Semântica:** `<button type="button">` com o nome fixo "Mostrar senha" e `aria-pressed` `false` ou `true`, pelo toggle da APG, em que o nome não muda com o estado [90]; `aria-controls` aponta para o campo. O Compose troca a descrição entre mostrar e esconder [126]; na web, fica o padrão da APG. O texto final passa pela `design:ux-copy` na sessão C.
+  - **Comportamento:** alterna o `type` do campo entre `password` e `text`, sem perder o valor nem o `autocomplete`. O foco fica no botão [90]. O estado é do componente e começa escondido a cada montagem. Enter e Espaço acionam (botão nativo). Nada bloqueia o colar nem o preenchimento automático [150].
+  - **Movimento:** nenhum; o ícone troca na hora.
+  - **Modos de contraste:** em `forced-colors`, o ícone em `ButtonText` e o anel como nos outros controles.
+  - **Risco:** não encontrei fonte sobre o efeito da senha visível, na hora do envio, no gerenciador de senhas do navegador; a sessão C confere no Chromium que o navegador continua oferecendo salvar e preencher (§11).
 - **Data:** o `date` nativo, com o ícone de calendário do navegador no fim (o `::-webkit-calendar-picker-indicator` continua com `cursor: pointer`). Não se troca: abrir o seletor por outro ícone pediria script. A máscara vazia e o ícone são do navegador, no idioma dele (a captura do Chromium em inglês mostra "mm/dd/yyyy"); com o `color-scheme: light` do reset, a sessão C confere o ícone na captura.
 - **`select`:** `appearance: none` e o `chevron-down` do Font Awesome (registrado no plugin), 20 px, em `on-surface-variant` (8,41 no painel, 7,97 no admin; o contorno é o que identifica o campo), a 12 px da borda. A lista de opções continua a nativa. O M3 tem o select filled e outlined com a mesma anatomia e o mesmo erro do campo [140], e o exposed dropdown só leitura usa um ícone final [129]. A seta não gira (o estado aberto da lista nativa não chega à página).
 - **`textarea` (a observação do modal):** o mesmo contorno, padding de 16 em todos os lados, `rows` de hoje (3: 72 px de texto, 104 de caixa) e `resize: vertical` de hoje. Passando de 3 linhas, o texto rola dentro, como o `MultiLine` do Compose depois do máximo [118]. O `field-sizing: content`, que faz o textarea crescer no material-web, fica de fora: só vale em alguns navegadores [131], e 140 caracteres dão cerca de 4 linhas em 390 (estimativa). O contador "0/140" continua sendo a ajuda (o Compose o põe no apoio [119]), no começo da linha, com algarismos tabulares, lido no foco pelo `aria-describedby` e sem região viva (anunciar a cada tecla seria tagarela [151]).
@@ -589,7 +596,7 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 - **Nome e e-mail longos:** o `input` rola o texto dentro dele, como hoje; nada quebra a coluna.
 - **Erro de duas ou mais linhas:** quebra dentro da coluna, com o ícone na primeira linha. Nome e Sobrenome lado a lado: "O primeiro nome é obrigatório" ocupa 2 linhas em 240 px; as mensagens de formato (68 a 73 caracteres) ocupam 3 linhas em 1440 e até 4 perto de 480 px (estimativa). A linha da grade cresce, com `align-items: start`.
 - **Autopreenchimento:** o navegador pinta o fundo com a cor dele; o texto e o contorno continuam. Sem truque para trocar essa cor (ela diz que o valor veio do navegador, e a 3.3.8 pede o preenchimento livre [150]). A sessão C confere o contorno na captura.
-- **Placeholder longo:** "Mínimo de 6 caracteres, com letra e número" não cabe em 390 (292 px de texto; a captura `register-390-full.png` já o mostra cortado). Ver a seção 12 (pergunta ao usuário).
+- **Placeholder longo:** "Mínimo de 6 caracteres, com letra e número" não cabe em 390 (292 px de texto; a captura `register-390-full.png` já o mostra cortado). Decidido pelo usuário (§12 e §13): o mesmo texto passa a ser também a ajuda do campo, visível sempre.
 
 ### 5.2 O painel e os títulos (decisões b e j)
 
@@ -765,7 +772,7 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 - **Por que essa ordem, também em 390:**
   - a mesma ordem do DOM em todas as larguras: a ordem visual e a do Tab nunca se separam;
   - a partir de `lg`, o aviso "Dados salvos." (no topo à direita) nunca cruza a coluna de "Seus dados" (seção 4); com os pedidos à esquerda, ele cobriria quase toda a largura do "Salvar alterações" na coluna da direita (de x 848 a 1264, contra o aviso de 872 a 1288, em 1440);
-  - **o custo:** em 390, "Seus pedidos" começa a cerca de 1300 px do topo, e o "Ver meus pedidos" da confirmação chega ao topo da página. A alternativa sem mudar a ordem é a âncora `/profile#seus-pedidos` no botão da confirmação (o `scrollBehavior` da SPEC-M §10.1 já respeita a âncora com a reserva do topo, e o foco vai ao `main` com `preventScroll`); o arquivo é da etapa 7. Fica como pergunta ao usuário (seção 12).
+  - **o custo:** em 390, "Seus pedidos" começa a cerca de 1300 px do topo, e o "Ver meus pedidos" da confirmação chega ao topo da página. A alternativa sem mudar a ordem é a âncora `/profile#seus-pedidos` no botão da confirmação (o `scrollBehavior` da SPEC-M §10.1 já respeita a âncora com a reserva do topo, e o foco vai ao `main` com `preventScroll`); o arquivo é da etapa 7. O usuário escolheu a âncora (§12 e §13).
 
 **Contêineres (g):**
 
@@ -953,6 +960,7 @@ Os estados de vazio seguem a §6 do `SPEC.md`: o perfil sem pedidos tem o `Empty
   - `describedBy`: o id do erro, se houver; senão, o da ajuda (hoje vão os dois);
   - a ajuda só renderiza sem erro;
   - `.is-readonly` só com `readonly`; `.is-disabled` com `disabled`.
+  - no `type="password"`, o estado `senhaVisivel` (começa `false` a cada montagem) troca o `type` do campo entre `password` e `text`, e o `button.form-group__mostrar` ("Mostrar senha", `aria-pressed`, `aria-controls`) fica no fim do campo, com padding no fim do valor (5.1, tipo "Senha"; decisão do usuário).
 - **Algarismos tabulares na ajuda, sempre:** `.form-group__help` com `font-variant-numeric: tabular-nums`, porque o componente não sabe quando a ajuda é o contador "0/140".
 - **Cores de sistema nos modos de contraste:** `CanvasText` (contorno, contínuo ou tracejado) e `GrayText` (desabilitado), as exceções do SPEC-M §1.1, item 6 (5.1).
 - **Espaçamento sem `gap` no grupo:** o rótulo leva `margin-block-end: var(--space-2)`, e as mensagens, `margin-block-start: var(--space-1)`. Assim, a região viva vazia do CEP não soma vão. Quem põe na raiz uma classe com `gap` soma esse vão às margens: por isso a observação do `ModalAdditional` perde a classe `customize__section` (5.9). Nenhum outro uso do `FormGroup` passa classe com `gap` (os filtros do admin passam `admin-page__filter`, só largura e margem de baixo).
@@ -1081,7 +1089,7 @@ Nenhuma. Ícones: `circle-exclamation`, `chevron-down`, `chevron-right`, `sign-o
 
 ### Textos
 
-Todos reais. **Nenhuma palavra muda.** Mudam três apresentações:
+Todos reais. No desenho da sessão D, nenhuma palavra mudava; com as decisões do usuário (§13), entram o nome "Mostrar senha" do botão novo, a instrução da senha também como ajuda do campo e os dois textos de validação com "E-mail" (a redação passa pela `design:ux-copy` na sessão C). Mudam também três apresentações:
 
 | Texto | Antes | Depois | Motivo |
 |---|---|---|---|
@@ -1108,11 +1116,12 @@ Ficam como estão:
 | "Dados salvos.", "Não foi possível salvar. Tente de novo.", "Conta criada. Entre para continuar.", "Conta excluída.", "Não foi possível excluir a conta. Tente de novo." | `ProfileView.vue`, `authHandlers.js` | toasts |
 | "Observação", "Ex.: ponto da carne, sem sal…", "0/140" | `ModalAdditional.vue` | modal |
 
-**Observado, sem mudar (pergunta ao usuário, seção 12):** as mensagens "O email é obrigatório" e "Email inválido" escrevem "email", e o `SPEC.md` padroniza "E-mail" nos formulários (§8, [CON-09]); "Email inválido" não sugere a correção, que a 3.3.3 pede quando ela é conhecida [148].
+**Muda por decisão do usuário (§12 e §13):** as mensagens "O email é obrigatório" e "Email inválido" escrevem "email", e o `SPEC.md` padroniza "E-mail" nos formulários (§8, [CON-09]); "Email inválido" não sugere a correção, que a 3.3.3 pede quando ela é conhecida [148]. Os dois passam a "E-mail", e o de formato sugere a correção; a redação sai da `design:ux-copy` na sessão C.
 
 ---
 
 ## 9. Arquivos para o construtor (sessão C)
+**Decisões do usuário (§13):** além da lista abaixo, a sessão C muda o `src/plugins/fontawesome.js` (`faEye` e `faEyeSlash`), o `src/utils/validators.js` (os dois textos do e-mail), o `src/views/ConfirmationView.vue` (a âncora do "Ver meus pedidos") e os testes deles (`validators.test.js`, `ConfirmationView.test.js` e os das telas que conferem os textos), como diz a tabela do §13.
 
 ```
 src/components/FormGroup.vue                 seta do select, mensagens (erro no lugar da ajuda), prop live,
@@ -1211,7 +1220,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 | [118], [119], [120] Text fields (Compose) | conceito (documentação) | O filled se destaca; o outlined, de ênfase menor, simplifica formulários com muitos campos; somente leitura focável e copiável; o campo denso de 48; o contador no apoio; `MultiLine` que rola depois do máximo | Escolha do outlined, somente leitura, altura, textarea |
 | [121], [122] `TextFieldLabelPosition` | conceito | O rótulo `Above`, fora do contêiner e sempre minimizado | Rótulo acima |
 | [123], [124], [125] Defaults e código do campo | conceito (código de componente) | 56 dp, 1 e 2 dp, `roundedShape` em `CornerMedium`, cores tonais, nenhuma cor de hover ou somente leitura | Medidas, forma, cores descartadas |
-| [126], [127] Senha (Compose) | conceito | Botão de mostrar a senha no fim, com nome que muda ou fixo | Pergunta ao usuário |
+| [126], [127] Senha (Compose) | conceito | Botão de mostrar a senha no fim, com nome que muda ou fixo | Tipo "Senha" (5.1), por decisão do usuário |
 | [129], [140] Exposed dropdown e select | conceito | Seleção num campo, ícone final, mesmo erro do campo | `select` |
 | [131], [132], [133] Text field (material-web) | conceito (documentação e código) | Erro no lugar do apoio; `aria-invalid` e `aria-describedby`; o desabilitado e o somente leitura não validam; o textarea com `field-sizing` | Mensagens, `aria-*`, textarea |
 | [134], [135], [136], [137], [138], [139] Tokens do campo (material-web) | conceito (tokens) | Cores por estado; foco de 3 px; padding de 16; apoio 4 px abaixo com recuo de 16; ícones de 24 | Matriz, medidas |
@@ -1241,7 +1250,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 | O campo misturar a forma do Expressive com as cores do M3 padrão | As cores tonais reprovam a 1.4.11 nos tokens do projeto (1,53 e 1,05, medidos); a forma de 12 é a do Expressive [125]. Desvio registrado em 5.1. As medidas são do M3, não necessariamente do Expressive [29] |
 | O rótulo em label-l e a ajuda em body-m divergirem do body-small do M3 ([119], [134]), e o rótulo em repouso ficar `on-surface`, e não `on-surface-variant` [135] | Desvios registrados, com motivo (5.1): fora do contorno, o rótulo é título do campo e não pode ter a cor do placeholder; a ajuda segue o papel da ajuda no sistema e as mensagens longas do app |
 | O erro do campo que aparece no `blur` não ser anunciado na hora | Decisão desta etapa, contra a tagarelice [151]: no envio, o foco vai ao primeiro erro, lido pelo `aria-describedby` [158]. O exemplo "Invalid entry" da 4.1.3 [151] pesa contra; a sessão principal decide (seção 12) |
-| A instrução da senha só existir no placeholder, que some ao digitar e é cortado em 390 | O placeholder não substitui a instrução [156]; a captura `register-390-full.png` já o mostra cortado. O erro repete a regra no `blur`. Pergunta ao usuário (seção 12) |
+| A instrução da senha só existir no placeholder, que some ao digitar e é cortado em 390 | O placeholder não substitui a instrução [156]; a captura `register-390-full.png` já o mostra cortado. O erro repete a regra no `blur`. O usuário decidiu: o texto passa a ser também a ajuda do campo (§13) |
 | O aviso "Dados salvos." cobrir inteiro o "Salvar alterações" focado em 390 | A reserva do aviso no `scroll-padding` e a rolagem do foco depois do aviso, só pelo teclado (seção 4); o `keyboard.mjs` mede, com mutação |
 | A rolagem depois do aviso fazer a página pular no toque | No Chrome do Android, o toque põe o foco no botão, e a página subiria cerca de 100 px. O perfil segue o `CartView` (etapa 7): guarda a última entrada e só rola pelo teclado. Pelo toque e pelo mouse, o aviso pode cobrir o botão, sem anel à vista e sem foco de teclado a cobrir [76] |
 | O banner nascer fora da vista quando o envio vem de Enter num campo (o foco fica no campo, a cerca de 740 px do banner em 390) | A view rola o grupo de envio (banner e botão), e não o `activeElement`, em qualquer entrada (seção 4); o `keyboard.mjs` mede "Enter no CEP em 390, com a falha simulada" |
@@ -1259,7 +1268,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 | O "Excluir conta" com a forma da Brasa ao lado do "Sair" M3 | Até a etapa 10, como o "Remover" do carrinho; a etapa 10 desenha o `danger` |
 | O erro de exclusão ficar atrás do diálogo aberto | Com o `showModal()`, a página fica inerte e o aviso fica sob o fundo do diálogo (5.7). Raro com o `localStorage`, possível com uma API: fica para a etapa 10 |
 | Com uma API, o login mostrar "E-mail ou senha incorretos." numa falha de rede | O handler de hoje trata toda falha como credencial; o banner comporta outra mensagem, mas o texto não existe (5.3). Fica para o plano da API |
-| "Ver meus pedidos" (confirmação) chegar ao topo do perfil, com os pedidos a cerca de 1300 px em 390 | A ordem fica a do `SPEC.md` (5.6); a âncora `#seus-pedidos` é pergunta ao usuário (seção 12) |
+| "Ver meus pedidos" (confirmação) chegar ao topo do perfil, com os pedidos a cerca de 1300 px em 390 | A ordem fica a do `SPEC.md` (5.6); a âncora `#seus-pedidos` entra por decisão do usuário (§13) |
 | "Recebido" parecer clicável | Sem camada, cursor, foco, ícone nem forma de pílula; o canto de 8 é o dos chips [7], mas a altura de 28 e o lugar ao lado de texto o leem como etiqueta. O crítico olha a captura parada em 390 |
 | "Recebido R$ 29,49" lido como valor recebido | O total fica na linha do número; o status vem depois da data e da contagem (5.8) |
 | O "Ver itens" nativo anunciado de forma diferente em cada leitor | Inferência registrada no dossiê ([159], [96]); sem ARIA por cima; o axe mede o estado aberto |
@@ -1269,6 +1278,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 | O rótulo "Observação" menor que os títulos vizinhos no modal | É o rótulo do campo; os vizinhos são seções com `h3` (5.9) |
 | Parecer kit de formulário genérico | Nada de ilustração, de coluna de marca nem de "esqueci a senha"; o campo é o do M3 com a forma da casa, e o único gesto é a cor que muda com a ação |
 | O acervo mostrar o campo novo no modal real | Efeito aceito (SPEC-M §11.4) |
+| A senha visível na hora do envio mudar o que o gerenciador de senhas do navegador oferece | Não encontrei fonte. O botão só troca o `type` e não mexe no `autocomplete` nem bloqueia o colar [150]; a sessão C confere no Chromium que o navegador continua oferecendo salvar e preencher, com a senha escondida e visível |
 
 ---
 
@@ -1276,7 +1286,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 
 **Decidido (item 6 do pacote):**
 
-- **a.** `FormGroup` outlined nas cores do M3 padrão, com a forma do Expressive: sem fundo, contorno `outline` de 1 px (4,06 e 3,85), canto 12, 56 px, padding 16; rótulo acima (`Above`), label-l 500 (desvio), em `primary` no foco e `error` no erro; valor e placeholder em body-l; ajuda e erro em body-m (desvio), 4 px abaixo, recuo de 16, o erro no lugar da ajuda, com ícone; hover `on-surface`; foco `primary` mais o anel encostado; somente leitura tracejado em `outline`, texto inteiro; desabilitado em `outline-variant` e 38%; `select` com `appearance: none` e chevron; `date` nativo; `textarea` de 3 linhas com o contador na ajuda; sem botão de mostrar a senha; a prop `live` no CEP. Sai o fundo `surface-container-highest` da SPEC-M §5.8.
+- **a.** `FormGroup` outlined nas cores do M3 padrão, com a forma do Expressive: sem fundo, contorno `outline` de 1 px (4,06 e 3,85), canto 12, 56 px, padding 16; rótulo acima (`Above`), label-l 500 (desvio), em `primary` no foco e `error` no erro; valor e placeholder em body-l; ajuda e erro em body-m (desvio), 4 px abaixo, recuo de 16, o erro no lugar da ajuda, com ícone; hover `on-surface`; foco `primary` mais o anel encostado; somente leitura tracejado em `outline`, texto inteiro; desabilitado em `outline-variant` e 38%; `select` com `appearance: none` e chevron; `date` nativo; `textarea` de 3 linhas com o contador na ajuda; o botão de mostrar a senha em todo `type="password"` (decisão do usuário); a prop `live` no CEP. Sai o fundo `surface-container-highest` da SPEC-M §5.8.
 - **b.** Painel `surface-container-low`, canto 28, sem sombra, 440 e 560 px, padding 16, 24 e 32; o `h1` na regra global, dentro do painel; página `surface` sem nada em volta; em 390, o painel na largura toda; rodapé com o link na frase (`link-inline`, exceção da 2.5.8), em 500, alinhado ao início.
 - **c.** Banner `error-container`, canto 16, texto `on-error-container` (7,23), ícone `error`, sem a borda esquerda; logo acima do botão (desvio do `SPEC.md` §5.8, inferência); região `role="alert"` com `aria-atomic` sempre no DOM; o foco fica onde estava (no botão, ou no campo do Enter), e a view rola o grupo de envio (banner e botão) para a vista, em qualquer entrada; a margem do banner vale só dentro do grupo; o admin recebe o visual agora e a posição na etapa 9.
 - **d.** Aviso de conta salva igual ao do pagamento, sem botão, no topo antes do formulário, ligado ao botão por `aria-describedby`.
@@ -1290,14 +1300,14 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 - **l.** A reserva de hoje cobre a toolbar; o aviso "Dados salvos." pede a reserva da etapa 7 e a rolagem do foco só pelo teclado (o precedente do `CartView`); o banner pede a rolagem do grupo de envio, também no toque; o `keyboard.mjs` mede em 844 e 800, com "Enter no CEP" e a falha do WebCrypto simulada.
 - **m.** O login do admin, os filtros, o `ModalProducts` e a observação recebem o campo e o painel agora (tabela de 5.9); a observação perde a classe `customize__section` no `ModalAdditional`, para o `gap` dela não somar às margens do campo.
 
-**Em aberto, para o usuário (ou a sessão principal):**
+**Decidido pelo usuário e pela sessão principal (23/11/2026; o detalhe e os arquivos estão no §13):**
 
-1. **Botão de mostrar a senha:** não entra (é texto e lógica novos). Se o usuário quiser, as fontes estão em 5.1 ([150], [126], [127], [90]).
-2. **A instrução da senha:** "Mínimo de 6 caracteres, com letra e número" está só no placeholder, que some ao digitar [156] e é cortado em 390. Recomendação: o mesmo texto passa a ser a ajuda do campo (`helper`), visível sempre; o placeholder sai ou fica. Muda a apresentação de um texto que o `SPEC.md` define como placeholder: decisão do usuário.
+1. **Botão de mostrar a senha: entra** (escolha do usuário). Desenho na 5.1, tipo "Senha" ([150], [126], [127], [90], [78]).
+2. **A instrução da senha: entra também como ajuda.** "Mínimo de 6 caracteres, com letra e número" passa a ser a ajuda (`helper`) do campo Senha do cadastro, visível sempre; o placeholder fica, como o usuário escolheu ("também"). Hoje ela só está no placeholder, que some ao digitar [156] e é cortado em 390.
 3. **O anúncio do erro do campo no `blur`:** decidido pela sessão principal (§13): sem região viva, como recomenda a 5.1.
-4. **"Ver meus pedidos" com âncora:** `/profile#seus-pedidos` no botão da confirmação (arquivo da etapa 7), para quem chega em 390 cair nos pedidos (5.6).
-5. **Dois textos de validação:** "O email é obrigatório" e "Email inválido" escrevem "email", contra o "E-mail" padronizado do `SPEC.md` (§8, [CON-09]), e "Email inválido" não sugere a correção [148].
-6. **Desvios a confirmar:**
+4. **"Ver meus pedidos" com âncora: entra.** `/profile#seus-pedidos` no botão da confirmação (arquivo da etapa 7), para quem chega em 390 cair nos pedidos (5.6).
+5. **Dois textos de validação: mudam.** "O email é obrigatório" e "Email inválido" passam a escrever "E-mail", o padronizado do `SPEC.md` (§8, [CON-09]), e o erro de formato passa a sugerir a correção [148]. O texto final sai da `design:ux-copy` na sessão C.
+6. **Desvios: confirmados pelo usuário.**
    - o banner junto do botão (do `SPEC.md` §5.8; inferência, sem fonte sobre a posição);
    - o rótulo em label-l e a ajuda em body-m (o M3 usa body-small);
    - o rótulo em repouso em `on-surface`, e não no `on-surface-variant` do outlined [135]: fora do contorno, ele é o nome visível do campo, e com a cor do placeholder os dois se leriam como a mesma coisa;
@@ -1360,13 +1370,19 @@ Revisão feita pela sessão principal em 23/11/2026, com um revisor (subagente s
 3. **Rolagem depois do aviso (achado 11):** o precedente do `CartView` (correção do `/code-review` da etapa 7).
 4. **Em aberto nº 3 (anúncio do erro do campo no `blur`):** fica sem região viva, como recomenda a 5.1. O erro entra no `aria-describedby` e é lido quando o campo recebe o foco; no envio, o banner e o foco no primeiro erro cobrem o anúncio. Uma região viva por campo deixaria a tela "tagarela" [151].
 
-### O que fica para o usuário (do §12)
+### Decisões do usuário (23/11/2026, ao fim da sessão D)
 
-- Nº 1: o botão de mostrar a senha (não entra sem pedido).
-- Nº 2: a instrução da senha como ajuda do campo, além do placeholder.
-- Nº 4: a âncora `/profile#seus-pedidos` no "Ver meus pedidos" da confirmação.
-- Nº 5: "O email é obrigatório" e "Email inválido" com "E-mail" e uma sugestão de correção.
-- Nº 6: os desvios a confirmar.
+O usuário respondeu às perguntas do §12. As quatro mudanças entram, inclusive a que esta etapa não recomendava (mostrar a senha), e os cinco desvios ficam confirmados.
+
+| Nº | Decisão | O que a sessão C faz |
+|---|---|---|
+| 1 | Botão de mostrar a senha: entra | No `FormGroup`, o botão da 5.1 (tipo "Senha") em todo `type="password"`, sem prop nova. `faEye` e `faEyeSlash` entram no `src/plugins/fontawesome.js`: são do `@fortawesome/free-solid-svg-icons`, que já é dependência. "Mostrar senha" passa pela `design:ux-copy`. Testes no `FormGroup.test.js`: o botão só no tipo senha; o `aria-pressed` alterna e o `type` do campo troca; o nome fica fixo; o foco fica no botão; o valor não muda. No `keyboard.mjs`, a ordem do Tab passa a ser senha, botão e envio. No `axe-scan.mjs`, o estado "senha visível" |
+| 2 | Instrução da senha também como ajuda | No `RegisterView`, o campo Senha ganha `helper="Mínimo de 6 caracteres, com letra e número"`; o placeholder fica. Com erro, o erro toma o lugar da ajuda (5.1), e a mensagem de formato da senha já repete a regra. O `RegisterView.test.js` confere a ajuda no `aria-describedby` |
+| 4 | Âncora nos pedidos | No `ConfirmationView.vue`, o "Ver meus pedidos" vai para `/profile#seus-pedidos`. O `scrollBehavior` da etapa 4 leva ao `h2#seus-pedidos` respeitando o `scroll-padding-top`, e quem está na confirmação já está logado (o guarda do perfil passa). O `ConfirmationView.test.js` confere o destino; o `flow.mjs` confere a chegada na seção em 390 |
+| 5 | "E-mail" nos textos de validação | Em `src/utils/validators.js`, os dois textos do `validateEmail` passam a "E-mail", e o de formato sugere a correção; a redação sai da `design:ux-copy`. Mudam junto o `validators.test.js` e os testes das telas que conferem esses textos. É utilitário de tela, fora da camada simulada |
+| 6 | Desvios confirmados | A sessão C constrói como está no desenho, e o SPEC-M (§5.8, §5.9 e a linha `FormGroup` da §4.2 e da §6) registra os desvios no mesmo PR |
+
+Nenhuma das quatro mexe em `src/services/`, nas stores, nos dados de exemplo nem nas esperas simuladas (regra "escopo só de frontend"). A 1 acrescenta texto e lógica de tela, com a escolha do usuário registrada.
 
 ### O que a sessão C mede (o desenho estimou pelo CSS)
 
