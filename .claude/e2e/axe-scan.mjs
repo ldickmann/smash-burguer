@@ -103,21 +103,50 @@ const SCENARIOS = {
       },
     },
     { name: 'confirmation', hash: '#/confirmation', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.confirmation-page__status h1', 'confirmation'); } },
-    { name: 'login', hash: '#/login' },
-    { name: 'login-erro', hash: '#/login', storage: { 'smash-burger:account': USER }, act: async (p) => { await p.fill('#email', USER.email); await p.fill('#password', 'errada123'); await p.getByRole('button', { name: 'Entrar', exact: true }).click(); await p.waitForTimeout(1600); } },
-    { name: 'register', hash: '#/register' },
-    { name: 'register-vazio', hash: '#/register', act: async (p) => { await p.getByRole('button', { name: 'Criar conta', exact: true }).click(); await p.waitForTimeout(600); } },
-    { name: 'register-conta-salva', hash: '#/register', storage: { 'smash-burger:account': USER } },
-    { name: 'profile', hash: '#/profile', storage: LOGGED },
-    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); } },
+    // Login, cadastro e perfil (desenho da Conta, §9): cada estado confere o seletor dele
+    { name: 'login', hash: '#/login', full: true, act: async (p) => { await exigir(p, '.auth-panel #entrar-titulo', 'login'); } },
+    { name: 'login-erro', hash: '#/login', storage: { 'smash-burger:account': USER }, act: async (p) => { await p.fill('#email', USER.email); await p.fill('#password', 'errada123'); await p.getByRole('button', { name: 'Entrar', exact: true }).click(); await p.locator('.auth-form__anuncio .auth-alert').waitFor({ timeout: 3000 }).catch(() => {}); await exigir(p, '.auth-form__anuncio .auth-alert', 'login-erro'); } },
+    { name: 'login-senha-visivel', hash: '#/login', act: async (p) => { await p.fill('#password', 'senha123'); await p.getByRole('button', { name: 'Mostrar senha' }).click(); await exigir(p, '#password[type="text"]', 'login-senha-visivel'); await exigir(p, 'button.form-group__mostrar[aria-pressed="true"]', 'login-senha-visivel'); } },
+    { name: 'register', hash: '#/register', full: true, act: async (p) => { await exigir(p, '.auth-panel #cadastro-titulo', 'register'); } },
+    { name: 'register-vazio', hash: '#/register', full: true, act: async (p) => { await p.getByRole('button', { name: 'Criar conta', exact: true }).click(); await p.waitForTimeout(600); await exigir(p, '#firstName[aria-invalid="true"]', 'register-vazio'); } },
+    { name: 'register-conta-salva', hash: '#/register', storage: { 'smash-burger:account': USER }, full: true, act: async (p) => { await exigir(p, '#aviso-conta-salva', 'register-conta-salva'); } },
+    {
+      // A resposta do ViaCEP fica presa (a rota da página vence a do contexto), para medir a espera
+      name: 'register-cep-buscando', hash: '#/register', act: async (p) => {
+        await p.route('https://viacep.com.br/**', () => {});
+        await p.fill('#CEP', '89010000');
+        await p.waitForTimeout(300);
+        await exigir(p, '#CEP-ajuda .form-group__spinner', 'register-cep-buscando');
+      },
+    },
+    {
+      name: 'register-cep-unico', hash: '#/register', act: async (p) => {
+        await p.route('https://viacep.com.br/**', (r) => r.fulfill({ json: { logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' } }));
+        await p.fill('#CEP', '35588000');
+        await p.locator('#CEP-ajuda', { hasText: 'vale para a cidade toda' }).waitFor({ timeout: 3000 }).catch(() => {});
+        await exigir(p, '#street', 'register-cep-unico');
+        await exigir(p, '#CEP-ajuda:has-text("vale para a cidade toda")', 'register-cep-unico');
+      },
+    },
+    { name: 'profile', hash: '#/profile', storage: LOGGED, full: true, act: async (p) => { await exigir(p, '.profile-page .profile-order', 'profile'); } },
+    { name: 'profile-itens', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByText('Ver itens').first().click(); await p.waitForTimeout(300); await exigir(p, '.profile-order__details[open]', 'profile-itens'); } },
+    {
+      name: 'profile-sem-pedidos', hash: '#/profile', full: true,
+      storage: { ...LOGGED, 'smash-burger:session': { ...SESSION, orderHistory: [], lastOrderId: null, nextOrderId: 1001 } },
+      act: async (p) => { await exigir(p, '.profile-page .empty-state', 'profile-sem-pedidos'); },
+    },
+    { name: 'profile-salvo', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Salvar alterações' }).click(); await p.locator('.toast', { hasText: 'Dados salvos.' }).waitFor({ timeout: 4000 }).catch(() => {}); await exigir(p, '.toast:has-text("Dados salvos.")', 'profile-salvo'); } },
+    { name: 'profile-excluir', hash: '#/profile', storage: LOGGED, act: async (p) => { await p.getByRole('button', { name: 'Excluir conta' }).click(); await p.waitForTimeout(600); await exigir(p, 'dialog[open] #excluir-conta-titulo', 'profile-excluir'); } },
+    // A observação do modal Personalizar, com texto (o FormGroup novo no diálogo)
+    { name: 'modal-observacao', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.fill('dialog[open] #observacao', 'Bem passado, sem sal'); await exigir(p, 'dialog[open] #observacao', 'modal-observacao'); } },
     { name: '404', hash: '#/rota-inexistente' },
   ],
   admin: [
-    { name: 'admin-login', hash: '#/admin/login' },
+    { name: 'admin-login', hash: '#/admin/login', act: async (p) => { await exigir(p, '.admin-login .auth-panel', 'admin-login'); } },
     { name: 'admin', hash: '#/admin', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
     { name: 'admin-produtos', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
     { name: 'admin-modal', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
-    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, full: true, act: async (p) => { await exigir(p, '#statusFilter', 'admin-pedidos'); } },
     { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
   ],
 };
