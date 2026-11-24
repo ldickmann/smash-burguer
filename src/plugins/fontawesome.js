@@ -40,6 +40,8 @@ import {
   faChevronDown,
   faChevronUp,
   faArrowUpRightFromSquare,
+  faEye,
+  faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
 import { faClock, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
@@ -86,6 +88,8 @@ library.add(
   faChevronDown,
   faChevronUp,
   faArrowUpRightFromSquare,
+  faEye,
+  faEyeSlash,
   faClock
 );
 
