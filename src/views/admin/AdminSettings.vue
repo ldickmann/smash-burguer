@@ -2,7 +2,7 @@
   <section class="admin-settings">
     <h1 class="admin-page__title admin-settings__title">Configurações</h1>
 
-    <AdminCard title="Dados do painel">
+    <AdminCard title="Dados do painel" class="admin-settings__card">
       <p class="admin-settings__text">
         Os produtos criados, editados ou excluídos e o status dos pedidos ficam salvos neste
         navegador. Restaurar volta aos dados publicados com o site.
@@ -26,9 +26,9 @@
       max-width="480px"
       @close="pending = null"
     >
-      <p v-if="pending">{{ RESETS[pending].text }}</p>
+      <p v-if="pending" class="admin-settings__dialog-text">{{ RESETS[pending].text }}</p>
       <template #footer>
-        <div class="admin-settings__actions">
+        <div class="admin-settings__actions admin-settings__actions--fim">
           <BaseButton variant="secondary" @click="pending = null">Cancelar</BaseButton>
           <BaseButton variant="danger" icon-start="rotate-left" @click="confirmReset">Restaurar</BaseButton>
         </div>

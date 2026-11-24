@@ -11,25 +11,26 @@
       :options="STATUS_FILTERS"
     />
 
-    <!-- Busca da barra do painel (?q=): o resultado é anunciado a leitores de tela -->
-    <p v-if="query" class="admin-page__search-result" role="status">
-      {{ searchSummary }}
-      <button type="button" class="link-inline" @click="clearSearch">Limpar busca</button>
-    </p>
+    <!-- Busca da barra do painel (?q=): a região existe antes da mensagem (vazia sem busca), para o
+         leitor de tela anunciar o resultado; o "Limpar busca" fica fora dela -->
+    <div class="admin-page__busca">
+      <p class="admin-page__search-result" role="status" aria-atomic="true">{{ query ? searchSummary : "" }}</p>
+      <BaseButton v-if="query" variant="ghost" size="sm" @click="clearSearch">Limpar busca</BaseButton>
+    </div>
 
     <ul v-if="filteredOrders.length" class="orders-list" role="list">
       <li v-for="order in filteredOrders" :key="order.id">
         <AdminCard :title="`Pedido #${order.id}`">
           <template #header-actions>
-            <span class="status-chip" :class="`status-chip--${order.status}`">
+            <M3RotuloStatus :tom="tomDoStatus(order.status)">
               {{ STATUS_LABELS[order.status] ?? order.status }}
-            </span>
+            </M3RotuloStatus>
           </template>
 
           <div class="order-info">
             <div class="order-info__block">
               <h3 class="order-info__title">Cliente</h3>
-              <p>{{ order.customerName }}</p>
+              <p class="order-info__name">{{ order.customerName }}</p>
               <p class="order-info__muted">{{ order.address }}</p>
               <p class="order-info__muted tabular">{{ order.phone }}</p>
             </div>
@@ -38,15 +39,16 @@
               <h3 class="order-info__title">Itens</h3>
               <ul class="order-info__items" role="list">
                 <li v-for="item in order.items" :key="item.id" class="order-info__item">
-                  <span><span class="tabular">{{ item.quantity }}×</span> {{ item.name }}</span>
-                  <span class="tabular">{{ formatPrice(item.price) }}</span>
+                  <span class="order-info__item-name"><span class="tabular">{{ item.quantity }}×</span> {{ item.name }}</span>
+                  <!-- O unitário, com "cada", como no diálogo: o card não calcula o total da linha -->
+                  <span class="order-info__item-price tabular">{{ formatPrice(item.price) }} cada</span>
                 </li>
               </ul>
             </div>
 
             <p class="order-info__total">
-              <span>Total</span>
-              <span class="tabular">{{ formatPrice(order.total) }}</span>
+              <span class="order-info__total-label">Total</span>
+              <span class="order-info__total-value tabular">{{ formatPrice(order.total) }}</span>
             </p>
           </div>
 
@@ -86,9 +88,9 @@
           <div>
             <dt>Status</dt>
             <dd>
-              <span class="status-chip" :class="`status-chip--${detailsOrder.status}`">
-                {{ STATUS_LABELS[detailsOrder.status] }}
-              </span>
+              <M3RotuloStatus :tom="tomDoStatus(detailsOrder.status)">
+                {{ STATUS_LABELS[detailsOrder.status] ?? detailsOrder.status }}
+              </M3RotuloStatus>
             </dd>
           </div>
           <div>
@@ -115,8 +117,8 @@
         </ul>
 
         <p class="order-info__total">
-          <span>Total</span>
-          <span class="tabular">{{ formatPrice(detailsOrder.total) }}</span>
+          <span class="order-info__total-label">Total</span>
+          <span class="order-info__total-value tabular">{{ formatPrice(detailsOrder.total) }}</span>
         </p>
       </div>
       <template #footer>
@@ -129,7 +131,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { formatPrice } from "@/utils/formatters";
 import { ORDER_STATUSES, STATUS_LABELS, useAdminOrdersStore } from "@/stores/adminOrders";
@@ -140,8 +142,14 @@ import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import FormGroup from "@/components/FormGroup.vue";
+import M3RotuloStatus from "@/components/ui/M3RotuloStatus.vue";
 
 const LAST_STATUS = ORDER_STATUSES.at(-1);
+
+// Tom do rótulo por status (só apresentação): "Em preparo" e "A caminho" no mesmo info, porque o texto
+// os distingue; status fora da lista não chega à tela (a store o tira), e cairia no info
+const TONS = { pending: "aviso", preparing: "info", delivery: "info", completed: "sucesso" };
+const tomDoStatus = (status) => TONS[status] ?? "info";
 
 const STATUS_FILTERS = [
   { value: "", label: "Todos" },
@@ -187,15 +195,41 @@ const clearSearch = () => {
   router.replace({ query: { ...route.query, q: undefined } });
 };
 
+// O aviso fica no pé e a reserva dele no scroll-padding, mas o foco que não se move não rola: o botão
+// focado pelo teclado (que vê o anel) rola para cima do aviso. Quem toca ou clica não vê o anel, e a
+// página pularia: a última entrada decide (como no CartView e no ProfileView)
+let ultimaPorPonteiro = false;
+const marcarPonteiro = () => {
+  ultimaPorPonteiro = true;
+};
+const marcarTeclado = () => {
+  ultimaPorPonteiro = false;
+};
+onMounted(() => {
+  document.addEventListener("pointerdown", marcarPonteiro, true);
+  document.addEventListener("keydown", marcarTeclado, true);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("pointerdown", marcarPonteiro, true);
+  document.removeEventListener("keydown", marcarTeclado, true);
+});
+
 // Leva o pedido ao próximo status; o aviso anuncia a mudança também para leitores de tela.
-// O botão sai da lista filtrada ou fica desabilitado em "Concluído": aí o foco vai para o título
+// O botão sai da lista filtrada ou fica desabilitado em "Concluído": aí o foco vai para o título.
+// Se ele continua focado, a view o rola para fora de baixo do aviso (só pelo teclado). O jsdom não tem
+// scrollIntoView
 const updateStatus = async (order, event) => {
   const button = event?.currentTarget;
   const status = ordersStore.advanceStatus(order.id);
   if (!status) return;
   toast.show({ message: `Pedido #${order.id}: ${STATUS_LABELS[status]}.` });
   await nextTick();
-  if (button && (!button.isConnected || button.disabled)) titleRef.value?.focus();
+  if (button && (!button.isConnected || button.disabled)) {
+    titleRef.value?.focus();
+    return;
+  }
+  if (ultimaPorPonteiro) return;
+  document.activeElement?.scrollIntoView?.({ block: "nearest" });
 };
 
 // "Detalhes" abre o pedido num diálogo; ao fechar, o foco volta ao botão

@@ -1,9 +1,16 @@
-// Meu perfil (painel): dados do admin logado num AdminCard.
+// Meu perfil (docs/direcoes/desenho/admin.md, §5.10): os dados do admin num card de até 40rem, com a
+// nota e o "Sair" no rodapé.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
 .admin-profile__title {
   margin-bottom: var(--space-5);
+}
+
+// A nota fica com linhas de até cerca de 75 caracteres
+.admin-profile__card {
+  max-width: 40rem;
 }
 
 .admin-profile__info {
@@ -14,22 +21,28 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  // Sem caixa alta: dt em body-m (7,56), dd em body-l (13,93)
   dt {
-    color: var(--color-ink-muted);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    @include tipo(body-m);
+
+    color: var(--m3-on-surface-variant);
+    letter-spacing: var(--m3-body-m-tracking);
   }
 
   dd {
+    @include tipo(body-l);
+
     margin-top: var(--space-1);
+    color: var(--m3-on-surface);
+    letter-spacing: var(--m3-body-l-tracking);
     overflow-wrap: anywhere;
   }
 }
 
 .admin-profile__note {
+  @include tipo(body-m);
+
   margin-top: var(--space-4);
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }

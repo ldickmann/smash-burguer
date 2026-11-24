@@ -15,11 +15,12 @@
       :options="CATEGORY_FILTERS"
     />
 
-    <!-- Busca da barra do painel (?q=): o resultado é anunciado a leitores de tela -->
-    <p v-if="query" class="admin-page__search-result" role="status">
-      {{ searchSummary }}
-      <button type="button" class="link-inline" @click="clearSearch">Limpar busca</button>
-    </p>
+    <!-- Busca da barra do painel (?q=): a região existe antes da mensagem (vazia sem busca), para o
+         leitor de tela anunciar o resultado; o "Limpar busca" fica fora dela -->
+    <div class="admin-page__busca">
+      <p class="admin-page__search-result" role="status" aria-atomic="true">{{ query ? searchSummary : "" }}</p>
+      <BaseButton v-if="query" variant="ghost" size="sm" @click="clearSearch">Limpar busca</BaseButton>
+    </div>
 
     <EmptyState
       v-if="query && !filteredProducts.length"
@@ -28,10 +29,13 @@
       text="Confira o texto da busca ou escolha outra categoria."
     />
 
+    <!-- Categoria esvaziada pelo painel, sem busca: o aviso de vazio do Cardápio -->
+    <EmptyState v-else-if="!filteredProducts.length" icon="utensils" :title="TEXTOS.vazio" />
+
     <ul v-else class="products-list" role="list">
       <li v-for="product in filteredProducts" :key="`${product.category}-${product.id}`">
-        <ProductCard :product="product" variant="admin" :heading-level="2">
-          <template #actions>
+        <M3CartaoProduto :produto="product" :nivel-titulo="2">
+          <template #acoes>
             <BaseButton variant="secondary" size="sm" @click="openEditModal(product)">
               Editar
             </BaseButton>
@@ -44,7 +48,7 @@
               Excluir
             </BaseButton>
           </template>
-        </ProductCard>
+        </M3CartaoProduto>
       </li>
     </ul>
 
@@ -74,7 +78,7 @@
       max-width="480px"
       @close="productToDelete = null"
     >
-      <p>
+      <p class="product-delete__text">
         “{{ productToDelete?.name }}” sai do cardápio salvo neste navegador. Para trazê-lo de
         volta, use Configurações › Restaurar cardápio original.
       </p>
@@ -96,11 +100,12 @@ import { useRoute, useRouter } from "vue-router";
 import { CATEGORIES, useProductsStore } from "@/stores/products.js";
 import { useToastStore } from "@/stores/toast";
 import { matchesSearch, searchQueryOf } from "@/utils/search";
+import { TEXTOS } from "@/utils/textosLoja";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import EmptyState from "@/components/ui/EmptyState.vue";
 import FormGroup from "@/components/FormGroup.vue";
-import ProductCard from "@/components/ProductCard.vue";
+import M3CartaoProduto from "@/components/admin/M3CartaoProduto.vue";
 import ModalProducts from "@/components/admin/ModalProducts.vue";
 
 const CATEGORY_FILTERS = [

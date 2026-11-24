@@ -1,5 +1,7 @@
-// Login admin (SPEC §5.11): mesmo painel da §5.8 sobre a ilustração em giz.
+// Login do admin (docs/direcoes/desenho/admin.md, §5.11): o painel da Conta (_auth.scss, etapa 8) sobre
+// a ilustração em giz, com o scrim do M3 por cima. Todo texto fica no painel; nada é texto sobre o scrim.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "../auth/auth";
 
 .admin-login {
@@ -10,12 +12,12 @@
   padding: var(--space-7) var(--gutter);
   overflow: hidden;
 
-  // Camada escura sobre a ilustração
+  // O scrim de 32% sobre a ilustração
   &::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: var(--color-overlay);
+    background: var(--m3-scrim);
   }
 }
 
@@ -35,14 +37,23 @@
   z-index: var(--z-raised);
 }
 
-// Atalho do admin de teste, só no `yarn dev`
+// Atalho do admin de teste, só no `yarn dev`: o tracejado é decorativo (1,53); o texto (8,41) e o botão
+// identificam o bloco
 .admin-login__dev {
+  @include tipo(body-m);
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
   padding-top: var(--space-4);
-  border-top: 1px dashed var(--color-border);
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+  border-top: 1px dashed var(--m3-outline-variant);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
+}
+
+// "Voltar à loja": text button alinhado ao início, com o texto na linha do h1 e dos rótulos
+.admin-login__voltar {
+  align-self: flex-start;
+  margin-inline-start: calc(-1 * var(--space-3));
 }

@@ -1,6 +1,15 @@
-// Peças comuns às telas do admin.
+// Peças comuns às telas do painel (docs/direcoes/desenho/admin.md, §5.3 e §5.4): o h1 pela regra global
+// (--text-page, 500), o cabeçalho de Produtos, o filtro de 56 px, a linha do resultado da busca e o
+// valor dos KPIs. A página é a surface da moldura; o texto do main fica em body-m.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 
+// O h1 (regra global) e o filtro ficam a 20 px do que vem depois
+.admin-page__title {
+  color: var(--m3-on-surface);
+}
+
+// Produtos: o h1 e o filled "Novo produto" na mesma linha, com quebra
 .admin-page__header {
   display: flex;
   flex-wrap: wrap;
@@ -10,43 +19,47 @@
   margin-bottom: var(--space-5);
 }
 
-.admin-page__title {
-  font-size: var(--text-page);
-}
-
+// O FormGroup select de hoje (56 px), sem prop densa
 .admin-page__filter {
   width: 100%;
   max-width: 16rem;
   margin-bottom: var(--space-5);
 }
 
-// KPI: rótulo ink-muted text-sm; valor Archivo 700 text-2xl
+// Valor do KPI em headline-m 400, tabular (13,93 sobre o card); a nota em body-m (7,56)
 .kpi__value {
-  color: var(--color-ink);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  @include tipo(headline-m);
+
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-headline-m-tracking);
 }
 
 .kpi__note {
+  @include tipo(body-m);
+
   margin-top: var(--space-1);
-  color: var(--color-ink-muted);
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
-// Resultado da busca da barra do painel, com o "Limpar busca"
-.admin-page__search-result {
+// Linha do resultado da busca da barra: a região role="status" fica sempre no DOM (vazia sem busca), e o
+// text button "Limpar busca" fica ao lado, fora dela
+.admin-page__busca {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
-  color: var(--color-ink-muted);
-  font-size: var(--text-sm);
+}
 
-  .link-inline {
-    border: 0;
-    background: none;
-    font: inherit;
-    cursor: pointer;
-  }
+// Sem busca, a região vazia não ocupa a linha nem afasta a grade
+.admin-page__busca:has(.admin-page__search-result:empty) {
+  margin-bottom: 0;
+}
+
+.admin-page__search-result {
+  @include tipo(body-m);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-m-tracking);
 }

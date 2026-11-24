@@ -1,39 +1,54 @@
-// Relatórios (SPEC §5.11): os valores de exemplo no slot padrão do AdminCard.
+// Relatórios (docs/direcoes/desenho/admin.md, §5.9): os três KPIs numa lista, em 3 colunas a partir de
+// md, e a classificação dos mais vendidos num card de até 40rem.
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 @use "admin-page";
 
 .admin-page__title {
   margin-bottom: var(--space-5);
 }
 
-.sales-reports__grid {
+// Abaixo de md, três cards lado a lado não comportariam "R$ 12.450,00" em headline-m
+.sales-reports__kpis {
   display: grid;
+  align-items: stretch;
   gap: var(--space-4);
+  margin-bottom: var(--space-4);
 
-  @include up(sm) {
+  @include up(md) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
+// Em 1440, na largura toda, o nome e a quantidade ficariam a cerca de 1000 px um do outro
 .sales-reports__top {
-  @include up(sm) {
-    grid-column: 1 / -1;
-  }
+  max-width: 40rem;
 }
 
+// A classificação é uma sequência: o número nativo da ol, tabular
 .top-products {
+  @include tipo(body-m);
+
   padding-left: var(--space-5);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
 .top-products__item {
   padding-block: var(--space-2);
 
+  &::marker {
+    color: var(--m3-on-surface-variant);
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Divisor decorativo entre as linhas (1,38 sobre o card)
   & + & {
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--m3-outline-variant);
   }
 }
 
-// Nome à esquerda, quantidade à direita
+// Nome no início, quantidade no fim, sem quebra
 .top-products__row {
   display: flex;
   justify-content: space-between;
@@ -41,5 +56,9 @@
 }
 
 .top-products__qty {
-  font-weight: 700;
+  @include tipo(label-l, 500);
+
+  flex-shrink: 0;
+  white-space: nowrap;
+  letter-spacing: var(--m3-label-l-tracking);
 }
