@@ -1,4 +1,4 @@
-/* global process */
+/* global process, Buffer */
 // §13.5 Teclado: só Tab, Shift+Tab, Enter, Espaço, setas e Esc (SPEC-material §13.5 e §13.3, item 6).
 // No Cardápio (etapa 6): o grupo de categorias com rádios nativos (uma parada no Tab, setas que marcam e
 // a volta do último ao primeiro), o foco não coberto pelo grupo grudado e pelo cabeçalho (1440, 390 e
@@ -624,6 +624,170 @@ async function salvarPeloTeclado(semRolagem) {
   const anel = await p.evaluate(() => ({ ...(() => { const s = getComputedStyle(document.activeElement); return { offset: parseFloat(s.outlineOffset) }; })(), tag: document.activeElement.tagName }));
   const ring = await p.evaluate(ringOf);
   check(anel.tag === 'SUMMARY' && ring.ok && anel.offset < 0, '"Ver itens": anel de 3 px por dentro', `${ring.outline}, offset ${anel.offset}`);
+  await c.close();
+}
+
+// Painel (desenho do admin, §4.5, §4.6 e §9): a gaveta modal pelo teclado em 390; o aviso no pé contra o
+// "Atualizar status", o "Novo produto" e o "Editar"; e, nas seis rotas, em 1440 e 390, o foco (com o
+// anel) nunca inteiro sob o cabeçalho grudado. A mutação desliga o scrollIntoView: o aviso cobre o botão
+const ADMIN_SESSAO = { 'smash-burger:admin-session': { admin: { firstName: 'Admin', lastName: 'User', role: 'admin' }, isAuthenticated: true } };
+const PNG_1PX = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+const abrirPainel = async (p, hash, titulo) => { await openRoute(p, hash, titulo); await p.waitForTimeout(200); };
+const nomeFocado = (p) => p.evaluate(() => { const el = document.activeElement; return el === document.body ? 'BODY' : (el.getAttribute('aria-label') || el.textContent || el.id || el.tagName).trim().replace(/\s+/g, ' '); });
+// O elemento focado, com o anel, contra o cabeçalho grudado (inteiro sob ele) e contra os avisos (cruza)
+const sobOPainel = () => {
+  const el = document.activeElement;
+  if (el === document.body) return null;
+  const s = getComputedStyle(el);
+  const anel = s.outlineStyle === 'none' ? 0 : Math.max(0, parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset));
+  const b = el.getBoundingClientRect();
+  const r = { left: b.left - anel, right: b.right + anel, top: b.top - anel, bottom: b.bottom + anel };
+  const cruza = (x) => { const q = x.getBoundingClientRect(); return Math.min(r.right, q.right) > Math.max(r.left, q.left) && Math.min(r.bottom, q.bottom) > Math.max(r.top, q.top); };
+  const cab = document.querySelector('.admin-header');
+  const h = cab?.getBoundingClientRect();
+  const nome = `${el.tagName} "${(el.getAttribute('aria-label') || el.textContent || el.id || '').trim().replace(/\s+/g, ' ').slice(0, 28)}"`;
+  // O skip link aparece por cima do cabeçalho, de propósito (z-index), e não fica sob ele
+  const avisos = [...document.querySelectorAll('.toast-region .toast')];
+  return { nome, sobCabecalho: !!h && !cab.contains(el) && !el.matches(".skip-link") && b.width > 0 && r.bottom <= h.bottom, aviso: avisos.some(cruza), avisos: avisos.length, topo: Math.round(r.top), base: Math.round(r.bottom), rolagem: Math.round(scrollY) };
+};
+async function focoNoPainel(p, label, max = 90) {
+  const cobertos = [];
+  let n = 0;
+  let voltas = 0;
+  for (const tecla of ['Tab', 'Shift+Tab']) {
+    const vistos = new Set();
+    for (let i = 0; i < max; i++) {
+      await p.keyboard.press(tecla);
+      const k = await p.evaluate(() => { const el = document.activeElement; return el === document.body ? 'BODY' : `${el.tagName}:${(el.getAttribute('aria-label') || el.textContent || el.id || '').trim().slice(0, 40)}:${Math.round(el.getBoundingClientRect().top + scrollY)}`; });
+      if (k === 'BODY' || vistos.has(k)) { voltas++; break; }
+      vistos.add(k);
+      n++;
+      const c = await p.evaluate(sobOPainel);
+      if (c?.sobCabecalho) cobertos.push(`${tecla} ${c.nome}`);
+    }
+  }
+  check(voltas === 2, `${label}: o Tab e o Shift+Tab percorreram a página (${n} focos)`);
+  check(cobertos.length === 0, `${label}: nenhum foco inteiro sob o cabeçalho grudado`, cobertos.join(' | '));
+}
+for (const w of [1440, 390]) {
+  const c = await browser.newContext({ viewport: { width: w, height: w === 390 ? ALTURA : 900 } });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  for (const [hash, titulo] of [['#/admin', 'Painel'], ['#/admin/products', 'Produtos'], ['#/admin/orders', 'Pedidos'], ['#/admin/reports', 'Relatórios'], ['#/admin/profile', 'Meu perfil'], ['#/admin/settings', 'Configurações']]) {
+    await abrirPainel(p, hash, titulo);
+    await focoNoPainel(p, `painel ${hash} em ${w}`);
+  }
+  await c.close();
+}
+{
+  console.log(`=== painel: gaveta em 390×${ALTURA}`);
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/orders', 'Pedidos');
+  await p.getByRole('button', { name: 'Alternar menu' }).focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(300);
+  check(await nomeFocado(p) === 'Painel', 'gaveta aberta pelo teclado: o foco vai a "Painel"', await nomeFocado(p));
+  await p.keyboard.press('Shift+Tab');
+  check(await nomeFocado(p) === 'Fechar', 'Shift+Tab a partir de "Painel" vai ao "Fechar"', await nomeFocado(p));
+  await p.locator('#admin-sidebar').getByRole('button', { name: 'Sair' }).focus();
+  const fora = [];
+  for (let i = 0; i < 8; i++) {
+    await p.keyboard.press('Tab');
+    const onde = await p.evaluate(() => ({ dentro: !!document.querySelector('#admin-sidebar')?.contains(document.activeElement), corpo: document.activeElement === document.body }));
+    if (!onde.dentro && !onde.corpo) fora.push(await nomeFocado(p));
+  }
+  check(fora.length === 0, 'com a gaveta aberta, o Tab a partir do "Sair" não cai no cabeçalho nem no main (inert)', fora.join(' | '));
+  await p.locator('#admin-sidebar').getByRole('link', { name: 'Painel' }).focus();
+  await p.keyboard.press('Escape');
+  await p.waitForTimeout(250);
+  check(await nomeFocado(p) === 'Alternar menu', 'Esc fecha a gaveta e devolve o foco ao "Alternar menu"', await nomeFocado(p));
+  await c.close();
+}
+// O "Atualizar status" do último card, chegado pelo Tab perto do pé: com o aviso no pé, a view rola o botão
+// para cima dele (só pelo teclado)
+async function atualizarPeloTeclado(semRolagem) {
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  if (semRolagem) await c.addInitScript(() => { Element.prototype.scrollIntoView = () => {}; });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/orders', 'Pedidos');
+  const botao = p.getByRole('button', { name: 'Atualizar status' }).last();
+  await botao.evaluate((el) => { const r = el.getBoundingClientRect(); scrollBy(0, r.top - (innerHeight - 64)); });
+  await p.getByRole('button', { name: 'Detalhes', exact: true }).first().evaluate((el) => el.focus({ preventScroll: true }));
+  await p.keyboard.press('Tab');
+  const antes = await p.evaluate(sobOPainel);
+  await p.keyboard.press('Enter');
+  await p.locator('.toast-region .toast').first().waitFor({ timeout: 3000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(sobOPainel);
+  await c.close();
+  return { antes, depois };
+}
+{
+  const { antes, depois } = await atualizarPeloTeclado(false);
+  check(antes.nome.includes('Atualizar status'), `painel em 390×${ALTURA}: o Tab leva ao "Atualizar status" perto do pé`, `${antes.nome} (${antes.topo}–${antes.base})`);
+  check(depois.avisos === 1 && depois.nome.includes('Atualizar status') && !depois.aviso, `painel em 390×${ALTURA}: com o aviso no pé, o "Atualizar status" focado (com o anel) não fica sob ele`, `${depois.topo}–${depois.base}, rolagem ${antes.rolagem} → ${depois.rolagem}`);
+  const m = await atualizarPeloTeclado(true);
+  check(m.depois.avisos === 1 && m.depois.aviso, `painel em 390×${ALTURA}: mutação — sem a rolagem da OrderManagement, o aviso cobre o botão`, `${m.depois.topo}–${m.depois.base}`);
+}
+// Pelo ponteiro, a página não pula
+{
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/orders', 'Pedidos');
+  const botao = p.getByRole('button', { name: 'Atualizar status' }).last();
+  await botao.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  const antes = await p.evaluate(() => Math.round(scrollY));
+  await botao.click();
+  await p.locator('.toast-region .toast').first().waitFor({ timeout: 3000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(() => Math.round(scrollY));
+  check(antes === depois, `painel em 390×${ALTURA}: pelo mouse, o "Atualizar status" não rola a página`, `${antes} → ${depois}`);
+  await c.close();
+}
+// O "Novo produto" depois de criar, pelo teclado: o foco volta ao botão, fora do aviso (no pé)
+for (const [w, h] of [[1024, 768], [1440, 900]]) {
+  const c = await browser.newContext({ viewport: { width: w, height: h } });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/products', 'Produtos');
+  await p.getByRole('button', { name: 'Novo produto' }).focus();
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(400);
+  await p.fill('dialog[open] #name', 'Lanche de teste');
+  await p.fill('dialog[open] #price', '19,90');
+  await p.setInputFiles('dialog[open] input[type=file]', { name: 'lanche.png', mimeType: 'image/png', buffer: PNG_1PX });
+  await p.waitForTimeout(400);
+  await p.locator('dialog[open]').getByRole('button', { name: 'Salvar', exact: true }).focus();
+  await p.keyboard.press('Enter');
+  await p.locator('.toast-region .toast', { hasText: 'Produto criado.' }).waitFor({ timeout: 3000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(sobOPainel);
+  check(depois.avisos === 1 && depois.nome.includes('Novo produto') && !depois.aviso, `painel em ${w}×${h}: depois de criar, o foco volta ao "Novo produto", fora do aviso`, JSON.stringify(depois));
+  await c.close();
+}
+// O "Editar" de um card perto do pé, em 390: o diálogo fecha, e o foco que volta não fica sob o aviso
+{
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, ADMIN_SESSAO);
+  const p = await c.newPage();
+  await abrirPainel(p, '#/admin/products', 'Produtos');
+  const editar = p.getByRole('button', { name: 'Editar', exact: true }).nth(1);
+  await editar.evaluate((el) => { const r = el.getBoundingClientRect(); scrollBy(0, r.top - (innerHeight - 64)); });
+  await editar.evaluate((el) => el.focus({ preventScroll: true }));
+  await p.keyboard.press('Shift+Tab');
+  await p.keyboard.press('Tab');
+  await p.keyboard.press('Enter');
+  await p.waitForTimeout(400);
+  await p.locator('dialog[open]').getByRole('button', { name: 'Salvar', exact: true }).focus();
+  await p.keyboard.press('Enter');
+  await p.locator('.toast-region .toast', { hasText: 'Produto atualizado.' }).waitFor({ timeout: 3000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(sobOPainel);
+  check(depois.avisos === 1 && depois.nome.includes('Editar') && !depois.aviso, `painel em 390×${ALTURA}: depois de editar, o "Editar" focado não fica sob o aviso`, JSON.stringify(depois));
   await c.close();
 }
 

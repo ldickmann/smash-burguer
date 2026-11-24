@@ -141,13 +141,50 @@ const SCENARIOS = {
     { name: 'modal-observacao', hash: '#/menu', act: async (p) => { await abrirModal(p, 'Cheese Bacon'); await p.fill('dialog[open] #observacao', 'Bem passado, sem sal'); await exigir(p, 'dialog[open] #observacao', 'modal-observacao'); } },
     { name: '404', hash: '#/rota-inexistente' },
   ],
+  // Painel (desenho do admin, §9): cada estado confere o seletor estável dele antes do axe
   admin: [
     { name: 'admin-login', hash: '#/admin/login', act: async (p) => { await exigir(p, '.admin-login .auth-panel', 'admin-login'); } },
-    { name: 'admin', hash: '#/admin', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-produtos', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
-    { name: 'admin-modal', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); } },
-    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, full: true, act: async (p) => { await exigir(p, '#statusFilter', 'admin-pedidos'); } },
-    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } } },
+    {
+      name: 'admin-login-erro', hash: '#/admin/login', storage: { admin: ADMIN }, act: async (p) => {
+        await p.fill('#email', ADMIN.email);
+        await p.fill('#password', 'errada1');
+        await p.getByRole('button', { name: 'Entrar', exact: true }).click();
+        await p.locator('.admin-login .auth-form__anuncio .auth-alert').waitFor({ timeout: 3000 }).catch(() => {});
+        await exigir(p, '.admin-login .auth-form__anuncio .auth-alert', 'admin-login-erro');
+      },
+    },
+    { name: 'admin', hash: '#/admin', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.dashboard__kpis .admin-card--kpi', 'admin'); } },
+    { name: 'admin-produtos', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.products-list .m3-cartao-produto', 'admin-produtos'); } },
+    { name: 'admin-produtos-busca-vazia', hash: '#/admin/products?q=zzz', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.product-management .empty-state', 'admin-produtos-busca-vazia'); } },
+    { name: 'admin-modal', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Novo produto' }).click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #produto-titulo', 'admin-modal'); } },
+    {
+      name: 'admin-modal-erro', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => {
+        await p.getByRole('button', { name: 'Novo produto' }).click();
+        await p.waitForTimeout(500);
+        await p.locator('dialog[open]').getByRole('button', { name: 'Salvar', exact: true }).click();
+        await p.waitForTimeout(300);
+        await exigir(p, '#name[aria-invalid="true"]', 'admin-modal-erro');
+        await exigir(p, '#image-erro', 'admin-modal-erro');
+      },
+    },
+    { name: 'admin-excluir', hash: '#/admin/products', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Excluir', exact: true }).first().click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #excluir-produto-titulo', 'admin-excluir'); } },
+    { name: 'admin-pedidos', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, full: true, act: async (p) => { await exigir(p, '.orders-list .m3-status', 'admin-pedidos'); } },
+    { name: 'admin-pedidos-filtro', hash: '#/admin/orders?status=pending', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { if ((await p.locator('#statusFilter').inputValue()) !== 'pending') throw new Error('admin-pedidos-filtro: o filtro não ficou em pending'); } },
+    { name: 'admin-detalhes', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Detalhes', exact: true }).first().click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #pedido-detalhes-titulo', 'admin-detalhes'); } },
+    { name: 'admin-relatorios', hash: '#/admin/reports', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.top-products', 'admin-relatorios'); } },
+    { name: 'admin-perfil', hash: '#/admin/profile', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await exigir(p, '.admin-profile__info', 'admin-perfil'); } },
+    { name: 'admin-configuracoes', hash: '#/admin/settings', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.getByRole('button', { name: 'Restaurar cardápio original' }).click(); await p.waitForTimeout(500); await exigir(p, 'dialog[open] #restaurar-titulo', 'admin-configuracoes'); } },
+    {
+      name: 'admin-gaveta', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => {
+        // Só abaixo de lg: em 1440 a coluna é fixa, e o estado mede a moldura de novo
+        if ((p.viewportSize()?.width ?? 1440) >= 1024) return;
+        await p.getByRole('button', { name: 'Alternar menu' }).click();
+        await p.waitForTimeout(400);
+        await exigir(p, '#admin-sidebar[role="dialog"]:visible', 'admin-gaveta');
+        await exigir(p, 'main[inert]', 'admin-gaveta');
+      },
+    },
+    { name: 'admin-menu-perfil', hash: '#/admin/orders', storage: { 'smash-burger:admin-session': { admin: ADMIN, isAuthenticated: true } }, act: async (p) => { await p.locator('.navbar-profile__avatar').click(); await p.waitForTimeout(400); await exigir(p, '#menu-perfil-admin:visible', 'admin-menu-perfil'); } },
   ],
 };
 const list = GROUP === 'todos' ? [...SCENARIOS.loja, ...SCENARIOS.admin] : SCENARIOS[GROUP];
