@@ -135,6 +135,15 @@ describe('ModalAdditional (Personalizar no M3)', () => {
     expect(botao.find('span.tabular').text()).toBe(formatPrice(produto.price));
   });
 
+  // Desenho da Conta (§5.9): o gap da .customize__section somaria 12 px às margens do campo
+  it('a observação é o FormGroup sem a classe customize__section, com o contador como ajuda', () => {
+    montarModal();
+    const grupo = wrapper.find('#observacao').element.closest('.form-group');
+    expect(grupo.classList.contains('customize__section')).toBe(false);
+    expect(wrapper.find('#observacao-ajuda').text()).toBe('0/140');
+    expect(wrapper.find('#observacao').attributes('aria-describedby')).toBe('observacao-ajuda');
+  });
+
   it('a foto que falhou volta a ser tentada na abertura seguinte', async () => {
     const { produtos } = montarModal({ categoria: 'drinks', nome: 'Copo de Refrigerante' });
     await wrapper.find('.customize__foto img').trigger('error');

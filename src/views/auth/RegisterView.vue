@@ -3,21 +3,11 @@
     <section class="auth-panel auth-panel--wide" aria-labelledby="cadastro-titulo">
       <h1 id="cadastro-titulo" class="auth-panel__title">Criar conta</h1>
 
-      <div v-if="submitError" class="auth-alert" role="alert">
-        <font-awesome-icon
-          :icon="['fas', 'circle-exclamation']"
-          class="auth-alert__icon"
-          aria-hidden="true"
-        />
-        <p>{{ submitError }}</p>
-      </div>
-
+      <!-- Antes do formulário: quem preenche sabe antes, e o leitor de tela lê antes do modo de formulário -->
       <div v-if="hasAccount" id="aviso-conta-salva" class="auth-alert auth-alert--warning">
-        <font-awesome-icon
-          :icon="['fas', 'circle-exclamation']"
-          class="auth-alert__icon"
-          aria-hidden="true"
-        />
+        <span class="auth-alert__icon" aria-hidden="true">
+          <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+        </span>
         <p>Já existe uma conta salva neste navegador. Se você criar outra, a anterior será apagada.</p>
       </div>
 
@@ -67,6 +57,7 @@
           type="password"
           autocomplete="new-password"
           placeholder="Mínimo de 6 caracteres, com letra e número"
+          helper="Mínimo de 6 caracteres, com letra e número"
           :error="errors.password"
           required
           @blur="touch('password')"
@@ -109,6 +100,7 @@
           :error="cepError"
           :helper="cepHelper"
           :loading="cep.loading.value"
+          live
           required
           @blur="touch('CEP')"
         />
@@ -132,16 +124,29 @@
           autocomplete="address-level3"
         />
 
-        <BaseButton
-          type="submit"
-          size="lg"
-          block
-          :loading="loading"
-          :aria-describedby="hasAccount ? 'aviso-conta-salva' : undefined"
-          class="auth-form__submit"
-        >
-          {{ loading ? "Criando conta…" : "Criar conta" }}
-        </BaseButton>
+        <!-- O banner fica junto do botão, onde a pessoa agiu. A região do alerta existe desde o
+             carregamento (vazia, sem caixa), para o leitor de tela anunciar o erro -->
+        <div ref="envioRef" class="auth-form__envio">
+          <div class="auth-form__anuncio" role="alert" aria-atomic="true">
+            <div v-if="submitError" class="auth-alert">
+              <span class="auth-alert__icon" aria-hidden="true">
+                <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+              </span>
+              <p>{{ submitError }}</p>
+            </div>
+          </div>
+
+          <BaseButton
+            type="submit"
+            size="lg"
+            block
+            :loading="loading"
+            :aria-describedby="hasAccount ? 'aviso-conta-salva' : undefined"
+            class="auth-form__submit"
+          >
+            {{ loading ? "Criando conta…" : "Criar conta" }}
+          </BaseButton>
+        </div>
       </form>
 
       <p class="auth-panel__footer">
@@ -203,6 +208,7 @@ const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
 });
 
 const formRef = ref(null);
+const envioRef = ref(null);
 const loading = ref(false);
 const submitError = ref("");
 
@@ -272,7 +278,13 @@ const handleRegister = async () => {
 
     loading.value = true;
     const result = await authRegister(form.value, route.query.redirect);
-    if (result?.error) submitError.value = result.error;
+    if (result?.error) {
+      submitError.value = result.error;
+      // O foco fica onde estava (no botão, ou no campo do Enter, a ~740 px dali em 390); o banner e o
+      // botão vêm para a vista. O jsdom não tem scrollIntoView
+      await nextTick();
+      envioRef.value?.scrollIntoView?.({ block: "nearest" });
+    }
   } finally {
     loading.value = false;
     submitting = false;

@@ -3,15 +3,6 @@
     <section class="auth-panel" aria-labelledby="entrar-titulo">
       <h1 id="entrar-titulo" class="auth-panel__title">Entrar</h1>
 
-      <div v-if="authError" class="auth-alert" role="alert">
-        <font-awesome-icon
-          :icon="['fas', 'circle-exclamation']"
-          class="auth-alert__icon"
-          aria-hidden="true"
-        />
-        <p>{{ authError }}</p>
-      </div>
-
       <form ref="formRef" class="auth-form" novalidate @submit.prevent="handleLogin">
         <FormGroup
           id="email"
@@ -35,9 +26,22 @@
           @blur="touch('password')"
         />
 
-        <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
-          {{ loading ? "Entrando…" : "Entrar" }}
-        </BaseButton>
+        <!-- O banner fica junto do botão, onde a pessoa agiu. A região do alerta existe desde o
+             carregamento (vazia, sem caixa), para o leitor de tela anunciar o erro -->
+        <div ref="envioRef" class="auth-form__envio">
+          <div class="auth-form__anuncio" role="alert" aria-atomic="true">
+            <div v-if="authError" class="auth-alert">
+              <span class="auth-alert__icon" aria-hidden="true">
+                <font-awesome-icon :icon="['fas', 'circle-exclamation']" />
+              </span>
+              <p>{{ authError }}</p>
+            </div>
+          </div>
+
+          <BaseButton type="submit" size="lg" block :loading="loading" class="auth-form__submit">
+            {{ loading ? "Entrando…" : "Entrar" }}
+          </BaseButton>
+        </div>
       </form>
 
       <p class="auth-panel__footer">
@@ -73,6 +77,7 @@ const { errors, touch, validateAll, firstInvalid } = useFormValidation(form, {
 });
 
 const formRef = ref(null);
+const envioRef = ref(null);
 const loading = ref(false);
 // Mensagem do erro de login ("" sem erro)
 const authError = ref("");
@@ -99,7 +104,13 @@ const handleLogin = async () => {
   const result = await authLogin(form.value, route.query.redirect);
   loading.value = false;
 
-  if (result?.error) authError.value = result.error;
+  if (result?.error) {
+    authError.value = result.error;
+    // O foco fica onde estava (no botão, ou no campo do Enter); o banner e o botão vêm para a vista.
+    // O jsdom não tem scrollIntoView
+    await nextTick();
+    envioRef.value?.scrollIntoView?.({ block: "nearest" });
+  }
 };
 </script>
 

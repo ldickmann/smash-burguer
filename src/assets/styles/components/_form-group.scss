@@ -1,96 +1,223 @@
-// FormGroup (SPEC §5.8): rótulo, campo, ajuda e erro.
+// FormGroup (desenho da Conta, §5.1 e §7.1): o campo outlined do M3 com a forma do Expressive (canto
+// 12) e o rótulo acima, sempre à vista. Sem fundo: o campo toma a cor da superfície em que está, e o
+// contorno outline o identifica (4,06 no painel e no perfil, 3,85 no diálogo e no admin). O erro toma
+// o lugar da ajuda; o somente leitura é tracejado, com o texto inteiro; o desabilitado é apagado.
 @use "../base/breakpoints" as *;
+@use "../base/m3" as *;
 
+// Sem gap: o rótulo e as mensagens dão o espaço por margem, e a região viva vazia do CEP não soma vão
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
 }
 
 .form-group__label {
-  color: var(--color-ink);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  line-height: var(--leading-compact);
+  @include tipo(label-l, 500);
+
+  margin-block-end: var(--space-2);
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-label-l-tracking);
 }
 
 .form-group__field {
+  @include tipo(body-l);
+
   width: 100%;
-  min-height: 3rem;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-input);
-  color: var(--color-ink);
-  font-size: var(--text-md);
-  line-height: var(--leading-body);
+  min-height: 3.5rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--m3-outline);
+  border-radius: var(--m3-forma-m);
+  background-color: transparent;
+  color: var(--m3-on-surface);
+  caret-color: var(--m3-primary);
+  letter-spacing: var(--m3-body-l-tracking);
 
   &::placeholder {
-    color: var(--color-ink-subtle);
+    color: var(--m3-on-surface-variant);
     opacity: 1;
+  }
+
+  // O ícone do seletor de data é do navegador
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+
+  // Também no :focus do mouse, que nem sempre mostra o anel (o anel vem do _a11y.scss)
+  &:focus {
+    border-color: var(--m3-primary);
+  }
+
+  // Depois do foco, com a mesma especificidade: o erro continua no contorno com o foco
+  &[aria-invalid="true"] {
+    border-color: var(--m3-error);
+    caret-color: var(--m3-error);
   }
 
   @include hover-capable {
     &:hover:not(:focus, :disabled, [readonly]) {
-      border-color: var(--color-ink-muted);
+      border-color: var(--m3-on-surface);
+    }
+
+    &[aria-invalid="true"]:hover:not(:focus, :disabled, [readonly]) {
+      border-color: var(--m3-on-error-container);
     }
   }
 
-  &:focus-visible {
-    border-color: var(--color-accent);
-  }
-
-  &[aria-invalid="true"] {
-    border-color: var(--color-danger);
-  }
-
-  &:disabled,
+  // Somente leitura: focável e copiável; o traço o separa do editável, e o texto inteiro, do desabilitado.
+  // Com foco, só o anel: o contorno não acende (vence também a regra global do _a11y.scss)
   &[readonly] {
     border-style: dashed;
-    border-color: var(--color-border);
-    background-color: var(--color-surface-2);
-    color: var(--color-ink-muted);
+    border-color: var(--m3-outline);
     cursor: default;
   }
 
-  // Ícone do seletor de data visível no tema escuro
-  &::-webkit-calendar-picker-indicator {
-    cursor: pointer;
+  &[readonly]:focus {
+    border-color: var(--m3-outline);
+  }
+
+  &:disabled {
+    border-color: var(--m3-outline-variant);
+    color: var(--color-ink-disabled);
+    cursor: not-allowed;
+  }
+
+  &:disabled::placeholder {
+    color: var(--color-ink-disabled);
   }
 }
 
+// O rótulo acende com o foco no campo (e não no botão de mostrar a senha, que também fica no grupo)
+.form-group:not(.has-error, .is-readonly):has(.form-group__field:focus) .form-group__label {
+  color: var(--m3-primary);
+}
+
+.form-group.has-error .form-group__label {
+  color: var(--m3-error);
+}
+
+@include hover-capable {
+  .form-group.has-error:has(.form-group__field:hover:not(:focus)) .form-group__label {
+    color: var(--m3-on-error-container);
+  }
+}
+
+.form-group.is-disabled .form-group__label,
+.form-group.is-disabled .form-group__help {
+  color: var(--color-ink-disabled);
+}
+
+// Select: a lista continua nativa; a seta do Font Awesome fica a 12 px da borda, a 16 do texto
+.form-group__select {
+  position: relative;
+  display: block;
+}
+
 .form-group__field--select {
-  padding-right: var(--space-6);
+  padding-inline-end: calc(var(--space-3) + 1.25rem + var(--space-4));
+  appearance: none;
   cursor: pointer;
 }
 
+.form-group__seta {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-3);
+  height: 1.25rem;
+  margin-block: auto;
+  color: var(--m3-on-surface-variant);
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.form-group.is-disabled .form-group__seta {
+  color: var(--color-ink-disabled);
+}
+
 .form-group__field--textarea {
-  padding-block: var(--space-3);
+  padding: var(--space-4);
   resize: vertical;
 }
 
+// Input: o invólucro posiciona o botão de mostrar a senha
+.form-group__controle {
+  position: relative;
+  display: block;
+}
+
+// O valor não passa por baixo do botão
+.form-group__field--senha {
+  padding-inline-end: calc(var(--target-min) + var(--space-2));
+}
+
+// Mostrar a senha: botão de ícone no fim do campo, dentro do contorno, com a camada de estado. O anel
+// fica por dentro, para não passar do contorno do campo
+.form-group__mostrar {
+  @include camada-de-estado;
+  @include anel-interno;
+
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-1);
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  margin-block: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--m3-forma-full);
+  background: transparent;
+  color: var(--m3-on-surface-variant);
+  font-size: 1.25rem;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--color-ink-disabled);
+    cursor: not-allowed;
+
+    &::before {
+      opacity: 0;
+    }
+  }
+}
+
+// Ajuda e erro: 4 px abaixo do campo, com o texto alinhado ao do campo (recuo de 16 dos dois lados)
 .form-group__help,
 .form-group__error {
+  @include tipo(body-m);
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
-  font-size: var(--text-sm);
-  line-height: var(--leading-compact);
+  margin-block-start: var(--space-1);
+  padding-inline: var(--space-4);
+  letter-spacing: var(--m3-body-m-tracking);
 }
 
+// Algarismos tabulares sempre: o componente não sabe quando a ajuda é o contador "0/140"
 .form-group__help {
-  color: var(--color-ink-muted);
+  color: var(--m3-on-surface-variant);
+  font-variant-numeric: tabular-nums;
 }
 
 .form-group__error {
-  color: var(--color-danger);
+  color: var(--m3-error);
 }
 
-// Arco em SVG (três quartos de círculo), sem raio de borda
+// O ícone centrado na altura da primeira linha (o erro pode quebrar em várias)
+.form-group__icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--m3-body-m-linha);
+}
+
+// Arco em SVG (três quartos de círculo), centrado na primeira linha
 .form-group__spinner {
   flex-shrink: 0;
   width: 1em;
   height: 1em;
+  margin-block-start: calc((var(--m3-body-m-linha) - 1em) / 2);
 
   @include motion-ok {
     animation: form-group-spin var(--dur-spin) linear infinite;
@@ -100,5 +227,48 @@
 @keyframes form-group-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+// Cores forçadas: cada estado com a sua cor de sistema (SPEC-material §1.1, item 6)
+@media (forced-colors: active) {
+  .form-group__field {
+    border-color: CanvasText;
+  }
+
+  .form-group__field[readonly],
+  .form-group__field[readonly]:focus {
+    border-color: CanvasText;
+  }
+
+  .form-group__field:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  .form-group.is-disabled .form-group__label,
+  .form-group.is-disabled .form-group__help {
+    color: GrayText;
+  }
+
+  .form-group__seta {
+    color: currentColor;
+  }
+
+  .form-group__mostrar {
+    color: ButtonText;
+  }
+}
+
+// Mais contraste: o contorno em on-surface-variant; o traço separa o somente leitura do editável. O
+// desabilitado não muda (isento). O seletor simples perde para o foco, o erro e o desabilitado, que ficam
+@media (prefers-contrast: more) {
+  .form-group__field {
+    border-color: var(--m3-on-surface-variant);
+  }
+
+  .form-group__field[readonly],
+  .form-group__field[readonly]:focus {
+    border-color: var(--m3-on-surface-variant);
   }
 }

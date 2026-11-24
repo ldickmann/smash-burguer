@@ -69,9 +69,13 @@ async function focusNotCovered(page, label, max = 150) {
   const touching = [];
   let count = 0;
   let ended = false;
+  let previous = '';
   for (let i = 0; i < max; i++) {
     await page.keyboard.press('Tab');
     const key = await page.evaluate(() => { const el = document.activeElement; return el === document.body ? 'BODY' : `${el.tagName}:${(el.getAttribute('aria-label') || el.textContent || el.id || '').trim().slice(0, 40)}:${Math.round(el.getBoundingClientRect().top + scrollY)}`; });
+    // O campo de data recebe um Tab por parte (dia, mês e ano): a repetição seguida não é o fim da volta
+    if (key === previous) continue;
+    previous = key;
     if (key === 'BODY' || seen.has(key)) { ended = true; break; }
     seen.add(key);
     count++;
@@ -473,6 +477,153 @@ for (const [w, h, onde, removido, vizinho] of [[390, ALTURA, 'pe', 'Suco de Abac
   });
   check(!linha.rola && linha.linhas === 1, 'em 360 px, o grupo de categorias cabe numa linha, sem rolagem', JSON.stringify(linha));
   await focoSobAsBarras(p, 'Cardápio em 360');
+  await c.close();
+}
+
+// Login, Cadastro e Perfil (desenho da Conta, §4, §5.3, §5.5 e §9), em 390 com a altura de KB_ALTURA
+// (rode com 844 e 800). O ViaCEP é simulado por page.route; nada sai para a rede
+const VIACEP = { logradouro: 'Rua XV de Novembro', bairro: 'Centro', localidade: 'Blumenau', uf: 'SC' };
+const VIACEP_UNICO = { logradouro: '', bairro: '', localidade: 'Serra Azul', uf: 'MG' };
+const NAVEGANTES = { logradouro: 'Rua Beira da Praia', bairro: 'Centro', localidade: 'Navegantes', uf: 'SC' };
+// O perfil só salva com todos os campos válidos: o USER de cima não tem celular
+const PERFIL = { ...USER, phone: '47999999999' };
+const SESSAO_PERFIL = { ...SESSION, user: PERFIL };
+const simularViaCep = (page, resposta) => page.route('https://viacep.com.br/**', (r) => r.fulfill({ json: resposta }));
+const nomeDoFoco = () => { const el = document.activeElement; return el.id || (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' '); };
+// O retângulo de um elemento cabe na janela e não cruza a toolbar flutuante
+const aVista = (seletor) => {
+  const r = document.querySelector(seletor)?.getBoundingClientRect();
+  const barra = document.querySelector('.m3-ferramentas').getBoundingClientRect();
+  if (!r || r.height === 0) return { ok: false, motivo: 'sem caixa' };
+  const cruza = Math.min(r.bottom, barra.bottom) > Math.max(r.top, barra.top) && Math.min(r.right, barra.right) > Math.max(r.left, barra.left);
+  return { ok: r.top >= 0 && r.bottom <= innerHeight && !cruza, topo: Math.round(r.top), base: Math.round(r.bottom), barra: Math.round(barra.top) };
+};
+
+// Ordem do Tab no cadastro: a do DOM, com o botão de mostrar a senha depois da senha e, com o CEP único
+// da cidade, a rua e o bairro logo depois do CEP. Nenhum foco cruza a toolbar
+for (const unico of [false, true]) {
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  const p = await c.newPage();
+  await simularViaCep(p, unico ? VIACEP_UNICO : VIACEP);
+  await openRoute(p, '#/register', 'Criar conta');
+  await p.fill('#CEP', unico ? '35588000' : '89010000');
+  await p.locator('#CEP-ajuda', { hasText: unico ? 'vale para a cidade toda' : 'Blumenau' }).waitFor({ timeout: 3000 }).catch(() => {});
+  await p.locator('#firstName').focus();
+  const ordem = [];
+  const sob = [];
+  for (let i = 0; i < 40; i++) {
+    const nome = await p.evaluate(nomeDoFoco);
+    if (nome !== ordem.at(-1)) {
+      ordem.push(nome);
+      const r = await p.evaluate(cobertoPor);
+      if (r.barra) sob.push(`${nome} (${r.topo}–${r.base})`);
+    }
+    if (nome === 'Entrar') break;
+    await p.keyboard.press('Tab');
+  }
+  const esperada = ['firstName', 'lastName', 'email', 'password', 'Mostrar senha', 'dateOfBirth', 'phone', 'CEP', ...(unico ? ['street', 'neighborhood'] : []), 'Criar conta', 'Entrar'];
+  const rotulo = unico ? 'com CEP único da cidade' : 'com CEP de rua';
+  check(ordem.join(',') === esperada.join(','), `cadastro em 390×${ALTURA}, ${rotulo}: a ordem do Tab é a do DOM`, ordem.join(' → '));
+  check(sob.length === 0, `cadastro em 390×${ALTURA}, ${rotulo}: nenhum foco cruza a toolbar`, sob.join(' | '));
+  await c.close();
+}
+
+// Banner do cadastro com Enter no CEP (achado 1 da revisão): o foco fica no CEP, e a view rola o grupo
+// de envio (banner e botão) para a vista. A falha é a do WebCrypto (o site aberto por HTTP num IP da
+// rede): o addInitScript esconde o crypto.subtle, e o guarda do próprio app recusa o hash. A mensagem
+// tem 3 linhas em 390, o pior caso. A mutação desliga o scrollIntoView: o banner fica fora da vista
+async function bannerComEnterNoCep(semRolagem) {
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await c.addInitScript((desligar) => {
+    Object.defineProperty(globalThis.crypto, 'subtle', { get: () => undefined });
+    if (desligar) Element.prototype.scrollIntoView = () => {};
+  }, semRolagem);
+  const p = await c.newPage();
+  await simularViaCep(p, VIACEP);
+  await openRoute(p, '#/register', 'Criar conta');
+  for (const [id, valor] of [['firstName', 'Maria'], ['lastName', 'Silva'], ['email', 'maria@example.com'], ['password', 'senha123'], ['dateOfBirth', '1990-05-10'], ['phone', '47999999999'], ['CEP', '89010000']]) await p.fill(`#${id}`, valor);
+  await p.locator('#CEP-ajuda', { hasText: 'Blumenau' }).waitFor({ timeout: 3000 }).catch(() => {});
+  await p.locator('#CEP').focus();
+  await p.keyboard.press('Enter');
+  await p.locator('.auth-form__anuncio .auth-alert').waitFor({ timeout: 4000 }).catch(() => {});
+  await p.waitForTimeout(300);
+  const r = await p.evaluate((aVistaFonte) => {
+    const aVista = new Function(`return (${aVistaFonte})`)();
+    return { foco: document.activeElement.id, texto: document.querySelector('.auth-form__anuncio')?.textContent.trim(), banner: aVista('.auth-form__anuncio .auth-alert'), botao: aVista('.auth-form__submit') };
+  }, aVista.toString());
+  await c.close();
+  return r;
+}
+{
+  const r = await bannerComEnterNoCep(false);
+  check(r.foco === 'CEP' && r.texto.startsWith('Abra o site por HTTPS'), `cadastro em 390×${ALTURA}: com Enter no CEP e a falha do WebCrypto, o foco fica no CEP e a região do alerta tem a mensagem`, `${r.foco}: ${r.texto}`);
+  check(r.banner.ok && r.botao.ok, `cadastro em 390×${ALTURA}: o banner e o botão ficam na janela, fora da toolbar`, `banner ${JSON.stringify(r.banner)}; botão ${JSON.stringify(r.botao)}`);
+  const m = await bannerComEnterNoCep(true);
+  check(!m.banner.ok, `cadastro em 390×${ALTURA}: mutação — sem a rolagem do grupo de envio, o banner fica fora da vista ou sob a toolbar`, JSON.stringify(m.banner));
+}
+
+// O aviso "Dados salvos." sobre o "Salvar alterações" (§4): o botão, chegado pelo Tab, fica perto do pé;
+// o aviso nasce acima da toolbar, e a view rola o foco para fora de baixo dele. A mutação desliga o
+// scrollIntoView: o aviso cobre o botão
+async function salvarPeloTeclado(semRolagem) {
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  if (semRolagem) await c.addInitScript(() => { Element.prototype.scrollIntoView = () => {}; });
+  await seed(c, { 'smash-burger:session': SESSAO_PERFIL, 'smash-burger:cart:v1': CART, 'smash-burger:account': PERFIL });
+  const p = await c.newPage();
+  await simularViaCep(p, NAVEGANTES);
+  await openRoute(p, '#/profile', 'Sua conta');
+  // O botão começa em parte visível, com 30 px acima da reserva da toolbar (o Chromium centraliza o foco
+  // que vem de fora da tela): o Tab o traz o mínimo, e ele para perto do pé
+  await p.getByRole('button', { name: 'Salvar alterações' }).evaluate((el) => { const r = el.getBoundingClientRect(); scrollBy(0, r.top - (innerHeight - 96 - 30)); });
+  await p.locator('#state').evaluate((el) => el.focus({ preventScroll: true }));
+  await p.keyboard.press('Tab');
+  const antes = await p.evaluate(cobertoPor);
+  await p.keyboard.press('Enter');
+  await p.locator('.toast-region .toast', { hasText: 'Dados salvos.' }).waitFor({ timeout: 4000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(cobertoPor);
+  await c.close();
+  return { antes, depois };
+}
+{
+  const { antes, depois } = await salvarPeloTeclado(false);
+  check(antes.nome === 'Salvar alterações' && !antes.barra, `perfil em 390×${ALTURA}: o Tab leva ao "Salvar alterações", fora da toolbar`, `${antes.nome} (${antes.topo}–${antes.base})`);
+  check(depois.avisos === 1 && depois.nome === 'Salvar alterações' && !depois.aviso && !depois.barra, `perfil em 390×${ALTURA}: com o aviso "Dados salvos.", o botão focado (com o anel) não fica sob o aviso nem sob a toolbar`, `${depois.topo}–${depois.base}, rolagem ${antes.rolagem} → ${depois.rolagem}`);
+  const m = await salvarPeloTeclado(true);
+  check(m.depois.avisos === 1 && m.depois.aviso, `perfil em 390×${ALTURA}: mutação — sem a rolagem da ProfileView, o aviso cobre o botão`, `${m.depois.topo}–${m.depois.base}`);
+}
+
+// Pelo mouse, a página não pula: com o botão à vista, o clique em "Salvar alterações" não rola
+{
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, { 'smash-burger:session': SESSAO_PERFIL, 'smash-burger:cart:v1': CART, 'smash-burger:account': PERFIL });
+  const p = await c.newPage();
+  await simularViaCep(p, NAVEGANTES);
+  await openRoute(p, '#/profile', 'Sua conta');
+  const botao = p.getByRole('button', { name: 'Salvar alterações' });
+  await botao.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  const rolagemAntes = await p.evaluate(() => Math.round(scrollY));
+  await botao.click();
+  await p.locator('.toast-region .toast', { hasText: 'Dados salvos.' }).waitFor({ timeout: 4000 }).catch(() => {});
+  await p.waitForTimeout(400);
+  const depois = await p.evaluate(() => ({ rolagem: Math.round(scrollY), avisos: document.querySelectorAll('.toast-region .toast').length }));
+  check(depois.avisos === 1 && depois.rolagem === rolagemAntes, `perfil em 390×${ALTURA}: pelo mouse, salvar não rola a página`, `rolagem ${rolagemAntes} → ${depois.rolagem}`);
+  await c.close();
+}
+
+// "Ver itens": o anel por dentro (outline-offset negativo), de 3 px
+{
+  const c = await browser.newContext({ viewport: { width: 390, height: ALTURA } });
+  await seed(c, { 'smash-burger:session': SESSION_PEDIDO, 'smash-burger:cart:v1': CART, 'smash-burger:account': USER });
+  const p = await c.newPage();
+  await simularViaCep(p, NAVEGANTES);
+  await openRoute(p, '#/profile', 'Sua conta');
+  await p.locator('.profile-order__summary').first().focus();
+  await p.keyboard.press('Shift+Tab');
+  await p.keyboard.press('Tab');
+  const anel = await p.evaluate(() => ({ ...(() => { const s = getComputedStyle(document.activeElement); return { offset: parseFloat(s.outlineOffset) }; })(), tag: document.activeElement.tagName }));
+  const ring = await p.evaluate(ringOf);
+  check(anel.tag === 'SUMMARY' && ring.ok && anel.offset < 0, '"Ver itens": anel de 3 px por dentro', `${ring.outline}, offset ${anel.offset}`);
   await c.close();
 }
 

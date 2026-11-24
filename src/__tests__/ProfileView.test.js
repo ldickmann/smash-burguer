@@ -6,6 +6,7 @@ import ProfileView from '../views/auth/ProfileView.vue';
 import { useUserStore } from '../stores/userStore';
 import { useCartStore } from '../stores/cart';
 import { ACCOUNT_KEY, authService } from '../services/authServices';
+import { formatPrice } from '../utils/formatters';
 
 const ACCOUNT = {
   firstName: 'Maria',
@@ -81,7 +82,7 @@ describe('ProfileView', () => {
     await vi.advanceTimersByTimeAsync(1000);
     await flushPromises();
 
-    expect(wrapper.find('#email-erro').text()).toBe('O email é obrigatório');
+    expect(wrapper.find('#email-erro').text()).toBe('O e-mail é obrigatório');
     expect(savedAccount()).toEqual(ACCOUNT);
     expect(useUserStore().user.email).toBe(ACCOUNT.email);
   });
@@ -201,5 +202,156 @@ describe('ProfileView', () => {
     expect(useUserStore().isAuthenticated).toBe(false);
     expect(useCartStore().items).toEqual([]);
     expect(router.currentRoute.value.path).toBe('/');
+  });
+});
+
+// Desenho da Conta (§5.6 a §5.8 e §9): as seções em contêineres, os campos de endereço somente
+// leitura, o CEP como região viva, o "Excluir conta" em danger, a linha do pedido sem "·" com o total
+// ao lado do número, o rótulo de status que não é controle e o "Ver itens" nativo
+describe('ProfileView no M3', () => {
+  const PEDIDO = {
+    items: [{ productId: 1, category: 'foods', name: 'Cheese Bacon', unitPrice: 29.49, quantity: 1 }],
+    total: 29.49,
+    paymentMethod: 'PIX',
+    address: ACCOUNT.address,
+  };
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+    vi.stubGlobal('fetch', viaCep());
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  const comPedido = async () => {
+    const montado = await mountProfile();
+    useUserStore().placeOrder(PEDIDO);
+    await flushPromises();
+    return montado;
+  };
+
+  it('"Seus dados" e "Seus pedidos" são seções nomeadas pelos h2, em .profile-page__secao, nessa ordem', async () => {
+    const { wrapper } = await mountProfile();
+    const secoes = wrapper.findAll('section.profile-page__secao');
+    expect(secoes.map((s) => s.attributes('aria-labelledby'))).toEqual(['seus-dados', 'seus-pedidos']);
+    expect(secoes.map((s) => s.find('h2').text())).toEqual(['Seus dados', 'Seus pedidos']);
+    expect(wrapper.find('.profile-page__card').exists()).toBe(false);
+    expect(wrapper.findAll('h1').map((h) => h.text())).toEqual(['Sua conta']);
+  });
+
+  it('Rua, Bairro, Cidade e UF são somente leitura, com .is-readonly', async () => {
+    const { wrapper } = await mountProfile();
+    for (const id of ['street', 'neighborhood', 'city', 'state']) {
+      expect(wrapper.find(`#${id}`).attributes('readonly')).toBeDefined();
+      expect(wrapper.find(`#${id}`).element.closest('.form-group').classList.contains('is-readonly')).toBe(true);
+    }
+  });
+
+  it('o CEP é uma região viva, com a ajuda dentro', async () => {
+    const { wrapper } = await mountProfile();
+    const regiao = wrapper.find('#CEP').element.closest('.form-group').querySelector('.form-group__mensagens');
+    expect(regiao.getAttribute('role')).toBe('status');
+    expect(regiao.getAttribute('aria-atomic')).toBe('true');
+    expect(regiao.textContent).toContain('ViaCEP');
+  });
+
+  it('"Salvar alterações" é tonal e block; o "Excluir conta" da tela usa a variante danger', async () => {
+    const { wrapper } = await mountProfile();
+    const salvar = buttonByText(wrapper, 'Salvar alterações');
+    expect(salvar.classes()).toEqual(expect.arrayContaining(['btn--secondary', 'btn--block']));
+    const excluir = wrapper.find('.profile-delete button');
+    expect(excluir.text()).toBe('Excluir conta');
+    expect(excluir.classes()).toContain('btn--danger');
+  });
+
+  it('a linha do pedido: número e total na linha 1; data, contagem e status em parágrafos, sem "·"', async () => {
+    const { wrapper } = await comPedido();
+    const pedido = wrapper.find('li.profile-order');
+    expect(pedido.find('.profile-order__head .profile-order__number').text()).toMatch(/^Pedido #\d+$/);
+    expect(pedido.find('.profile-order__head .profile-order__total').text()).toBe(formatPrice(29.49));
+    expect(pedido.find('.profile-order__total').classes()).toContain('tabular');
+    const meta = pedido.find('.profile-order__meta');
+    expect(meta.findAll(':scope > p').map((p) => p.text())).toEqual([
+      expect.stringMatching(/^\d{2}\/\d{2}\/\d{4}, \d{2}:\d{2}$/),
+      '1 item',
+      'Recebido',
+    ]);
+    expect(meta.find('time').attributes('datetime')).toBeTruthy();
+    expect(pedido.text()).not.toContain('·');
+  });
+
+  it('"Recebido" é um rótulo de status: um p, sem papel, sem tabindex e sem ser botão', async () => {
+    const { wrapper } = await comPedido();
+    const status = wrapper.find('.profile-order__status');
+    expect(status.element.tagName).toBe('P');
+    expect(status.attributes('role')).toBeUndefined();
+    expect(status.attributes('tabindex')).toBeUndefined();
+    expect(status.find('button, a, svg').exists()).toBe(false);
+  });
+
+  it('"Ver itens" é o summary de um details, com os dois chevrons decorativos; aberto, mostra o resumo', async () => {
+    const { wrapper } = await comPedido();
+    const details = wrapper.find('details.profile-order__details');
+    const summary = details.find(':scope > summary.profile-order__summary');
+    expect(summary.text()).toBe('Ver itens');
+    const chevrons = summary.findAll('.profile-order__chevron');
+    expect(chevrons).toHaveLength(2);
+    for (const chevron of chevrons) expect(chevron.attributes('aria-hidden')).toBe('true');
+    expect(summary.attributes('role')).toBeUndefined();
+    expect(details.find('.order-summary').exists()).toBe(true);
+  });
+
+  it('depois do aviso "Dados salvos.", o foco rola para a vista só se a última entrada foi do teclado', async () => {
+    const rolar = vi.fn();
+    Element.prototype.scrollIntoView = rolar;
+    try {
+      const { wrapper } = await mountProfile();
+      const salvar = async () => {
+        await wrapper.find('form').trigger('submit');
+        await vi.advanceTimersByTimeAsync(1000);
+        await flushPromises();
+      };
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await salvar();
+      expect(rolar).toHaveBeenCalledTimes(1);
+      expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+
+      // Pelo toque ou pelo mouse, a página não pula
+      document.dispatchEvent(new Event('pointerdown'));
+      await salvar();
+      expect(rolar).toHaveBeenCalledTimes(1);
+    } finally {
+      delete Element.prototype.scrollIntoView;
+    }
+  });
+
+  // /code-review: o aviso de erro fica no mesmo lugar do de sucesso e também cobriria o botão
+  it('com o aviso de erro ao salvar, o foco também rola, se a última entrada foi do teclado', async () => {
+    const rolar = vi.fn();
+    Element.prototype.scrollIntoView = rolar;
+    try {
+      const { wrapper } = await mountProfile();
+      vi.spyOn(useUserStore(), 'updateProfile').mockRejectedValue(new Error('cota cheia'));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await wrapper.find('form').trigger('submit');
+      await flushPromises();
+      expect(rolar).toHaveBeenCalledTimes(1);
+      expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+    } finally {
+      delete Element.prototype.scrollIntoView;
+    }
+  });
+
+  it('sem pedidos, o EmptyState com "Ver cardápio" dentro da seção', async () => {
+    const { wrapper } = await mountProfile();
+    const secao = wrapper.findAll('section.profile-page__secao')[1];
+    expect(secao.find('.empty-state').text()).toContain('Você ainda não fez pedidos');
+    expect(secao.find('a[href="/menu"]').text()).toBe('Ver cardápio');
   });
 });

@@ -152,3 +152,102 @@ describe('RegisterView', () => {
     });
   });
 });
+
+// Desenho da Conta (§5.3, §5.5 e §9): o aviso antes do formulário, o CEP como região viva, o erro no
+// lugar da ajuda, a instrução da senha como ajuda e o banner junto do botão, com a rolagem do grupo
+describe('RegisterView no M3', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+    delete Element.prototype.scrollIntoView;
+  });
+
+  const preencherComCep = async (wrapper) => {
+    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(viaCepResponse('Rua XV de Novembro', 'Blumenau'))));
+    await fillForm(wrapper);
+    await wrapper.find('#CEP').setValue('89010000');
+    await flushPromises();
+  };
+
+  it('o aviso de conta salva vem antes do formulário, no topo do painel', async () => {
+    localStorage.setItem(ACCOUNT_KEY, JSON.stringify({ email: 'maria@example.com', password: 'senha123' }));
+    const wrapper = await mountRegister();
+    const aviso = wrapper.find('#aviso-conta-salva');
+    expect(aviso.classes()).toEqual(expect.arrayContaining(['auth-alert', 'auth-alert--warning']));
+    expect(aviso.attributes('role')).toBeUndefined();
+    const form = wrapper.find('form').element;
+    expect(aviso.element.compareDocumentPosition(form) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('o CEP é uma região viva desde a montagem, com a ajuda dentro', async () => {
+    vi.stubGlobal('fetch', vi.fn());
+    const wrapper = await mountRegister();
+    const regiao = wrapper.find('#CEP').element.closest('.form-group').querySelector('.form-group__mensagens');
+    expect(regiao.getAttribute('role')).toBe('status');
+    expect(regiao.getAttribute('aria-atomic')).toBe('true');
+    expect(regiao.querySelector('#CEP-ajuda').textContent).toContain('ViaCEP');
+  });
+
+  it('a instrução da senha é a ajuda do campo, e o placeholder fica', async () => {
+    const wrapper = await mountRegister();
+    const senha = wrapper.find('#password');
+    expect(senha.attributes('aria-describedby')).toBe('password-ajuda');
+    expect(wrapper.find('#password-ajuda').text()).toBe('Mínimo de 6 caracteres, com letra e número');
+    expect(senha.attributes('placeholder')).toBe('Mínimo de 6 caracteres, com letra e número');
+    expect(senha.attributes('autocomplete')).toBe('new-password');
+    expect(wrapper.find('button.form-group__mostrar[aria-controls="password"]').exists()).toBe(true);
+  });
+
+  it('envio vazio: aria-invalid e aria-describedby nos erros; no CEP, o erro toma o lugar da ajuda', async () => {
+    vi.stubGlobal('fetch', vi.fn());
+    const wrapper = await mountRegister();
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+
+    for (const id of ['firstName', 'lastName', 'email', 'password', 'dateOfBirth', 'phone', 'CEP']) {
+      expect(wrapper.find(`#${id}`).attributes('aria-invalid')).toBe('true');
+      expect(wrapper.find(`#${id}`).attributes('aria-describedby')).toBe(`${id}-erro`);
+    }
+    expect(wrapper.find('#CEP-erro').text()).toBe('O CEP é obrigatório');
+    expect(wrapper.find('#CEP-ajuda').exists()).toBe(false);
+    expect(wrapper.find('#password-ajuda').exists()).toBe(false);
+    expect(wrapper.find('.auth-alert').exists()).toBe(false);
+  });
+
+  it('a região do alerta existe vazia na montagem, logo antes do botão', async () => {
+    const wrapper = await mountRegister();
+    const regiao = wrapper.find('.auth-form__envio > .auth-form__anuncio');
+    expect(regiao.attributes('role')).toBe('alert');
+    expect(regiao.attributes('aria-atomic')).toBe('true');
+    expect(regiao.text()).toBe('');
+    expect(regiao.element.nextElementSibling.matches('button[type="submit"]')).toBe(true);
+  });
+
+  it('falha do cadastro: o banner entra na região, e a view rola o grupo de envio', async () => {
+    const rolar = vi.fn();
+    Element.prototype.scrollIntoView = rolar;
+    vi.spyOn(authService, 'register').mockRejectedValue(new Error('falhou'));
+    const wrapper = await mountRegister();
+    await preencherComCep(wrapper);
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+
+    expect(wrapper.find('.auth-form__anuncio .auth-alert').text()).toBe('Não foi possível criar a conta. Tente de novo.');
+    expect(rolar).toHaveBeenCalledTimes(1);
+    expect(rolar.mock.contexts[0]).toBe(wrapper.find('.auth-form__envio').element);
+    expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+  });
+
+  it('Nome e Sobrenome ficam no mesmo grupo, antes do e-mail; a ordem do DOM é a do Tab', async () => {
+    const wrapper = await mountRegister();
+    expect(wrapper.findAll('.auth-form__names input').map((el) => el.attributes('id'))).toEqual(['firstName', 'lastName']);
+    const ordem = wrapper.findAll('form input, form button').map((el) => el.attributes('id') ?? el.text());
+    expect(ordem).toEqual(['firstName', 'lastName', 'email', 'password', '', 'dateOfBirth', 'phone', 'CEP', 'Criar conta']);
+  });
+});

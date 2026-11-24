@@ -115,7 +115,8 @@ describe('ConfirmationView (Confirmação do Material 3)', () => {
     const links = wrapper.findAll('.confirmation-page__acoes a');
     expect(links.map((link) => [link.text(), link.attributes('href')])).toEqual([
       ['Voltar ao cardápio', '/menu'],
-      ['Ver meus pedidos', '/profile'],
+      // Âncora nos pedidos (desenho da Conta, §13): em 390, "Seus pedidos" fica a ~1300 px do topo
+      ['Ver meus pedidos', '/profile#seus-pedidos'],
     ]);
     expect(links[0].classes()).toEqual(expect.arrayContaining(['m3-botao--filled', 'btn--lg']));
     expect(links[1].classes()).toEqual(expect.arrayContaining(['m3-botao--tonal', 'btn--lg']));

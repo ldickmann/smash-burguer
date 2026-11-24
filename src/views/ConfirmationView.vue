@@ -30,7 +30,7 @@
 
       <div class="confirmation-page__acoes">
         <BaseButton size="lg" to="/menu">Voltar ao cardápio</BaseButton>
-        <BaseButton variant="secondary" size="lg" to="/profile">Ver meus pedidos</BaseButton>
+        <BaseButton variant="secondary" size="lg" to="/profile#seus-pedidos">Ver meus pedidos</BaseButton>
       </div>
     </div>
   </div>

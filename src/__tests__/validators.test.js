@@ -12,6 +12,13 @@ describe('validateEmail', () => {
   it.each(['', 'maria', 'maria@example', 'maria silva@example.com', '@example.com'])('recusa "%s"', (email) => {
     expect(validateEmail(email).isValid).toBe(false);
   });
+
+  // "E-mail", como nos rótulos (SPEC.md §8); o erro de formato sugere a correção (3.3.3)
+  it('as mensagens escrevem "E-mail", e a de formato mostra o formato esperado', () => {
+    expect(validateEmail('').message).toBe('O e-mail é obrigatório');
+    expect(validateEmail('maria@example').message).toBe('E-mail inválido. Use o formato voce@exemplo.com');
+    expect(validateEmail('maria@example.com').message).toBe('');
+  });
 });
 
 describe('validateBirthDate', () => {

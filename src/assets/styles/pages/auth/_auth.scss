@@ -1,30 +1,41 @@
-// Painel de autenticação compartilhado por Entrar, Criar conta e o login admin (SPEC §5.8).
+// Painel de autenticação (desenho da Conta, §5.2 e §5.3), dividido por Entrar, Criar conta e o login do
+// admin: um contêiner surface-container-low de canto 28, sem sombra, centrado no alto da página, sem
+// nada em volta. O banner de erro em error-container fica junto do botão de envio; o aviso de conta
+// salva, no topo. O h1 segue a regra global (--text-page, 500).
 @use "../../base/breakpoints" as *;
+@use "../../base/m3" as *;
 
+// O ritmo do carrinho: a coluna a 20 e 40 px do cabeçalho
 .auth-page {
   display: flex;
   justify-content: center;
-  padding-block: var(--space-7) var(--space-8);
+  padding-block: var(--space-5) var(--space-8);
+
+  @include up(md) {
+    padding-top: var(--space-7);
+  }
 }
 
+// Borda nos modos de contraste: o painel contra a página dá 1,05 e some sem ela
 .auth-panel {
+  @include reserva-de-sombra;
+
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   width: 100%;
   max-width: 440px;
-  padding: var(--space-5);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
-  box-shadow: var(--elev-1);
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-xl);
+  background: var(--m3-surface-container-low);
+
+  @include up(sm) {
+    padding: var(--space-5);
+  }
 
   @include up(md) {
     padding: var(--space-6);
   }
-}
-
-.auth-panel__title {
-  font-size: var(--text-page);
 }
 
 .auth-form {
@@ -33,43 +44,66 @@
   gap: var(--space-4);
 }
 
+// No admin, o botão fica direto no formulário: a margem vale fora do grupo de envio
 .auth-form__submit {
   margin-top: var(--space-2);
 }
 
-// Banner de erro de autenticação
+// Grupo de envio: a região do alerta (vazia, sem altura, sem erro) e o botão, sem gap
+.auth-form__envio {
+  display: flex;
+  flex-direction: column;
+}
+
+// O banner fica a 16 px do botão (8 + 8); no admin, no topo do painel, ele não ganha margem
+.auth-form__envio .auth-alert {
+  margin-block-end: var(--space-2);
+}
+
+// Banner de erro: o papel e o "on" dele (7,23), a forma e o padding do aviso do pagamento. Borda nos
+// modos de contraste, onde o fundo some
 .auth-alert {
+  @include reserva-de-sombra;
+  @include tipo(body-l);
+
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-left: 3px solid var(--color-danger);
-  border-radius: var(--radius-sm);
-  background: var(--color-danger-soft);
-  color: var(--color-ink);
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--m3-forma-l);
+  background: var(--m3-error-container);
+  color: var(--m3-on-error-container);
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
+// O ícone de 20 px centrado na altura da primeira linha do texto (4,99 sobre o contêiner)
 .auth-alert__icon {
+  display: inline-flex;
   flex-shrink: 0;
-  margin-top: 0.2em;
-  color: var(--color-danger);
+  align-items: center;
+  height: var(--m3-body-l-linha);
+  color: var(--m3-error);
+  font-size: 1.25rem;
 }
 
-// Aviso que não é erro (ex.: a conta nova substitui a que já está salva)
+// Aviso que não é erro (a conta nova substitui a que já está salva): o aviso do pagamento, sem o botão
 .auth-alert--warning {
-  border-left-color: var(--color-warning);
-  background: var(--color-warning-soft);
+  background: var(--m3-aviso-container);
+  color: var(--m3-aviso);
 
   .auth-alert__icon {
-    color: var(--color-warning);
+    color: var(--m3-aviso);
   }
 }
 
+// Rodapé: link na frase (a exceção de alvo da 2.5.8), alinhado ao início, como o h1 e os rótulos
 .auth-panel__footer {
-  color: var(--color-ink-muted);
-  text-align: center;
+  @include tipo(body-l);
+
+  color: var(--m3-on-surface-variant);
+  letter-spacing: var(--m3-body-l-tracking);
 }
 
 .auth-panel__footer .link-inline {
-  font-weight: 700;
+  font-weight: 500;
 }
