@@ -90,6 +90,34 @@ describe('store dos avisos (toast.js)', () => {
     expect(mensagens()).toEqual([]);
   });
 
+  it('o soltar() não retoma o aviso pausado pelo ponteiro ou pelo foco; ele volta a correr no resume()', () => {
+    const id = store.show({ message: 'Salvo' });
+    vi.advanceTimersByTime(1000);
+    store.pause(id);
+    store.segurar();
+    store.soltar();
+    vi.advanceTimersByTime(10000);
+    expect(mensagens()).toEqual(['Salvo']);
+
+    store.resume(id);
+    vi.advanceTimersByTime(2999);
+    expect(mensagens()).toEqual(['Salvo']);
+    vi.advanceTimersByTime(1);
+    expect(mensagens()).toEqual([]);
+  });
+
+  it('o aviso com ação sob o ponteiro não ganha os 10 s até o ponteiro sair', () => {
+    const a = store.show({ message: 'A removido.', variant: 'info', action: { label: 'Desfazer', onClick: vi.fn() } });
+    store.pause(a);
+    store.show({ message: 'B removido.', variant: 'info', action: { label: 'Desfazer', onClick: vi.fn() } });
+    vi.advanceTimersByTime(20000);
+    expect(mensagens()).toEqual(['A removido.', 'B removido.']);
+
+    store.resume(a);
+    vi.advanceTimersByTime(10000);
+    expect(mensagens()).toEqual(['B removido.']);
+  });
+
   it('o resume() não arma o tempo com um diálogo aberto (o mouseleave sobre o aviso parado)', () => {
     store.show({ message: 'Salvo' });
     store.segurar();

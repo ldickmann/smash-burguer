@@ -8,6 +8,9 @@ const DURACAO_LONGA = 10000;
 let nextId = 1;
 // Timers ficam fora do estado reativo
 const timers = new Map();
+// Avisos com o ponteiro ou o foco dentro: o tempo não volta a correr sem a pessoa sair deles, nem
+// quando um diálogo fecha
+const interagindo = new Set();
 
 export const useToastStore = defineStore("toast", {
   state: () => ({
@@ -37,7 +40,7 @@ export const useToastStore = defineStore("toast", {
         for (const antigo of this.toasts) {
           if (antigo.action && !timers.has(antigo.id)) {
             timers.set(antigo.id, { remaining: DURACAO_LONGA, startedAt: Date.now(), handle: null });
-            this.resume(antigo.id);
+            this.armar(antigo.id);
           }
         }
       }
@@ -51,7 +54,7 @@ export const useToastStore = defineStore("toast", {
 
       if (expira) {
         timers.set(id, { remaining: duration, startedAt: Date.now(), handle: null });
-        this.resume(id);
+        this.armar(id);
       }
       return id;
     },
@@ -60,6 +63,7 @@ export const useToastStore = defineStore("toast", {
       const timer = timers.get(id);
       if (timer?.handle) clearTimeout(timer.handle);
       timers.delete(id);
+      interagindo.delete(id);
       this.toasts = this.toasts.filter((toast) => toast.id !== id);
     },
 
@@ -70,8 +74,20 @@ export const useToastStore = defineStore("toast", {
       }
     },
 
-    // Pausa no hover e no foco
+    // Pausa no hover e no foco (o AppToast chama): o aviso fica marcado até o resume()
     pause(id) {
+      interagindo.add(id);
+      this.parar(id);
+    },
+
+    // O ponteiro ou o foco saiu do aviso: o tempo volta a correr (se não houver diálogo aberto)
+    resume(id) {
+      interagindo.delete(id);
+      this.armar(id);
+    },
+
+    // Para o tempo, guardando o que falta
+    parar(id) {
       const timer = timers.get(id);
       if (!timer?.handle) return;
       clearTimeout(timer.handle);
@@ -79,8 +95,9 @@ export const useToastStore = defineStore("toast", {
       timer.remaining -= Date.now() - timer.startedAt;
     },
 
-    resume(id) {
-      if (this.dialogosAbertos > 0) return;
+    // Arma o tempo que falta, a não ser com um diálogo aberto ou com a pessoa dentro do aviso
+    armar(id) {
+      if (this.dialogosAbertos > 0 || interagindo.has(id)) return;
       const timer = timers.get(id);
       if (!timer || timer.handle) return;
       timer.startedAt = Date.now();
@@ -90,7 +107,7 @@ export const useToastStore = defineStore("toast", {
     // O BaseDialog chama ao abrir: o primeiro diálogo pausa o tempo dos avisos na tela
     segurar() {
       if (this.dialogosAbertos === 0) {
-        for (const toast of this.toasts) this.pause(toast.id);
+        for (const toast of this.toasts) this.parar(toast.id);
       }
       this.dialogosAbertos += 1;
     },
@@ -103,7 +120,7 @@ export const useToastStore = defineStore("toast", {
       if (this.dialogosAbertos > 0) return;
       for (const toast of this.toasts) {
         toast.retido = false;
-        this.resume(toast.id);
+        this.armar(toast.id);
       }
     },
 

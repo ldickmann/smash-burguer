@@ -333,8 +333,13 @@ const focusFirstError = async () => {
 
 // Com o aviso na tela (de sucesso ou de erro, no mesmo lugar), o botão focado pelo teclado rola para
 // fora de baixo dele (a reserva fica no scroll-padding). O jsdom não tem scrollIntoView
+// O aviso de erro não expira: o envio seguinte o tira antes de mostrar o resultado novo, para o
+// "Dados salvos." não aparecer ao lado de um erro que já não vale
+let avisoDeErro = null;
 const avisar = async (aviso) => {
-  toastStore.show(aviso);
+  if (avisoDeErro !== null) toastStore.dismiss(avisoDeErro);
+  const id = toastStore.show(aviso);
+  avisoDeErro = aviso.variant === "error" ? id : null;
   if (ultimaPorPonteiro) return;
   await nextTick();
   document.activeElement?.scrollIntoView?.({ block: "nearest" });

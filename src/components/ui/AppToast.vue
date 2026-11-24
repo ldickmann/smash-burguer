@@ -105,9 +105,16 @@ const guardarOrigem = (event) => {
   if (de && !regiao.value?.contains(de)) origem = de;
 };
 
-const focoPerdido = () => {
+// Perdido também quando o foco ainda está no aviso dispensado: ele fica no DOM durante a transição de
+// saída, e o foco cairia no body quando ele sair
+const focoPerdido = (id) => {
   const ativo = document.activeElement;
-  return !ativo || ativo === document.body || !document.contains(ativo);
+  return (
+    !ativo ||
+    ativo === document.body ||
+    !document.contains(ativo) ||
+    !!ativo.closest?.(`[data-toast-id="${id}"]`)
+  );
 };
 
 // Destino do foco depois que um aviso sai: o primeiro botão do aviso seguinte na pilha (o de baixo;
@@ -139,7 +146,7 @@ const agir = async (id, event) => {
   const destino = destinoDepoisDe(id);
   await toastStore.runAction(id, event);
   await nextTick();
-  if (ultimaEntrada === "teclado" && focoPerdido()) destino()?.focus();
+  if (ultimaEntrada === "teclado" && focoPerdido(id)) destino()?.focus();
 };
 
 // Só retoma o tempo quando o foco sai do aviso inteiro
@@ -148,11 +155,13 @@ const handleFocusOut = (event, id) => {
 };
 
 // O foco que não se move: depois de mostrar um aviso, o elemento focado sobe acima da reserva
-// (scroll-padding-bottom), como o CartView, o ProfileView e a OrderManagement já fazem
+// (scroll-padding-bottom), como o CartView, o ProfileView e a OrderManagement já fazem. Olha os ids,
+// e não a contagem: o quarto aviso entra e tira o mais antigo no mesmo tick, e a contagem fica em 3
 watch(
-  () => visiveis.value.length,
+  () => visiveis.value.map((toast) => toast.id),
   async (agora, antes) => {
-    if (agora <= antes || ultimaEntrada !== "teclado") return;
+    const entrou = agora.some((id) => !antes?.includes(id));
+    if (!entrou || ultimaEntrada !== "teclado") return;
     await nextTick();
     const ativo = document.activeElement;
     if (ativo && ativo !== document.body && !regiao.value?.contains(ativo)) {

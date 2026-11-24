@@ -206,6 +206,24 @@ describe('BaseDialog', () => {
     expect(painel.classes()).not.toContain('tem-mais');
   });
 
+  it('o divisor de baixo aparece quando o conteúdo cresce com o corpo já no teto, sem rolar', async () => {
+    wrapper = montar({ slots: { default: '<div id="conteudo-dialogo"><p>Curto</p></div>', footer: '<button>Ok</button>' } });
+    await wrapper.setProps({ open: true });
+    const corpo = wrapper.find('.dialog__body');
+    Object.defineProperty(corpo.element, 'clientHeight', { configurable: true, value: 200 });
+    Object.defineProperty(corpo.element, 'scrollHeight', { configurable: true, value: 200 });
+    await flushPromises();
+    expect(wrapper.find('.dialog__panel').classes()).not.toContain('tem-mais');
+
+    // Mensagens de erro entram no corpo: a caixa dele não muda (está no teto), só o conteúdo
+    Object.defineProperty(corpo.element, 'scrollHeight', { configurable: true, value: 500 });
+    const erro = document.createElement('p');
+    erro.textContent = 'Informe o nome.';
+    document.getElementById('conteudo-dialogo').appendChild(erro);
+    await flushPromises();
+    expect(wrapper.find('.dialog__panel').classes()).toContain('tem-mais');
+  });
+
   it('o botão em loading dentro do diálogo anuncia o rótulo novo na região do diálogo', async () => {
     const { default: BaseButton } = await import('../components/ui/BaseButton.vue');
     const Conteudo = {

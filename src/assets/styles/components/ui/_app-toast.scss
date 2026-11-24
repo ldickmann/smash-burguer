@@ -14,7 +14,6 @@
   bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   pointer-events: none;
 
   @include up(lg) {
@@ -40,6 +39,12 @@
   @include up(lg) {
     align-items: flex-start;
   }
+}
+
+// As duas listas existem sempre (regiões vivas); a vazia não pode somar vão no pé. O vão entre elas só
+// entra quando as duas têm avisos (a lista vazia continua na árvore de acessibilidade)
+.toast-region__list--status:not(:empty) + .toast-region__list--alert:not(:empty) {
+  margin-top: var(--space-2);
 }
 
 .toast {

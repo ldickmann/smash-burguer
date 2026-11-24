@@ -149,6 +149,13 @@ describe('aviso (AppToast, §4.5 e §5.1)', () => {
     expect(valor(css.aviso, '.toast-enter-from', 'transform', MOVIMENTO_OK)).toBe('scale(0.8)');
   });
 
+  it('a lista vazia não soma vão no pé: o vão entre as listas só existe quando as duas têm avisos', () => {
+    expect(valor(css.aviso, '.toast-region', 'gap')).toBeUndefined();
+    expect(
+      valor(css.aviso, '.toast-region__list--status:not(:empty) + .toast-region__list--alert:not(:empty)', 'margin-top')
+    ).toBe('var(--space-2)');
+  });
+
   it('acima da toolbar abaixo de lg; a partir de lg, no início do .container, alinhado ao início', () => {
     const code = escopado(css.aviso, 'AppToast.vue');
     expect(valor(code, 'body:has(.m3-ferramentas) .toast-region', 'bottom', ABAIXO_LG)).toBe(

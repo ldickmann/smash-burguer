@@ -385,6 +385,20 @@ describe('ProfileView no M3', () => {
     }
   });
 
+  it('um novo envio tira o aviso de erro do envio anterior: depois do sucesso, só "Dados salvos."', async () => {
+    const { useToastStore } = await import('../stores/toast');
+    const { wrapper } = await mountProfile();
+    const salvar = vi.spyOn(useUserStore(), 'updateProfile').mockRejectedValueOnce(new Error('cota cheia'));
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+    expect(useToastStore().toasts.map((t) => t.message)).toEqual(['Não foi possível salvar. Tente de novo.']);
+
+    salvar.mockResolvedValueOnce();
+    await wrapper.find('form').trigger('submit');
+    await flushPromises();
+    expect(useToastStore().toasts.map((t) => t.message)).toEqual(['Dados salvos.']);
+  });
+
   it('sem pedidos, o EmptyState com "Ver cardápio" dentro da seção', async () => {
     const { wrapper } = await mountProfile();
     const secao = wrapper.findAll('section.profile-page__secao')[1];

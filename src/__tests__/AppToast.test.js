@@ -252,6 +252,44 @@ describe('AppToast', () => {
     });
   });
 
+  it('o quarto aviso, que troca o mais antigo, também rola o foco do teclado para a vista', async () => {
+    const fora = document.createElement('button');
+    document.body.appendChild(fora);
+    const rolar = vi.fn();
+    fora.scrollIntoView = rolar;
+    wrapper = mountToasts(pinia, router);
+    ['1', '2', '3'].forEach((message) => store.show({ message, duration: 0 }));
+    await flushPromises();
+
+    fora.focus();
+    teclado();
+    rolar.mockClear();
+    store.show({ message: '4', duration: 0 });
+    await flushPromises();
+    expect(wrapper.findAll('.toast')).toHaveLength(3);
+    expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+    fora.remove();
+  });
+
+  it('com a transição de saída real, a ação que não move o foco não o deixa no botão que está saindo', async () => {
+    // Sem o stub do TransitionGroup: o aviso dispensado fica no DOM até a transição de saída acabar
+    wrapper = mount(AppToast, {
+      attachTo: document.body,
+      global: { plugins: [pinia, router], stubs: { 'font-awesome-icon': true, TransitionGroup: false } },
+    });
+    store.show({ message: 'A', variant: 'info', action: { label: 'Desfazer', onClick: vi.fn() } });
+    store.show({ message: 'B', duration: 0 });
+    await flushPromises();
+
+    const desfazer = wrapper.find('[data-toast-id] .toast__action');
+    desfazer.element.focus();
+    teclado();
+    await desfazer.trigger('click');
+    await flushPromises();
+    expect(document.activeElement).not.toBe(desfazer.element);
+    expect(document.activeElement.closest('.toast').textContent).toContain('B');
+  });
+
   it('retenção: com um diálogo aberto, o aviso novo não aparece; ao soltar, entra na lista viva', async () => {
     wrapper = mountToasts(pinia, router);
     store.segurar();

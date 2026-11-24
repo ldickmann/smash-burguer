@@ -88,6 +88,7 @@ let pointerStartedOnBackdrop = false;
 // Se este diálogo segura os avisos (segurar() ao abrir, soltar() ao fechar ou desmontar aberto)
 let segurando = false;
 let observador = null;
+let mutacoes = null;
 
 const anunciar = async (texto) => {
   // Limpa antes para que a mesma frase seja anunciada de novo
@@ -137,15 +138,35 @@ const medirRolagem = () => {
   temMais.value = body.scrollTop + body.clientHeight < body.scrollHeight - 1;
 };
 
+// No teto (max-height), a caixa do corpo não muda quando o conteúdo cresce: além dela, o ResizeObserver
+// olha os filhos do corpo (uma imagem que carrega), e o MutationObserver, o conteúdo que entra ou sai
+// (as mensagens de erro), que também passa a ser observado
+const observarFilhos = () => {
+  for (const filho of bodyRef.value?.children ?? []) observador?.observe(filho);
+};
+
 const observarCorpo = () => {
-  if (typeof ResizeObserver === "undefined" || !bodyRef.value) return;
-  observador = new ResizeObserver(medirRolagem);
-  observador.observe(bodyRef.value);
+  const body = bodyRef.value;
+  if (!body) return;
+  if (typeof ResizeObserver !== "undefined") {
+    observador = new ResizeObserver(medirRolagem);
+    observador.observe(body);
+    observarFilhos();
+  }
+  if (typeof MutationObserver !== "undefined") {
+    mutacoes = new MutationObserver(() => {
+      observarFilhos();
+      medirRolagem();
+    });
+    mutacoes.observe(body, { childList: true, subtree: true, characterData: true });
+  }
 };
 
 const pararDeObservar = () => {
   observador?.disconnect();
   observador = null;
+  mutacoes?.disconnect();
+  mutacoes = null;
 };
 
 const soltarAvisos = () => {
