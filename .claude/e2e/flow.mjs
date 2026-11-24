@@ -186,8 +186,21 @@ for (const w of widths) {
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await page.locator('[role=alert]', { hasText: 'E-mail ou senha incorretos.' }).waitFor({ timeout: 1500 }).catch(() => {});
   const elapsed = Date.now() - t0;
-  const banner = await page.evaluate(() => ({ alert: document.querySelector('.auth-alert')?.getAttribute('role'), text: document.querySelector('.auth-alert')?.textContent.trim(), busy: document.querySelector('.auth-form button[type=submit]').getAttribute('aria-busy') }));
-  check(banner.alert === 'alert' && banner.text === 'E-mail ou senha incorretos.' && elapsed <= 1500, 'senha errada: banner role="alert" em até 1,5 s', `${elapsed}ms`);
+  // A região role="alert" fica sempre no DOM, junto do botão, e recebe a caixa (desenho da Conta, §5.3)
+  const banner = await page.evaluate(() => {
+    const regiao = document.querySelector('.auth-form__envio > .auth-form__anuncio');
+    const caixa = regiao?.querySelector('.auth-alert')?.getBoundingClientRect();
+    return {
+      alert: regiao?.getAttribute('role'),
+      atomic: regiao?.getAttribute('aria-atomic'),
+      text: regiao?.textContent.trim(),
+      antesDoBotao: regiao?.nextElementSibling?.matches('button[type=submit]'),
+      aVista: !!caixa && caixa.top >= 0 && caixa.bottom <= innerHeight,
+      busy: document.querySelector('.auth-form button[type=submit]').getAttribute('aria-busy'),
+    };
+  });
+  check(banner.alert === 'alert' && banner.atomic === 'true' && banner.text === 'E-mail ou senha incorretos.' && elapsed <= 1500, 'senha errada: banner na região role="alert" em até 1,5 s', `${elapsed}ms`);
+  check(banner.antesDoBotao && banner.aVista, 'o banner fica logo acima do botão, à vista', JSON.stringify(banner));
   check(banner.busy === null, 'o botão sai do loading');
   await snap('login-erro');
   await page.fill('#password', 'senha123');
@@ -221,12 +234,26 @@ for (const w of widths) {
   check(!conf.badge, 'o badge some (carrinho esvaziado)');
   await snap('confirmation');
 
-  // Conta
+  // Conta: "Ver meus pedidos" chega à seção pela âncora (desenho da Conta, §13); em 390, ela fica a
+  // ~1300 px do topo do perfil
   console.log('Conta');
-  await page.goto(BASE + '#/profile');
-  await page.waitForTimeout(500);
-  const prof = await page.evaluate(() => ({ orders: [...document.querySelectorAll('.profile-order__number')].map((n) => n.textContent.trim()), meta: document.querySelector('.profile-order__meta')?.textContent }));
-  check(prof.orders[0] === 'Pedido #1001' && norm(prof.meta).includes('R$ 29,49'), '"Seus pedidos" lista o #1001 com o total certo', `${prof.orders} ${norm(prof.meta)}`);
+  await page.getByRole('link', { name: 'Ver meus pedidos' }).click();
+  await page.waitForURL(/#\/profile#seus-pedidos/, { timeout: 3000 }).catch(() => {});
+  await page.waitForTimeout(700);
+  const ancora = await page.evaluate(() => {
+    const h2 = document.getElementById('seus-pedidos').getBoundingClientRect();
+    return { hash: location.hash, top: Math.round(h2.top), altura: innerHeight };
+  });
+  check(ancora.hash === '#/profile#seus-pedidos' && ancora.top >= 0 && ancora.top < ancora.altura / 2, '"Ver meus pedidos" chega a "Seus pedidos", no alto da tela', JSON.stringify(ancora));
+  // O total na linha do número; data, contagem e status em parágrafos, sem "·" (desenho da Conta, §5.8)
+  const prof = await page.evaluate(() => ({
+    orders: [...document.querySelectorAll('.profile-order__number')].map((n) => n.textContent.trim()),
+    total: document.querySelector('.profile-order__total')?.textContent,
+    meta: [...document.querySelectorAll('.profile-order__meta > p')].map((p) => p.textContent.trim()),
+  }));
+  check(prof.orders[0] === 'Pedido #1001' && norm(prof.total) === 'R$ 29,49', '"Seus pedidos" lista o #1001 com o total certo', `${prof.orders} ${norm(prof.total)}`);
+  check(prof.meta.length === 3 && prof.meta[1] === '1 item' && prof.meta[2] === 'Recebido' && !prof.meta.join('').includes('·'), 'a linha do pedido: data, "1 item" e "Recebido", sem "·"', prof.meta.join(' | '));
+  await snap('perfil-pedidos');
   await page.getByRole('button', { name: 'Sair' }).click();
   await page.waitForTimeout(300);
   await page.fill('#email', 'maria@example.com');
