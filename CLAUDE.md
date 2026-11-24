@@ -18,7 +18,7 @@ O projeto usa Yarn 3.8.7, fixado com o hash sha512 em `packageManager` no `packa
 export COREPACK_NPM_REGISTRY=https://registry.npmjs.org
 corepack yarn@3.8.7 install --immutable
 corepack yarn@3.8.7 build
-npx vitest run                             # 656 testes
+npx vitest run                             # 869 testes
 npx eslint .                               # deve dar 0 erros
 corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/smash-burguer/ (em background)
 ```
@@ -71,7 +71,7 @@ corepack yarn@3.8.7 preview --port 4173 --strictPort   # http://localhost:4173/s
 - **CSP:** fica numa `<meta>` do `index.html`, porque o GitHub Pages não aceita cabeçalhos. Recurso novo de outra origem (script, `fetch`, imagem ou fonte) precisa entrar nela. O `'unsafe-inline'` de `style-src` fica: o Font Awesome e o servidor de desenvolvimento do Vite injetam `<style>`. No `yarn dev`, o Vite e o devtools põem scripts antes da `<meta>`; a ordem que vale é a do `dist/index.html`.
 - **`console.log`:** o build descarta as chamadas cujo valor não é usado (`esbuild.pure` no `vite.config.js`). Numa arrow function de expressão, como `(x) => console.log(x)`, use chaves; o `eslint .` acusa esse caso (`no-restricted-syntax`).
 - **Proibidos:** `!important`, `outline: none`, `transition: all`, hex ou rgba fora dos tokens, e `toFixed`. Preço sempre via `formatPrice`. As buscas da §13.2 do SPEC devem continuar com 0 resultados.
-- **Componentes base:** ficam em `src/components/ui/` (`BaseButton`, `BaseDialog`, `QuantityStepper`, `CategoryTabs`, `AppToast`, `EmptyState`), com os primitivos do M3 copiados da Home (`M3Foto`, `M3BotaoDividido`, `M3FolhaIngredientes`, `M3ItemLista`, `M3ItemSegmentado`) e o `M3RotuloStatus` (rótulo de status do perfil e do painel, etapa 9). O `BaseButton` desenha o M3 (filled, tonal e texto); `danger`, `iconOnly` e `pressed` ficam com a forma da Brasa (`.btn--legado`) até a etapa 10 do plano.
+- **Componentes base:** ficam em `src/components/ui/` (`BaseButton`, `BaseDialog`, `QuantityStepper`, `CategoryTabs`, `AppToast`, `EmptyState`), com os primitivos do M3 copiados da Home (`M3Foto`, `M3BotaoDividido`, `M3FolhaIngredientes`, `M3ItemLista`, `M3ItemSegmentado`) e o `M3RotuloStatus` (rótulo de status do perfil e do painel, etapa 9). O `BaseButton` desenha o M3 (filled, tonal, texto e perigo, o botão de ícone pela `variant`, o carregando e o desabilitado); a prop `pressed` e o `.btn--legado` saíram na etapa 10. O `AppToast` é o snackbar do M3, no pé, e absorve a reserva do foco das páginas; com um diálogo aberto, a store dos avisos segura o tempo e os avisos novos (`segurar()` e `soltar()`, chamados pelo `BaseDialog`).
 - **Assinatura de autoria:** `src/components/AssinaturaEncaixe.vue`, no `MainLayout`, logo depois do `<M3Rodape>`, com `tom="escuro"`.
   - É cópia exata de um bloco com sha256 `3a9f9cc494d415f3a30c34519336b53b1db8c16955b89d09ddd22043543749fd`: não edite nem formate o arquivo. Se o CSS do projeto vazar para a faixa, corrija a regra do projeto.
   - Fica fora das convenções acima (`<style>` global, cores em hex, `!important`, animação própria e link de 40 px de altura). A §1.1 e a §13.2 do SPEC e o `axe-scan.mjs` já a excluem.

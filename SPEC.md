@@ -427,7 +427,7 @@ Substitui o `QuantityControl.vue` e o contador interno do `AdditionalsList` [CON
 - **Estrutura:** `role="group"` com `aria-label="Quantidade de {label}"`.
   - Botões `−`/`+` são `BaseButton` secundários `iconOnly` de 44px, com rótulos "Diminuir {label}" e "Aumentar {label}".
   - O valor fica num `<output aria-live="polite">` de 2ch, com algarismos tabulares.
-- **Limites:** no mínimo ou no máximo, o botão recebe `disabled` **de verdade** e mostra o estilo de desabilitado.
+- **Limites:** no mínimo ou no máximo, o botão recebe `aria-disabled="true"`, continua focável e mostra o estilo de desabilitado; o clique não muda o número. (Etapa 10 do Material 3: com `disabled`, o botão focado perdia o foco para o viewport; `docs/direcoes/desenho/componentes-base.md`, §5.4.)
 - **Movimento:** o número rola, ver §7.5. Não é uma micro-interação 3D.
 
 #### `ui/CategoryTabs.vue`
@@ -763,7 +763,7 @@ As opções, de cima para baixo:
   - O total da linha é `formatPrice(unitPrice × quantity)`, em 700 e tabular.
 - **Linha inferior:** `QuantityStepper` de 1 a 10 e o botão "Remover" (`danger`, `iconStart="trash-can"`, `aria-label="Remover {nome}"`).
 - **Remover:**
-  - tira o item na hora e mostra um toast info "{nome} removido." com a ação **Desfazer** (`faRotateLeft`), por 5 s;
+  - tira o item na hora e mostra um toast info "{nome} removido." com a ação **Desfazer** (`faRotateLeft`), que não some sozinho: sai pela ação, pelo "Fechar aviso", pela troca de rota ou 10 s depois de uma nova remoção (etapa 10 do Material 3, decisão do usuário em 24/11/2026; era "por 5 s");
   - Desfazer devolve o item à mesma posição.
   - Isso substitui a ausência de confirmação [HIE-03].
 

@@ -258,8 +258,9 @@ O arquivo chama `sucesso`, `aviso` e `info` de "cores personalizadas harmonizada
 | `--m3-on-surface-variant` | `#424940` | Texto secundário, descrições, rótulos da pílula | — |
 | `--m3-outline` | `#72796f` | Borda funcional: campos; borda em `prefers-contrast: more` | sobre surface 4,28:1; sobre surface-container-highest 3,48:1 |
 | `--m3-outline-variant` | `#c2c9bd` | Divisores decorativos (linha de direitos) | — |
-| `--m3-inverse-surface` | `#2d322c` | Sem uso direto na Home (candidato ao toast, §4.2) | inverse-on-surface 11,54:1 |
-| `--m3-inverse-on-surface` | `#eef2e9` | Texto sobre inverse-surface | — |
+| `--m3-inverse-surface` | `#2d322c` | Aviso (`AppToast`, etapa 10) | inverse-on-surface 11,54:1; inverse-primary 7,70:1 |
+| `--m3-inverse-on-surface` | `#eef2e9` | Texto, ícone de erro e "Fechar aviso" sobre inverse-surface; anel por dentro dos botões do aviso | — |
+| `--m3-inverse-primary` | `#9fd49b` | Ação do aviso ("Desfazer", etapa 10). Gerado pelo mesmo gerador do esquema (`@material/material-color-utilities` 0.4.0, `SchemeTonalSpot`, semente `#5DBB63`, claro, contraste 0.0, rodado fora do projeto), que reproduziu os 12 papéis já nos tokens (decisão do usuário, 24/11/2026) | sobre inverse-surface 7,70:1; com a camada inversa pressionada 5,75:1 |
 | `--m3-scrim` | `rgba(0, 0, 0, 0.32)` | Fundo de diálogo e da gaveta do admin | — |
 
 #### Camadas de estado
@@ -296,8 +297,8 @@ Pares que entram com as outras telas (medidos agora, ainda fora do `contraste.js
 - **Um filled por região.** O "Ver cardápio" M (56 px) é o maior controle da página (desenho, §1); no feed, cada card tem o seu split.
 - **Secondary é o anel de foco** [30]. Dentro do disco do hero, o anel vira `on-primary` (6,43:1), pela propriedade local `--m3-prensa-foco`.
 - **A cor do círculo separa informação de ação:** `secondary-container` nos itens com link, `tertiary-container` no horário (desenho, §5.4).
-- **Error só para erro, ação destrutiva e os badges do carrinho e do painel** (o badge de carrinho é uso típico citado pelo Compose [35]; os selos de contagem dos atalhos do painel são badges, e não status: desenho do admin, §5.2).
-- **Desabilitado:** `--color-ink-disabled` (`#a2a79e`, on-surface a 38% sobre surface, já composto; isento de contraste). O fundo do botão desabilitado não tem token M3 ainda (§6).
+- **Error só para erro, ação destrutiva e os badges do carrinho e do painel** (a ação destrutiva é o text button `danger`, que no hover e no pressionado escurece para `on-error-container`: no `surface-container-high`, o `error` com a camada pressionada daria 4,32; adaptação do projeto, etapa 10) (o badge de carrinho é uso típico citado pelo Compose [35]; os selos de contagem dos atalhos do painel são badges, e não status: desenho do admin, §5.2).
+- **Desabilitado (etapa 10):** `--m3-desabilitado-conteudo` (`rgba(24, 29, 23, 0.38)`, on-surface a 38%) e `--m3-desabilitado-container` (`rgba(24, 29, 23, 0.1)`, on-surface a 10%), em `rgba` para compor com qualquer fundo; isentos de contraste. O apelido `--color-ink-disabled` aponta para o primeiro (sobre a surface, compõe o `#a2a79e` de antes). As camadas do aviso (`--m3-camada-inversa-hover` e `-pressionada`, inverse-on-surface a 8% e 10%) só medem os pares.
 
 #### Mapa dos tokens atuais (tabela de migração)
 
@@ -430,12 +431,12 @@ Escala do M3: none 0, extra-small 4, small 8, medium 12, large 16, large-increas
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--m3-forma-xs` | `4px` | Cantos de dentro das listas segmentadas e do split |
+| `--m3-forma-xs` | `4px` | Cantos de dentro das listas segmentadas e do split; aviso (`AppToast`, etapa 10) |
 | `--m3-forma-s` | `8px` | Marca no cabeçalho; tonal pressionado; rótulos de status (`M3RotuloStatus`, §5.9 e §5.11) |
 | `--m3-forma-m` | `12px` | Card do feed; filled S pressionado; FAB a partir de `lg` |
 | `--m3-forma-l` | `16px` | Folha de ingredientes; FAB abaixo de `lg`; foto do card abaixo de `md`; filled M pressionado |
 | `--m3-forma-l-aumentada` | `20px` | Cantos de fora das listas segmentadas |
-| `--m3-forma-xl` | `28px` | Foto do card a partir de `md`; contêineres das listas; hero abaixo de `md`; cantos de cima do rodapé |
+| `--m3-forma-xl` | `28px` | Foto do card a partir de `md`; contêineres das listas; hero abaixo de `md`; cantos de cima do rodapé; diálogo (os quatro cantos) e sheet (só em cima) |
 | `--m3-forma-xxl` | `48px` | Contêiner do hero a partir de `md` |
 | `--m3-forma-full` | `999px` | Botões, pílula, badge, círculos |
 | `--m3-forma-cookie` | `polygon(…)` (120 pontos) | Disco do hero; foto do destaque. Geometria própria: r(θ) = 0,465 + 0,035·cos(12θ) |
@@ -451,9 +452,9 @@ A elevação do M3 é principalmente tonal [1][13][32]: a superfície muda de co
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--m3-elevacao-1` | `0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15)` | Sem uso na Home (apelido `--elev-1`) |
+| `--m3-elevacao-1` | `0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15)` | Sheet abaixo de `md` (etapa 10; apelido `--elev-1`) |
 | `--m3-elevacao-2` | `0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15)` | Folha de ingredientes (apelido `--elev-2`) |
-| `--m3-elevacao-3` | `0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15)` | Pílula e FAB flutuando abaixo de `lg` (apelido `--elev-3`) |
+| `--m3-elevacao-3` | `0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15)` | Pílula e FAB flutuando abaixo de `lg`; aviso; diálogo a partir de `md` (apelido `--elev-3`) |
 
 - **Cards sem sombra:** o card do feed é filled [63], em `surface-container-highest`. O `--elev-0` fica `none`, e o `--glow-accent` sai (§2.2).
 - **`reserva-de-sombra`:** toda superfície que depende de sombra ou de fundo ganha borda de 1 px em `CanvasText` com `forced-colors: active` e em `--m3-outline` com `prefers-contrast: more`.
@@ -494,7 +495,7 @@ Os valores das curvas `linear()` são copiados inteiros do `_tokens.scss` do mat
 
 | Token | Brasa | Material | Uso que fica |
 |---|---|---|---|
-| `--dur-instant` | 80ms | 50ms | Pressionar |
+| `--dur-instant` | 80ms | 50ms | Sem uso desde a etapa 10 (era o aperto do `.btn--legado`); a etapa 11 decide se sai |
 | `--dur-fast` | 150ms | 150ms | Teto do movimento reduzido; hover |
 | `--dur-base` | 240ms | 250ms | Diálogo; parte do tempo do retorno "Adicionado" |
 | `--dur-slow` | 400ms | 400ms | Sheet mobile, gaveta do admin |
@@ -574,14 +575,14 @@ Props copiadas do código. A produção recebe **cópias** dos componentes, das 
   | `variant="primary"` | filled | `primary` e `on-primary`; pressionado em `forma-m` (S) ou `forma-l` (M) |
   | `variant="secondary"` | tonal | `secondary-container` e `on-secondary-container`; pressionado em `forma-s` |
   | `variant="ghost"` | texto | tinta `primary` com camada de estado |
-  | `variant="danger"` | texto em `--m3-error` | **a desenhar**: os dossiês não trazem variante de perigo; a recomendação é o text button com a tinta `error` (6,16:1 sobre surface) e a camada de estado |
+  | `variant="danger"` | perigo | Desenhado e construído na etapa 10 (desenho dos componentes base (`docs/direcoes/desenho/componentes-base.md`), §5.5): text button na tinta `error`, que escurece para `on-error-container` no hover e no pressionado, com a camada de estado; uma forma só, dentro e fora dos diálogos |
   | `size="sm"` | S de 40 px com alvo de 44 px por `::after` | Como o `sm` atual |
   | `size="md"` | S de 44 px | Desvio da ficha [19] |
   | `size="lg"` | M de 56 px | Tamanhos do Expressive: XS 32, S 40, M 56, L 96 e XL 136 dp [17][18][19] |
   | `retorno` (novo) | face "Adicionado" | Vem do `M3Botao` |
-  | `iconOnly` | botão de ícone redondo de 44 px | **a desenhar** (sem fonte de icon button nos dossiês) |
-  | `loading` | spinner atual, na forma M3 | **a desenhar** (§6) |
-  | `pressed` | toggle | Sem uso desde a etapa 6: o grupo de categorias passou a rádios nativos num `fieldset` (desenho do Cardápio, 6.b). A etapa 10 decide se a prop fica |
+  | `iconOnly` | botão de ícone do Expressive | Desenhado e construído na etapa 10 (§5.6 do desenho): redondo, pela `variant` (`ghost` padrão em `on-surface-variant`, `secondary` tonal, `primary` filled, `danger` na tinta `error`); `sm` 40 com alvo de 44, `md` 44, `lg` 56; ícone de 20 px (24 no `lg`); tonal e filled apertados em `forma-s` (`forma-m` no `lg`) |
+  | `loading` | o arco de hoje, nas cores do repouso | Desenhado e construído na etapa 10 (§5.7 do desenho): hover e pressionado neutros, largura travada, sem `aria-busy`; o rótulo novo vai à região viva do diálogo ou do `App.vue` |
+  | `pressed` | — | **Saiu** na etapa 10 (§5.9 do desenho): sem uso desde a etapa 6. Quem precisar de toggle passa `aria-pressed` como atributo. O `.btn--legado` saiu inteiro |
 
 - **Troca de forma:** ao pressionar, o canto diminui [17][18][19][54], por opacidade entre camadas (`troca-de-forma`).
 
@@ -662,14 +663,14 @@ Os dossiês não cobrem todos os componentes do M3. Onde não há fonte, a forma
 
 | Componente atual | Forma M3 correspondente | Fonte | Estado |
 |---|---|---|---|
-| `ui/QuantityStepper.vue` | Dois botões de ícone tonal redondos de 44 px e o número em title-m tabular. Sem o button group padrão, que comprime os vizinhos do botão pressionado [54] e arrisca o alvo mínimo [78] | [54], [78] | **a desenhar** |
+| `ui/QuantityStepper.vue` | Dois botões de ícone tonal redondos de 44 px e o número em title-m tabular. Sem o button group padrão, que comprime os vizinhos do botão pressionado [54] e arrisca o alvo mínimo [78] | [54], [78] | Desenhado e construído na etapa 10 (desenho dos componentes base (`docs/direcoes/desenho/componentes-base.md`), §5.4): o número em title-m 500 tabular, em 2ch, com troca direta; **no limite, `aria-disabled`** (o botão continua focável e o clique não faz nada), no lugar do `disabled` real |
 | `ui/CategoryTabs.vue` | Button group conectado: substitui os segmented buttons, com seleção única (papel de rádio no exemplo do Compose), formas de início, meio e fim e troca de forma no selecionado [54] | [54], [60], [93], [100] | Desenhado e construído na etapa 6 (`docs/direcoes/desenho/cardapio.md`, §5.2): rádios nativos num `fieldset` com `legend` (sai o `aria-pressed`), marcada em pílula `primary` (decisão do usuário), desmarcadas em `surface-container`, 44 px, vão de 2 px e anel por dentro |
-| `ui/AppToast.vue` | A ficha o chama de snackbar, mas **não encontrei** fonte de snackbar nos dossiês. Recomendação: `inverse-surface` com `inverse-on-surface` (11,54:1), sem a borda colorida da Brasa | — | **a desenhar** (pesquisa antes) |
-| `ui/EmptyState.vue` | **Não encontrei** componente de estado vazio nos dossiês. Recomendação: ícone em `on-surface-variant`, título title-l 500, texto body-m `on-surface-variant` e a ação como botão filled M | — | **a desenhar** |
-| `ui/BaseDialog.vue` | **Não encontrei** fonte de diálogo nos dossiês. Pelos apelidos, já fica `surface-container`, `forma-xl` (28), `elevacao-3` e `scrim` | — | **a desenhar** (pesquisa antes); comportamento igual (`showModal()`, foco, Esc) |
+| `ui/AppToast.vue` | O snackbar do M3 | [216] a [227] | Desenhado e construído na etapa 10 (desenho dos componentes base (`docs/direcoes/desenho/componentes-base.md`), §4.3 a §4.5 e §5.1): `inverse-surface` com `inverse-on-surface`, canto 4, `elevacao-3`, body-m, sem borda colorida e sem ícone de sucesso (só o erro tem o `circle-exclamation`); ação em text button `inverse-primary`; no pé em todas as larguras (acima da toolbar abaixo de `lg`, centrado abaixo de `lg` e no início da coluna de conteúdo a partir dele); duas regiões vivas fixas (`status` e `alert`); com ação, de erro ou `duration: 0`, não expira; os anteriores com ação passam a 10 s quando chega outro; com um diálogo aberto, a store segura o tempo e os avisos novos; absorve a reserva do foco das páginas (uma por aviso, até 3) |
+| `ui/EmptyState.vue` | Ícone, título e texto | [242] a [244] | Desenhado e construído na etapa 10 (§5.3 do desenho): alinhado ao início, ícone solto de 32 px em `on-surface-variant`, título `<p>` em title-l 500, texto body-m; o vazio depois de uma escolha (Cardápio, Pedidos e Produtos sem busca) fica numa região `role="status"` |
+| `ui/BaseDialog.vue` | Diálogo e bottom sheet do M3 | [228] a [241] | Desenhado e construído na etapa 10 (§5.2 do desenho): `surface-container-high`, canto 28 e `elevacao-3` a partir de `md`; abaixo, sheet `surface-container-low` na altura do conteúdo (até 640 px e `100dvh − 32 px`), cantos de 28 em cima, `elevacao-1`, sem alça; título headline-s 400; divisores só com rolagem; Shift+Tab preso também a partir do título; as confirmações destrutivas são `alertdialog`, com a descrição ligada e o foco no "Cancelar" |
 | `FormGroup.vue` | Text field outlined do M3, com a forma do Expressive (canto 12, `CornerMedium`) e o rótulo acima (`TextFieldLabelPosition.Above`); as cores tonais do Expressive reprovam a 1.4.11 nos tokens do projeto | [118] a [125], [131] a [140] | Desenhado e construído na etapa 8 (`docs/direcoes/desenho/conta.md`, §5.1): sem fundo (sai o híbrido com `surface-container-highest`), contorno `outline` de 1 px (4,06 no painel e no perfil, 3,85 no diálogo e no admin), 56 px, padding 16; hover em `on-surface`, foco em `primary` com o anel; o erro toma o lugar da ajuda; somente leitura tracejado, com o texto inteiro, separado do desabilitado; `select` com o chevron; a prop `live` (região `role="status"`, o CEP) e o botão "Mostrar senha" (toggle da APG) em todo `type="password"`. **Desvios confirmados pelo usuário:** o rótulo em label-l 500 e `on-surface` (o M3 usa body-small e `on-surface-variant` [134], [135]) e a ajuda e o erro em body-m |
 | `PaymentMethodPicker.vue` | Lista segmentada de rádios numa coluna (cantos 20/4, vão de 2 px), com o controle de 24 px no início da linha [107] e o marcado em `secondary-container`, como o item atual da pílula | [66], [81], [107], [113] | Desenhado e construído na etapa 7 (`docs/direcoes/desenho/carrinho-pagamento.md`, §5.7): rádios nativos num `fieldset` com a `legend` escondida (o `h2` fica na seção), sem marcado ao abrir; controle vazio na desmarcada e `primary` com check na marcada, que passa aos quatro cantos de 20; o rádio escondido tem o retângulo do `label` (foco não coberto) |
-| `CartItem.vue` | Item de lista segmentada, como o `M3ItemLista`, com o `QuantityStepper` e o "Remover" | [66], [81] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.2): blocos `surface-container-lowest` de cantos 20/4 numa bandeja `surface-container-low` de padding 8 (cantos concêntricos); `M3Foto` de 64 px na forma da Home (círculo, flor e o cartão de canto 16 nos hambúrgueres); o "Remover" fica com a forma da Brasa até a etapa 10 |
+| `CartItem.vue` | Item de lista segmentada, como o `M3ItemLista`, com o `QuantityStepper` e o "Remover" | [66], [81] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.2): blocos `surface-container-lowest` de cantos 20/4 numa bandeja `surface-container-low` de padding 8 (cantos concêntricos); `M3Foto` de 64 px na forma da Home (círculo, flor e o cartão de canto 16 nos hambúrgueres); o "Remover" é o `danger` desenhado na etapa 10 |
 | `OrderSummary.vue` | Contêiner `surface-container-low` de canto 28, como as listas da Home | [66], [26] | Desenhado e construído na etapa 7 (desenho do Carrinho, §5.3): o contêiner fica nas páginas (carrinho, pagamento e confirmação), e o componente muda só a tipografia (linhas em body-l, body-m no compacto; Total em headline-s 500), o divisor só com linhas e o `overflow-wrap: anywhere`. No perfil (etapa 8), aberto pelo "Ver itens", só com a tipografia, sem caixa |
 | `CartBadge.vue` | Badge do FAB da `M3BarraFerramentas`: badge grande do M3 [35], 16 px, cor de erro | [35] | Pronto (vem da Home) |
 | `ProductCard.vue` (`admin`) → `M3CartaoProduto` | Filled card [63] em `surface-container-high`, canto 12, padding 8, com o `M3Foto` 4:3, nome, descrição em 2 linhas, preço e o slot `acoes`; na horizontal abaixo de `sm` | [63], [34] | desenhado e construído na etapa 9 (desenho do admin, §5.7) |
@@ -782,13 +783,13 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 
 ### 5.5 Carrinho — desenhado na etapa 7
 
-- **Desenho e construção (etapa 7):** `docs/direcoes/desenho/carrinho-pagamento.md`, §5.1 a §5.5. O `h1` segue a regra global (`--text-page`, de display-s a display-m), com o ritmo do Cardápio; a lista é uma bandeja `surface-container-low` de canto 28 e padding 8, nomeada por um `h2` escondido, com os itens da lista segmentada (§4.2); o resumo fica num contêiner da página, na grade 8/12 e 4/12 do `SPEC.md`, grudado a partir de `lg`; o visitante vê o aviso, "Entrar e finalizar" (filled M) e "Criar conta" (tonal); o "Desfazer" devolve o foco ao "Remover" do item devolvido; enquanto há aviso (toast), o `scroll-padding` da rota soma `--m3-toast-reserva` (no pé abaixo de `md` e no topo de `md` a `xl`, onde o aviso cruza a coluna da lista); cada item ganha borda nos modos de contraste.
+- **Desenho e construção (etapa 7):** `docs/direcoes/desenho/carrinho-pagamento.md`, §5.1 a §5.5. O `h1` segue a regra global (`--text-page`, de display-s a display-m), com o ritmo do Cardápio; a lista é uma bandeja `surface-container-low` de canto 28 e padding 8, nomeada por um `h2` escondido, com os itens da lista segmentada (§4.2); o resumo fica num contêiner da página, na grade 8/12 e 4/12 do `SPEC.md`, grudado a partir de `lg`; o visitante vê o aviso, "Entrar e finalizar" (filled M) e "Criar conta" (tonal); o "Desfazer" devolve o foco ao "Remover" do item devolvido; cada item ganha borda nos modos de contraste. **Etapa 10:** o aviso com "Desfazer" não some sozinho (sai pela ação, pelo "Fechar aviso", pela troca de rota ou 10 s depois de uma nova remoção), no lugar do "por 5 s" do `SPEC.md` (decisão do usuário, 24/11/2026); a reserva do foco é do `AppToast`, no pé em todas as larguras.
 - **Recomendação (antes do desenho):** `h1` "Seu carrinho" em display-s; itens numa lista segmentada (§4.2), com miniatura em `M3Foto` de 64 px, nome, detalhes, total da linha, `QuantityStepper` e "Remover"; `OrderSummary` num contêiner `surface-container-low` de canto 28; CTA filled M "Finalizar pedido" (logado) ou "Entrar e finalizar" (visitante), como no `SPEC.md`.
 - **Fica do `SPEC.md`:** remover com "Desfazer" no toast, carrinho vazio com `EmptyState`, links do visitante.
 
 ### 5.6 Pagamento — desenhado na etapa 7
 
-- **Desenho e construção (etapa 7):** desenho do Carrinho, §5.6 a §5.8. Cada seção tem o seu `h2` (a da forma de pagamento sem `aria-labelledby`); "Alterar no perfil" é text button; sem endereço, o aviso fica em `aviso-container` com o "Adicionar endereço" em filled S; o rótulo do CTA quebra linha; o resumo só gruda com 48rem de altura (mixin `altura-min`); depois do aviso da conferência, o elemento focado rola para a vista. O desabilitado e o `loading` do filled são da etapa 10.
+- **Desenho e construção (etapa 7):** desenho do Carrinho, §5.6 a §5.8. Cada seção tem o seu `h2` (a da forma de pagamento sem `aria-labelledby`); "Alterar no perfil" é text button; sem endereço, o aviso fica em `aviso-container` com o "Adicionar endereço" em filled S; o rótulo do CTA quebra linha; o resumo só gruda com 48rem de altura (mixin `altura-min`); depois do aviso da conferência, o elemento focado rola para a vista. **Etapa 10:** o CTA fica com `aria-disabled` até ser válido (continua no Tab, com a ajuda lida no foco); o aviso da conferência não expira quando a tela continua e mantém os 4 s quando o carrinho esvaziou e a tela volta ao carrinho.
 - **Recomendação (antes do desenho):** seções "Entrega" e "Forma de pagamento" em contêineres `surface-container-low`; `PaymentMethodPicker` como lista segmentada de rádios (§4.2); aviso de endereço em `aviso` sobre `aviso-container` (5,03:1); CTA filled M "Confirmar pedido · R$ x", desabilitado até ser válido.
 - **Fica do `SPEC.md`:** guards, `loading` "Enviando pedido…", conferência com o cardápio e o pedido.
 
@@ -843,9 +844,11 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 
 | Componente | Padrão | Hover | Foco | Pressionado | Selecionado | Desabilitado | Carregando |
 |---|---|---|---|---|---|---|---|
-| Botão filled | `primary` / `on-primary`, cantos `full` | `primary-hover` | anel | `primary-pressed`; cantos `forma-m` (S) ou `forma-l` (M) | — | **a desenhar**: hoje `--color-surface-4` e `--color-ink-disabled`, sem camada | **a desenhar**: spinner atual + `aria-busy` |
-| Botão tonal | `secondary-container` / `on-secondary-container` | `secondary-container-hover` | anel | `secondary-container-pressed`; cantos `forma-s` | `pressed`: **a desenhar** [54] | idem | idem |
-| Botão de texto | tinta `primary`, sem fundo | camada 8% | anel | camada 10% | — | idem | — |
+| Botão filled | `primary` / `on-primary`, cantos `full` | `primary-hover` | anel | `primary-pressed`; cantos `forma-m` (S) ou `forma-l` (M) | — | contêiner `--m3-desabilitado-container`, rótulo `--m3-desabilitado-conteudo`, sem camada (isento); `GrayText` nas cores forçadas | cores do repouso, hover e pressionado neutros, arco em `--dur-spin`, largura travada; o rótulo novo na região viva (sem `aria-busy`) |
+| Botão tonal | `secondary-container` / `on-secondary-container` | `secondary-container-hover` | anel | `secondary-container-pressed`; cantos `forma-s` | — (a prop `pressed` saiu na etapa 10) | idem; borda `outline` com `prefers-contrast: more` | idem |
+| Botão de texto | tinta `primary`, sem fundo | camada 8% | anel | camada 10% | — | sem contêiner, rótulo a 38% | idem, sem camada |
+| Perigo (`danger`, etapa 10) | tinta `error`, sem fundo | `on-error-container` + camada 8% | anel | `on-error-container` + camada 10% | — | sem contêiner, rótulo a 38% | tinta `error`, arco, sem camada |
+| Botão de ícone (etapa 10) | redondo de 44 px; padrão em `on-surface-variant`, tonal ou filled pela `variant` | camada 8% ou o fundo de hover | anel | camada 10%; tonal e filled em `forma-s` | — | ícone a 38% (com contêiner a 10% no tonal e no filled) | — |
 | Retorno "Adicionado" (filled e tonal) | `primary-container` / `on-primary-container`, check e "Adicionado" | igual | anel | igual | — | — | — |
 | Split, frente | cantos de fora `full`, de dentro `forma-xs` | `primary-hover` | anel | `primary-pressed`; cantos de fora `forma-m` | — | — | — |
 | Split, trás | 44 × 44, canto de dentro `forma-xs`, chevron para baixo | `primary-hover` | anel | `primary-pressed` | expandido: pílula inteira, chevron para cima, `aria-expanded="true"` [55] | — | — |
@@ -859,10 +862,12 @@ A Home é a de `#/direcoes/material`, inteira. O desenho (§3 a §7 e §14) é a
 | Item segmentado (informação) | igual, ícone em `tertiary-container` | — | não recebe foco | — | — | — | — |
 | Item de lista (produto) | `surface-container-lowest`, sem hover próprio | — | no botão | — | — | — | imagem que falha: ícone `utensils` |
 | `CategoryTabs` (etapa 6) | grupo conectado [54]: desmarcada em `surface-container` / `on-surface-variant`; marcada em pílula `primary` / `on-primary` | camada no fundo composto | anel interno no `label` (`on-primary` na marcada) | troca de forma por opacidade [54] | `checked` nativo; pílula inteira | — | — |
-| `QuantityStepper` | **a desenhar** | via botão | via botão | via botão | — | no limite: `disabled` real | — |
+| `QuantityStepper` (etapa 10) | dois ícones tonais de 44 px; número title-m 500 tabular | via botão | via botão | via botão (troca de forma) | — | no limite: `aria-disabled="true"`, focável, clique sem efeito, visual de desabilitado | — |
 | `FormGroup` (etapa 8) | sem fundo; contorno `outline` de 1 px, canto 12, 56 px; rótulo label-l 500 `on-surface` | contorno `on-surface` (com erro, `on-error-container`) | contorno e rótulo `primary` + anel com `outline-offset: 0`; o somente leitura só com o anel | — | — | `outline-variant` e `--color-ink-disabled`; o somente leitura é tracejado, com o texto inteiro | ajuda com spinner (CEP), numa região `role="status"` (`live`) |
 | `PaymentMethodPicker` | `surface-container-lowest`, cantos 20/4; controle vazio de 24 px (2 px `on-surface-variant`) | camada | anel interno no item (`:has(:focus-visible)`) | camada 10% | `secondary-container`, quatro cantos de 20, controle `primary` com check (etapa 7) | — | — |
-| `AppToast` | **a desenhar** (`inverse-surface`) | pausa o tempo | anel no fechar | — | — | — | — |
+| `AppToast` (etapa 10) | `inverse-surface` / `inverse-on-surface` (11,54), canto 4, `elevacao-3`; ação em `inverse-primary` (7,70); fora da tela enquanto há diálogo aberto | pausa o tempo (nos que têm tempo) | anel por dentro, em `inverse-on-surface`, nos botões | camada 10% | — | — | — |
+| `BaseDialog` (etapa 10) | `surface-container-high`, canto 28, `elevacao-3` (≥ `md`); sheet `surface-container-low`, `elevacao-1` (< `md`); divisores transparentes | — | foco inicial: `[autofocus]` (o "Cancelar" nas confirmações), o primeiro controle do corpo ou o título; Tab e Shift+Tab presos | — | corpo rolado: divisores em `outline-variant` | — | — |
+| `EmptyState` (etapa 10) | ícone 32 `on-surface-variant`, título title-l 500, texto body-m, alinhado ao início | — | — | — | — | — | — |
 | Item da sidebar admin | sem fundo; `on-surface-variant`; 56 px, pílula | camada | anel interno | camada 10% | `aria-current`: `secondary-container` / `on-secondary-container`, rótulo em 700 (desenho do admin, §6) | — | — |
 
 Os estados de vazio e erro das telas (carrinho vazio, filtro sem resultado, banner `role="alert"`) seguem a §6 do `SPEC.md`, com os componentes da §4.2.
@@ -926,8 +931,9 @@ Regras para todas:
 | Elemento | Movimento | Com movimento reduzido |
 |---|---|---|
 | Camadas de estado | Opacidade em `--m3-dur-mola-efeitos-rapida` | Igual |
-| Diálogo, sheet, toast, gaveta do admin | Os da §7.5 do `SPEC.md`, com `--ease-out` → emphasized-decelerate e `--ease-in-out` → standard (apelidos) | Só `opacity` |
-| `QuantityStepper` | O da §7.5 do `SPEC.md` até o desenho (§4.2) | Troca direta |
+| Diálogo, sheet, gaveta do admin | Os da §7.5 do `SPEC.md`, com `--ease-out` → emphasized-decelerate e `--ease-in-out` → standard (apelidos): sheet em `--dur-slow` e fundo em `--dur-base` | Só `opacity`, em `--dur-fast` |
+| Aviso (etapa 10) | Entrada por opacidade e `scale(0.8)` a partir do centro de baixo, com as molas rápidas de efeitos e espacial; saída inversa | Só `opacity` |
+| `QuantityStepper` (etapa 10) | Troca direta do número (o odômetro saiu) | Troca direta |
 | Spinner de `loading` | Rotação contínua de `--dur-spin` | Parado + texto |
 
 ### 7.8 O que sai do SPEC da Brasa
