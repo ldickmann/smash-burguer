@@ -6,14 +6,14 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 
 **Resumo:**
 
-- **Aviso (`AppToast`):** o snackbar do M3 [220] [224]: `inverse-surface` com o texto em `inverse-on-surface` (11,54), canto 4 (`forma-xs`), `elevacao-3`, body-m, sem borda colorida e sem ícone de sucesso; só o erro leva o `circle-exclamation`, na cor do texto. A ação ("Desfazer") vira text button em `primary-container` (10,13): o `inverse-primary` do M3 não existe nos tokens, e criá-lo é pergunta ao usuário (§12). O anel dentro do aviso passa a `inverse-on-surface`, por dentro (o `secondary` mede 2,02 ali).
-- **Aviso, posição e tempo:** no pé em todas as larguras, na loja e no painel, centrado, acima da toolbar enquanto ela flutua (abaixo de `lg`, e não só de `md`) [223] [224]. O `AppToast` **absorve** as quatro regras `:global` das páginas numa regra só, que conta os avisos (até 3) [76]. Com ação ou de erro, o aviso **não some sozinho**: fica até a pessoa agir, fechar ou trocar de rota ([217], [219], [227]). Duas regiões vivas fixas (`status` e `alert`) passam a existir antes da mensagem [152] [153]. Um aviso que nasce com um diálogo aberto espera o diálogo fechar.
-- **Diálogo (`BaseDialog`):** `surface-container-high`, canto 28, `elevacao-3` a partir de `md` [229] [231] [232]; abaixo de `md`, sheet em `surface-container-low`, cantos de 28 só em cima, `elevacao-1`, **na altura do conteúdo** (com teto) e sem alça [237] [241]. Título em headline-s 400 [229]; divisores só quando o corpo rola [234]. As confirmações destrutivas viram `alertdialog` com a descrição ligada [235]. O erro da exclusão da conta passa a aparecer dentro do diálogo.
+- **Aviso (`AppToast`):** o snackbar do M3 [220] [224]: `inverse-surface` com o texto em `inverse-on-surface` (11,54), canto 4 (`forma-xs`), `elevacao-3`, body-m, sem borda colorida e sem ícone de sucesso; só o erro leva o `circle-exclamation`, na cor do texto. A ação ("Desfazer") vira text button em `inverse-primary` (7,70), o papel do M3 [220] que o usuário mandou gerar com o mesmo gerador do esquema (`#9fd49b`; §12, "Respostas do usuário"). O anel dentro do aviso passa a `inverse-on-surface`, por dentro (o `secondary` mede 2,02 ali).
+- **Aviso, posição e tempo:** no pé em todas as larguras, na loja e no painel, acima da toolbar enquanto ela flutua (abaixo de `lg`, e não só de `md`) [223] [224]; centrado abaixo de `lg` (o `Scaffold` [223]) e, a partir dele, no início da coluna de conteúdo, para não cruzar o resumo grudado do carrinho e do pagamento. O `AppToast` **absorve** as regras `:global` das páginas numa regra só, que conta os avisos (até 3) [76]; o painel mantém a reserva no pé do `.admin-main`. Com ação ou de erro, o aviso **não some sozinho**: fica até a pessoa agir, fechar ou trocar de rota ([217], [219], [227]); quando chega outro com ação, os anteriores com ação passam a 10 s [218]. Duas regiões vivas fixas (`status` e `alert`) passam a existir antes da mensagem [152] [153]. Enquanto um diálogo está aberto, a store segura o tempo e a entrada dos avisos novos (`segurar()` e `soltar()`).
+- **Diálogo (`BaseDialog`):** `surface-container-high`, canto 28, `elevacao-3` a partir de `md` [229] [231] [232]; abaixo de `md`, sheet em `surface-container-low`, cantos de 28 só em cima, `elevacao-1`, **na altura do conteúdo** (com teto) e sem alça [237] [241]. Título em headline-s 400 [229]; divisores só quando o corpo rola [234]. As confirmações destrutivas viram `alertdialog` com a descrição ligada [235] e abrem com o foco no "Cancelar" [199]. O Shift+Tab a partir do título não sai mais do diálogo. O erro da exclusão da conta passa a aparecer dentro do diálogo.
 - **Estado vazio:** alinhado ao início, como o resto do sistema; ícone de 32 px em `on-surface-variant`, título title-l 500 em `<p>`, texto body-m; sem círculo nem ilustração. Depois de um filtro, ele é anunciado numa região `role="status"` que já existe [151] [153].
 - **Seletor de quantidade:** dois botões de ícone tonais redondos de 44 px [255] [249], o número em title-m 500 tabular, troca direta. **No limite, `aria-disabled` no lugar do `disabled`**: o botão focado que fica `disabled` leva o foco ao viewport [273] [270], e o exemplo de quantidade da APG usa `aria-disabled` [275]. A §6 do SPEC-M muda.
-- **`BaseButton`:** `danger` vira text button em `error` que escurece para `on-error-container` no hover e no pressionado (no card `high`, o `error` pressionado daria 4,32); `iconOnly` vira o botão de ícone do Expressive (padrão, tonal ou filled pela `variant`); `loading` mantém o arco, as cores do repouso e anuncia o rótulo novo numa região viva (sai o `aria-busy`); o desabilitado usa `on-surface` a 10% e a 38% [264] [265] [253]; **a prop `pressed` sai** (sem uso desde a etapa 6). O `.btn--legado` sai inteiro.
-- **Contagem:** nenhum componente novo; mudam 5 componentes, o `toast.js`, o `useAnnouncer.js` e 7 telas. **4 tokens novos** (`--m3-desabilitado-conteudo`, `--m3-desabilitado-container`, `--m3-camada-inversa-hover`, `--m3-camada-inversa-pressionada`), **10 pares novos** medidos, nenhuma dependência, nenhum ícone novo, **nenhum texto novo**.
-- **Fica para a etapa 11:** os apelidos que perdem o último uso (`--color-surface-4`, `--color-danger-soft`, `--color-overlay`, `--elev-3`, `--radius-lg`, `--color-info`, `--color-danger`) e os pares de `PARES_COMUNS` do modal e do aviso. Pergunta ao usuário: o papel `inverse-primary` (§12).
+- **`BaseButton`:** `danger` vira text button em `error` que escurece para `on-error-container` no hover e no pressionado (no card `high`, o `error` pressionado daria 4,32); `iconOnly` vira o botão de ícone do Expressive (padrão, tonal ou filled pela `variant`); `loading` mantém o arco, as cores do repouso e anuncia o rótulo novo numa região viva (sai o `aria-busy`); o desabilitado usa `on-surface` a 10% e a 38% [264] [265] [253] (o rótulo em `on-surface`, e não `on-surface-variant`, é desvio declarado); **a prop `pressed` sai** (sem uso desde a etapa 6). O `.btn--legado` sai inteiro.
+- **Contagem:** nenhum componente novo; mudam 5 componentes, o `toast.js`, o `useAnnouncer.js` e 7 telas (uma delas, o `PaymentView`, em dois avisos). **5 tokens novos** (o papel `--m3-inverse-primary`, `--m3-desabilitado-conteudo`, `--m3-desabilitado-container`, `--m3-camada-inversa-hover`, `--m3-camada-inversa-pressionada`), **10 pares novos** medidos, nenhuma dependência, nenhum ícone novo, **nenhum texto novo**.
+- **Fica para a etapa 11:** os apelidos que perdem o último uso (`--color-surface-4`, `--color-danger-soft`, `--color-overlay`, `--elev-3`, `--radius-lg`, `--color-info`, `--color-danger`) e os pares de `PARES_COMUNS` do modal e do aviso. O usuário respondeu as duas perguntas em 24/11/2026: o `inverse-primary` gerado e o "Desfazer" sem prazo (§12).
 
 ---
 
@@ -22,7 +22,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 **A tese do SPEC-M vale como está:** a ousadia fica no hero da Home; o resto é quieto (SPEC-M §0, "Tese"). Nos componentes base:
 
 - **São a gramática das telas, e não momentos.** O mesmo aviso, o mesmo diálogo e o mesmo botão de ícone em todo lugar, da loja ao painel. Nenhum deles tem entrada decorativa, cor de estado ou forma própria.
-- **A única superfície escura do sistema claro é o aviso.** O `inverse-surface` faz o aviso se ler como algo que passou por cima da página, e não como mais um card. É o traço que se reconhece destes componentes, e ele vem do papel do M3 [220] [224], sem cor nova.
+- **A única superfície escura do sistema claro é o aviso.** O `inverse-surface` faz o aviso se ler como algo que passou por cima da página, e não como mais um card. É o traço que se reconhece destes componentes, e ele vem dos papéis do M3 [220] [224]; o único papel novo, o `inverse-primary` da ação, saiu do mesmo gerador do esquema (§12).
 - **O que flutua tem elevação; o resto é tonal.** Aviso, diálogo e sheet ficam acima da página (SPEC-M §2.6); botões, estado vazio e seletor ficam na superfície de quem os usa.
 - **Sem:** borda colorida no aviso, ícone de sucesso, ilustração ou círculo no vazio, alça falsa no sheet, indicador que muda de forma, toggle sem uso, aperto por `translateY`.
 
@@ -31,30 +31,30 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 | Na Brasa (capturas `e08` e `e09`) | No M3 | Por quê |
 |---|---|---|
 | Aviso em `surface-container-high`, canto 12, borda esquerda de 3 px e ícone na cor do estado | `inverse-surface`, canto 4, `elevacao-3`, sem borda; ícone só no erro, na cor do texto | Contêiner, forma e elevação do snackbar ([220], [221], [198], [224]); a anatomia não tem ícone [219] [224]; a borda colorida é padrão genérico (pacote, item 11) |
-| "Desfazer" tonal | Text button em `primary-container` | A ação do snackbar é um `TextButton` [219] em `inverse-primary` [220], papel que o projeto não tem (§8) |
-| A partir de `md`, aviso no topo à direita na loja; desce 8 px de cima também no pé | No pé em todas as larguras, centrado; entra por escala e opacidade | O snackbar fica no pé, acima do FAB ou da barra [223] [224]; não encontrei snackbar no topo; a entrada do Compose é escala de 0,8 a 1 com opacidade [218] |
-| 4 s para todos (5 s no "Desfazer") | 4 s sem ação; com ação ou de erro, até a pessoa agir, fechar ou sair | O snackbar com ação não expira [217] [219]; a 2.2.1 só dispensa o aviso cuja informação está em outro lugar [227] |
-| Diálogo `surface-container`, título 700, divisores fixos; sheet da altura da tela até com duas linhas | `surface-container-high` (≥ `md`) e sheet `surface-container-low` (< `md`) na altura do conteúdo; título headline-s 400; divisores só com rolagem | [229], [231], [232]; [237], [241]; [234] |
+| "Desfazer" tonal | Text button em `inverse-primary` | A ação do snackbar é um `TextButton` [219] em `inverse-primary` [220], papel gerado nesta etapa pelo gerador do esquema (§8, §12) |
+| A partir de `md`, aviso no topo à direita na loja; desce 8 px de cima também no pé | No pé em todas as larguras; centrado abaixo de `lg`, no início da coluna de conteúdo a partir dele; entra por escala e opacidade | O snackbar fica no pé, acima do FAB ou da barra, centrado [223] [224]; não encontrei snackbar no topo nem regra para telas largas; a entrada do Compose é escala de 0,8 a 1 com opacidade [218] |
+| 4 s para todos (5 s no "Desfazer") | 4 s sem ação; com ação ou de erro, até a pessoa agir, fechar ou sair; os anteriores com ação, 10 s depois de um novo | O snackbar com ação não expira [217] [219]; o `Long` de 10 s [218]; a 2.2.1 só dispensa o aviso cuja informação está em outro lugar [227] |
+| Diálogo `surface-container`, título 700, divisores fixos, foco inicial no título; sheet da altura da tela até com duas linhas | `surface-container-high` (≥ `md`) e sheet `surface-container-low` (< `md`) na altura do conteúdo; título headline-s 400; divisores só com rolagem; nas confirmações, foco no "Cancelar" | [229], [231], [232]; [237], [241]; [234]; [199] |
 | Estado vazio centrado, título 700 | Alinhado ao início, título title-l 500, texto body-m | SPEC-M §4.2; o sistema alinha ao início (admin, §2) |
 | Stepper: dois quadrados contornados de canto 8, o número em 700 rolando na vertical; `disabled` no limite | Dois tonais redondos de 44 px, título title-m 500 tabular, troca direta; `aria-disabled` no limite | [255], [249]; o odômetro saiu do sistema (SPEC-M §7.8); [273], [275] |
-| `danger`, `iconOnly` e `pressed` com canto 8, borda de 1 px e aperto por `translateY` | Text button `error`; botão de ícone redondo com troca de forma; sem `pressed` | [253], [255], [249]; SPEC-M §7.2 |
-| Desabilitado em `surface-container-highest` com `#a2a79e` | Contêiner `on-surface` a 10% e conteúdo `on-surface` a 38% | [264], [265], [253], [268] |
+| `danger`, `iconOnly` e `pressed` com canto 8, borda de 1 px e aperto por `translateY` | Text button `error` (que escurece no hover e no pressionado, adaptação do projeto); botão de ícone redondo com troca de forma; sem `pressed` | [253], [255], [249]; SPEC-M §7.2; o precedente do campo [135] |
+| Desabilitado em `surface-container-highest` com `#a2a79e` | Contêiner `on-surface` a 10% e conteúdo `on-surface` a 38% (o rótulo em `on-surface`, e não `on-surface-variant`, é desvio declarado) | [264], [265], [266], [253], [268] |
 | Carregando com `aria-busy` | O rótulo novo anunciado numa região viva; sem `aria-busy` | [151]; [207], [263] |
 
 ---
 
 ## 2. Processo: plano, revisão contra o pacote e desenho final
 
-### Sistema (dentro da identidade aprovada; nenhuma cor nova)
+### Sistema (dentro da identidade aprovada; uma cor nova, do mesmo gerador)
 
 - **Cores, por papel:**
-  - aviso (`inverse-surface`) #2d322c, texto e ícones (`inverse-on-surface`) #eef2e9, ação (`primary-container`) #bbf0b6;
+  - aviso (`inverse-surface`) #2d322c, texto e ícones (`inverse-on-surface`) #eef2e9, ação (`inverse-primary`) #9fd49b (papel novo, gerado com a semente; §12);
   - diálogo (`surface-container-high`) #e6e9e0; sheet (`surface-container-low`) #f1f5ec; fundo (`scrim`) preto a 32%;
   - botão de ícone padrão (`on-surface-variant`) #424940; tonal (`secondary-container`) #d5e8cf com `on-secondary-container` #3b4b39;
   - perigo (`error`) #ba1a1a, que escurece para `on-error-container` #93000a no hover e no pressionado;
   - desabilitado: `on-surface` #181d17 a 10% (contêiner) e a 38% (conteúdo).
 - **Tipo:** Roboto, uma família. Aviso em body-m; título do diálogo em headline-s 400; título do vazio em title-l 500; texto do vazio em body-m; número do seletor em title-m 500 tabular; rótulos dos botões em label-l 500 (title-m no `lg`).
-- **Layout:** o aviso no pé, centrado na área de conteúdo; o diálogo centrado a partir de `md` e preso ao pé abaixo dele; o vazio alinhado ao início, na coluna de quem o usa.
+- **Layout:** o aviso no pé, centrado abaixo de `lg` e no início da coluna de conteúdo a partir dele; o diálogo centrado a partir de `md` e preso ao pé abaixo dele; o vazio alinhado ao início, na coluna de quem o usa.
 - **Princípio:** nenhum destes componentes chama atenção sozinho. O único contraste forte é o do aviso escuro, porque ele interrompe sem bloquear.
 
 ### Plano (primeira passada)
@@ -75,10 +75,10 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 ### Revisão contra o pacote (o que saiu genérico, repetido, inventado, infiel ou inviável, e o que entrou)
 
 - **Ícone colorido por variante e canto 12: saíram (genérico e infiel).** O toast com ícone e borda coloridos é padrão genérico (pacote, item 11); a anatomia do snackbar é contêiner, texto, ação e fechar [219] [224], com canto 4 [220] [221]. Entrou o aviso sem ícone de sucesso; o erro leva o `circle-exclamation` na cor do texto, como pista de forma, e não de cor [99] (5.1).
-- **Topo à direita: trocado (inventado e acessibilidade).** Não encontrei snackbar no topo [223] [224]; no topo, o aviso cobria o "Novo produto" focado em 1024 (admin, §4.6). Entrou o pé em todas as larguras, acima da toolbar enquanto ela flutua (4.5).
+- **Topo à direita: trocado (inventado e acessibilidade).** Não encontrei snackbar no topo [223] [224]; no topo, o aviso cobria o "Novo produto" focado em 1024 (admin, §4.6). Entrou o pé em todas as larguras, acima da toolbar enquanto ela flutua (4.5). **Volta 1:** centrado em todas as larguras, ele cruzava o resumo grudado do carrinho e do pagamento a partir de `lg`; passou ao início da coluna de conteúdo a partir de `lg` (4.5).
 - **4 s para todos: trocado (acessibilidade).** O "Desfazer" só existe no aviso; a 2.2.1 pede desligar o limite quando a informação não está em outro lugar [227], e o snackbar com ação não expira [217] [219]. Entrou a regra por tipo (4.3).
 - **O mais novo em cima, entrando de cima: trocado (inviável no pé).** Ancorado no pé, o novo fica embaixo, perto da borda; a entrada passa à escala de 0,8 com opacidade [218] (4.4).
-- **`--m3-inverse-primary` à mão: saiu (inventado).** Nenhuma cor sai de outro lugar que não a semente (SPEC-M §0). Entrou o `primary-container`, medido (10,13), e a pergunta ao usuário (§12).
+- **`--m3-inverse-primary` à mão: saiu (inventado).** Nenhuma cor sai de outro lugar que não a semente (SPEC-M §0). Na primeira versão do desenho entrou o `primary-container` (10,13), com a pergunta ao usuário; o usuário escolheu gerar o papel com o mesmo gerador do esquema, e a sessão principal o gerou (`#9fd49b`, 7,70; §12).
 - **Diálogo em `surface-container`, título 700, divisores fixos: trocados (infiel à pesquisa).** As três fontes dão `surface-container-high` ao diálogo [229] [231] [232] e headline-s ao título [229]; o divisor aparece só com rolagem [234]. Os pares das telas foram medidos de novo (§8).
 - **Sheet de altura inteira com alça: trocado (pendência da etapa 8 e genérico).** Duas linhas não pedem a tela toda (captura `admin-excluir-390`); a alça sugere um gesto que o projeto não tem, e ela é opcional [241]. Entrou o sheet na altura do conteúdo, com teto, sem alça, com o "Fechar" visível [199].
 - **Círculo de 64 px e título headline-s no vazio: saíram (genérico e infiel).** O círculo é ilustração decorativa (pacote, item 11), e no sistema o círculo separa informação de ação (SPEC-M §2.2); o SPEC-M recomenda title-l 500. Entrou o ícone solto de 32 px.
@@ -111,7 +111,7 @@ Um aviso com ação                           O de erro (perfil, "Salvar altera�
 │                                  │        │                                  │
 │┌ inverse-surface, canto 4 ──────┐│        │┌────────────────────────────────┐│
 ││ Cheese Bacon     ↺ Desfazer [✕]││ 72 px  ││ ⚠ Não foi possível     [✕]    ││ 72 px
-││ removido.        primary-cont.  ││ 2 lin. ││   salvar. Tente de novo.      ││ role="alert"
+││ removido.        inverse-prim.  ││ 2 lin. ││   salvar. Tente de novo.      ││ role="alert"
 │└────────────────────────────────┘│        │└────────────────────────────────┘│
 │  x 16 a 374; y ≈ 676 a 748  ↕ 16 │        │                                  │
 │          ╭ Início Cardápio Perfil╮(🛒)    │          ╭ Início Cardápio Perfil╮(🛒)
@@ -119,7 +119,8 @@ Um aviso com ação                           O de erro (perfil, "Salvar altera�
   pad. 16 no início, 8 no fim, 4 em cima      ícone de 20 px em inverse-on-surface
   e embaixo; texto body-m inverse-on-surface  (a pista de forma, e não de cor)
 
-Três empilhados (três remoções seguidas; o mais antigo em cima, o mais novo perto da barra)
+Três empilhados (três remoções seguidas; o mais antigo em cima, o mais novo perto da barra; os dois de
+cima, com ação, saem 10 s depois do aviso seguinte, e o de baixo fica sem prazo, 4.3)
 ┌──────────────────────────────────┐
 │┌────────────────────────────────┐│ y ≈ 516 a 588
 ││ Coca Cola Lata   ↺ Desfazer [✕]││
@@ -143,29 +144,30 @@ Abaixo de `sm`, o aviso ocupa a largura da região (358 px em 390). O "Cheese Ba
 ### 3.2 Aviso na loja em 1440 e no painel em 1440
 
 ```
-Loja, 1440 (sem toolbar no pé a partir de lg)
+Loja, 1440 (sem toolbar no pé a partir de lg; o aviso no início da coluna de conteúdo)
 ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
 │ Smash Burger                                          ╭ Início  Cardápio  Perfil ╮  (🛒)       │
 │ Seu carrinho                                                                                  │
-│ …                                                                                              │
-│                          ┌ inverse-surface, canto 4, elevacao-3 ──────────┐                    │
-│                          │ Cheese Bacon removido.     ↺ Desfazer   [✕]     │  52 px, 1 linha   │
-│                          └────────────────────────────────────────────────┘  y ≈ 832 a 884    │
-│                          centrado em x 720; largura do conteúdo, até 600 px; 16 px do pé      │
+│ ╭ bandeja dos itens (x 152 a 893) ──────────────────╮  ╭ resumo grudado ──────╮               │
+│ │ …                                                 │  │ … ( Finalizar pedido )│               │
+│┌ inverse-surface, canto 4, elevacao-3 ──────┐      │  ╰──────────────────────╯               │
+││ Cheese Bacon removido.  ↺ Desfazer   [✕]    │      │   o resumo fica fora do alcance do      │
+│└────────────────────────────────────────────┘      │   aviso (que termina antes de x 752)    │
+│ x 152 a ≈ 498; largura do conteúdo, até 600 px; y ≈ 832 a 884, 16 px do pé                     │
 └────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-Painel, 1440 (a região começa depois da coluna de 240)
+Painel, 1440 (a região começa depois da coluna de 240, alinhada ao h1)
 ┌───────────────┬────────────────────────────────────────────────────────────────────────────────┐
 │ Smash Burger  │ ╭ ⌕ Buscar… ╮                                          [🔔¹] [☑¹] (AU)        │
 │  ( Pedidos  ) │ Pedidos                                                                        │
 │               │ …                                                                              │
-│               │                   ┌─────────────────────────────────┐                          │
-│               │                   │ Pedido #1: Em preparo.     [✕]  │  centrado em x 840       │
-│               │                   └─────────────────────────────────┘  (de 272 a 1408)        │
+│               │┌─────────────────────────────────┐                                             │
+│               ││ Pedido #1: Em preparo.     [✕]  │  no início do conteúdo, em x 272             │
+│               │└─────────────────────────────────┘                                             │
 └───────────────┴────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Em 1024, a loja já não tem toolbar no pé (`lg`): o aviso fica a 16 px do pé, centrado em x 512; no painel, centrado na área depois da coluna (de 272 a 992). Com dois avisos de tipos diferentes, o de erro fica embaixo (4.2).
+Em 1024, a loja já não tem toolbar no pé (`lg`): o aviso fica a 16 px do pé, de x 32 até no máximo 632, antes do fim da coluna da lista (cerca de 656; o resumo começa depois do vão); no painel, de x 272 em diante. Com dois avisos de tipos diferentes, o de erro fica embaixo (4.2).
 
 ### 3.3 Diálogo de confirmação ("Excluir conta?", "Excluir produto?", "Restaurar…?") em 1440 e 390
 
@@ -174,7 +176,7 @@ Em 1024, a loja já não tem toolbar no pé (`lg`): o aviso fica a 16 px do pé,
 ░░░░░░░░░░░░░░░░ scrim 32% ░░░░░░░░░░░░░░░░░░░         ░░░░░░░░░░ scrim ░░░░░░░░░░░░░░░░░░
 ░┌ surface-container-high, canto 28, elevacao-3 ┐░       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ░│ Excluir conta?                          [✕]  │░       ┌ surface-container-low ──────────┐
-░│ headline-s 400, recebe o foco (h2)           │░       │ cantos de 28 só em cima,        │
+░│ headline-s 400 (h2)                          │░       │ cantos de 28 só em cima,        │
 ░│                                    ↕ 16      │░       │ elevacao-1, até 640 px          │
 ░│ Seus dados, o histórico de pedidos e o       │░       │ Excluir conta?              [✕] │
 ░│ carrinho serão apagados deste navegador.     │░       │ Seus dados, o histórico de      │
@@ -184,7 +186,8 @@ Em 1024, a loja já não tem toolbar no pé (`lg`): o aviso fica a 16 px do pé,
 ░└──────────────────────────────────────────────┘░       │      ( Cancelar ) 🗑 Excluir conta│
    pad. 24 nos lados; tonal e perigo ao fim, 8            └─────────────────────────────────┘
    entre eles; sem divisores (o corpo não rola)             ≈ 260 px de altura (y ≈ 584 a 844),
-   role="alertdialog", aria-describedby no texto            com a área segura no rodapé
+   role="alertdialog", aria-describedby no texto;           com a área segura no rodapé
+   o foco abre no "Cancelar" (autofocus) [199]
 ```
 
 **Com o erro da exclusão (perfil, 5.2):** o banner `error-container` (canto 16, `⚠` em `error`, texto `on-error-container`) aparece no corpo, logo abaixo do texto, dentro de uma região `role="alert"` que existe desde a abertura; o foco fica no "Excluir conta".
@@ -272,15 +275,19 @@ Desabilitado: ( Confirmar pedido · R$ 29,49 )  ( Atualizar status )  Remover   
 **Aviso (decisão c):**
 
 - **Origem:** quando o foco entra no aviso vindo de fora (`focusin` com o `relatedTarget` fora da região), o `AppToast` guarda esse elemento como a origem.
-- **"Fechar aviso" pelo teclado** (o `click` com `event.detail === 0`): o aviso sai, e o foco vai ao primeiro botão do aviso seguinte na pilha (o de baixo; sem ele, o de cima); sem outro aviso, à origem, se ela ainda está no documento; sem origem, ao `main#conteudo`. É o "item seguinte ao apagado" e o "botão que abriu" da APG [270], e evita o foco no `body` [273].
-- **Pelo ponteiro** (`event.detail > 0`): o foco não se move: quem clica não vê o anel, e levar o foco a outro ponto rolaria a página (a lição do `CartView`, etapa 7). Não encontrei fonte sobre de onde o próximo Tab parte depois que o elemento focado some; a sessão C confere no Chromium.
-- **"Desfazer":** a ação roda primeiro (o `CartView` continua levando o foco ao "Remover" do item devolvido, lógica da etapa 7, que fica na view porque só ela sabe onde o item voltou). Se, depois da ação, o foco ficou no `body` e a ativação foi pelo teclado, vale a mesma regra do "Fechar aviso". O `runAction` passa a receber o evento e a devolver o resultado do `onClick` (§8, "Lógica").
+- **Teclado ou ponteiro:** o `AppToast` guarda a última entrada (`pointerdown` e `keydown` na captura do `document`, tirados no `onBeforeUnmount`), a mesma modalidade do `CartView` (etapa 7). Não usa o `event.detail` do clique: a ativação por um leitor de tela pode chegar com `detail` 1, como um clique de mouse.
+- **"Fechar aviso" com a última entrada de teclado:** o aviso sai, e o foco vai ao primeiro botão do aviso seguinte na pilha (o de baixo; sem ele, o de cima); sem outro aviso, à origem, se ela ainda está no documento; sem origem, ao `main#conteudo`. É o "item seguinte ao apagado" e o "botão que abriu" da APG [270], e evita o foco no `body` [273].
+- **Com a última entrada de ponteiro:** o foco não se move: quem clica não vê o anel, e levar o foco a outro ponto rolaria a página (a lição do `CartView`, etapa 7). Não encontrei fonte sobre de onde o próximo Tab parte depois que o elemento focado some; a sessão C confere no Chromium.
+- **"Desfazer":** a ação roda primeiro (o `CartView` continua levando o foco ao "Remover" do item devolvido, lógica da etapa 7, que fica na view porque só ela sabe onde o item voltou). Se, depois da ação, o foco ficou no `body` e a última entrada foi de teclado, vale a mesma regra do "Fechar aviso". O `runAction` passa a receber o evento e a devolver o resultado do `onClick` (§8, "Lógica").
 - **O aviso não toma o foco ao aparecer:** mensagem de status não move o foco [151], e o snackbar não deve interromper [219].
 
 **Diálogo (decisão g):**
 
-- **Foco inicial:** o de hoje: `[autofocus]`, senão o primeiro controle do corpo, senão o título (`tabindex="-1"`). Nas confirmações destrutivas, o corpo não tem controle, e o foco vai ao título: um elemento estático do topo, como a APG aceita [199], e não a ação destrutiva, que a APG desaconselha num passo difícil de desfazer [199]. As etapas 8 e 9 já fixaram o título.
-- **Tab preso:** fica (o `trapFocus` de hoje). Ordem nas confirmações: título → "Fechar" → "Cancelar" → ação destrutiva → "Fechar"…
+- **Foco inicial:** a regra de hoje fica: `[autofocus]`, senão o primeiro controle do corpo, senão o título (`tabindex="-1"`).
+  - **Nas três confirmações** ("Excluir conta?", "Excluir produto?", "Restaurar…?"), o "Cancelar" ganha o atributo `autofocus`: num passo difícil de desfazer, a APG põe o foco inicial na ação menos destrutiva [199] (pesquisa, "Diálogo e bottom sheet" e "Riscos da etapa 10"). A API do `BaseDialog` não muda (ele já procura `[autofocus]`); cada view ganha um atributo: `ProfileView.vue` L159, `ProductManagement.vue` L87 e `AdminSettings.vue` L32. Com `role="alertdialog"` e o `aria-describedby` [235], o leitor lê o nome e a descrição ao entrar, e depois "Cancelar, botão".
+  - **Troca o que as etapas 8 e 9 fixaram** (o foco no título; desenho da Conta, L408, e do admin, 5.7 e 5.10), por decisão da sessão principal com a fonte [199] (§12).
+  - **Os "Detalhes" do pedido, o `ModalProducts` e o Personalizar ficam como hoje:** o título (os "Detalhes" não têm controle no corpo), o primeiro campo e o primeiro controle do corpo.
+- **Tab preso:** o `trapFocus` de hoje, com uma correção. Hoje, com o foco no título (`tabindex="-1"`, fora da lista de focáveis), o Shift+Tab não cai em nenhum ramo e o navegador leva o foco para fora do diálogo. **O ramo do Shift+Tab passa a levar ao último focável quando o elemento ativo é o primeiro, ou não está na lista** (`!focusables.includes(active)`: o título, o próprio `<dialog>`, ou fora dele), e não só quando ele está fora do diálogo. O Tab a partir do título já vai ao "Fechar" pelo navegador. Ordem nas confirmações: "Cancelar" (o foco inicial) → ação destrutiva → "Fechar" → "Cancelar"…; o Shift+Tab faz o inverso.
 - **Esc e clique no fundo:** emitem `close` (hoje), como o material-web [234]; a H102 não fala do clique no fundo [200].
 - **Devolução:** a quem abriu, se ele ainda está na página [200]; quando o gatilho some, a view decide o destino (o `h1` em Produtos e Pedidos, etapa 9), como pede a F85 [202].
 
@@ -292,7 +299,7 @@ Desabilitado: ( Confirmar pedido · R$ 29,49 )  ( Atualizar status )  Remover   
 |---|---|---|
 | Aviso de sucesso ou info | A mensagem, sem interromper ("Produto criado."); no de ação, também o rótulo da ação ("Cheese Bacon removido. Desfazer") | Lista `role="status"` com `aria-atomic="false"`, **fixa desde a montagem**: só o aviso novo é lido [153] [151] |
 | Aviso de erro | A mensagem, interrompendo ("Não foi possível salvar. Tente de novo.") | Lista `role="alert"` com `aria-atomic="true"`, fixa desde a montagem [152] |
-| Aviso que nasce com um diálogo aberto | Nada, até o diálogo fechar; então, a mensagem | O `AppToast` o retém (5.1): a página atrás do diálogo modal é inerte [200], e a região viva inerte não anuncia |
+| Aviso que nasce com um diálogo aberto | Nada, até o último diálogo fechar; então, a mensagem | A store o segura (5.1): ele fica fora da tela e fora da lista viva até o contador de diálogos voltar a 0, porque a página atrás do diálogo modal é inerte [200], e a região viva inerte não anuncia |
 | Erro da exclusão da conta | A mensagem, com o diálogo aberto | Região `role="alert"` com `aria-atomic` dentro do corpo do diálogo, desde a abertura [152] |
 | Botão que entra em `loading` com rótulo novo | "Enviando pedido…", "Entrando…", "Criando conta…", "Salvando…", "Excluindo…" | O rótulo novo vai à região viva mais próxima: a do diálogo, dentro dele, ou a do `App.vue` (o `useAnnouncer`) [151] (5.7) |
 | Valor do seletor | O número novo ("2") | O `output` de hoje, `aria-live="polite"` |
@@ -301,22 +308,31 @@ Desabilitado: ( Confirmar pedido · R$ 29,49 )  ( Atualizar status )  Remover   
 | Vazio com busca no painel | "0 pedidos para “x”." (a linha da busca, etapa 9) | O vazio da busca fica **fora** da região, para não anunciar duas vezes |
 | Diálogo de confirmação | O nome ("Excluir conta?"), o papel de alerta e a descrição | `role="alertdialog"` e `aria-describedby` repassados ao `<dialog>` [235] |
 
-A sessão C ouve num leitor de tela se o aviso de ação lê o rótulo "Desfazer" junto da mensagem (depende do leitor; o essencial é a mensagem).
+**O `aria-atomic="false"` na lista de status é desvio declarado da ARIA22**, que aconselha declarar `aria-atomic="true"` porque alguns ambientes não tratam o `status` como atômico [153] (pesquisa, Etapa 8, "Mensagens de status"). **Motivo:** a lista guarda até 3 avisos, e cada aviso entra inteiro, como um nó novo; com `true`, o leitor releria a pilha toda a cada aviso. **Risco:** um leitor que não respeite o `false` relê a pilha; outro pode ler só o texto do nó novo sem o rótulo dos botões. A lista de erro fica com `true` (a ARIA19 [152]), porque os erros quase nunca se empilham.
+
+A sessão C ouve num leitor de tela:
+- se o aviso de ação lê o rótulo "Desfazer" junto da mensagem (depende do leitor; o essencial é a mensagem);
+- como cada leitor trata o `aria-atomic="false"` da lista de status (acima);
+- se o NVDA lê duas vezes o "Entrando…" (e os outros rótulos de `loading`): uma pela troca do nome do botão focado e outra pela região viva (5.7). Se ler, o custo é a repetição; a região viva continua sendo o caminho que funciona nos leitores que não anunciam a troca do nome.
 
 ### 4.3 Tempo (decisão c)
 
 | Aviso | Tempo | Por quê |
 |---|---|---|
 | Sucesso e info, sem ação | 4000 ms (hoje), pausando com o ponteiro ou o foco dentro dele | O `Short` do Compose [218]; a informação está também na tela (tabela abaixo), o caso que a 2.2.1 dispensa [227] |
-| Com ação ("Desfazer") | Não some sozinho: sai pela ação, pelo "Fechar aviso", pela troca de rota ou quando um quarto aviso empurra o mais antigo | O padrão do Compose com ação é `Indefinite` [217] [218]; o KDoc pede que não expire, e mover o foco não conta como ação [219]; desligar o limite é melhor que ajustá-lo [227] |
-| Erro | Igual ao de ação | A falha não aparece em outro lugar da tela [227] |
-| Info da conferência do pagamento ("O carrinho foi atualizado…") | Igual ao de ação (`duration: 0`, uma linha no `PaymentView`) | A instrução "Confira o pedido antes de confirmar" não está em outro lugar [227] |
+| Com ação ("Desfazer"), o mais novo | Não some sozinho: sai pela ação, pelo "Fechar aviso", pela troca de rota ou quando um quarto aviso empurra o mais antigo | O padrão do Compose com ação é `Indefinite` [217] [218]; o KDoc pede que não expire até a pessoa fazer outra ação, e mover o foco não conta como ação [219]; desligar o limite é melhor que ajustá-lo [227] |
+| Com ação, os anteriores (quando chega um aviso novo com ação) | Passam ao `Long` de 10 s, contados a partir do aviso novo, pausando com o ponteiro ou o foco dentro deles | A nova remoção é "outra ação" no sentido do [219]; o `Long` do Compose dura 10000 ms [218]; o "Desfazer" de cada remoção continua alcançável por um tempo, e a pilha não fica cheia de avisos sem prazo até a troca de rota |
+| Erro | Igual ao de ação mais novo (não passa a 10 s: a regra dos anteriores é só para os avisos com ação) | A falha não aparece em outro lugar da tela [227] |
+| Info da conferência do pagamento ("O carrinho foi atualizado…"), quando a tela continua | Sem prazo (`duration: 0`) | A instrução "Confira o pedido antes de confirmar" não está em outro lugar [227] |
+| Info da conferência quando o carrinho ficou vazio (o `PaymentView` vai ao `/cart`) | 4000 ms (hoje), que sobrevivem à troca de rota | Um aviso sem prazo sairia na mesma troca de rota que o leva ao carrinho; o `EmptyState` do carrinho mostra o estado |
 
-**Onde a informação de cada aviso de 4 s também está:** "Conta criada. Entre para continuar." (a tela de login que abre); "Conta excluída." (a Home, com "Entrar" na pílula); "Produto atualizado.", "Produto criado.", "Produto excluído." (a grade de Produtos); "Pedido #{id}: {status}." (o rótulo de status do card); "Cardápio original restaurado.", "Pedidos de exemplo restaurados." (Produtos e Pedidos); "Dados salvos." (os campos, que mantêm os dados); "Seu carrinho está vazio." (o `EmptyState` do carrinho).
+**Onde a informação de cada aviso de 4 s também está:** "Conta criada. Entre para continuar." (a tela de login que abre); "Conta excluída." (a Home, com "Entrar" na pílula); "Produto atualizado.", "Produto criado.", "Produto excluído." (a grade de Produtos); "Pedido #{id}: {status}." (o rótulo de status do card); "Cardápio original restaurado.", "Pedidos de exemplo restaurados." (Produtos e Pedidos); "Seu carrinho está vazio." e a conferência que esvaziou o carrinho (o `EmptyState` do carrinho). **"Dados salvos."** é o caso mais frágil: os campos mostram os dados mesmo sem salvar, e a confirmação em si só existe no aviso. Ele fica com os 4 s porque a confirmação não é necessária para continuar, e a falha de gravação aparece de outro jeito (o aviso de erro, que não expira); fica registrado como risco (§11).
 
 **Troca de rota:** os avisos que não expiram saem quando o caminho (`route.path`) muda; os de 4 s ficam até o tempo deles (o "Seu carrinho está vazio." nasce no guard e precisa sobreviver ao redirecionamento). Não encontrei o equivalente web do "Time to take action" do Android [225] [226].
 
-**Fila:** até 3 na tela, o mais antigo sai quando chega o quarto (hoje; `SPEC.md` §4.1). Não entra a fila de um por vez do Compose [217] [218]: com o "Desfazer" sem prazo, o segundo aviso esperaria para sempre; nem a troca do MDC [224], que apagaria o "Desfazer" da remoção anterior.
+**Fila:** até 3 na tela, o mais antigo sai quando chega o quarto (hoje; `SPEC.md` §4.1). Não entra a fila de um por vez do Compose [217] [218]: com o "Desfazer" sem prazo, o segundo aviso esperaria para sempre; nem a troca do MDC [224], que apagaria na hora o "Desfazer" da remoção anterior. O meio-termo é a regra dos anteriores com ação: o "Desfazer" antigo fica por 10 s, e só o mais novo fica sem prazo.
+
+**Com um diálogo aberto:** o tempo de nenhum aviso corre, e os avisos novos esperam fora da tela (5.1, "Retenção").
 
 ### 4.4 Movimento (decisão d e §7.7 do SPEC-M)
 
@@ -342,32 +358,42 @@ A sessão C ouve num leitor de tela se o aviso de ação lê o rótulo "Desfazer
 
 | Lugar | Pé do aviso (`bottom`) | Faixa horizontal |
 |---|---|---|
-| Loja, abaixo de `lg` (a toolbar flutua) | `calc(var(--m3-barra-reserva) + env(safe-area-inset-bottom))`: 16 px acima da pílula e do FAB, perto da margem de 12 dp do snackbar [219] [223] | de `--gutter` a `--gutter`, centrado |
-| Loja a partir de `lg`; painel em todas as larguras; acervo | `calc(var(--space-4) + env(safe-area-inset-bottom))` | idem; no painel a partir de `lg`, começa depois da coluna (`inset-inline-start: calc(var(--m3-navegacao-largura) + var(--gutter))`), para o aviso centrar na área de trabalho, como o `Scaffold` centra no conteúdo [223] |
+| Loja, abaixo de `lg` (a toolbar flutua) | `calc(var(--m3-barra-reserva) + env(safe-area-inset-bottom))`: 16 px acima da pílula e do FAB, perto da margem de 12 dp do snackbar [219] [223] | de `--gutter` a `--gutter`, centrado, como o `Scaffold` [223] |
+| Painel e acervo sem `.m3-ferramentas`, abaixo de `lg` | `calc(var(--space-4) + env(safe-area-inset-bottom))` | idem, centrado |
+| Loja e acervo, a partir de `lg` | `calc(var(--space-4) + env(safe-area-inset-bottom))` | **no início da coluna de conteúdo:** `inset-inline-start: max(var(--gutter), calc((100vw - var(--container-max)) / 2 + var(--gutter)))` (a borda do `.container`, a mesma conta que o aviso usa hoje para o `right`), com as listas em `align-items: flex-start` |
+| Painel, a partir de `lg` | igual | no início do conteúdo, depois da coluna: `inset-inline-start: calc(var(--m3-navegacao-largura) + var(--gutter))` (272 px, alinhado ao `h1`) |
 
 - **A seleção "a toolbar flutua"** é `body:has(.m3-ferramentas)` abaixo de `lg` (hoje só abaixo de `md`; entre 768 e 1023 o aviso ia para o topo, e a toolbar continua flutuando no pé).
 - **Sem toolbar** (painel, login do admin, acervo sem `.m3-ferramentas`), o aviso fica a 16 px do pé.
+- **Por que no início da coluna a partir de `lg` (volta 1):** centrado, o aviso cruzava a coluna do resumo grudado do carrinho e do pagamento (em 1024 × 768, de x 712 a 812; em 1440 × 900, de 960 a 1020, nas medidas do revisor). O `scroll-padding` não move um elemento grudado: com muitos itens, o CTA do resumo fica perto do pé e o aviso o cobriria. Das duas saídas, esta muda só o aviso: a outra (o resumo descontar a reserva na altura máxima enquanto há aviso) faria do resumo um contêiner de rolagem próprio, com o CTA escondido nele, ou o faria pular ao deixar de grudar. O `Scaffold` centraliza o snackbar [223], mas não encontrei regra para telas largas nem para o início da área [223] [224]: a partir de `lg`, vale o alinhamento do sistema, que põe o conteúdo no início (admin, §2), e abaixo de `lg` fica o centro do Compose.
+- **No papel (estimativas pelas medidas da etapa 7):**
+  - **1024 × 768:** a coluna da lista vai de x 32 a cerca de 656 (o "Remover" termina em 632, mais 16 do item e 8 da bandeja), e o resumo começa depois do vão; o aviso vai de x 32 até no máximo 632 (600 px): fica pelo menos 24 px antes do fim da coluna da lista e longe do resumo;
+  - **1440 × 900:** a coluna da lista vai de x 152 a 893; o aviso vai de 152 até no máximo 752: 141 px antes do fim da coluna;
+  - **o pagamento** usa a mesma grade 8/12 e 4/12 (`SPEC.md`): o aviso da conferência fica na coluna das seções, e o CTA grudado, na outra;
+  - **a coluna da lista**, que rola, continua protegida pelo `scroll-padding` (abaixo).
 
 **A reserva absorvida (uma regra, no `_app-toast.scss`, por `:global`):**
 
-| Avisos na tela | Seletores (`html:has(…)`) | `scroll-padding-bottom` | `padding-bottom` do `body` |
+| Avisos na tela | Seletores (`html:has(…)`) | `scroll-padding-bottom` | Pé da página: `padding-bottom` do `body` (loja e acervo) ou do `.admin-main` (painel) |
 |---|---|---|---|
 | 1 ou mais | `.toast-region .toast` | B + 1 × R | `var(--space-4)` + 1 × R |
 | 2 ou mais | `.toast-region .toast + .toast`; ou `.toast-region__list--status .toast` junto com `.toast-region__list--alert .toast` | B + 2 × R | `var(--space-4)` + 2 × R |
 | 3 | `.toast + .toast + .toast` numa lista; ou 2 numa e 1 na outra (as duas combinações) | B + 3 × R | `var(--space-4)` + 3 × R |
 
 - **B** é o pé do aviso: `var(--m3-barra-reserva)` na loja abaixo de `lg` (as mesmas regras com `html:has(.m3-ferramentas)` antes, dentro de `below(lg)`); `var(--space-4)` no resto. **R** é o `--m3-toast-reserva` (6,5rem, 104 px: um aviso de até 3 linhas, 92 px, mais o vão; etapa 7). Os seletores saem de um `@each` em Sass.
-- **Por que o `body` ganha `padding-bottom`:** sem ele, o último controle da página (o link da assinatura, o "Sair" do painel numa página curta) não tem para onde subir, e o aviso o cobre. É a regra do `.admin-main` da etapa 9, levada a todas as rotas; o espaço entra embaixo, e nada acima se move. Abaixo de `lg`, na loja, o `.main-layout` já reserva a toolbar, e o `body` soma o aviso.
+- **Por que o pé da página ganha `padding-bottom`:** sem ele, o último controle da página não tem para onde subir, e o aviso o cobre (o link da assinatura no fim da loja; o último botão do conteúdo numa página curta do painel, como o "Atualizar status" medido na etapa 9). O espaço entra embaixo, e nada acima se move.
+  - **Na loja e no acervo, no `body`:** `html:not(:has(.admin-layout)):has(…) body`. Abaixo de `lg`, na loja, o `.main-layout` já reserva a toolbar, e o `body` soma o aviso.
+  - **No painel, no `.admin-main` (como hoje):** a regra de `_admin-layout.scss` (L93–95) fica, agora com a mesma contagem. No `body`, a página do painel ficaria mais alta que a coluna grudada (`100dvh`), e a coluna subiria até 120 px no fim da rolagem, levando o "Sair" junto (a partir de `lg`, ele fica no pé da coluna; abaixo, na gaveta, que é modal e não depende desta reserva).
 - **O foco que não se move:** depois de mostrar um aviso (também o retido, ao soltá-lo), se a última entrada foi de teclado e o elemento focado não está no aviso, o `AppToast` faz `document.activeElement.scrollIntoView({ block: "nearest" })`, que respeita a reserva. É o padrão que o `CartView`, o `ProfileView` e a `OrderManagement` já usam; nas três views a chamada fica (repetida, sem efeito).
 - **Avisos empilhados** (o risco aceito na etapa 7): a reserva conta até 3, e o "Remover" vizinho focado depois de três remoções sobe acima da pilha (em 390, a área útil fica de 80 a 436 px, para elementos de 44 a 56 px).
 - **Por largura, com um aviso (estimativas):**
   - **loja em 390 × 844:** o aviso de 72 px vai de 676 a 748; a área útil do foco vai de 80 a 644 (`scroll-padding-bottom` de 200);
-  - **loja e painel em 1024 × 768:** o aviso de 52 px vai de 700 a 752; a área útil vai de 80 a 648 (120 de reserva). No painel, o aviso começa depois da coluna e não cruza o "Sair" (de x 12 a 228);
-  - **loja e painel em 1440 × 900:** o aviso vai de 832 a 884; a área útil vai de 80 a 780. O "Novo produto" do painel, no topo, fica longe do aviso (o motivo da etapa 9 para o pé);
+  - **loja e painel em 1024 × 768:** o aviso de 52 px vai de 700 a 752; a área útil vai de 80 a 648 (120 de reserva). Na loja, o aviso fica na coluna da lista e não alcança o resumo grudado; no painel, começa depois da coluna e não cruza o "Sair" (de x 12 a 228);
+  - **loja e painel em 1440 × 900:** o aviso vai de 832 a 884; a área útil vai de 80 a 780. O resumo grudado fica fora do alcance do aviso; o "Novo produto" do painel, no topo, fica longe dele (o motivo da etapa 9 para o pé);
   - **painel em 390:** sem toolbar, o aviso fica a 16 px do pé, e a reserva é de 120.
 - **O rodapé do diálogo sobre o campo focado:** o corpo é o contêiner de rolagem e termina acima do rodapé; `scroll-padding-block: var(--space-4)` no corpo dá a folga do anel (pendência da etapa 6). O CTA nunca cobre o campo.
 - **A pílula sobre o aviso:** abaixo de `lg`, o aviso fica 16 px acima dela; a partir de `lg`, a pílula está no cabeçalho.
-- **As regras que saem:** `_cart-page.scss` (L7–21), `_payment.scss` (L7–18), `_profile.scss` (L8–21) e, em `_admin-layout.scss`, as três regras do aviso (L75–95: a posição no pé, a reserva no `scroll-padding` e o `padding-bottom` do `.admin-main`). **Fica** no `_admin-layout.scss` o `--m3-barra-reserva: 0rem` (L70–73, sobre a toolbar, e não sobre o aviso) e **entra** a regra da coluna (acima). O `--m3-toast-reserva` fica, agora com um dono só.
+- **As regras que saem:** `_cart-page.scss` (L7–21), `_payment.scss` (L7–18), `_profile.scss` (L8–21) e, em `_admin-layout.scss`, duas das três regras do aviso (L75–88: a posição no pé e a reserva no `scroll-padding`). **Ficam** no `_admin-layout.scss` o `--m3-barra-reserva: 0rem` (L70–73, sobre a toolbar, e não sobre o aviso) e o `padding-bottom` do `.admin-main` (L90–95), que passa a contar os avisos; **entra** a regra do início da região a partir de `lg` (acima). O `--m3-toast-reserva` fica.
 
 ### 4.6 Modos de contraste (decisão q)
 
@@ -404,11 +430,11 @@ A sessão C ouve num leitor de tela se o aviso de ação lê o rótulo "Desfazer
 
 **Estrutura:**
 
-- `div.toast-region` (fixa, `z-index: var(--z-toast)`, `pointer-events: none`, `inset-inline: var(--gutter)`, pé pela tabela de 4.5; coluna, `align-items: center`, `gap: var(--space-2)`):
+- `div.toast-region` (fixa, `z-index: var(--z-toast)`, `pointer-events: none`, `inset-inline: var(--gutter)`, pé e faixa pela tabela de 4.5; coluna, `align-items: center` abaixo de `lg` e `flex-start` a partir dele, `gap: var(--space-2)`):
   - `TransitionGroup name="toast" tag="div"` → `div.toast-region__list.toast-region__list--status[role=status][aria-atomic=false]`, com os avisos de sucesso e info;
   - `TransitionGroup name="toast" tag="div"` → `div.toast-region__list.toast-region__list--alert[role=alert][aria-atomic=true]`, com os de erro (embaixo, perto da borda).
-- Cada aviso: `div.toast.toast--{variant}` (sem `role`; a classe da variante fica como gancho de teste, sem CSS) → `font-awesome-icon.toast__icon` (só no erro, `aria-hidden`) → `p.toast__message` → `BaseButton.toast__action variant="ghost"` (com ação; era `secondary`) → `BaseButton.toast__close variant="ghost" icon-only icon-start="xmark" label="Fechar aviso"`. Os eventos de hoje ficam (`mouseenter`, `mouseleave`, `focusin`, `focusout`).
-- **Por que duas listas fixas:** hoje cada aviso nasce com o próprio `role` e a mensagem juntos, e a ARIA22 confere se o papel existe antes da mensagem [153]; a ARIA19 pede o contêiner do erro desde o carregamento [152]. O `aria-atomic="false"` na lista de status faz o leitor ler só o aviso novo, e não a pilha toda; o `aria-atomic="true"` no erro é o que a ARIA19 pede para o VoiceOver do iOS [152].
+- Cada aviso **que não está retido** (`v-for` sobre os avisos com `retido: false`, 5.1, "Retenção"): `div.toast.toast--{variant}` (sem `role`; a classe da variante fica como gancho de teste, sem CSS) → `font-awesome-icon.toast__icon` (só no erro, `aria-hidden`) → `p.toast__message` → `BaseButton.toast__action variant="ghost"` (com ação; era `secondary`) → `BaseButton.toast__close variant="ghost" icon-only icon-start="xmark" label="Fechar aviso"`. Os eventos de hoje ficam (`mouseenter`, `mouseleave`, `focusin`, `focusout`).
+- **Por que duas listas fixas:** hoje cada aviso nasce com o próprio `role` e a mensagem juntos, e a ARIA22 confere se o papel existe antes da mensagem [153]; a ARIA19 pede o contêiner do erro desde o carregamento [152]. O `aria-atomic="false"` na lista de status faz o leitor ler só o aviso novo, e não a pilha toda: é desvio declarado da ARIA22, com o motivo e o risco em 4.2; o `aria-atomic="true"` no erro é o que a ARIA19 pede para o VoiceOver do iOS [152].
 
 **Visual do aviso (`.toast`):**
 
@@ -421,55 +447,105 @@ A sessão C ouve num leitor de tela se o aviso de ação lê o rótulo "Desfazer
 | Padding | `var(--space-1) var(--space-2) var(--space-1) var(--space-4)` (4 em cima e embaixo, 8 no fim, 16 no início) | 16 no início e 8 no fim [219]; os 4 de cima e de baixo são do projeto |
 | Altura | 52 px com uma linha (44 do botão mais 4 e 4), 72 com duas, 92 com três | O M3 dá 48 e 68 dp [220]; a diferença é o alvo de 44 px do projeto [78] |
 | Largura | abaixo de `sm`, a da região; a partir de `sm`, a do conteúdo, até `min(37.5rem, 100%)` | até 600 dp, sem mínimo [219] |
-| Vãos | `display: flex; align-items: center; gap: var(--space-2)` | o de hoje (sem fonte no M3) |
-| Ícone de erro | 20 px (`1.25rem`), `inverse-on-surface`, `flex-shrink: 0` | a pista de forma da 1.4.1 [99]; 20 px como os ícones de apoio do sistema (admin, 5.1) |
+| Vãos | `display: flex; align-items: center; gap: var(--space-2)` | **muda:** hoje o vão é `--space-3`; os 8 px deixam o texto mais largo ao lado dos dois botões em 390 (sem fonte no M3) |
+| Ícone de erro | 20 px (`1.25rem`), `inverse-on-surface`, `flex-shrink: 0` | a pista de forma da 1.4.1 [99]; os 20 px são o tamanho dos ícones de apoio do projeto (os `1.25rem` do "Mostrar senha" do campo, da coluna e da busca do painel) |
 | Modos | `reserva-de-sombra` (4.6) | SPEC-M §2.6 |
 
 **Os botões dentro do aviso (repintados pelo próprio aviso, com seletor de duas classes, o precedente do hero em `pages/home/_secao-hero.scss` L160):**
 
-- `.toast .toast__action { color: var(--m3-primary-container); }`: o text button "Desfazer" em `primary-container` (10,13); a camada de estado é `currentColor` (8% no hover, 10% no pressionado [12]): 8,18 e 7,74 (medidos com a camada da própria cor; com a camada `inverse-on-surface`, mais clara, 8,03 e 7,56, o par que entra no `contraste.js`).
+- `.toast .toast__action { color: var(--m3-inverse-primary); }`: o text button "Desfazer" em `inverse-primary` (7,70), a cor da ação do snackbar [220] [224]; a camada de estado é `currentColor` (8% no hover, 10% no pressionado [12]): 6,44 e 6,15 (medidos com a camada da própria cor; com a camada `inverse-on-surface`, mais clara, 6,11 e 5,75, os pares que entram no `contraste.js`).
 - `.toast .toast__close { color: var(--m3-inverse-on-surface); }`: o botão de ícone padrão (5.6) na cor do texto; hover 9,15; pressionado 8,61.
 - `.toast :is(.toast__action, .toast__close):focus-visible { outline-color: var(--m3-inverse-on-surface); outline-offset: calc(-1 * var(--focus-width)); }`: o anel por dentro, em `inverse-on-surface` (11,54; sobre a camada pressionada, 8,61). **Por quê:** o `secondary` mede 2,02 sobre o `inverse-surface` (abaixo de 3 [98]); por fora, o anel (2 + 3 px) passaria 1 px da borda do aviso, com 4 px de padding em cima e embaixo, e encostaria na página clara.
-- **Por que `primary-container` na ação:** é da mesma paleta primária do `inverse-primary` que o M3 usa [220]; mede 10,13; e a ação se distingue do texto pelo peso (label-l 500 contra body-m 400), pelo ícone, pela posição no fim e pela camada de estado, e não só pela cor (as duas cores medem 1,13 uma contra a outra). Não encontrei no dossiê o tom do `inverse-primary`; o valor dele teria de vir do gerador (§12).
+- **Por que `inverse-primary` na ação (decisão do usuário, §12):** é o papel que o M3 dá à ação do snackbar [220] [224]. A sessão principal o gerou com o mesmo gerador do esquema (`@material/material-color-utilities` 0.4.0, `SchemeTonalSpot`, semente `#5DBB63`, claro, contraste 0.0, rodado fora do projeto), que reproduziu exatamente os 12 papéis que já estão nos tokens; o valor é `#9fd49b`. A ação se distingue do texto pela cor (1,49 contra o `inverse-on-surface`), pelo peso (label-l 500 contra body-m 400), pelo ícone e pela posição no fim, e a camada de estado a confirma no hover. A primeira versão do desenho usava o `primary-container` (10,13), um papel de contêiner usado como tinta e só 1,13 contra o texto.
 
 **Interação e estados:**
 
-- **Tempo, fila e troca de rota:** 4.3. **Pausa:** com o ponteiro ou o foco dentro, só nos avisos de 4 s (hoje).
-- **Retenção com um diálogo aberto (lógica de apresentação, novo):** um `watch` com `flush: "sync"` sobre os ids da store vê cada aviso novo; se nesse instante existe um `dialog[open]` (todos os diálogos do projeto são o `BaseDialog`, aberto com `showModal()`), o aviso fica retido: não entra nas listas, o tempo dele fica pausado (`pause(id)`), e ele é solto no evento `close` desse `dialog` (`{ once: true }`) ou na troca de rota, quando ganha o `resume(id)`. **Por quê:** com o diálogo modal, a página atrás é inerte [200]: o aviso ficaria atrás do fundo e a região viva não anunciaria. Inferência pela ordem do agendador do Vue: hoje o "Conta excluída." nasce no handler com o diálogo ainda aberto (o `deleteOpen` só vira `false` depois do `await`), e por isso pode não ser lido; a sessão C confere num teste (o aviso é inserido só depois do `close`).
+- **Tempo, fila e troca de rota:** 4.3. **Pausa:** com o ponteiro ou o foco dentro, nos avisos que têm tempo (os de 4 s e os anteriores com ação, de 10 s).
+- **Retenção com um diálogo aberto (na store; corrigida na volta 1):**
+  - **O contador:** a store ganha `dialogosAbertos` (um número, e não um booleano, para diálogos aninhados ou trocados um pelo outro) e duas ações, `segurar()` e `soltar()` (o código abaixo). O `BaseDialog` chama `segurar()` no `openDialog` e `soltar()` no `closeDialog` **e** no `onBeforeUnmount` quando ainda segura (5.2): o `ModalProducts` é `v-if`, e o `ProfileView` sai com a rota, e um `<dialog>` desmontado não é sinal confiável do `close`. O `soltar()` não desce de 0.
+  - **O tempo:** com o contador acima de 0, o `resume` não arma o tempo de nenhum aviso, e o `segurar()` que leva o contador de 0 a 1 pausa os que estavam correndo. Quando o contador volta a 0, a store arma o tempo de todos os que estão na tela.
+  - **Como o aviso retido aparece:** o aviso que nasce com o contador acima de 0 entra na store com `retido: true` e **fica fora da tela e fora das listas vivas** (o `AppToast` só desenha os que têm `retido: false`). Quando o contador volta a 0, a store tira o `retido` de todos, e eles entram nas listas, que já existem: o leitor de tela ouve a mensagem nessa hora (4.2). Os avisos que já estavam na tela quando o diálogo abriu ficam onde estavam, atrás do fundo e inertes, com o tempo parado.
+  - **Por quê:** com o diálogo modal, a página atrás é inerte [200]: o aviso ficaria atrás do fundo, e a região viva inerte não anuncia. A primeira versão retinha o aviso no `AppToast`, com um `watch` síncrono; ele rodava dentro do `push`, antes de a store armar o tempo, e o tempo corria mesmo retido (achado da revisão).
+  - **O "Conta excluída."** nasce no handler com o diálogo ainda aberto (o `deleteOpen` só vira `false` depois do `await`; inferência pela ordem do agendador do Vue): ele fica retido até o diálogo fechar ou desmontar, e só então aparece e é lido. O teste do §9 confere.
 - **Foco:** 4.1. **Rolagem do foco:** 4.5.
 - **Hover nos botões:** a camada; o aviso não reage ao ponteiro (só pausa o tempo).
 
 **Acessibilidade:** as duas listas fixas e o que se ouve (4.2); "Fechar aviso" com o nome de hoje [257] [259]; a ação com o texto visível "Desfazer"; nenhum `aria-label` novo; o ícone do erro `aria-hidden`.
 
-**Comportamento:** 1440, no pé, centrado, a largura do conteúdo até 600 (cerca de 346 px para o "Desfazer"); 1024, a 16 px do pé (loja) ou centrado depois da coluna (painel); 390, na largura da região (358), 16 px acima da toolbar na loja.
+**Comportamento:** 1440, no pé, no início da coluna de conteúdo (x 152 na loja, 272 no painel), a largura do conteúdo até 600 (cerca de 346 px para o "Desfazer"); 1024, a 16 px do pé, no início da coluna (x 32 na loja, 272 no painel); 390, centrado, na largura da região (358), 16 px acima da toolbar na loja.
 
 **Movimento:** 4.4.
 
 **Reservas:**
 
 - **Texto longo:** quebra em várias linhas; os botões ficam no fim da linha, centrados na altura. A mensagem real mais longa (a conferência do pagamento, 78 caracteres) dá 3 linhas em 390 (92 px, medido na etapa 7). Um nome de produto de até 60 caracteres (o limite do `ModalProducts`) com " removido." pode passar de 3 linhas em 390 e da reserva de um aviso (risco, §11).
-- **Três avisos:** a pilha e a reserva por contagem (4.5); o quarto empurra o mais antigo.
+- **Três avisos:** a pilha e a reserva por contagem (4.5); o quarto empurra o mais antigo; os anteriores com ação saem 10 s depois do aviso seguinte (4.3).
 - **Aviso com o carrinho esvaziado:** o "Desfazer" do último item aparece sobre o `EmptyState` (a captura `cart-desfazer-390`); ao desfazer, o item volta e o foco vai ao "Remover" dele (etapa 7).
 
 **`toast.js` (estado de interface, não persistido; a mudança exata):**
 
 ```
+const MAX_TOASTS = 3;                                    (hoje)
+const DURACAO_LONGA = 10000;                             (novo: o Long do Compose [218])
+
+state: { toasts: [], dialogosAbertos: 0 }                (dialogosAbertos é novo)
+
 show({ message, variant = "success", action = null, duration = 4000 })
   // expira só sem ação, fora do erro e com duração positiva
   const expira = !action && variant !== "error" && duration > 0;
-  push { id, message, variant, action, duration, expira }
+  // novo: chegou outra ação; os avisos com ação que ainda não têm tempo passam a 10 s, a partir de agora
+  se action: para cada aviso na tela com action e sem timer:
+      timers.set(antigo.id, { remaining: DURACAO_LONGA, startedAt: Date.now(), handle: null });
+      resume(antigo.id);                                 (não arma com diálogo aberto)
+  push { id, message, variant, action, retido: dialogosAbertos > 0 }      (retido é novo)
   enquanto houver mais de 3: dismiss(o mais antigo)      (hoje)
-  se expira: timers.set(id, …) e resume(id)              (hoje, só para os que expiram)
+  se expira: timers.set(id, { remaining: duration, … }) e resume(id)   (só para os que expiram)
+
+resume(id)
+  se dialogosAbertos > 0: return                         (novo: nenhum tempo corre com diálogo aberto)
+  (o resto, hoje)
+
+segurar()                                                (novo; o BaseDialog chama ao abrir)
+  se dialogosAbertos === 0: pause(id) de cada aviso na tela
+  dialogosAbertos += 1
+
+soltar()                                                 (novo; o BaseDialog chama ao fechar e ao
+  se dialogosAbertos === 0: return                        desmontar aberto; não desce de 0)
+  dialogosAbertos -= 1
+  se dialogosAbertos === 0:
+      cada aviso: retido = false
+      resume(id) de cada aviso (os sem timer não fazem nada)
 
 runAction(id, event)
   const resultado = toast?.action?.onClick?.(event);    (o evento é novo e opcional)
   dismiss(id);
   return resultado;                                     (o AppToast espera a promessa para o foco)
 
-pause(id), resume(id), dismiss(id): os de hoje (sem timer, não fazem nada)
+pause(id), dismiss(id): os de hoje (sem timer, não fazem nada)
 ```
 
-O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso não expira; `duration: 0` também não expira". O `CartView` deixa de passar `duration: 5000` (L107), que perde o efeito; o `PaymentView` passa `duration: 0` no aviso da conferência (L114).
+O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso não expira; `duration: 0` também não expira; quando chega outro aviso com `action`, os anteriores com `action` saem em 10 s; com um diálogo aberto (`dialogosAbertos > 0`), o aviso novo espera fora da tela e nenhum tempo corre".
+
+**As telas que mudam a chamada:**
+
+- **`CartView`** deixa de passar `duration: 5000` (L107), que perde o efeito (decisão do usuário, §12).
+- **`PaymentView` (L112–121), as duas chamadas:** o aviso passa a nascer depois de saber se o carrinho ficou vazio. O texto e a variante não mudam:
+
+  ```
+  if (cartStore.syncWithCatalog()) {
+    submitting.value = false;
+    const aviso = { message: "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar.", variant: "info" };
+    if (!cartStore.items.length) {
+      toastStore.show(aviso);                   // 4 s: sobrevive à troca de rota; o carrinho vazio mostra o estado
+      router.push("/cart");
+      return;
+    }
+    toastStore.show({ ...aviso, duration: 0 }); // sem prazo: a tela continua, e a instrução só está no aviso
+    …                                           // o resto do ramo, hoje
+  }
+  ```
+
+  **Por quê:** com `duration: 0` também no ramo do redirecionamento, a regra da troca de rota (os avisos que não expiram saem) apagaria o aviso no mesmo instante do `router.push("/cart")`. A regra fica como está.
 
 ### 5.2 `BaseDialog` e o sheet (decisões e, f, g)
 
@@ -511,9 +587,13 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 - **Rodapé:** `flex-shrink: 0`, `padding: var(--space-4) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom))`, sem fundo próprio. O texto e as ações ficam a 24 px [230]. As ações são de cada view (o seguro antes, a ação por último, ao fim, 8 px entre elas [230] [228]), como as etapas 8 e 9 fixaram.
 - **Divisores (decisão e):** o cabeçalho e o rodapé têm `border-block-end` e `border-block-start` de 1 px **transparentes**; com `.is-rolado` (o corpo saiu do topo), o do cabeçalho fica `--m3-outline-variant`; com `.tem-mais` (há conteúdo abaixo), o do rodapé também. Nada se move: só a cor da borda troca. O material-web mostra os divisores só quando o conteúdo rola e não está no topo ou no fim [234]. **Lógica:** um ouvinte `scroll` (passivo) no corpo e um `ResizeObserver` nele calculam `rolado = scrollTop > 0` e `temMais = scrollTop + clientHeight < scrollHeight - 1`; zerados ao abrir; desligados ao fechar e no `onBeforeUnmount`.
 
-**Interação e estados (decisão g):** 4.1. A API não muda: `open`, `title`, `titleId`, `maxWidth`; emite `close`; slots `header`, padrão e `footer`. Os atributos que a view passa (`role`, `aria-describedby`) caem no `<dialog>` pela herança de atributos (o componente não tem `inheritAttrs: false`).
+**Interação e estados (decisão g):** 4.1. A API não muda: `open`, `title`, `titleId`, `maxWidth`; emite `close`; slots `header`, padrão e `footer`. Os atributos que a view passa (`role`, `aria-describedby`) caem no `<dialog>` pela herança de atributos (o componente não tem `inheritAttrs: false`). Três mudanças de lógica, sem prop nova:
 
-**As confirmações viram `alertdialog`:** "Excluir conta?" (`ProfileView.vue` L146–164), "Excluir produto?" (`ProductManagement.vue` L74–92) e "Restaurar…?" (`AdminSettings.vue` L22–36) passam `role="alertdialog"` e `aria-describedby` apontando para o `p` do texto, que ganha um `id` (`excluir-conta-texto`, `excluir-produto-texto`, `restaurar-texto`). O alert dialog serve a prompts de confirmação, com a mensagem ligada por `aria-describedby` [235]; o `type="alert"` do material-web faz o mesmo [232] [234]. O `aria-modal` não entra: o `showModal()` já bloqueia o resto [235] [200].
+- **O `trapFocus` corrigido (volta 1):** o ramo do Shift+Tab leva ao último focável quando o elemento ativo é o primeiro **ou não está na lista de focáveis** (`!focusables.includes(active)`), e não só quando ele está fora do diálogo. Hoje, com o foco no título (`tabindex="-1"`), o Shift+Tab sai do diálogo. O ramo do Tab não muda.
+- **O tempo dos avisos (volta 1):** o `openDialog` chama `toastStore.segurar()` e guarda que segura (uma variável local); o `closeDialog` chama `toastStore.soltar()` se segurava; o `onBeforeUnmount` também solta, se ainda segurava (o diálogo que sai aberto da página, como o `ModalProducts` com `v-if` e o do perfil, que sai com a rota). A lógica está em 5.1, "Retenção".
+- **Os divisores e a região de anúncio** (acima e 5.7).
+
+**As confirmações viram `alertdialog`:** "Excluir conta?" (`ProfileView.vue` L146–164), "Excluir produto?" (`ProductManagement.vue` L74–92) e "Restaurar…?" (`AdminSettings.vue` L22–36) passam `role="alertdialog"` e `aria-describedby` apontando para o `p` do texto, que ganha um `id` (`excluir-conta-texto`, `excluir-produto-texto`, `restaurar-texto`). O alert dialog serve a prompts de confirmação, com a mensagem ligada por `aria-describedby` [235]; o `type="alert"` do material-web faz o mesmo [232] [234]. O `aria-modal` não entra: o `showModal()` já bloqueia o resto [235] [200]. **O "Cancelar" dos três ganha `autofocus`** (`ProfileView.vue` L159, `ProductManagement.vue` L87, `AdminSettings.vue` L32): o foco abre na ação menos destrutiva [199] (4.1).
 
 **O erro com o diálogo aberto (pendência da etapa 8):** o `ProfileView` deixa de mandar o erro da exclusão ao aviso (L361). O corpo do diálogo ganha `div.profile-delete__anuncio[role=alert][aria-atomic=true]`, **sempre no DOM** [152], depois do texto, com o banner `p.profile-delete__erro` (`v-if`) no visual do `.auth-alert` da etapa 8: `error-container`, canto 16 (`--m3-forma-l`), padding 16, o `circle-exclamation` num `span` de 20 px em `error` (4,99), o texto em `on-error-container` (7,23), `reserva-de-sombra`. O texto é o `result.error` de hoje ("Não foi possível excluir a conta. Tente de novo."). Uma `ref` local (`erroExclusao`) guarda a mensagem; é limpa ao abrir, ao fechar e antes de tentar de novo. O foco fica no "Excluir conta" (o `loading` não o desabilita). O handler, a store e o serviço não mudam. **Por quê:** com o `showModal()`, a página atrás é inerte [200], e o aviso ficaria atrás do fundo; o erro num diálogo que tem o foco não é mensagem de status [151], e a região de alerta o anuncia mesmo assim.
 
@@ -586,11 +666,11 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 
 **O limite (decisão i):**
 
-- **`aria-disabled="true"` no limite, no lugar do `disabled`:** `:aria-disabled="modelValue <= min ? 'true' : undefined"` no (−) e o inverso no (+); sai o `:disabled`. O botão continua focável e com o visual de desabilitado (5.8); o clique não faz nada (o `BaseButton` bloqueia o `aria-disabled` repassado, 5.7, e o `change()` de hoje já não emite no limite).
+- **`aria-disabled="true"` no limite, no lugar do `disabled`:** `:aria-disabled="modelValue <= min ? 'true' : undefined"` no (−) e o inverso no (+); sai o `:disabled`. O botão continua focável e com o visual de desabilitado (5.8); o clique não faz nada (o `BaseButton` bloqueia o `aria-disabled` repassado, 5.9, e o `change()` de hoje já não emite no limite).
 - **Por quê:** quem aperta Enter no (−) até o mínimo tem o foco nele; com `disabled`, o botão deixa de ser focável e o navegador leva o foco ao viewport [273], o que a APG chama de perder o foco [270]. A convenção da APG aceita o `disabled` quando o estado se infere pelo vizinho [270], mas não trata desse caso; o exemplo de quantidade da APG usa `aria-disabled` no limite [275]; e o `soft-disabled` do material-web faz o mesmo nos botões de ícone [257] [258].
 - **Sem spinbutton:** o padrão da APG põe o foco num campo editável e tira os botões do Tab [274] [275], e o próprio exemplo avisa de falhas de suporte no celular e no toque [275]. Fica o grupo de dois botões e o `output` do `SPEC.md`.
 - **O que o leitor de tela ouve:** "Diminuir Coca Cola Lata, botão"; ao apertar, o `output` diz "1"; no limite, o botão passa a "indisponível" (conforme o leitor) e continua com o foco; apertar de novo não muda nada.
-- **A §6 do SPEC-M muda:** a linha do `QuantityStepper` deixa "no limite: `disabled` real" e passa a "no limite: `aria-disabled`, focável, clique sem efeito" (a sessão C edita).
+- **Muda em três lugares** (registrados na §12): a §6 do SPEC-M (a linha do `QuantityStepper` deixa "no limite: `disabled` real" e passa a "no limite: `aria-disabled`, focável, clique sem efeito"; a sessão C edita), o `SPEC.md` L430 ("o botão recebe `disabled` **de verdade**") e o teste que o plano pede na etapa 10 ("`QuantityStepper.test.js` (novo): `disabled` real no limite"), que passa a conferir o `aria-disabled`.
 - **O que o teste confere** (`QuantityStepper.test.js`, §9): no mínimo, o (−) tem `aria-disabled="true"` e **não** tem `disabled`; com o foco nele e cliques até o mínimo, o `document.activeElement` continua o botão; o clique no limite não emite; os três rótulos.
 
 **Comportamento:** igual em 1440, 1024 e 390; no item do carrinho, à esquerda do "Remover", com quebra (etapa 7).
@@ -603,7 +683,8 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 
 - **Arquivo:** `src/components/ui/BaseButton.vue` e `components/ui/_base-button.scss`. **API:** `variant="danger"` (hoje), sem prop nova.
 - **Uma forma só: text button na tinta `error`, com a camada de estado** (SPEC-M §4.1, recomendação), em todos os usos, dentro e fora dos diálogos. **Por quê:** não encontrei botão nem orientação destrutiva no M3 [267] [231] [268]; o exemplo de exclusão do material-web usa dois text buttons sem cor própria [232]; o `error` é o papel da ação destrutiva no sistema (SPEC-M §2.2); e uma forma só mantém a API (decisão j). O "Cancelar" tonal ao lado tem mais ênfase que a ação destrutiva, o que combina com começar pela ação menos destrutiva [199].
-- **O hover e o pressionado escurecem a tinta para `on-error-container`**, com a camada (`currentColor` a 8% e 10% [12]). **Por quê (medido):** no `surface-container-high` (o card de produto do painel e o diálogo a partir de `md`), o `error` com a camada pressionada dá 4,32 (4,47 com a camada da própria cor), abaixo de 4,5. Com `on-error-container`, 6,26. O precedente é o campo com erro no hover, que já troca para `on-error-container` (etapa 8). A troca de cor é direta, sem transição.
+- **O hover e o pressionado escurecem a tinta para `on-error-container`**, com a camada (`currentColor` a 8% e 10% [12]). **Por quê (medido):** no `surface-container-high` (o card de produto do painel e o diálogo a partir de `md`), o `error` com a camada pressionada dá 4,32 (4,47 com a camada da própria cor), abaixo de 4,5. Com `on-error-container`, 6,26. A troca de cor é direta, sem transição.
+- **É adaptação do projeto, e não regra do M3:** no M3, o rótulo do botão não muda de cor nos estados (a ação do snackbar fica na mesma cor no hover, no foco e no pressionado [220]; o ícone do tonal também [255]); a camada é que marca o estado. O precedente no projeto é o campo com erro, cujo contorno e rótulo passam a `on-error-container` no hover (etapa 8), a partir das cores por estado do campo outlined [135].
 - **Classe:** `m3-botao--perigo` (o mapa passa a `{ primary: "filled", secondary: "tonal", ghost: "texto", danger: "perigo" }`); sai a `.btn--legado`. `padding-inline: var(--space-3)`, como o text button.
 - **Ícones:** `trash-can` ("Remover", "Excluir", "Excluir produto", "Excluir conta") e `rotate-left` ("Restaurar"), hoje, em `currentColor`.
 - **Alvo:** `md` 44 px; `sm` 40 com alvo de 44 ("Excluir" no card de produto).
@@ -633,8 +714,10 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 | `primary` | filled (sem uso hoje) | `primary` / `on-primary` | [254] |
 | `danger` | padrão na tinta `error` (sem uso hoje) | — / `error`, `on-error-container` no hover e no pressionado | 5.5 |
 
+- **Por que desenhar o filled e o perigo de ícone, se não têm uso, e tirar o `pressed`:** os dois são combinações de props que já existem (`variant="primary"` ou `"danger"` com `iconOnly`) e que qualquer tela pode escrever hoje; sem CSS, elas cairiam num botão sem forma definida. O `pressed` é um estado próprio, com semântica (`aria-pressed`) e visual de toggle que só um uso real decide, e não há nenhum (5.9).
+
 - **Tamanhos (`size`):** `sm` 40 × 40 com alvo de 44 (o `::after` da face com `inset: -2px` nos quatro lados), `md` 44 × 44, `lg` 56 × 56. O S do Expressive tem 40 dp e o M, 56 [249] [250]; o `md` de 44 é o alvo do projeto (desvio da ficha, como o botão S de 44 [19]).
-- **Ícone:** 20 px (`1.25rem`) no `sm` e no `md`, 24 (`1.5rem`) no `lg`. O M3 usa 24 dp no S e no M [249] [250]; os 20 px são o tamanho dos ícones do Font Awesome no sistema (o "Mostrar senha" do campo, a navegação do painel) (decisão c).
+- **Ícone:** 20 px (`1.25rem`) no `sm` e no `md`, 24 (`1.5rem`) no `lg`. O M3 usa 24 dp no S e no M [249] [250]: os 20 px são **desvio** declarado. O precedente são os `1.25rem` dos ícones de apoio do projeto: o "Mostrar senha" do campo (etapa 8), os itens da coluna e a lupa da busca do painel (etapa 9). A toolbar da loja usa 24 px (abaixo de `md`), e o botão de ícone fica com o tamanho dos botões vizinhos do campo e do painel.
 - **Forma:** redonda (`--m3-forma-full`) [249]. **Troca de forma:** no tonal e no filled, pressionado em `forma-s` no `sm` e no `md` e em `forma-m` no `lg` [249] [250] (por opacidade, `troca-de-forma`). No padrão, sem contêiner, só a camada (como o text button; a troca de forma não se vê sem fundo).
 - **Cores e anel:** o padrão em `on-surface-variant` no repouso e no hover (a camada de 8% e 10% [12]); o anel de 3 px em `secondary`, afastado 2 px (por dentro só no aviso, 5.1).
 
@@ -661,6 +744,7 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 - **O clique fica bloqueado e a largura travada** (hoje; a largura só cresce, nunca encolhe).
 - **Sai o `aria-busy`.** O `aria-busy` serve a regiões vivas e a widgets que ficariam sem os filhos obrigatórios durante a atualização [207]; não encontrei fonte que diga que o leitor de tela o anuncia num botão [207] [263]; e ele pode fazer a tecnologia assistiva segurar as mudanças do elemento até voltar a `false` [207] [263], justo a troca do rótulo.
 - **O anúncio (lógica de apresentação, novo):** quando `loading` vira `true`, o botão guarda o texto do `.btn__label`, espera o `nextTick` e, **se o rótulo mudou**, manda o texto novo à região viva mais próxima: a do `BaseDialog`, por `inject` (o diálogo fornece a dele, porque a página atrás é inerte [200]), ou a do `App.vue` (`useAnnouncer().announce`). É o indicador de "ocupado" que a 4.1.3 lista entre as mensagens de status [151]. O "Salvar" do `ModalProducts`, que não muda de rótulo enquanto lê a imagem, não anuncia nada (o nome do arquivo mostra "Lendo a imagem…", etapa 9).
+- **Dois anúncios possíveis:** o NVDA pode ler a troca do nome do botão focado e a região viva, duas vezes ("Entrando…", "Entrando…"). A sessão C ouve (4.2); a região viva fica, porque é o caminho nos leitores que não anunciam a troca do nome.
 - **A chave:** `src/composables/useAnnouncer.js` passa a exportar `CHAVE_ANUNCIADOR` (`Symbol`); o `BaseDialog` faz `provide(CHAVE_ANUNCIADOR, anunciar)`, e o `BaseButton`, `inject(CHAVE_ANUNCIADOR, null) ?? useAnnouncer().announce`.
 - **Movimento reduzido:** o arco parado, com o rótulo (hoje; SPEC-M §7.7).
 
@@ -676,6 +760,8 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 |---|---|---|---|
 | Filled, tonal, ícone filled e tonal | `--m3-desabilitado-container` (on-surface a 10%) | `--m3-desabilitado-conteudo` (on-surface a 38%) | [264] (filled 0,1), [254] e [255] (ícones 0,1); o tonal de texto usa 0,12 numa versão mais antiga dos tokens [265]: fica o 0,1 das versões novas |
 | Texto, perigo, ícone padrão | transparente | `--m3-desabilitado-conteudo` | [267], [253] |
+
+- **Desvio declarado no conteúdo:** o filled e o texto do M3 dão o rótulo desabilitado em `OnSurfaceVariant` a 0,38 ([264], [266]); o tonal e os ícones, em `OnSurface` a 0,38 ([265], [253] a [255]). O projeto usa `on-surface` a 38% em todos: um token só para o botão e o campo (SPEC-M §2.2 já define o desabilitado como "on-surface a 38%"), e a diferença entre os dois a 38% é pequena e isenta de contraste [269].
 
 - **Os tokens novos (cor; o SPEC-M e a etapa 8 já os pedem):** `--m3-desabilitado-conteudo: rgba(24, 29, 23, 0.38)` e `--m3-desabilitado-container: rgba(24, 29, 23, 0.1)` (on-surface #181d17 com o alfa). **Por que `rgba`, e não a cor composta:** o M3 desenha o desabilitado como a cor "on" com alfa [268], e o botão desabilitado aparece em quatro fundos (`surface`, `low`, `lowest`, `high`); o `rgba` se compõe com cada um, como as camadas `--m3-camada-*`. Sobre a `surface`, o conteúdo composto dá exatamente o `#a2a79e` de hoje.
 - **O nome M3 do `--color-ink-disabled` (pendência da etapa 8):** o apelido passa a `var(--m3-desabilitado-conteudo)`. O campo (`_form-group.scss`) continua escrevendo `var(--color-ink-disabled)` até a etapa 11, cujo script troca pelo papel; o botão já usa o token novo. Sobre o `low`, o texto do campo desabilitado passa de `#a2a79e` a `#9fa39b` (composto; isento).
@@ -693,7 +779,7 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 
 **A prop `pressed` sai.**
 
-- **Por quê:** sem uso desde a etapa 6, quando o grupo de categorias passou a rádios nativos (desenho do Cardápio, L628); desenhar o toggle sem nenhum caso real seria desenhar uma função que o projeto não tem (pacote, item 3); e o toggle do M3 troca o rótulo em alguns exemplos ([245], [258]) enquanto a APG pede o rótulo fixo [90], uma escolha que só um uso real decide. O único toggle do projeto, o "Mostrar senha" do campo, é um `button` próprio com `aria-pressed` (etapa 8) e não usa a prop.
+- **Por quê:** sem uso desde a etapa 6, quando o grupo de categorias passou a rádios nativos (desenho do Cardápio, L628); desenhar o toggle sem nenhum caso real seria desenhar uma função que o projeto não tem (pacote, item 3). Ao contrário do filled e do perigo de ícone (5.6), que são combinações de props que já existem e só pedem CSS, o `pressed` é um estado próprio, com semântica e visual de toggle; e o toggle do M3 troca o rótulo em alguns exemplos ([245], [258]) enquanto a APG pede o rótulo fixo [90], uma escolha que só um uso real decide. O único toggle do projeto, o "Mostrar senha" do campo, é um `button` próprio com `aria-pressed` (etapa 8) e não usa a prop.
 - **API (decisão j):** a prop, o comentário dela e a linha `aria-pressed` saem do `BaseButton.vue`; o teste "pressed vira aria-pressed" sai do `BaseButton.test.js`. Quem precisar de toggle no futuro passa `aria-pressed` como atributo, que chega ao botão pela herança de hoje.
 
 **O `.btn--legado` sai inteiro.** Com `danger`, `iconOnly` e `pressed` resolvidos, nenhum botão fica na forma da Brasa.
@@ -722,15 +808,15 @@ O JSDoc do `show` passa a dizer: "com `action` ou `variant: 'error'`, o aviso n�
 |---|---|---|---|
 | `CartView.vue` | "Ver cardápio" do vazio com `size="lg"`; sai o `duration: 5000` do aviso | L15; L107 | 5.3; 4.3 |
 | `MenuView.vue` | O `EmptyState` dentro de um `div[role=status][aria-atomic=true]` fixo; a grade com `v-if` | L19–26 | 5.3 |
-| `ProfileView.vue` | O diálogo de exclusão com `role="alertdialog"`, `aria-describedby="excluir-conta-texto"`, o `id` no texto e a região `role="alert"` com o banner; o `confirmDelete` guarda o erro na `ref`, e não no aviso | L146–164; L352–365 | 5.2 |
-| `PaymentView.vue` | O CTA com `aria-disabled`; o aviso da conferência com `duration: 0` | L47; L114 | 5.8; 4.3 |
-| `ProductManagement.vue` | "Excluir produto?" com `role="alertdialog"` e `aria-describedby`; o vazio da categoria dentro da região de status | L74–92; L33 | 5.2; 5.3 |
+| `ProfileView.vue` | O diálogo de exclusão com `role="alertdialog"`, `aria-describedby="excluir-conta-texto"`, o `id` no texto, o `autofocus` no "Cancelar" e a região `role="alert"` com o banner; o `confirmDelete` guarda o erro na `ref`, e não no aviso | L146–164 (o "Cancelar" na L159); L352–365 | 5.2; 4.1 |
+| `PaymentView.vue` | O CTA com `aria-disabled`; o aviso da conferência nasce depois de saber se o carrinho ficou vazio: 4 s no ramo do `router.push("/cart")`, `duration: 0` no ramo que continua | L47; L112–121 | 5.8; 4.3; 5.1 |
+| `ProductManagement.vue` | "Excluir produto?" com `role="alertdialog"`, `aria-describedby` e o `autofocus` no "Cancelar"; o vazio da categoria dentro da região de status | L74–92 (o "Cancelar" na L87); L33 | 5.2; 4.1; 5.3 |
 | `OrderManagement.vue` | O `EmptyState` em dois: sem busca, dentro da região de status; com busca, fora | L72–77 | 5.3 |
-| `AdminSettings.vue` | "Restaurar…?" com `role="alertdialog"` e `aria-describedby` | L22–36 | 5.2 |
+| `AdminSettings.vue` | "Restaurar…?" com `role="alertdialog"`, `aria-describedby` e o `autofocus` no "Cancelar" | L22–36 (o "Cancelar" na L32) | 5.2; 4.1 |
 | `ModalAdditional.vue`, `ModalProducts.vue`, `AdditionalsList.vue`, `CartItem.vue`, `SidebarAdmin.vue`, `TheNavbarAdmin.vue`, `NotificationBar.vue`, `LoginView.vue`, `LoginAdminView.vue`, `RegisterView.vue`, `AdminDashboard.vue` | Nada no código: o visual vem dos componentes. Os pares do Personalizar e do `ModalProducts` foram medidos de novo na superfície nova (§8) | — | — |
 | `_cart-page.scss`, `_payment.scss`, `_profile.scss` | Saem as regras do aviso | L7–21; L7–18; L8–21 | 4.5 |
 | `_profile.scss` | Entram `.profile-delete__anuncio` e `.profile-delete__erro` (o visual do `.auth-alert`) | — | 5.2 |
-| `_admin-layout.scss` | Saem as três regras do aviso; entra o início da região depois da coluna a partir de `lg` | L75–95 | 4.5 |
+| `_admin-layout.scss` | Saem a posição do aviso no pé e a reserva no `scroll-padding`; fica o `padding-bottom` do `.admin-main`, agora com a contagem de avisos; entra o início da região depois da coluna a partir de `lg` | L75–88; L90–95 | 4.5 |
 | `_modal-products.scss` | A borda do botão de imagem com `prefers-contrast: more` | — | 5.10 |
 
 **Pares das telas dentro do diálogo, medidos de novo** (o desenho do Cardápio, L456 e L838, e o da Conta, L913, pediram): §8.
@@ -752,11 +838,11 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 | Botão de ícone filled (`primary` + `iconOnly`; sem uso) | `primary` / `on-primary` (6,43) | `primary-hover` | anel | `primary-pressed`; `forma-s` (`lg`: `forma-m`) | — | contêiner 10%, ícone 38% | — |
 | Botões nos modos de contraste | `forced-colors`: borda `ButtonText`; `prefers-contrast: more`: borda `outline` no tonal | — | anel | — | — | `GrayText` no texto e na borda | — |
 | `QuantityStepper` | dois ícones tonais de 44; número title-m 500 tabular | via botão | via botão | via botão (troca de forma) | — | **no limite: `aria-disabled="true"`, focável, clique sem efeito**, visual de desabilitado | — |
-| `AppToast` | `inverse-surface` / `inverse-on-surface` (11,54), canto 4, `elevacao-3`; ícone só no erro | pausa o tempo (só nos de 4 s) | anel interno `inverse-on-surface` nos botões (11,54) | — | — | — | — |
-| Ação do aviso ("Desfazer") | text button em `primary-container` (10,13) | camada 8% (8,03) | anel interno `inverse-on-surface` | camada 10% (7,56) | — | — | — |
+| `AppToast` | `inverse-surface` / `inverse-on-surface` (11,54), canto 4, `elevacao-3`; ícone só no erro; retido (fora da tela) enquanto houver diálogo aberto | pausa o tempo (nos que têm tempo) | anel interno `inverse-on-surface` nos botões (11,54) | — | — | — | — |
+| Ação do aviso ("Desfazer") | text button em `inverse-primary` (7,70) | camada 8% (6,11) | anel interno `inverse-on-surface` | camada 10% (5,75) | — | — | — |
 | "Fechar aviso" | ícone padrão em `inverse-on-surface` (11,54) | camada 8% (9,15) | anel interno | camada 10% (8,61) | — | — | — |
 | Aviso nos modos de contraste | `forced-colors`: borda `CanvasText`; mais contraste: borda `outline` | — | anel | — | — | — | — |
-| Diálogo (≥ `md`) | `surface-container-high`, canto 28, `elevacao-3`, sobre o `scrim`; divisores transparentes | — | o foco inicial pela regra de 4.1; Tab preso | — | — | — | — |
+| Diálogo (≥ `md`) | `surface-container-high`, canto 28, `elevacao-3`, sobre o `scrim`; divisores transparentes | — | o foco inicial pela regra de 4.1 (nas confirmações, o "Cancelar"); Tab e Shift+Tab presos, também a partir do título | — | — | — | — |
 | Sheet (< `md`) | `surface-container-low`, cantos de 28 em cima, `elevacao-1`, altura do conteúdo até `100dvh − 32 px`; sem alça | — | idem | — | — | — | — |
 | Divisores do diálogo | transparentes | — | — | — | corpo rolado: `outline-variant` em cima; mais conteúdo abaixo: em baixo | — | — |
 | "Fechar" do diálogo | ícone padrão (7,56 no `high`; 8,41 no `low`) | camada 8% | anel (5,25; 5,83) | camada 10% (6,22; 6,90; anel 4,32; 4,78) | — | — | — |
@@ -775,10 +861,10 @@ Os estados de vazio e erro das telas seguem a §6 do `SPEC.md`, com estes compon
 ### 7.1 `AppToast` (`src/components/ui/`) e `toast.js` (`src/stores/`)
 
 - **Props, slots, emits:** nenhum (hoje).
-- **Store:** `show({ message, variant = "success", action = null, duration = 4000 })`, com o aviso que expira só sem ação, fora do erro e com `duration > 0`; `dismiss(id)`, `pause(id)`, `resume(id)` (hoje); `runAction(id, event)`, com o evento opcional e o resultado do `onClick` devolvido. Até 3 avisos, o mais antigo sai (hoje).
-- **Estrutura:** `div.toast-region` → `div.toast-region__list--status[role=status][aria-atomic=false]` e `div.toast-region__list--alert[role=alert][aria-atomic=true]` (os dois `TransitionGroup`) → `div.toast.toast--{variant}` → `font-awesome-icon.toast__icon` (erro) → `p.toast__message` → `BaseButton.toast__action` (`ghost`) → `BaseButton.toast__close` (`ghost`, `iconOnly`).
-- **Lógica:** a retenção com um `dialog[open]` (`watch` com `flush: "sync"`, o evento `close`, a troca de rota); a saída dos avisos que não expiram na troca de `route.path` (`useRoute`); a origem do foco (`focusin`); o foco depois do "Fechar aviso" e da ação pelo teclado; a última entrada (`pointerdown` e `keydown` na captura do `document`, tirados no `onBeforeUnmount`) e a rolagem do foco depois de mostrar um aviso.
-- **Tokens:** `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-primary-container`, `--m3-forma-xs`, `--m3-elevacao-3`, `--m3-body-m` (a linha e o tracking), `--m3-toast-reserva`, `--m3-barra-reserva`, `--m3-navegacao-largura` (na regra do painel), `--z-toast`, `--gutter`, `--space-1` a `--space-4`, `--focus-width`, `--m3-dur-mola-efeitos-rapida`, `--m3-mola-efeitos-rapida`, `--m3-dur-mola-espacial-rapida`, `--m3-mola-espacial-rapida`, `--m3-outline` (pela `reserva-de-sombra`).
+- **Store:** `show({ message, variant = "success", action = null, duration = 4000 })`, com o aviso que expira só sem ação, fora do erro e com `duration > 0`, os anteriores com ação a 10 s quando chega outro com ação, e o `retido` quando há diálogo aberto; `dismiss(id)`, `pause(id)` (hoje); `resume(id)`, que não arma com diálogo aberto; **novos:** o estado `dialogosAbertos` e as ações `segurar()` e `soltar()`; `runAction(id, event)`, com o evento opcional e o resultado do `onClick` devolvido. Até 3 avisos, o mais antigo sai (hoje).
+- **Estrutura:** `div.toast-region` → `div.toast-region__list--status[role=status][aria-atomic=false]` e `div.toast-region__list--alert[role=alert][aria-atomic=true]` (os dois `TransitionGroup`) → `div.toast.toast--{variant}` (só os que não estão retidos) → `font-awesome-icon.toast__icon` (erro) → `p.toast__message` → `BaseButton.toast__action` (`ghost`) → `BaseButton.toast__close` (`ghost`, `iconOnly`).
+- **Lógica:** a saída dos avisos que não expiram na troca de `route.path` (`useRoute`); a origem do foco (`focusin`); o foco depois do "Fechar aviso" e da ação com a última entrada de teclado; a última entrada (`pointerdown` e `keydown` na captura do `document`, tirados no `onBeforeUnmount`) e a rolagem do foco depois de mostrar um aviso. A retenção mora na store (5.1).
+- **Tokens:** `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-inverse-primary` (novo), `--m3-forma-xs`, `--m3-elevacao-3`, `--m3-body-m` (a linha e o tracking), `--m3-toast-reserva`, `--m3-barra-reserva`, `--m3-navegacao-largura` (na regra do painel), `--z-toast`, `--gutter`, `--space-1` a `--space-4`, `--focus-width`, `--m3-dur-mola-efeitos-rapida`, `--m3-mola-efeitos-rapida`, `--m3-dur-mola-espacial-rapida`, `--m3-mola-espacial-rapida`, `--m3-outline` (pela `reserva-de-sombra`).
 - **Mixins:** `tipo`, `reserva-de-sombra`, `up`, `below`, `motion-ok`.
 - **Referências:** [216] a [227], [151] a [153], [76], [99], [198], [200].
 
@@ -786,7 +872,7 @@ Os estados de vazio e erro das telas seguem a §6 do `SPEC.md`, com estes compon
 
 - **Props:** `open: { type: Boolean, default: false }`, `title: { type: String, default: "" }`, `titleId: { type: String, required: true }`, `maxWidth: { type: String, default: "880px" }` (hoje). **Emits:** `close`. **Slots:** `header`, padrão, `footer`. **Atributos:** caem no `<dialog>` (o `role` e o `aria-describedby` das confirmações).
 - **Estrutura:** `dialog.dialog` → `div.dialog__panel(.is-rolado)(.tem-mais)` → `header.dialog__header` (`h2.dialog__title` e o `BaseButton.dialog__close`) → `div.dialog__body` → `footer.dialog__footer` → `p.visually-hidden[role=status][aria-atomic=true]`.
-- **Lógica:** a de hoje (`showModal`, trava de rolagem, foco inicial, Tab preso, Esc, clique no fundo, devolução); os divisores (`scroll` e `ResizeObserver`); o `provide(CHAVE_ANUNCIADOR, …)`.
+- **Lógica:** a de hoje (`showModal`, trava de rolagem, foco inicial, Esc, clique no fundo, devolução); o `trapFocus` com o Shift+Tab corrigido (a partir do título); o `segurar()` ao abrir e o `soltar()` ao fechar e ao desmontar aberto (a store dos avisos); os divisores (`scroll` e `ResizeObserver`); o `provide(CHAVE_ANUNCIADOR, …)`.
 - **Tokens:** `--m3-surface-container-high`, `--m3-surface-container-low`, `--m3-on-surface`, `--m3-outline-variant`, `--m3-scrim`, `--m3-forma-xl`, `--m3-elevacao-3`, `--m3-elevacao-1`, `--m3-headline-s` (e a linha), `--space-2` a `--space-6`, `--gutter`, `--dur-fast`, `--dur-base`, `--dur-slow`, `--ease-out` (apelido, até a etapa 11).
 - **Referências:** [228] a [241], [199], [200], [202], [166].
 
@@ -824,7 +910,7 @@ Os estados de vazio e erro das telas seguem a §6 do `SPEC.md`, com estes compon
 - **Token do projeto sem uso:** `--dur-instant` (só o aperto do `.btn--legado`); o SPEC-M §2.8 o lista como "Pressionar". A etapa 11 decide se sai.
 - **`--color-ink-disabled`:** continua no `_form-group.scss`; a etapa 11 o troca por `--m3-desabilitado-conteudo`, e não por `#a2a79e` (o plano, etapa 11, lista o valor antigo).
 - **Pares:** os de `PARES_COMUNS` do modal e do aviso (`color-ink`, `color-ink-muted`, `color-danger`, `color-border-strong`, `color-accent` e `color-focus` sobre `color-surface-2`; `color-ink` e `color-success` sobre `color-surface-3`) ficam sem uso na produção e saem com os apelidos.
-- **Sai já na sessão C, nada para a 11:** o `.btn--legado`, a prop `pressed`, as classes `stepper-up`, `stepper-down` e `.stepper__digit`, as quatro regras do aviso nas páginas.
+- **Sai já na sessão C, nada para a 11:** o `.btn--legado`, a prop `pressed`, as classes `stepper-up`, `stepper-down` e `.stepper__digit`, as regras do aviso nas páginas (as três do carrinho, do pagamento e do perfil e duas das três do painel).
 - **Ícones:** nenhum fica sem uso (o `circle-check` segue na confirmação; o `circle-info`, no rodapé e na seção "onde").
 
 ---
@@ -835,19 +921,20 @@ Os estados de vazio e erro das telas seguem a §6 do `SPEC.md`, com estes compon
 
 | Token | Valor | Uso | Fonte |
 |---|---|---|---|
-| `--m3-desabilitado-conteudo` | `rgba(24, 29, 23, 0.38)` | Rótulo e ícone do botão desabilitado; o apelido `--color-ink-disabled` passa a apontar para ele | on-surface a 38% ([264], [265], [253], [268]) |
+| `--m3-inverse-primary` | `#9fd49b` | Ação ("Desfazer") do aviso | O papel da ação do snackbar [220] [224]; gerado pela sessão principal com o mesmo gerador do esquema (`@material/material-color-utilities` 0.4.0, `SchemeTonalSpot`, semente `#5DBB63`, claro, contraste 0.0, fora do projeto), que reproduziu exatamente os 12 papéis já nos tokens (decisão do usuário, §12). Entra só em `base/_tokens.scss`, na seção dos papéis; o `_tokens.scss` do material no acervo não muda (decisão e) |
+| `--m3-desabilitado-conteudo` | `rgba(24, 29, 23, 0.38)` | Rótulo e ícone do botão desabilitado; o apelido `--color-ink-disabled` passa a apontar para ele | on-surface a 38% ([264], [265], [253], [268]); o `OnSurfaceVariant` do filled e do texto é desvio declarado (5.8) |
 | `--m3-desabilitado-container` | `rgba(24, 29, 23, 0.1)` | Contêiner do filled, do tonal e dos ícones com contêiner desabilitados | on-surface a 10% ([264], [254], [255]) |
 | `--m3-camada-inversa-hover` | `rgba(238, 242, 233, 0.08)` | Medida dos pares do aviso no hover (o CSS usa `currentColor`) | a camada de 8% [12] sobre o inverso; como as `--m3-camada-primary-*` |
 | `--m3-camada-inversa-pressionada` | `rgba(238, 242, 233, 0.1)` | Medida dos pares do aviso no pressionado | a camada de 10% [12] |
 
-O resto usa o que existe: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-primary-container`, `--m3-forma-xs`, `--m3-forma-xl`, `--m3-elevacao-1`, `--m3-elevacao-3`, `--m3-scrim`, `--m3-toast-reserva` (6,5rem, agora só do aviso), `--m3-barra-reserva`, `--m3-navegacao-largura`, `--z-toast`, as durações e as molas. As medidas novas sem token são de layout e vêm da pesquisa: `37.5rem` (600 dp [219]) e `40rem` (640 dp [238] [241]). Nenhuma duração, curva ou `z-index` novo. As camadas inversas dão o caso pior para a ação: a `inverse-on-surface` é mais clara que o `primary-container` e clareia mais o fundo (7,56 contra 7,74 no pressionado).
+O resto usa o que existe: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-forma-xs`, `--m3-forma-xl`, `--m3-elevacao-1`, `--m3-elevacao-3`, `--m3-scrim`, `--m3-toast-reserva` (6,5rem, agora só do aviso), `--m3-barra-reserva`, `--m3-navegacao-largura`, `--z-toast`, as durações e as molas. As medidas novas sem token são de layout e vêm da pesquisa: `37.5rem` (600 dp [219]) e `40rem` (640 dp [238] [241]). Nenhuma duração, curva ou `z-index` novo. As camadas inversas dão o caso pior para a ação: a `inverse-on-surface` é mais clara que o `inverse-primary` e clareia mais o fundo (5,75 contra 6,15 no pressionado). A sessão C acrescenta o `inverse-primary` à tabela da §2.2 do SPEC-M ("Superfícies, contorno, inverso e scrim"), com a origem do valor.
 
 ### Pares novos (para `src/utils/contraste.js`, num grupo `PARES_COMPONENTES`; medidos)
 
 | Frente | Fundo | Mínimo | Medido | Onde |
 |---|---|---|---|---|
-| `m3-primary-container` | `m3-inverse-surface` | 4,5 | 10,13 | Ação "Desfazer" do aviso |
-| `m3-primary-container` | `m3-camada-inversa-pressionada` sobre `m3-inverse-surface` | 4,5 | 7,56 | "Desfazer" pressionado (no hover, 8,03) |
+| `m3-inverse-primary` | `m3-inverse-surface` | 4,5 | 7,70 | Ação "Desfazer" do aviso |
+| `m3-inverse-primary` | `m3-camada-inversa-pressionada` sobre `m3-inverse-surface` | 4,5 | 5,75 | "Desfazer" pressionado (no hover, com a `m3-camada-inversa-hover`, 6,11; com a camada da própria cor, 6,44 e 6,15) |
 | `m3-inverse-on-surface` | `m3-camada-inversa-pressionada` sobre `m3-inverse-surface` | 4,5 | 8,61 | "Fechar aviso" pressionado, com o anel interno (no hover, 9,15) |
 | `m3-on-error-container` | `m3-camada-pressionada` sobre `m3-surface-container-high` | 4,5 | 6,26 | Perigo pressionado no card de produto e no diálogo a partir de `md` (no hover, 6,52) |
 | `m3-on-error-container` | `m3-camada-pressionada` sobre `m3-surface-container-low` | 4,5 | 6,94 | Perigo pressionado no perfil e no sheet (no hover, 7,23) |
@@ -882,8 +969,8 @@ O resto usa o que existe: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--
 
 - `m3-secondary` sobre `m3-inverse-surface`: **2,02**. Por isso o anel do aviso é `inverse-on-surface`, por dentro.
 - `m3-primary` sobre `m3-inverse-surface`: 2,03. Por isso a ação não fica na tinta do text button comum.
-- `m3-primary-container` contra `m3-inverse-on-surface` (ação contra texto): 1,13. A ação se distingue por peso, ícone, posição e camada, e não pela cor (5.1).
-- `m3-secondary-container` e `m3-error-container` sobre `m3-inverse-surface`: 10,14 e 10,13. Alternativas possíveis para a ação; ficou o `primary-container`, da paleta do `inverse-primary`.
+- `m3-inverse-primary` contra `m3-inverse-on-surface` (ação contra texto): 1,49. A ação se distingue pela cor, pelo peso, pelo ícone e pela posição (5.1).
+- `m3-primary-container`, `m3-secondary-container` e `m3-error-container` sobre `m3-inverse-surface`: 10,13, 10,14 e 10,13. Eram as alternativas da primeira versão para a ação; o `primary-container` (a opção a da pergunta) seria um papel de contêiner usado como tinta e mede 1,13 contra o texto. O usuário escolheu o `inverse-primary` (§12).
 - `m3-inverse-surface` contra a `surface`, o `surface-container` e o `lowest`: 12,48, 11,23 e 13,09. O aviso se separa da página sem borda.
 - `m3-error` sobre `m3-camada-pressionada` sobre `m3-surface-container-high`: **4,32** (4,47 com a camada `error`). Abaixo de 4,5: por isso o perigo escurece no pressionado. No hover, 4,50 (4,62). Nos outros fundos o `error` pressionado passaria (4,79 no `low`, o par da etapa 8; 5,28 no `lowest`; 5,04 na `surface`), mas a regra fica uma só para o perigo em todos os fundos.
 - `m3-secondary-container` contra o `lowest`, o `high`, o `low`, o `surface-container` e a `surface`: 1,29, 1,05, 1,16, 1,10 e 1,23. Contêiner de controle com ícone: a 1.4.11 não se aplica [98].
@@ -897,16 +984,16 @@ O resto usa o que existe: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--
 
 | O que | Onde | Por quê |
 |---|---|---|
-| O aviso expira só sem ação, fora do erro e com `duration > 0`; `runAction(id, event)` devolve o resultado do `onClick` | `src/stores/toast.js` (estado de interface, não persistido) | [217], [219], [227] (4.3) |
-| Duas listas vivas fixas; a retenção com um `dialog[open]`; a saída dos que não expiram na troca de rota; a origem e o destino do foco; a última entrada e a rolagem do foco | `AppToast.vue` | [152], [153], [200], [270], [273], [76] (4.1, 4.2, 4.5) |
-| Os divisores pela rolagem do corpo; a região de anúncio do diálogo e o `provide` | `BaseDialog.vue` | [234]; [200], [151] |
+| O aviso expira só sem ação, fora do erro e com `duration > 0`; quando chega outro com ação, os anteriores com ação passam a 10 s (`DURACAO_LONGA`); o contador `dialogosAbertos` com `segurar()` e `soltar()`, o `retido` e o `resume` que não arma com diálogo aberto; `runAction(id, event)` devolve o resultado do `onClick` (o código em 5.1) | `src/stores/toast.js` (estado de interface, não persistido) | [217], [218], [219], [227], [200] (4.3, 5.1) |
+| Duas listas vivas fixas, só com os avisos não retidos; a saída dos que não expiram na troca de rota; a origem e o destino do foco; a última entrada e a rolagem do foco | `AppToast.vue` | [152], [153], [200], [270], [273], [76] (4.1, 4.2, 4.5) |
+| O Shift+Tab preso também a partir do título; o `segurar()` ao abrir e o `soltar()` ao fechar e ao desmontar aberto; os divisores pela rolagem do corpo; a região de anúncio do diálogo e o `provide` | `BaseDialog.vue` | [199], [200]; [234]; [151] |
 | A prop `pressed` sai; o `danger` e o `iconOnly` no mapa M3; o `aria-disabled` repassado bloqueia o clique; sai o `aria-busy`; o anúncio do rótulo no `loading` | `BaseButton.vue` | 5.5 a 5.9 |
 | `aria-disabled` no limite; sai a transição do número | `QuantityStepper.vue` | [273], [275] |
 | `CHAVE_ANUNCIADOR` | `useAnnouncer.js` | 5.7 |
-| O erro da exclusão dentro do diálogo; o `alertdialog` | `ProfileView.vue` | [152], [200], [235] |
-| O `alertdialog` e a descrição | `ProductManagement.vue`, `AdminSettings.vue` | [235] |
+| O erro da exclusão dentro do diálogo; o `alertdialog`; o `autofocus` no "Cancelar" | `ProfileView.vue` | [152], [200], [235], [199] |
+| O `alertdialog`, a descrição e o `autofocus` no "Cancelar" | `ProductManagement.vue`, `AdminSettings.vue` | [235], [199] |
 | A região `role="status"` em volta do vazio depois de uma escolha | `MenuView.vue`, `OrderManagement.vue`, `ProductManagement.vue` | [151], [153] |
-| O CTA com `aria-disabled`; o aviso da conferência com `duration: 0` | `PaymentView.vue` | [270], [271]; [227] |
+| O CTA com `aria-disabled`; o aviso da conferência depois de saber se o carrinho ficou vazio (4 s no redirecionamento, `duration: 0` na tela) | `PaymentView.vue` | [270], [271]; [227] |
 | Sai o `duration: 5000` | `CartView.vue` | 4.3 |
 
 Nada muda em `src/services/`, nas stores persistidas (`products`, `adminOrders`, `userStore`, `adminStore`, `cart`), nos dados de exemplo, nas esperas simuladas, nos handlers (`authHandlers.js`), no `router/index.js`, no `useScrollLock`, no `FormGroup.vue` nem no `_auth.scss`. Os estados de envio e de erro valem também com uma API: o erro da exclusão (raro com o `localStorage`, possível com um servidor) aparece no diálogo.
@@ -922,8 +1009,8 @@ Todos reais. **Nenhuma palavra muda e nenhum texto entra** (nem `aria-label`). M
 | Texto | Antes | Depois | Motivo |
 |---|---|---|---|
 | "Não foi possível excluir a conta. Tente de novo." | No aviso, atrás do fundo do diálogo | No banner dentro do diálogo | 5.2 |
-| "Desfazer" | Botão tonal, some em 5 s | Text button, fica até a pessoa agir, fechar ou sair do carrinho | 5.1, 4.3 |
-| "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar." | Some em 4 s | Fica até a pessoa fechar ou sair | 4.3 |
+| "Desfazer" | Botão tonal, some em 5 s | Text button em `inverse-primary`; o mais novo fica até a pessoa agir, fechar ou sair do carrinho; os anteriores saem 10 s depois de uma nova remoção (decisão do usuário, §12) | 5.1, 4.3 |
+| "O carrinho foi atualizado com o cardápio. Confira o pedido antes de confirmar." | Some em 4 s | Na tela do pagamento, fica até a pessoa fechar ou sair; quando o carrinho ficou vazio, continua com 4 s e acompanha a pessoa ao carrinho | 4.3 |
 | Títulos dos diálogos | title-l 700 | headline-s 400 | [229] |
 | Títulos dos estados vazios | `--text-lg` 700, centrados | title-l 500, alinhados ao início | SPEC-M §4.2 |
 
@@ -934,21 +1021,28 @@ Todos reais. **Nenhuma palavra muda e nenhum texto entra** (nem `aria-label`). M
 ## 9. Arquivos para o construtor (sessão C)
 
 ```
-src/assets/styles/base/_tokens.scss                        --m3-desabilitado-conteudo, --m3-desabilitado-container,
+src/assets/styles/base/_tokens.scss                        --m3-inverse-primary: #9fd49b (nos papéis);
+                                                           --m3-desabilitado-conteudo, --m3-desabilitado-container,
                                                            --m3-camada-inversa-hover, --m3-camada-inversa-pressionada;
                                                            --color-ink-disabled: var(--m3-desabilitado-conteudo)
 src/assets/styles/base/_motion.scss                        .toast, .dialog e .btn__spinner na lista de transform: none
 src/stores/toast.js                                        expira só sem ação, fora do erro e com duration > 0;
-                                                           runAction(id, event) devolve o resultado
+                                                           os anteriores com ação a 10 s quando chega outro;
+                                                           dialogosAbertos, segurar(), soltar(), retido, resume
+                                                           que não arma com diálogo aberto; runAction(id, event)
+                                                           devolve o resultado
 src/composables/useAnnouncer.js                            CHAVE_ANUNCIADOR
-src/components/ui/AppToast.vue                             duas listas vivas fixas, retenção com dialog[open], saída
-                                                           na troca de rota, foco pelo teclado, rolagem do foco,
-                                                           ícone só no erro, ação ghost
+src/components/ui/AppToast.vue                             duas listas vivas fixas só com os não retidos, saída na
+                                                           troca de rota, foco pela última entrada de teclado,
+                                                           rolagem do foco, ícone só no erro, ação ghost
 src/assets/styles/components/ui/_app-toast.scss            inverse-surface, forma-xs, elevacao-3, body-m, padding,
-                                                           largura; botões repintados e anel interno; posição no pé
-                                                           (below(lg) com a toolbar); a reserva por contagem no html
-                                                           e no body (:global, @each); entrada e saída
-src/components/ui/BaseDialog.vue                           divisores pela rolagem, região de anúncio e provide
+                                                           largura, gap space-2; ação em inverse-primary e anel
+                                                           interno; posição no pé (below(lg) com a toolbar;
+                                                           centrada abaixo de lg, no início do .container a partir
+                                                           dele); a reserva por contagem no html e no body, fora do
+                                                           painel (:global, @each); entrada e saída
+src/components/ui/BaseDialog.vue                           Shift+Tab preso a partir do título; segurar() e soltar();
+                                                           divisores pela rolagem, região de anúncio e provide
 src/assets/styles/components/ui/_base-dialog.scss          high e low, formas, elevações, altura automática com
                                                            teto, 640 no sheet, headline-s, espaços, divisores
                                                            transparentes, scroll-padding-block, reserva-de-sombra
@@ -962,18 +1056,21 @@ src/assets/styles/components/ui/_base-button.scss          as linhas de 5.9 (sai
                                                            desabilitado, loading neutro, tonal com mais contraste)
 src/views/CartView.vue                                     lg no "Ver cardápio" do vazio; sem duration
 src/views/MenuView.vue                                     região de status em volta do vazio
-src/views/PaymentView.vue                                  aria-disabled no CTA; duration: 0 na conferência
-src/views/auth/ProfileView.vue                             alertdialog, id do texto, região de alerta e banner;
-                                                           erro na ref, e não no aviso
-src/views/admin/ProductManagement.vue                      alertdialog, id do texto; região de status no vazio
-                                                           da categoria
+src/views/PaymentView.vue                                  aria-disabled no CTA; a conferência com 4 s no
+                                                           redirecionamento e duration: 0 na tela (5.1)
+src/views/auth/ProfileView.vue                             alertdialog, id do texto, autofocus no "Cancelar",
+                                                           região de alerta e banner; erro na ref, e não no aviso
+src/views/admin/ProductManagement.vue                      alertdialog, id do texto, autofocus no "Cancelar";
+                                                           região de status no vazio da categoria
 src/views/admin/OrderManagement.vue                        EmptyState em dois (com e sem busca)
-src/views/admin/AdminSettings.vue                          alertdialog, id do texto
+src/views/admin/AdminSettings.vue                          alertdialog, id do texto, autofocus no "Cancelar"
 src/assets/styles/pages/_cart-page.scss                    sai a regra do aviso (L7–21)
 src/assets/styles/pages/_payment.scss                      sai a regra do aviso (L7–18)
 src/assets/styles/pages/auth/_profile.scss                 sai a regra do aviso (L8–21); entram o anúncio e o
                                                            banner do diálogo
-src/assets/styles/layouts/_admin-layout.scss               saem as três regras do aviso (L75–95); entra o início
+src/assets/styles/layouts/_admin-layout.scss               saem a posição no pé e a reserva no scroll-padding
+                                                           (L75–88); o padding-bottom do .admin-main (L90–95)
+                                                           fica, com a contagem de 1 a 3 avisos; entra o início
                                                            da região depois da coluna a partir de lg
 src/assets/styles/components/admin/_modal-products.scss    borda do botão de imagem com prefers-contrast: more
 src/utils/contraste.js                                     PARES_COMPONENTES (10), os "onde" e as saídas da §8
@@ -988,48 +1085,67 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
   - o de sucesso some em 4000 ms (fake timers) e pausa no hover e no foco (hoje);
   - **o de ação e o de erro não somem** depois de 10 s; o de `duration: 0` também não;
   - a troca de rota tira os que não expiram e mantém os de 4 s;
-  - o "Fechar aviso" pelo teclado (`click` com `detail: 0`) põe o foco no botão do aviso seguinte; sem outro, na origem; sem origem, no `#conteudo`; pelo ponteiro (`detail: 1`), não move o foco;
-  - a ação recebe o evento; com o foco perdido depois dela, vale a mesma regra;
-  - **a retenção:** com um `dialog[open]` no documento, o aviso novo não é renderizado e não corre o tempo; depois do evento `close` desse `dialog`, ele aparece e o tempo começa;
+  - o "Fechar aviso" com a última entrada de teclado (um `keydown` na captura do `document` antes do clique) põe o foco no botão do aviso seguinte; sem outro, na origem; sem origem, no `#conteudo`; com a última entrada de ponteiro (`pointerdown`), não move o foco. O teste não usa o `event.detail`;
+  - a ação recebe o evento; com o foco perdido depois dela e a última entrada de teclado, vale a mesma regra;
+  - **a retenção na tela:** com `dialogosAbertos` em 1, o aviso novo não é renderizado; com `soltar()`, ele aparece dentro da lista viva;
   - só o erro tem o `.toast__icon`; a ação é `ghost` (`m3-botao--texto`); no máximo 3 (hoje).
-- `src/__tests__/BaseDialog.test.js` (novo): o `showModal` é chamado ao abrir (simulado no jsdom); o foco inicial no `[autofocus]`, senão no primeiro controle do corpo, senão no título; o Tab do último volta ao primeiro e o Shift+Tab do primeiro vai ao último; o `cancel` (Esc) emite `close`; o clique que começa e termina no `<dialog>` emite `close`, e o que começa no painel não; ao fechar, o foco volta a quem abriu, se ele ainda está no documento; `role` e `aria-describedby` repassados chegam ao `<dialog>`; as classes `is-rolado` e `tem-mais` com o `scrollTop`, o `clientHeight` e o `scrollHeight` simulados; a região `role="status"` existe vazia.
+- `src/__tests__/toast.test.js` (novo; a store sozinha, com fake timers):
+  - **dois avisos com ação:** o primeiro sai em 10 s depois do segundo, e o segundo fica (passados 20 s, continua na store);
+  - **o tempo não corre com o contador em 1:** `segurar()`, `show()` de sucesso, 10 s depois o aviso continua na store, com `retido: true`; `soltar()`, e ele sai 4 s depois;
+  - o `segurar()` com um aviso de 4 s na tela pausa o tempo dele; o `soltar()` o retoma;
+  - **dois `segurar()` pedem dois `soltar()`:** com um só, o tempo continua parado; o `soltar()` a mais não desce de 0;
+  - o `runAction(id, event)` chama o `onClick` com o evento e devolve o resultado.
+- `src/__tests__/BaseDialog.test.js` (novo; com a Pinia ativa, por causa da store dos avisos): o `showModal` é chamado ao abrir (simulado no jsdom); o foco inicial no `[autofocus]` (um "Cancelar" no rodapé), senão no primeiro controle do corpo, senão no título; o Tab do último volta ao primeiro, o Shift+Tab do primeiro vai ao último e **o Shift+Tab com o foco no título vai ao último** (o caso dos "Detalhes"); abrir chama `segurar()` e fechar chama `soltar()` (espiões na store); **desmontado aberto, solta**; o `cancel` (Esc) emite `close`; o clique que começa e termina no `<dialog>` emite `close`, e o que começa no painel não; ao fechar, o foco volta a quem abriu, se ele ainda está no documento; `role` e `aria-describedby` repassados chegam ao `<dialog>`; as classes `is-rolado` e `tem-mais` com o `scrollTop`, o `clientHeight` e o `scrollHeight` simulados; a região `role="status"` existe vazia.
 - `src/__tests__/QuantityStepper.test.js` (novo): `role="group"` com "Quantidade de {label}"; "Diminuir {label}" e "Aumentar {label}"; no mínimo, o (−) tem `aria-disabled="true"` e não tem `disabled`; no máximo, o (+); com o foco no (−) e cliques até o mínimo, o `document.activeElement` continua o (−); o clique no limite não emite; o `output` com `aria-live="polite"` mostra o valor; nenhum `<Transition>`.
 - `src/__tests__/EmptyState.test.js` (novo): raiz `div.empty-state` sem `role`; ícone `aria-hidden`; título em `p` e nenhum `h1` a `h6`; o texto só com a prop; o slot `action`.
 - `src/__tests__/BaseButton.test.js`: sai "pressed vira aria-pressed"; "em loading marca aria-busy…" vira "em loading mostra o spinner, bloqueia o clique, trava a largura e não põe `aria-busy`"; entram: `danger` → `m3-botao--perigo` sem `btn--legado`; `iconOnly` → `m3-botao`, a variante e `btn--icon-only`; o `aria-disabled="true"` repassado bloqueia o handler e não põe `disabled`; o anúncio do rótulo que muda (espião no `announce`) e nenhum anúncio quando ele não muda; dentro de um `BaseDialog`, o anúncio vai à região do diálogo. O caso "variantes geram as classes do mapa M3; danger, iconOnly e pressed ficam com a forma de hoje" troca a expectativa.
 - `src/__tests__/componentes-estilo.test.js` (novo, no padrão do `admin-estilo.test.js` e do `conta-estilo.test.js`, com as parciais compiladas pelo `sass-embedded` e pelo `<style scoped>`):
-  - aviso: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-forma-xs`, `--m3-elevacao-3`, nenhum `border-left`; o `transform` da entrada só dentro de `prefers-reduced-motion: no-preference`; a posição com `.m3-ferramentas` dentro de `max-width` de `lg`; as regras de reserva para 1, 2 e 3 avisos, no `html` e no `body`; o anel por dentro em `--m3-inverse-on-surface`;
+  - aviso: `--m3-inverse-surface`, `--m3-inverse-on-surface`, `--m3-forma-xs`, `--m3-elevacao-3`, nenhum `border-left`, `gap: var(--space-2)`; a ação em `--m3-inverse-primary`; o `transform` da entrada só dentro de `prefers-reduced-motion: no-preference`; a posição com `.m3-ferramentas` dentro de `max-width` de `lg`; a partir de `lg`, o `inset-inline-start` do `.container` e o `align-items: flex-start`; as regras de reserva para 1, 2 e 3 avisos no `html` e no `body`, com o `body` fora do painel (`:not(:has(.admin-layout))`); o anel por dentro em `--m3-inverse-on-surface`;
   - diálogo: `--m3-surface-container-high` a partir de `md` e `--m3-surface-container-low` abaixo; `max-width: 40rem` no sheet; nenhuma `height` fixa com `100dvh`; `scroll-padding-block`; título com `--m3-headline-s` e peso 400; divisores transparentes e `--m3-outline-variant` com `.is-rolado` e `.tem-mais`;
   - vazio: `align-items: flex-start`, `--m3-title-l` com 500, `--m3-body-m`;
   - seletor: nenhuma `transition` nem `transform`;
   - botão: nenhum `.btn--legado`; `.m3-botao--perigo` com `--m3-error` e `--m3-on-error-container` no hover e no `:active`; os tamanhos do `.btn--icon-only`; o desabilitado com os tokens novos e `GrayText`; o tonal com borda `--m3-outline` em `prefers-contrast: more`;
   - nenhum `--color-*`, `--elev-*`, `--radius-*` nem `--text-*` nas cinco parciais;
   - o `_motion.scss` com `.toast`, `.dialog` e `.btn__spinner`;
-  - as quatro parciais das páginas sem `.toast-region`; o `_admin-layout.scss` com a regra da coluna;
+  - as três parciais das páginas da loja sem `.toast-region`; o `_admin-layout.scss` sem a posição e o `scroll-padding` do aviso, com o `padding-bottom` do `.admin-main` para 1, 2 e 3 avisos e com a regra da coluna;
+  - o token `--m3-inverse-primary` com `#9fd49b`;
   - todos os pares de `PARES_COMPONENTES` acima do mínimo.
 - **Testes de hoje que mudam:**
   - `moldura-estilo.test.js` (L124–134): o aviso acima da toolbar abaixo de `lg` (e não de `md`); sem o `top` a partir de `md`;
   - `carrinho-estilo.test.js` (L112–140): o token `--m3-toast-reserva` fica (o caso da L112); as regras `html:has(.cart-page)…` e `.payment-page` saem, e o caso vai para o `componentes-estilo.test.js`;
   - `conta-estilo.test.js` (L335–343): sai o caso da reserva do perfil;
-  - `admin-estilo.test.js` (L200–208): saem as três asserções do aviso; entra a da coluna;
+  - `admin-estilo.test.js` (L200–208): saem as asserções da posição (`top`, `bottom`) e do `scroll-padding-bottom`; a do `padding-bottom` do `.admin-main` fica, com a contagem; entra a da coluna;
   - `base-button-estilo.test.js` (L137–138 e os do legado): o desabilitado com os tokens novos; sem o legado;
-  - `ProfileView.test.js`: o erro da exclusão aparece no banner do diálogo (`[role=alert]` dentro do `dialog`), e nenhum aviso nasce; o diálogo tem `role="alertdialog"` e `aria-describedby` com o texto;
-  - `PaymentView.test.js`: o CTA tem `aria-disabled="true"` (e não `disabled`) até ser válido, e o clique não envia; o aviso da conferência não expira;
+  - `ProfileView.test.js`: o erro da exclusão aparece no banner do diálogo (`[role=alert]` dentro do `dialog`), e nenhum aviso nasce; o diálogo tem `role="alertdialog"`, `aria-describedby` com o texto e o "Cancelar" com `autofocus`;
+  - `PaymentView.test.js`:
+    - o CTA tem `aria-disabled="true"` (e não `disabled`) até ser válido, e o clique não envia;
+    - L260–267 ("'Enviando pedido…' com aria-busy durante os 800 ms"): passa a conferir a classe `is-loading` e o texto, sem o `aria-busy`;
+    - o aviso da conferência, com a tela continuando, não expira;
+    - **novo:** com o carrinho esvaziado pela conferência, o aviso continua na store depois do `router.push("/cart")` e tem duração de 4000 ms (com fake timers, sai em 4 s);
+  - `ModalAdditional.test.js` L80: o "Diminuir Copo de Refrigerante" no mínimo tem `aria-disabled="true"` (era o atributo `disabled`);
+  - `adminAuth.test.js` L112 e L118: o "Entrando…" confere a classe `is-loading` (L112, era `aria-busy="true"`) e a falta dela depois (L118, era `aria-busy` ausente);
+  - os diálogos de confirmação (`ProductManagement.test.js` e, se cobre as Configurações, `adminPanel.test.js`): `role="alertdialog"` e o "Cancelar" com `autofocus`;
   - `MenuView.test.js`, `OrderManagement.test.js`, `ProductManagement.test.js`: a região de status em volta do vazio (vazia com itens; com o vazio dentro sem itens); com busca, o vazio fora dela;
-  - `adminPanel.test.js` (se cobre as Configurações): o `alertdialog`;
-  - `CartView.test.js`: sem mudança de expectativa (o `runAction` sem evento continua funcionando).
+  - `CartView.test.js`: sem mudança de expectativa (o `runAction` sem evento continua funcionando; o `duration` que sai não era conferido).
 
 **e2e (`.claude/e2e/`):**
 
 - `lacunas.mjs` (L57): as expectativas pelas durações lidas do `:root` (`--dur-slow` no sheet, `--dur-base` no fundo; `--dur-fast` nos dois com movimento reduzido), e o texto da checagem sem "240ms". A falha antiga (fundo em 250 ms) some.
 - `keyboard.mjs`:
-  - **foco preso nas confirmações:** em 1440 e em 390, "Excluir produto?" (painel) e "Excluir conta?" (perfil): o foco inicial no título; 12 Tabs e Shift+Tabs sem sair do `dialog`; a ordem título → "Fechar" → "Cancelar" → ação; o Esc devolve o foco ao botão de origem (o da etapa 9 e o do perfil);
+  - **foco preso nas confirmações:** em 1440 e em 390, "Excluir produto?" (painel) e "Excluir conta?" (perfil): o foco inicial no "Cancelar"; 12 Tabs e Shift+Tabs sem sair do `dialog`; a ordem "Cancelar" → ação → "Fechar" → "Cancelar"; o Esc devolve o foco ao botão de origem (o da etapa 9 e o do perfil);
+  - **Tabs e Shift+Tabs sem sair do `dialog`, começando no título:** nos "Detalhes" do pedido (o foco inicial no título), um Shift+Tab vai ao último focável (o "Fechar" do rodapé), e 12 Tabs e Shift+Tabs alternados não saem do diálogo. Mutação: sem a correção do `trapFocus`, o primeiro Shift+Tab sai;
   - **o seletor no limite:** no item do carrinho, foco no "Diminuir", Enter até 1: o `document.activeElement` é o mesmo botão, com `aria-disabled="true"`; Enter de novo não muda o número;
   - **o "Fechar aviso" pelo teclado:** depois de remover um item, Tab até o "Fechar aviso" e Enter: o foco não fica no `body` (vai à origem);
-  - **o aviso com ação não some:** depois de 6 s, o "Desfazer" continua na tela e alcançável pelo Tab;
+  - **o aviso com ação não some:** depois de 6 s, o "Desfazer" continua na tela e alcançável pelo Tab; com uma segunda remoção, o primeiro "Desfazer" sai cerca de 10 s depois, e o segundo fica;
   - **três avisos:** três remoções seguidas pelo teclado em 390 × 844: o "Remover" focado não cruza nenhum `.toast` (o `cobertoPor` de hoje);
+  - **o "Remover" vizinho contra o aviso (L414–446), reescrito:** os casos de 1024 (`topo`) e de 1440 (`largo`) passam a casos de pé, como o de 390: o "Remover" levado para perto do pé (com a reserva de 120 px no lugar dos 96 da toolbar, a partir de `lg`), Enter, e o vizinho focado não cruza o aviso nem a toolbar. O comentário que diz que o aviso fica no topo à direita sai;
+  - **o CTA do pagamento grudado, novo:** com o carrinho de muitos itens (o `CART6`), em 1024 × 768 e 1440 × 900, com a sessão e o endereço, o resumo grudado e o CTA perto do pé; um aviso na tela (a conferência, com um item do `CART6` semeado com o preço diferente do cardápio e o carrinho que continua) e o foco no CTA: o retângulo do CTA com o anel não cruza o aviso (a sessão C mede a cobertura e registra a distância);
   - o `focusNotCovered` de hoje com o aviso no pé de 768 a 1023 na loja.
-- `axe-scan.mjs`: o `payment-enviando` passa a exigir `.order-summary__cta .btn.is-loading` (L102, era `[aria-busy="true"]`); os estados abaixo.
-- `flow.mjs`: L52, L199 e L223 conferem a classe `is-loading` e o texto, e não o `aria-busy`; L216–218, o CTA com `aria-disabled="true"`, e não `disabled`.
+- `axe-scan.mjs`: o `payment-enviando` passa a exigir `.order-summary__cta .btn.is-loading` (L102, era `.order-summary__cta [aria-busy="true"]`); os estados abaixo.
+- `flow.mjs` (com a saída do `aria-busy` e o CTA em `aria-disabled`):
+  - L52 e L199 (o "Criando conta…" e o "Entrando…"): o `regLoading` e o objeto da L199 leem a classe `is-loading` e o texto, e não o `getAttribute('aria-busy')`;
+  - L216–218: o CTA desabilitado confere `getAttribute('aria-disabled') === 'true'` e o `aria-describedby`; o "habilitado" (L218) confere a falta do `aria-disabled`, e não o `.disabled`;
+  - L223 (o "Enviando pedido…"): a classe `is-loading` e o texto, e não o `aria-busy`.
 - `tokens-contrast.mjs` (L29–30): a linha informativa do desabilitado passa a medir `m3-desabilitado-conteudo` composto sobre `m3-desabilitado-container` sobre a `surface` (com `medirPar`), em vez do `color-ink-disabled` cru, que vira `rgba`.
 - `check-admin.mjs`, `micro-final.mjs`: sem mudança (o `.stepper__value` continua).
 
@@ -1038,12 +1154,12 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 | Nome | Passos | Seletor estável |
 |---|---|---|
 | Aviso de sucesso | `#/profile` com a sessão → "Salvar alterações" | `.toast-region__list--status .toast` com "Dados salvos." |
-| Aviso de erro | `#/profile` → falha simulada no salvar (o teste de hoje que força o erro, ou um `localStorage` cheio) | `.toast-region__list--alert .toast .toast__icon` |
+| Aviso de erro | `#/profile` → falha simulada no salvar → "Salvar alterações". **A falha:** um `addInitScript` troca o `Storage.prototype.setItem` por uma versão que lança erro quando `window.__falharGravacao` é `true`; o passo liga a flag com `page.evaluate` logo antes do clique (a semeadura do `localStorage` acontece antes, com a flag desligada). A camada simulada não muda | `.toast-region__list--alert .toast .toast__icon` |
 | Aviso com "Desfazer" | `#/cart` com itens → "Remover Cheese Bacon" | `.toast .toast__action` com "Desfazer" |
 | Três avisos | `#/cart` com três itens → três "Remover" | `.toast-region .toast + .toast + .toast` |
 | Aviso no painel | `#/admin/orders` → "Atualizar status" | `.toast-region .toast` com "Pedido #1" |
 | Confirmação no perfil | `#/profile` → "Excluir conta" | `dialog[open][role="alertdialog"] #excluir-conta-titulo` |
-| Erro no diálogo de exclusão | o anterior → exclusão com falha simulada | `dialog[open] .profile-delete__erro` |
+| Erro no diálogo de exclusão | o anterior → "Excluir conta" com falha simulada: o mesmo `addInitScript`, com o `Storage.prototype.removeItem` (e o `setItem`) lançando erro quando a flag está ligada; a flag é ligada logo antes do clique | `dialog[open] .profile-delete__erro` |
 | Excluir produto | `#/admin/products` → primeiro "Excluir" | `dialog[open][role="alertdialog"] #excluir-produto-titulo` |
 | Restaurar | `#/admin/settings` → "Restaurar cardápio original" | `dialog[open][role="alertdialog"] #restaurar-titulo` |
 | Detalhes do pedido | `#/admin/orders` → primeiro "Detalhes" | `dialog[open] #pedido-detalhes-titulo` |
@@ -1061,18 +1177,20 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 | Pagamento sem forma | `#/payment` sem escolher | `.order-summary__cta .btn[aria-disabled="true"]` |
 | "Atualizar status" desabilitado | `#/admin/orders?status=completed` | `.order-actions button:disabled` |
 
-**Capturas do acervo (§11.4 do SPEC-M; o efeito aceito):** no `yarn dev`, em 1440 e 390, o Personalizar aberto e um aviso (o "Desfazer" depois de adicionar e remover pelo carrinho, ou um aviso forçado pela store no console) dentro de `#/direcoes/esqueumorfismo`, `#/direcoes/neumorfismo` e `#/direcoes/material`, comparados com `capturas\acervo-antes\`: mudam só o modal (agora `high`/`low`, título headline-s) e o aviso (agora `inverse-surface`, no pé).
+**Capturas do acervo (§11.4 do SPEC-M; o efeito aceito):** no `yarn dev`, em 1440 e 390, o Personalizar aberto e um aviso dentro de `#/direcoes/esqueumorfismo`, `#/direcoes/neumorfismo` e `#/direcoes/material`, comparados com `capturas\acervo-antes\`: mudam só o modal (agora `high`/`low`, título headline-s) e o aviso (agora `inverse-surface`, no pé). **O aviso é forçado pela store** (no console ou por `page.evaluate`, com um `show()` de sucesso e um com ação): o "Desfazer" do carrinho não chega à Home do acervo, porque a troca de rota o tira.
 
 **O que a sessão C mede (o desenho estimou pelo CSS):**
 
 - a altura do aviso com uma, duas e três linhas (52, 72 e 92) e se o "Cheese Bacon removido." cabe numa linha com o "Desfazer" de texto em 390;
 - a rolagem do corpo do diálogo com a altura automática (o painel estica na altura do `<dialog>` com `max-height`);
 - o sheet de "Excluir conta?" em 390 (cerca de 260 px);
-- a ordem do agendador no "Conta excluída." (a retenção o mostra depois do `close`);
-- o anúncio do "Desfazer" e do `loading` num leitor de tela;
+- o "Conta excluída." retido até o diálogo fechar ou desmontar (e lido depois);
+- o anúncio do "Desfazer" e do `loading` num leitor de tela, o `aria-atomic="false"` da lista de status e se o NVDA lê o "Entrando…" duas vezes (a troca do nome do botão focado e a região viva; 4.2);
+- a cobertura do CTA grudado do pagamento com o aviso no início da coluna, em 1024 × 768 e 1440 × 900;
+- a faixa clara depois da assinatura com o aviso a partir de `lg` e a barra de rolagem que aparece e some em página curta no Windows (§11);
 - o `forced-colors` e o `prefers-contrast: more` do aviso, do diálogo e do tonal.
 
-**SPEC-M (no mesmo PR):** a §4.1 (as linhas `danger`, `iconOnly`, `loading` e `pressed` do mapa: desenhados; o `pressed` sai); a §4.2 (as linhas `QuantityStepper`, `AppToast`, `EmptyState` e `BaseDialog`: "desenhado e construído na etapa 10", com o resumo); a §6 (as linhas do filled, do tonal e do texto no desabilitado e no carregando, o `QuantityStepper` com `aria-disabled`, o `AppToast`); a §7.7 (o aviso com escala e opacidade; o seletor com troca direta); a §2.2 (a regra "Desabilitado" com os tokens novos; o `inverse-surface` em uso; o perigo que escurece para `on-error-container`); a §2.5 (`forma-xs` no aviso); a §2.6 (`elevacao-3` no aviso e no diálogo, `elevacao-1` no sheet); a §2.8 (o `--dur-instant` sem uso); a §5.5 (o "Desfazer" sem prazo, no lugar de "por 5 s" do `SPEC.md`); a §5.6 (o CTA com `aria-disabled`). **CLAUDE.md:** a linha dos componentes base (o `BaseButton` deixa de ter `danger`, `iconOnly` e `pressed` na forma da Brasa; sai o `.btn--legado`). **README e TESTING:** os testes novos e a contagem.
+**SPEC-M (no mesmo PR):** a §4.1 (as linhas `danger`, `iconOnly`, `loading` e `pressed` do mapa: desenhados; o `pressed` sai); a §4.2 (as linhas `QuantityStepper`, `AppToast`, `EmptyState` e `BaseDialog`: "desenhado e construído na etapa 10", com o resumo); a §6 (as linhas do filled, do tonal e do texto no desabilitado e no carregando, o `QuantityStepper` com `aria-disabled`, o `AppToast`); a §7.7 (o aviso com escala e opacidade; o seletor com troca direta); a §2.2 (a linha nova do `--m3-inverse-primary`, `#9fd49b`, na tabela "Superfícies, contorno, inverso e scrim", com a origem do valor e o 7,70 sobre o `inverse-surface`; a regra "Desabilitado" com os tokens novos; o `inverse-surface` em uso; o perigo que escurece para `on-error-container`); a §2.5 (`forma-xs` no aviso); a §2.6 (`elevacao-3` no aviso e no diálogo, `elevacao-1` no sheet); a §2.8 (o `--dur-instant` sem uso); a §5.5 (o "Desfazer" sem prazo, com os anteriores a 10 s, no lugar de "por 5 s" do `SPEC.md`); a §5.6 (o CTA com `aria-disabled`). **`SPEC.md`** (decisões do usuário e da sessão principal, §12): a §5.5 ("por 5 s") e a L430 do `QuantityStepper` ("`disabled` **de verdade**"). **CLAUDE.md:** a linha dos componentes base (o `BaseButton` deixa de ter `danger`, `iconOnly` e `pressed` na forma da Brasa; sai o `.btn--legado`). **README e TESTING:** os testes novos e a contagem.
 
 ---
 
@@ -1080,9 +1198,9 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 
 | Ref. | Publicado ou conceito | Padrão abstraído | Onde entra |
 |---|---|---|---|
-| [216] a [219] Snackbar (Compose, KDoc, `SnackbarHost`) | conceito (documentação e código) | Aviso breve no pé; uma ação; com ação, não expira; mover o foco não é ação; `Short` de 4 s; fila de um por vez | Aviso, tempo, fila |
-| [220], [221] `SnackbarTokens`, `ShapeTokens` | conceito (tokens) | `InverseSurface`, `InverseOnSurface`, `InversePrimary`; canto 4; `Level3`; 48 e 68 dp | Visual do aviso |
-| [222], [223] Flags e `Scaffold` | conceito (código) | Centrado, acima do FAB ou da barra; o layout em transição | Posição |
+| [216] a [219] Snackbar (Compose, KDoc, `SnackbarHost`) | conceito (documentação e código) | Aviso breve no pé; uma ação; com ação, não expira até outra ação; mover o foco não é ação; `Short` de 4 s e `Long` de 10 s; fila de um por vez | Aviso, tempo, os anteriores com ação a 10 s, fila |
+| [220], [221] `SnackbarTokens`, `ShapeTokens` | conceito (tokens) | `InverseSurface`, `InverseOnSurface`, `InversePrimary` (o papel gerado nesta etapa); canto 4; `Level3`; 48 e 68 dp; a ação na mesma cor em todos os estados | Visual do aviso; o perigo que escurece como adaptação |
+| [222], [223] Flags e `Scaffold` | conceito (código) | Centrado, acima do FAB ou da barra; o layout em transição | Posição abaixo de `lg` |
 | [224] Snackbar (MDC) | conceito (documentação) | Mesmas cores; preso ao pé; um por vez, o novo troca o velho | Posição, fila descartada |
 | [225], [226] Tempo de acessibilidade (Android) | conceito | O tempo recomendado por pessoa; não há equivalente na web | Risco do tempo |
 | [227] 2.2.1 (W3C) | referência técnica | O aviso é limite de tempo, salvo se a informação estiver em outro lugar; desligar é melhor | Tempo por tipo |
@@ -1096,7 +1214,8 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 | [269] 1.4.3 (W3C) | referência técnica | Componente inativo sem requisito de contraste | Isenção |
 | [270], [271], [272], [273] Teclado (APG), `aria-disabled` e `disabled` (MDN), HTML Standard | referência técnica | Foco perdido; `aria-disabled` para manter descobrível; o foco vai ao viewport quando o focado fica `disabled` | Limite do seletor, CTA do pagamento |
 | [274], [275] Spinbutton e exemplo de quantidade (APG) | referência técnica | `aria-disabled` no limite; botões fora do Tab; falhas no toque | Seletor |
-| [199], [200], [202] Diálogo modal, H102, F85 (W3C) | referência técnica | Fundo inerte; foco inicial em passo difícil de desfazer; devolução | Diálogo, retenção do aviso |
+| [199], [200], [202] Diálogo modal, H102, F85 (W3C) | referência técnica | Fundo inerte; o foco inicial na ação menos destrutiva num passo difícil de desfazer; devolução | Diálogo (o `autofocus` no "Cancelar"), retenção do aviso |
+| [135] Campo outlined (tokens do material-web) | conceito (tokens) | As cores por estado do campo | O precedente do perigo que escurece (campo com erro no hover, etapa 8) |
 | [151], [152], [153] 4.1.3, ARIA19, ARIA22 (W3C) | referência técnica | Região que existe antes da mensagem; `aria-atomic`; "ocupado" como status | Listas do aviso, vazio, `loading` |
 | [76], [77], [78] 2.4.11, 2.3.3, 2.5.8 (W3C) | referência técnica | Foco não coberto (C43); opacidade não é movimento; alvo | Reserva, troca de forma, alvo |
 | [96], [98], [99] 4.1.2, 1.4.11, 1.4.1 (W3C) | referência técnica | Controle nativo; contêiner com ícone dispensa borda; pista além da cor | Botão de imagem, tonal, ícone de erro |
@@ -1114,17 +1233,22 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 
 | Risco | Resposta |
 |---|---|
-| O aviso com ação ficar na tela para sempre | Sai pela ação, pelo "Fechar aviso", pela troca de rota e quando um quarto aviso o empurra (4.3). É o comportamento que o Compose dá ao aviso com ação [217] [218]; a reserva no pé (4.5) impede que ele cubra o foco |
+| O aviso com ação ficar na tela para sempre | Sai pela ação, pelo "Fechar aviso", pela troca de rota e quando um quarto aviso o empurra (4.3); quando chega outro com ação, ele passa a 10 s. É o comportamento que o Compose dá ao aviso com ação [217] [218]; a reserva no pé (4.5) impede que ele cubra o foco |
+| **Os anteriores com ação a 10 s (volta 1)** | **Custo:** quem remove dois itens seguidos tem 10 s (pausando com o ponteiro ou o foco no aviso) para desfazer o primeiro; o "Desfazer" do último fica sem prazo. É de novo um limite de tempo para o anterior, aceito porque a nova remoção é "outra ação" [219] e porque, sem ele, três avisos sem prazo ficariam empilhados até a troca de rota |
 | O "Desfazer" no fim da ordem do Tab | Sem prazo, ele fica alcançável; o leitor de tela ouve a mensagem e o rótulo pela lista viva (4.2). Montar o aviso noutro ponto do DOM tiraria o aviso das Homes do acervo (§11.4 do SPEC-M exige o real) |
-| A mudança do "por 5 s" do `SPEC.md` | Decisão de tempo do aviso, que o pacote deixa ao desenho (item 6.c), com [217], [219] e [227]; a sessão C atualiza a §5.5 do SPEC-M |
-| O `primary-container` na ação parecer verde claro demais ao lado do texto claro | A ação tem peso, ícone, posição e camada (1,13 de diferença de cor); a alternativa sourced é o `inverse-primary`, que depende do usuário (§12) |
+| A mudança do "por 5 s" do `SPEC.md` | Decisão do usuário (24/11/2026, §12), com [217], [219] e [227]; a sessão C atualiza a §5.5 do `SPEC.md` e do SPEC-M |
+| O `inverse-primary` na ação ficar perto do texto claro | Mede 1,49 contra o texto, e a ação se distingue também pelo peso, pelo ícone, pela posição e pela camada; é o papel que o M3 dá à ação [220] |
+| O aviso no início da coluna a partir de `lg` sem fonte para telas largas | Não encontrei regra do M3 para telas largas [223] [224]; abaixo de `lg` fica o centro do `Scaffold`. A escolha evita o resumo grudado sem mexer nas páginas (4.5); a sessão C mede o CTA grudado em 1024 e 1440 |
+| O "Dados salvos." sumir em 4 s sem a informação em outro lugar | Os campos mostram os dados mesmo sem salvar; a confirmação não é necessária para continuar, e a falha aparece no aviso de erro, que não expira (4.3). Risco aceito |
 | A reserva por contagem não cobrir um aviso de 4 linhas (nome de produto de 60 caracteres em 390) | Os nomes reais têm até 20 caracteres; um nome criado no painel com mais de cerca de 50 passa da reserva em cerca de 8 px; a rolagem do foco depois do aviso (4.5) ainda o tira de baixo quando a página tem para onde rolar. Risco aceito; a sessão C mede |
 | Duas listas vivas separarem o erro dos outros avisos | O erro fica embaixo, perto da borda e mais visível; a ordem por tipo, e não por tempo, só aparece com erro e sucesso juntos, o que é raro |
 | O leitor de tela não ler o "Desfazer" no anúncio | A mensagem é o essencial; o rótulo depende do leitor. A sessão C ouve (4.2) |
-| A retenção atrasar um aviso legítimo | O aviso só espera enquanto um diálogo modal está aberto, quando ele não seria visto nem ouvido [200]; é solto no `close` ou na troca de rota |
+| A retenção atrasar um aviso legítimo | O aviso só espera enquanto um diálogo modal está aberto, quando ele não seria visto nem ouvido [200]; é solto quando o contador volta a 0 |
 | A inferência sobre o "Conta excluída." (o aviso nasce com o diálogo aberto) estar errada | A retenção resolve os dois casos (aberto ou já fechado); a sessão C confere num teste |
-| O `dialog[open]` como sinal de modal | Todos os diálogos do projeto são o `BaseDialog` com `showModal()`; um `<dialog>` não modal no futuro pediria trocar por `:modal` |
-| O perigo trocar de cor no hover parecer outro botão | A troca é para o `on-error-container`, da mesma família, e é a do campo com erro no hover (etapa 8); medida (5.5) |
+| O contador `dialogosAbertos` ficar preso acima de 0 (um diálogo que some sem fechar) | O `BaseDialog` solta no `closeDialog` e no `onBeforeUnmount`, com a variável local que diz se ele segura; o `soltar()` não desce de 0; o teste do diálogo desmontado aberto confere |
+| Um `<dialog>` aberto fora do `BaseDialog` | Não existe hoje; um futuro precisaria chamar `segurar()` e `soltar()` também |
+| O perigo trocar de cor no hover parecer outro botão | A troca é para o `on-error-container`, da mesma família, e é a do campo com erro no hover (etapa 8, [135]); medida (5.5). É adaptação do projeto: no M3, o rótulo não muda de cor nos estados ([220], [255]) |
+| O foco inicial no "Cancelar" trocar o que as etapas 8 e 9 fixaram | Decisão da sessão principal com a fonte [199] (§12); o leitor ouve o nome e a descrição do `alertdialog` ao entrar [235], e o Enter cancela, a ação mais segura |
 | Os pares do diálogo mudarem de fundo | Medidos todos nos dois fundos (§8); o contorno do campo cai de 3,85 para 3,65 no `high`, ainda acima de 3 |
 | O `outline` dos campos no `high` (3,65) ficar perto do limite | Acima de 3 [98]; o rótulo e a ajuda identificam o campo |
 | O sheet de altura automática pular quando o conteúdo muda (o erro do `ModalProducts`) | Ele cresce até o teto, e o corpo rola depois; a sessão C mede no `ModalProducts` com erro em 390 |
@@ -1133,10 +1257,14 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 | Tirar o `aria-busy` quebrar quem o usa | Ninguém o lê fora dos testes e do e2e, que mudam (§9); o anúncio do rótulo cobre o "ocupado" [151] |
 | O CTA do pagamento no Tab enquanto indisponível confundir | É o uso que o MDN dá ao `aria-disabled` [271]; a ajuda é lida no foco; o visual é o do desabilitado |
 | A região de status do vazio anunciar a cada seta no Cardápio | Só anuncia quando a categoria fica vazia, o que só acontece se o painel esvaziar uma; nas categorias com itens, ela fica vazia |
-| O ícone de 20 px no botão de ícone, contra os 24 do M3 | Desvio registrado (5.6), com o precedente do campo e do painel |
+| O ícone de 20 px no botão de ícone, contra os 24 do M3 | Desvio registrado (5.6), com o precedente dos `1.25rem` do campo, da coluna e da busca do painel |
+| O `aria-atomic="false"` na lista de status | Desvio declarado da ARIA22 [153] (4.2); a sessão C ouve como cada leitor o trata |
+| O NVDA ler o rótulo de `loading` duas vezes | A troca do nome do botão focado e a região viva (4.2, 5.7); o custo é a repetição; a sessão C ouve |
 | O `EmptyState` alinhado ao início no card do gráfico deixar espaço vazio à direita | O card fica mais baixo (cerca de 150 px) e se lê como os KPIs acima, alinhados ao início |
 | A troca direta do número parecer seca | O retorno é a troca de forma do botão; o odômetro saiu do sistema (SPEC-M §7.8) |
-| O `body` com `padding-bottom` mostrar uma faixa clara depois da assinatura enquanto há aviso | Abaixo de `lg`, a loja já tem essa faixa (a reserva da toolbar); só aparece no fim da página e enquanto há aviso |
+| O `body` com `padding-bottom` mostrar uma faixa clara depois da assinatura enquanto há aviso | Na loja **a partir de `lg`**, aparece uma faixa clara de até 120 px depois da assinatura (16 + 104 com um aviso; até 328 com três), só no fim da página e enquanto há aviso. Abaixo de `lg`, a loja já tem a faixa da reserva da toolbar, e o aviso a aumenta. Aceito |
+| A barra de rolagem aparecer e sumir numa página curta (Windows) | Com o `padding-bottom`, uma página que cabia na janela passa a rolar enquanto há aviso; no Windows, a barra de rolagem clássica aparece e some com o aviso, e o conteúdo se desloca uns pixels na horizontal. Aceito; a sessão C confere |
+| O `padding-bottom` no `body` levar a coluna grudada do painel | No painel, a reserva fica no `.admin-main` (como hoje): no `body`, a coluna (`100dvh`) subiria até 120 px no fim da rolagem e levaria o "Sair" junto (4.5) |
 
 ---
 
@@ -1144,24 +1272,34 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 
 **Decidido (item 6 do pacote):**
 
-- **a.** Aviso em `inverse-surface` / `inverse-on-surface` (11,54), `forma-xs`, `elevacao-3`, body-m, padding 4/8/4/16, 52/72/92 px com 1/2/3 linhas, largura do conteúdo até 600 (a da região abaixo de `sm`) [219] [220] [224]; sem ícone de sucesso nem de info; o erro com o `circle-exclamation` em `inverse-on-surface` [99]; a ação como text button em `primary-container` (10,13), com o `inverse-primary` como pergunta; o "Fechar aviso" como ícone padrão em `inverse-on-surface`; o anel dos dois por dentro, em `inverse-on-surface` (o `secondary` mede 2,02).
-- **b.** No pé em todas as larguras, centrado na área de conteúdo, acima da toolbar abaixo de `lg` [223] [224]; no painel a partir de `lg`, depois da coluna. O `AppToast` absorve as quatro regras das páginas numa regra que conta até 3 avisos, no `scroll-padding-bottom` e no `padding-bottom` do `body` [76]; saem as regras de `_cart-page`, `_payment`, `_profile` e `_admin-layout`; o `--m3-toast-reserva` fica com o aviso.
-- **c.** 4 s sem ação (o `Short` [218]); com ação, de erro ou com `duration: 0`, até a pessoa agir, fechar ou trocar de rota [217] [219] [227]; até 3 empilhados, o mais antigo sai; duas listas vivas fixas (`status` com `aria-atomic="false"` e `alert` com `aria-atomic="true"`) [152] [153]; o foco depois do "Fechar aviso" e da ação, pelo teclado, ao aviso seguinte, à origem ou ao `main` [270]; o "Desfazer" continua levando o foco ao "Remover" no `CartView`; o aviso que nasce com um diálogo aberto espera o `close` [200]; o erro da exclusão vai para dentro do diálogo; o `toast.js` muda como em 5.1.
+- **a.** Aviso em `inverse-surface` / `inverse-on-surface` (11,54), `forma-xs`, `elevacao-3`, body-m, padding 4/8/4/16, 52/72/92 px com 1/2/3 linhas, largura do conteúdo até 600 (a da região abaixo de `sm`) [219] [220] [224]; sem ícone de sucesso nem de info; o erro com o `circle-exclamation` em `inverse-on-surface` [99]; gap de `space-2` (era `space-3`); a ação como text button em `inverse-primary` (`#9fd49b`, 7,70; decisão do usuário); o "Fechar aviso" como ícone padrão em `inverse-on-surface`; o anel dos dois por dentro, em `inverse-on-surface` (o `secondary` mede 2,02).
+- **b.** No pé em todas as larguras, acima da toolbar abaixo de `lg` [223] [224]; centrado abaixo de `lg` e no início da coluna de conteúdo a partir dele (o `.container` na loja, depois da coluna no painel), para não cruzar o resumo grudado (volta 1). O `AppToast` absorve as regras das páginas numa regra que conta até 3 avisos, no `scroll-padding-bottom` e no `padding-bottom` do `body` fora do painel [76]; no painel, o `padding-bottom` fica no `.admin-main`, com a contagem; saem as regras de `_cart-page`, `_payment`, `_profile` e duas das três de `_admin-layout`; o `--m3-toast-reserva` fica.
+- **c.** 4 s sem ação (o `Short` [218]); com ação, de erro ou com `duration: 0`, até a pessoa agir, fechar ou trocar de rota [217] [219] [227]; quando chega outro com ação, os anteriores com ação passam a 10 s (o `Long` [218]; volta 1); até 3 empilhados, o mais antigo sai; duas listas vivas fixas (`status` com `aria-atomic="false"`, desvio declarado da ARIA22, e `alert` com `aria-atomic="true"`) [152] [153]; o foco depois do "Fechar aviso" e da ação, com a última entrada de teclado, ao aviso seguinte, à origem ou ao `main` [270]; o "Desfazer" continua levando o foco ao "Remover" no `CartView`; com um diálogo aberto, a store segura o tempo e a entrada dos avisos novos (`dialogosAbertos`, `segurar()`, `soltar()`) [200]; o erro da exclusão vai para dentro do diálogo; a conferência do pagamento com 4 s no redirecionamento e sem prazo na tela; o `toast.js` muda como em 5.1.
 - **d.** Entrada por opacidade e `scale(0.8)` a partir do pé, saída inversa [218], com os tokens de mola do projeto; reduzido, só opacidade; `.toast` no `_motion.scss`; nada de barra de tempo.
 - **e.** Diálogo em `surface-container-high`, canto 28, `elevacao-3`, `scrim` [229] [231] [232]; título headline-s 400 no início [229] [230]; "Fechar" de ícone padrão; divisores só com rolagem [234]; corpo com padding 24 e `scroll-padding-block` de 16; rodapé com as ações ao fim, o seguro antes; a `maxWidth` e os valores de hoje; os pares das telas medidos de novo nos dois fundos.
 - **f.** Abaixo de `md`, sheet em `surface-container-low`, 28 só em cima, `elevacao-1`, até 640 px, **na altura do conteúdo** até `100dvh − 32 px`, sem alça, rodapé fixo com a área segura [237] [238] [241].
-- **g.** O foco inicial de hoje (nas confirmações, o título [199]); Tab preso; Esc e fundo emitem `close`; devolução a quem abriu [200]; as confirmações com `role="alertdialog"` e a descrição ligada [235]; os movimentos de hoje, com o `lacunas.mjs` lendo `--dur-slow` e `--dur-base` (0,4 s e 0,25 s).
+- **g.** A regra de foco inicial de hoje, com o `autofocus` no "Cancelar" das três confirmações (a ação menos destrutiva [199]; volta 1); Tab preso, e o Shift+Tab também a partir do título (volta 1); Esc e fundo emitem `close`; devolução a quem abriu [200]; as confirmações com `role="alertdialog"` e a descrição ligada [235]; os movimentos de hoje, com o `lacunas.mjs` lendo `--dur-slow` e `--dur-base` (0,4 s e 0,25 s).
 - **h.** Vazio alinhado ao início; ícone de 32 px em `on-surface-variant`, solto; título `<p>` em title-l 500; texto body-m; ação de quem usa, com o "Ver cardápio" do carrinho em filled M; anúncio por uma região `role="status"` fixa só depois de uma escolha (Cardápio, Pedidos e Produtos sem busca) [151] [153]; com busca, fora da região.
-- **i.** Dois botões de ícone tonais redondos de 44 px [255] [249] [245], 8 px de vão, número title-m 500 tabular em 2ch, troca direta; o tonal contra o fundo é isento [98]; **no limite, `aria-disabled`** [273] [270] [275]; sem spinbutton; a §6 do SPEC-M muda.
-- **j.** `danger` com uma forma só: text button em `error` que vai a `on-error-container` com a camada no hover e no pressionado (no `high`, 4,32 viraria 6,26); sem filled `error` nos diálogos [232]; os pares por fundo em 5.5.
-- **k.** `iconOnly` pelo Expressive: `ghost` → padrão em `on-surface-variant`, `secondary` → tonal, `primary` → filled, `danger` → padrão em `error`; `sm` 40 com alvo de 44, `md` 44, `lg` 56; redondo, pressionado em `forma-s` (`lg`: `forma-m`) no tonal e no filled [249] [250]; ícone de 20 px (24 no `lg`); o selo dos atalhos no lugar.
+- **i.** Dois botões de ícone tonais redondos de 44 px [255] [249] [245], 8 px de vão, número title-m 500 tabular em 2ch, troca direta; o tonal contra o fundo é isento [98]; **no limite, `aria-disabled`** [273] [270] [275]; sem spinbutton; mudam a §6 do SPEC-M, o `SPEC.md` L430 e o teste do plano (abaixo).
+- **j.** `danger` com uma forma só: text button em `error` que vai a `on-error-container` com a camada no hover e no pressionado (no `high`, 4,32 viraria 6,26), adaptação do projeto com o precedente do campo [135] (no M3, o rótulo não muda de cor nos estados, [220] [255]); sem filled `error` nos diálogos [232]; os pares por fundo em 5.5.
+- **k.** `iconOnly` pelo Expressive: `ghost` → padrão em `on-surface-variant`, `secondary` → tonal, `primary` → filled, `danger` → padrão em `error` (os dois últimos sem uso, mas combinações de props que já existem); `sm` 40 com alvo de 44, `md` 44, `lg` 56; redondo, pressionado em `forma-s` (`lg`: `forma-m`) no tonal e no filled [249] [250]; ícone de 20 px (24 no `lg`), desvio dos 24 dp do M3 com o precedente dos `1.25rem` do campo e do painel; o selo dos atalhos no lugar.
 - **l.** O arco de hoje, `1em`, `currentColor`, antes do rótulo [260]; as cores do repouso, hover e pressionado neutros; sem `aria-busy` [207] [263]; o rótulo novo anunciado na região viva do diálogo ou do `App.vue` [151]; a largura travada; reduzido, o arco parado.
-- **m.** Desabilitado com `--m3-desabilitado-container` (on-surface 10%) e `--m3-desabilitado-conteudo` (on-surface 38%), em `rgba` [264] [268]; o `--color-ink-disabled` aponta para o segundo; isento [269] [98]; `GrayText` nas cores forçadas; `aria-disabled` no seletor e no CTA do pagamento, `disabled` no resto [270] [271].
-- **n.** A prop `pressed` sai, com o teste dela.
+- **m.** Desabilitado com `--m3-desabilitado-container` (on-surface 10%) e `--m3-desabilitado-conteudo` (on-surface 38%; o `OnSurfaceVariant` do filled e do texto [264] [266] é desvio declarado), em `rgba` [264] [268]; o `--color-ink-disabled` aponta para o segundo; isento [269] [98]; `GrayText` nas cores forçadas; `aria-disabled` no seletor e no CTA do pagamento, `disabled` no resto [270] [271].
+- **n.** A prop `pressed` sai, com o teste dela (é um estado próprio, sem uso; o filled e o perigo de ícone ficam porque são combinações de props que já existem).
 - **o.** O `.btn--legado` sai inteiro (a tabela de 5.9); o `sm` volta ao alvo de 44; sai o aperto por `translateY`.
 - **p.** O botão de imagem do `ModalProducts` fica `<label>` [96]; só ganha a borda do tonal com mais contraste.
 - **q.** Modos de contraste pela tabela de 4.6: bordas `CanvasText` nas superfícies que flutuam, `ButtonText` nos botões, `GrayText` no desabilitado, `outline` no tonal com mais contraste.
-- **r.** Foco não coberto: a reserva por contagem no `scroll-padding` e no fim da página, a rolagem do foco depois de cada aviso, o corpo do diálogo como contêiner de rolagem com folga, e o aviso sempre acima da toolbar [76].
+- **r.** Foco não coberto: a reserva por contagem no `scroll-padding` e no fim da página, a rolagem do foco depois de cada aviso, o corpo do diálogo como contêiner de rolagem com folga, o aviso sempre acima da toolbar e, a partir de `lg`, fora da coluna do resumo grudado [76].
+
+**Decidido pela sessão principal (volta 1, 24/11/2026; `correcoes-componentes-volta-1.md`), para levar ao `ESTADO.md`:**
+
+1. **O foco inicial no "Cancelar" das três confirmações** ([199]) troca o "foco inicial no título" que a etapa 8 fixou (desenho da Conta, L408, "Excluir conta?") e a etapa 9 (desenho do admin, 5.7 e 5.10, "Excluir produto?" e "Restaurar…?").
+2. **O `aria-disabled` no limite do seletor** muda três textos: a §6 do SPEC-M ("no limite: `disabled` real"; a sessão C edita), o `SPEC.md` L430 ("o botão recebe `disabled` **de verdade**") e o teste do plano para a etapa 10 ("`QuantityStepper.test.js` (novo): `disabled` real no limite e os rótulos"), que passa a conferir o `aria-disabled`.
+3. **A retenção dos avisos mora na store** (`dialogosAbertos`, `segurar()`, `soltar()`), com o `BaseDialog` chamando as duas ações.
+4. **A conferência do pagamento** sai com 4 s no ramo do redirecionamento; a regra da troca de rota fica como está.
+5. **O aviso a partir de `lg`** fica no início da coluna de conteúdo.
+6. **O `padding-bottom` com aviso** fica no `body` na loja e no `.admin-main` no painel.
+7. **O Shift+Tab** fica preso também a partir do título.
 
 **Para a etapa 11:**
 
@@ -1180,16 +1318,44 @@ src/utils/contraste.js                                     PARES_COMPONENTES (10
 - o toggle (`pressed`); o botão de ícone outlined (sem uso);
 - o filled `error` como botão destrutivo.
 
-**Perguntas ao usuário (o que só ele decide):**
+**Perguntas ao usuário (o que só ele decide), como foram feitas:**
 
-1. **O papel `inverse-primary` para a ação do aviso.** O M3 pinta a ação do snackbar em `inverse-primary` [220] [224], papel que os tokens do projeto não têm. Opções:
-   - (a) usar o `primary-container`, que já existe, da mesma paleta primária, medido em 10,13 sobre o aviso (e 7,56 pressionado);
-   - (b) gerar o `--m3-inverse-primary` com o mesmo gerador do esquema (`@material/material-color-utilities` 0.4.0, TonalSpot, semente `#5DBB63`, rodado fora do projeto, como o esquema claro foi), sem escrever o valor à mão, e medir de novo. Não encontrei no dossiê o tom que o gerador dá a esse papel.
+1. **O papel `inverse-primary` para a ação do aviso.** O M3 pinta a ação do snackbar em `inverse-primary` [220] [224], papel que os tokens do projeto não tinham. Opções:
+   - (a) usar o `primary-container`, que já existe, da mesma paleta primária, medido em 10,13 sobre o aviso (e 7,56 pressionado). **Custos:** é um papel de contêiner usado como tinta, contra a regra "o 'on' sobre o contêiner dele" que a etapa 8 seguiu (desenho da Conta, L658); e mede 1,13 contra o texto do aviso, de modo que a ação se distingue pelo peso, pela posição e pelo ícone, e não pela cor;
+   - (b) gerar o `--m3-inverse-primary` com o mesmo gerador do esquema (`@material/material-color-utilities` 0.4.0, TonalSpot, semente `#5DBB63`, rodado fora do projeto, como o esquema claro foi), sem escrever o valor à mão, e medir de novo.
 
-   **Recomendo (a):** nenhuma cor nova, o par medido com folga, e a ação já se distingue do texto pelo peso, pelo ícone e pela posição. O desenho funciona com as duas; com (b), muda só o valor da `color` do `.toast__action` e os dois pares da ação.
+   A recomendação do desenho era (a): nenhuma cor nova e o par medido com folga.
+2. **O "Desfazer" sem prazo.** Opções:
+   - (a) o aviso com ação não some sozinho, e os anteriores com ação passam a 10 s quando chega outro (o desenho). Muda o "por 5 s" da §5.5 do `SPEC.md`;
+   - (b) os 5 s de hoje, com a pausa no foco e no ponteiro. Fica a falha da 2.2.1 que a etapa 7 registrou: o "Desfazer" só existe no aviso, e o tempo pode acabar antes de a pessoa chegar a ele pelo Tab [227].
+
+   **Recomendação: (a).** A 2.2.1 prefere desligar o limite a ajustá-lo [227], o snackbar com ação do M3 não expira [217] [219], e os 10 s dos anteriores evitam a pilha sem prazo. Se o usuário escolhesse (b), o `CartView` manteria o `duration: 5000`, e o `toast.js` deixaria a ação expirar com o tempo que o chamador passa.
+
+**Respostas do usuário (24/11/2026):**
+
+1. **O `inverse-primary`: a opção (b).** A sessão principal gerou o papel com o `@material/material-color-utilities` 0.4.0, `SchemeTonalSpot`, semente `#5DBB63`, esquema claro, contraste 0.0, rodado fora do projeto. O gerador reproduziu exatamente os 12 papéis que já estão nos tokens (primary `#3a693b`, on-primary, primary-container `#bbf0b6`, on-primary-container, secondary, secondary-container, surface, inverse-surface `#2d322c`, inverse-on-surface `#eef2e9`, surface-container-high, outline, error). **Valor: `--m3-inverse-primary: #9fd49b`.** Medido (duas casas, para baixo): 7,70 sobre o `inverse-surface`; 6,11 com a camada inversa de hover e 5,75 com a pressionada; 6,44 e 6,15 com a camada da própria cor; 1,49 contra o `inverse-on-surface`. Entra em `base/_tokens.scss` (§8); o `_tokens.scss` do acervo não muda (decisão e); a sessão C acrescenta a linha à tabela da §2.2 do SPEC-M.
+2. **O "Desfazer": a opção (a), a recomendada.** O aviso com ação não some sozinho, e os anteriores com ação passam a 10 s quando chega outro. Muda o "por 5 s" da §5.5 do `SPEC.md` (a sessão C atualiza o `SPEC.md` e a §5.5 do SPEC-M), e o `CartView` perde o `duration: 5000` (L107).
 
 ---
 
 ## 13. Revisão
 
-A preencher pela sessão principal.
+**Volta 1 do revisor (24/11/2026): "aprovado: não".** Um bloqueante, 5 importantes e 14 menores. O revisor conferiu todos os pares do desenho (5.1, 5.5, 5.6, §6 e §8) com as funções do `src/utils/contraste.js`, as linhas citadas do código, os apelidos que ficam sem uso e a cobertura das pendências das etapas 3 a 9. Ele também confirmou, no código, que o CTA do pagamento é `type="button"` e que não há `<form>` no pagamento (o Enter num campo não envia nada), e que o `BaseButton` de hoje não bloqueia o clique com `aria-disabled` (a mudança no `handleClick` é lógica de apresentação do componente).
+
+| # | Tipo e gravidade | Achado | Decisão da sessão principal (aplicada pelo designer) |
+|---|---|---|---|
+| 1 | infiel, bloqueante | O aviso da conferência com `duration: 0` some no `router.push("/cart")` do `PaymentView`, pela regra da troca de rota (`SPEC.md` L801 pede o aviso também nesse ramo) | O `PaymentView` só passa `duration: 0` no ramo que continua na tela; no redirecionamento, os 4 s de hoje, que sobrevivem à troca. A regra da troca de rota fica. Teste no `PaymentView.test.js` (5.1, 4.3) |
+| 2 | contrato e inviável, importante | A retenção por `watch` síncrono roda antes do `timers.set` e do `resume`: o tempo corria retido | A retenção mora na store: o contador `dialogosAbertos`, `segurar()` e `soltar()`, chamados pelo `BaseDialog` ao abrir, ao fechar e ao desmontar aberto; o `resume` não arma tempo com o contador acima de 0. Testes no `toast.test.js` e no `BaseDialog.test.js` (5.1, 5.2) |
+| 3 | infiel, importante | O foco inicial no título das confirmações não é o que o [199] diz (num passo difícil de desfazer, a ação menos destrutiva) | `autofocus` no "Cancelar" das três confirmações; a API do `BaseDialog` não muda. Troca o foco no título fixado pela etapa 8 (`conta.md` L408) e pela etapa 9 (4.1, 5.2) |
+| 4 | acessibilidade, importante | Com o foco no título (`tabindex="-1"`), o Shift+Tab sai do `<dialog>` | O ramo do Shift+Tab do `trapFocus` leva ao último focável também quando o ativo não está na lista; caso novo no `keyboard.mjs`, começando no título dos "Detalhes" (4.1, 5.2) |
+| 5 | acessibilidade, importante | Três avisos com "Desfazer" sem prazo ocupariam cerca de 39% da tela em 390 até a troca de rota | Um aviso novo com ação passa os anteriores com ação ao `Long` de 10 s [218]: a nova remoção é "outra ação" [219]. Custo no §11 (4.3, 5.1) |
+| 6 | acessibilidade, importante | A partir de `lg`, o aviso centrado e persistente cruzava o resumo grudado do pagamento (o `scroll-padding` não move elemento grudado); os casos de 1024 e 1440 do `keyboard.mjs` deixavam de testar | O aviso fica no início da coluna de conteúdo a partir de `lg` (escolha do projeto, sem fonte para telas largas); os casos do `keyboard.mjs` viram casos de pé, com o CTA grudado do CART6 em 1024 × 768 e 1440 × 900 (4.5, §9) |
+| 7–20 | menores | Testes que faltavam no §9; o `aria-atomic="false"` e o rótulo desabilitado em `on-surface` como desvios declarados; os custos da opção (a) do `inverse-primary`; a citação do ícone de 20 px; o `danger` que escurece como adaptação do projeto [135]; o `pressed` contra as combinações de ícone sem uso; o `padding-bottom` no `.admin-main` no painel; as mudanças do plano e do `SPEC.md` L430 com o `aria-disabled`; a leitura dupla do NVDA; a modalidade pela última entrada, e não pelo `event.detail`; o método da falha simulada; o acervo só com o aviso forçado; três detalhes de texto | Aceitos como o revisor propôs |
+
+**Respostas do usuário:** as duas da §12 (o `inverse-primary` gerado, `#9fd49b`, e o "Desfazer" sem prazo).
+
+**Decisões da sessão principal fora da tabela:**
+
+- **A volta 2 do revisor não rodou.** As correções seguiram a lista da volta 1, e a sessão principal conferiu no texto o bloqueante e os cinco importantes (5.1, 4.1, 4.3, 4.5, 5.2 e §12). O que só a construção mostra fica no §9 para a sessão C medir: a cobertura do CTA grudado com o aviso no início da coluna, o "Conta excluída." retido e lido depois do diálogo, o `aria-atomic="false"` e a leitura dupla do NVDA num leitor de tela, a faixa clara e a barra de rolagem no Windows. Custo se errado: um erro novo da volta 1 só aparece na sessão C ou no `/code-review`.
+- **O `aria-disabled` no limite do stepper fica** (HTML Standard [273]; APG [270] [275]). Ele muda o teste do plano ("`disabled` real no limite"), o `SPEC.md` L430 e a §6 do SPEC-M. A sessão C atualiza o `SPEC.md` e o SPEC-M, e o teste passa a conferir o `aria-disabled`, o foco que fica e o clique que não muda o valor.
+- **Os pares em duas casas, para baixo** (7,70, 5,75 e 1,49 no `inverse-primary`), como o `contraste.test.js`.
