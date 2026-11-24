@@ -11,7 +11,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 - **O CEP ganha região viva** (`role="status"`, prop nova `live` do `FormGroup`): "Buscando endereço…", o endereço e o erro da consulta passam a ser anunciados ([151], [153]).
 - **Painel** `surface-container-low` de canto 28, sem sombra; o `h1` fica dentro, na regra global. **Banner** em `error-container`, com o texto em `on-error-container` (7,23), logo acima do botão de envio, numa região `role="alert"` que existe desde a montagem ([152]). **Aviso de conta salva** igual ao do pagamento, no topo do formulário.
 - **Perfil:** os dois blocos em contêineres `low` (o padrão das seções do pagamento); o histórico em lista segmentada; "Recebido" vira rótulo de status, e não chip ([60], [141]); sai o "·" da linha do pedido (regra 7.g); "Ver itens" com chevron e cara de text button; "Excluir conta" passa à variante `danger` que já existe (SPEC-M §4.1).
-- **Foco não coberto:** em 390, o aviso "Dados salvos." cobre inteiro o "Salvar alterações" focado pelo teclado. Resposta: a reserva do aviso da etapa 7 e a rolagem do foco depois do aviso, como no pagamento.
+- **Foco não coberto:** em 390, o aviso "Dados salvos." cobre inteiro o "Salvar alterações" focado pelo teclado. Resposta: a reserva do aviso da etapa 7 e a rolagem do foco depois do aviso, só pelo teclado, como no carrinho. O banner do login e do cadastro rola o grupo de envio (banner e botão) para a vista, porque com Enter num campo o foco fica longe dele.
 - **Ficam para outras etapas:** a 9 resolve a ilustração e o `scrim` do login do admin, a posição do banner lá, a densidade dos filtros e o seletor de arquivo do `ModalProducts`; a 10, o `loading`, o desabilitado e o `danger` do `BaseButton`, o `BaseDialog` (com o erro de exclusão que hoje fica atrás dele), o `EmptyState` e o `AppToast`; a 11, os pares e os apelidos que ficam sem uso.
 - **Em aberto para o usuário:** o botão de mostrar a senha, a instrução da senha que hoje só existe no placeholder, a âncora de "Ver meus pedidos" e dois textos de validação (seção 12).
 
@@ -36,7 +36,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 | Ajuda e erro juntos, colados ao campo, sem recuo | O erro toma o lugar da ajuda, 4 px abaixo, com recuo de 16 | [131], [138], [139] |
 | `select` com a seta nativa | `appearance: none` e o `chevron-down` do Font Awesome no fim | O mesmo desenho em todo navegador; ícone no fim do campo [134], [135] |
 | Painel `surface-container` com sombra e canto 12 | `surface-container-low`, canto 28, sem sombra | SPEC-M §5.8; elevação tonal [1], [13] |
-| Banner rosa com borda esquerda vermelha de 3 px, no topo do formulário, criado junto com a mensagem | `error-container`, canto 16, texto `on-error-container`, logo acima do botão; a região `role="alert"` existe desde a montagem | Contenção tonal, como o aviso do pagamento; [152]; o erro aparece onde a pessoa agiu (5.3) |
+| Banner rosa com borda esquerda vermelha de 3 px, no topo do formulário, criado junto com a mensagem | `error-container`, canto 16, texto `on-error-container`, logo acima do botão; a região `role="alert"` existe desde a montagem | Contenção tonal, como o aviso do pagamento; [152]; o erro aparece onde a pessoa agiu (5.3; inferência) |
 | Aviso de conta salva com borda esquerda | Bloco `aviso-container`, igual ao do pagamento | Item 7 do pacote; desenho do Carrinho, 5.6 |
 | Perfil em dois cards com sombra | Dois contêineres `low` de canto 28 | Contenção [66], [26]; o padrão das seções do pagamento |
 | Pedido num card com borda; chip "Recebido" com `text-xs` 700; "17/10/2026, 19:15 · 1 item · R$ 29,49"; "▶ Ver itens" nativo | Item de lista segmentada; rótulo de status em `forma-s`; o total na linha do número, a data e a contagem em parágrafos separados, sem "·"; "Ver itens" com chevron e cara de text button | [66], [81], [8]; [60], [141]; regra 7.g da etapa 7; [159] |
@@ -63,7 +63,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 ### Plano (primeira passada)
 
 1. Campo filled do M3 (`surface-container-highest` com a linha embaixo), com o rótulo dentro, que flutua por `transform` (`Inside` [121]).
-2. 48 px e canto 4, como hoje.
+2. 48 px e canto 8 (`--radius-sm`), como hoje.
 3. Ícone de erro dentro do campo, no fim (o ícone final [131]), além da mensagem.
 4. Botão de mostrar a senha no fim do campo ([126], [127]).
 5. Login em duas colunas a partir de `lg`: o painel à direita e, à esquerda, a marca grande sobre `primary-container`.
@@ -78,18 +78,18 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 
 - **Filled com rótulo dentro: trocado (infiel aos placeholders e arriscado).**
   - Com o rótulo dentro, o placeholder só aparece com o rótulo minimizado, salvo com `isAlwaysMinimized` [119]; no material-web, ele some com valor e não flutua [131]. Os placeholders do `SPEC.md` ficam, e "Mínimo de 6 caracteres, com letra e número" só apareceria com o foco.
-  - O `date` nativo mostra "dd/mm/aaaa" sempre; o rótulo expandido ficaria por cima (inferência).
+  - O `date` nativo mostra a máscara da data mesmo vazio, no idioma do navegador ("dd/mm/aaaa" em português; a captura `register-390-full.png`, do Chromium em inglês, mostra "mm/dd/yyyy"; em outros navegadores ela pode nem aparecer, o que não foi conferido). Onde ela aparece, o rótulo expandido ficaria por cima (inferência).
   - O autopreenchimento obriga o rótulo a perceber o valor que o navegador pôs (inferência).
   - Rótulo acima reduz a rolagem horizontal para quem usa zoom e no celular [155].
   - Flutuar pede `transform` só em `motion-ok`: movimento a mais numa tela quieta.
   - Entrou o rótulo `Above` [121], [122], que é a posição de hoje.
   - **Filled ou outlined:** formulário com muitos campos é o caso documentado do outlined [120]. As cores tonais do Expressive reprovam a 1.4.11 aqui: a borda `outline-variant` do outlined tonal dá 1,53 contra o painel, e o contêiner `surface-container` do filled tonal, 1,05 ([125], [98], medidos). Entrou o outlined nas cores do M3 padrão [135], com a forma do Expressive.
   - **O híbrido da SPEC-M §5.8 sai:** o fundo `highest` dá 1,16 contra o painel e 1,10 contra o diálogo (medidos); quem identifica o campo é o contorno.
-- **48 px e canto 4: trocados.** 56 dp é a altura mínima do campo [125], e é o que o padding de 16 do material-web dá com a linha do body-l ([136], [137], [1]). O canto de 12 é o `roundedShape` do Expressive ([125], [8]).
+- **48 px e canto 8: trocados.** 56 dp é a altura mínima do campo [125], e é o que o padding de 16 do material-web dá com a linha do body-l ([136], [137], [1]). O canto de 12 é o `roundedShape` do Expressive ([125], [8]).
 - **Ícone de erro dentro do campo: saiu (repetido).** A mensagem já tem ícone e texto, que é o que a 3.3.1 pede [142]; um segundo ícone tira cerca de 40 px da área de texto em 390.
 - **Mostrar a senha: saiu (inventado).** É texto e lógica novos, fora do pacote. Vira pergunta ao usuário, com as fontes ([150], [126], [127], [90]).
 - **Login em duas colunas com a marca: saiu (repetição e genérico).** Abaixo de `md`, o hero da Home é um contêiner `primary-container` com o título grande, e a confirmação já tem uma faixa nessa cor; "ilustração decorativa no login" é padrão genérico (critérios do revisor). Entrou o painel único.
-- **Borda de 3 px e foco no banner: trocados.** A borda é da Brasa; o aviso do pagamento já é só tonal. Levar o foco ao banner faria o leitor de tela ouvir a mensagem duas vezes, pelo `role="alert"` e pelo foco. O foco fica no botão, e a 4.1.3 cobre o anúncio sem foco [151]. O banner vai para junto do botão (5.3).
+- **Borda de 3 px e foco no banner: trocados.** A borda é da Brasa; o aviso do pagamento já é só tonal. Levar o foco ao banner faria o leitor de tela ouvir a mensagem duas vezes, pelo `role="alert"` e pelo foco. O foco fica onde estava, e a 4.1.3 cobre o anúncio sem foco [151]. O banner vai para junto do botão (5.3).
 - **Somente leitura igual ao desabilitado: trocado (pacote e 1.4.11).** O somente leitura recebe foco [119]: o contorno precisa de 3:1 [98]. Entrou o tracejado em `outline` (4,06) com o texto inteiro.
 - **Perfil: quatro trocas.**
   - A sombra sai (elevação tonal [1], [13]).
@@ -143,7 +143,7 @@ As medidas abaixo são estimativas pelo CSS; a sessão C mede nas capturas.
 ├───────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                              ↕ --space-7       │
 │                      ╭ painel: surface-container-low, canto 28, padding 32 ──╮  440 px,        │
-│                      │ Entrar                 h1, --text-page (45/52), 500   │  centrado       │
+│                      │ Entrar                 h1, --text-page (45/50), 500   │  centrado       │
 │                      │                                         ↕ --space-5   │                 │
 │                      │ E-mail                 label-l 500, on-surface        │                 │
 │                      │                                         ↕ 8 px        │                 │
@@ -174,7 +174,7 @@ Legenda: `◉` é o item atual da pílula. O rodapé do painel fica alinhado ao 
 │ Smash Burger                     │  header estático, 64 px
 │                       ↕ --space-5│
 │╭ painel low, canto 28, pad. 16 ─╮│  358 px
-││ Entrar                         ││  h1, display-s 36/44
+││ Entrar                         ││  h1, 36 px, linha de cerca de 40
 ││ E-mail                         ││
 ││╭──────────────────────────────╮││  326 × 56
 │││ maria@example.com            │││
@@ -195,7 +195,7 @@ Legenda: `◉` é o item atual da pílula. O rodapé do painel fica alinhado ao 
 └──────────────────────────────────┘
 ```
 
-Sem erro, o banner não existe e o botão sobe 72 px (o banner de uma linha, 56, mais o vão de 16). O conteúdo inteiro cabe acima da reserva da toolbar em 844 px de altura.
+Sem erro, o banner não existe e o botão sobe 64 px (o banner de uma linha, 56, mais a margem de 8; o botão mantém os 8 de cima). O conteúdo inteiro cabe acima da reserva da toolbar em 844 px de altura.
 
 ### Wireframe do Cadastro em 1440, vazio, depois de "Criar conta"
 
@@ -215,7 +215,7 @@ Sem erro, o banner não existe e o botão sobe 72 px (o banner de uma linha, 56,
 │                 │   ● O email é obrigatório                                │
 │                 │ Senha  [ Mínimo de 6 caracteres, com letra e número ]    │
 │                 │   ● A senha é obrigatória                                │
-│                 │ Data de nascimento  [ dd/mm/aaaa                   📅 ]  │  ícone nativo
+│                 │ Data de nascimento  [ dd/mm/aaaa                   📅 ]  │  máscara e ícone nativos (no idioma do navegador)
 │                 │   ● A data de nascimento é obrigatória                   │
 │                 │ Celular  [ (47) 99999-9999 ]                             │
 │                 │   ● O número é obrigatório                               │
@@ -359,8 +359,10 @@ Legenda: `┌╌┐` é o contorno tracejado. Os dados são os da sessão semead
 ││ Seus pedidos                   ││
 ││╭ lowest, cantos 20/20/4/4 ────╮││  326 px; padding 16
 │││ Pedido #1001        R$ 29,49 │││
-│││ 17/10/2026, 19:15  1 item    │││
-│││                 ( Recebido ) │││  quebra para a linha de baixo se não couber
+│││ 17/10/2026, 19:15  1 item    │││  na tela, data, contagem e "Recebido"
+│││                 ( Recebido ) │││  ficam numa linha só (cerca de 284 de
+│││                              │││  294 px); o texto não tem largura. Quebra
+│││                              │││  só em 320 px (224 de conteúdo) ou com zoom
 │││ (› Ver itens)                │││
 ││╰──────────────────────────────╯││
 ││┃ vão de 2 px                   ││
@@ -429,10 +431,11 @@ Esta etapa fixa o texto, a ordem dos botões (o seguro antes, o destrutivo por �
     - A pessoa aperta Enter, e o aviso cobre o botão focado inteiro. O foco não se move, então o `scroll-padding` sozinho não rola nada. Em 390 × 800, o mesmo, 44 px acima.
   - **A resposta (a regra da etapa 7 vale, com a rolagem do pagamento):**
     - enquanto há aviso, o `scroll-padding` da rota soma `--m3-toast-reserva` (6,5rem): no pé abaixo de `md` e no topo de `md` a `lg`, por `:global(html:has(.profile-page):has(.toast-region .toast))`, a técnica C43 [76], como no carrinho e no pagamento;
-    - depois do `toastStore.show` do "Salvar alterações" (sucesso ou erro), a `ProfileView` faz `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })`, como a `PaymentView` depois da conferência (desenho do Carrinho, 5.8). Com a reserva somada, o botão sobe para cima do aviso (a base vai a 644 px; sobra um vão de 44);
+    - depois do `toastStore.show` do "Salvar alterações" (sucesso ou erro), a `ProfileView` faz `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })`, **só quando a última entrada foi de teclado**. É o precedente do `CartView` (etapa 7, correção do `/code-review`): a view guarda a última entrada (`pointerdown` ou `keydown`, na fase de captura do `document`), e quem toca ou clica não vê o anel, e a página não pula para ele (no Chrome do Android, o toque põe o foco no botão, e a página subiria cerca de 100 px). A `PaymentView` rola sempre; o perfil segue o carrinho. Com a reserva somada, o botão sobe para cima do aviso (a base vai a 644 px; sobra um vão de 44);
     - **por que o topo só até `lg`:** a partir de `lg`, "Seus dados" fica na coluna da esquerda, e o aviso, no topo à direita, nunca a cruza. Em 1440, a coluna vai de x 152 a 615 e o aviso de 872 a 1288; em 1024, de 32 a 422 contra 576 a 992. Sem a soma ali, a página não pula sem motivo (a lição do carrinho em `xl`, desenho do Carrinho, §13);
-    - **o que não cobre:** no Safari e no Firefox do macOS, o clique não põe o foco no botão, e nada rola. Sem foco no botão, não há foco a cobrir [76]; pelo teclado, a rolagem vale.
-  - **O banner que aparece acima do botão de envio (5.3):** ele empurra o botão focado em 72 a 120 px (uma a três linhas). No cadastro em 390, o botão pode descer para a faixa da toolbar. Depois de mostrar o banner, a view faz a mesma rolagem do foco (`block: "nearest"`): o botão volta para cima da reserva, e o banner fica logo acima dele, à vista.
+    - **o que não cobre:** pelo toque e pelo mouse, nada rola, e o aviso pode cobrir o botão; sem o anel à vista, não há foco de teclado a cobrir [76]. No Safari e no Firefox do macOS, o clique nem põe o foco no botão.
+  - **O banner que aparece acima do botão de envio (5.3):** ele empurra o botão em 64 a 112 px (a caixa de uma a três linhas mais a margem de 8), e o foco pode nem estar no botão: com Enter dentro de um campo (o CEP, o Nome), o foco fica no campo, e o banner nasce a cerca de 740 px do topo do formulário em 390, fora da vista ou sob a toolbar. Depois de mostrar o banner, a view rola o grupo de envio (`div.auth-form__envio`: o banner e o botão) com `scrollIntoView({ block: "nearest" })`, **em qualquer entrada, também no toque**: o banner é a resposta ao envio, e quem tocou em "Criar conta" precisa vê-lo. Com a reserva do pé (`scroll-padding-bottom`), o grupo para acima da toolbar. Se o grupo já está à vista, nada rola.
+    - **O custo, com Enter num campo do topo:** o campo focado (o Nome, por exemplo) sai da vista para cima enquanto o banner aparece; o próximo Tab o traz de volta, e o leitor de tela já ouviu o alerta. Com Enter no CEP, o campo focado fica logo acima do grupo, à vista (estimativa: o grupo de cerca de 176 px com o banner de 3 linhas termina na reserva, e o CEP fica acima dele).
   - **O aviso "Conta criada. Entre para continuar."** aparece em `/login`, com o foco no `main`; o primeiro Tab vai ao E-mail, no alto da tela, longe do aviso (no pé em 390; no topo à direita a partir de `md`, acima da altura do campo).
   - **O diálogo:** fica na top layer (`showModal()`), e a página fica inerte (SPEC-M §2.7; desenho do Cardápio, 5.5.6). Ao fechar, o foco volta ao "Excluir conta", que não se moveu (a rolagem fica travada).
 
@@ -473,7 +476,7 @@ Sem `live`, nada muda para quem usa o componente.
 |---|---|---|---|
 | 3.3.2 | Sempre visível e legível | Disponível, mas minimizado sobre o contorno | [144], [145] |
 | Placeholders do `SPEC.md` | Aparecem com o campo vazio | Só com o rótulo minimizado (no foco), salvo `isAlwaysMinimized` | [119], [131] |
-| `date` | O "dd/mm/aaaa" nativo fica livre | O rótulo expandido cairia sobre ele | inferência |
+| `date` | A máscara nativa da data, quando o navegador a mostra (no idioma dele), fica livre | O rótulo expandido cairia sobre ela | inferência |
 | Zoom | O rótulo quebra linha à vontade | O rótulo longo ("Data de nascimento") disputa os 56 px | [155]; inferência |
 | Autopreenchimento | Nada a perceber | O rótulo precisa saber que o navegador pôs um valor | inferência |
 | Movimento | Nenhum | Flutuar é `transform`, só em `motion-ok` | regra do projeto |
@@ -501,9 +504,9 @@ O rótulo é `label` com `for` igual ao `id`, antes do campo; clicar nele leva o
 |---|---|---|---|
 | Valor digitado | body-l 16/24 | `on-surface` | body-large [134]; 16 px evita o zoom do iOS (`SPEC.md` §5.8) |
 | Placeholder | body-l 16/24 | `on-surface-variant` | bodyLarge [119], [134] |
-| Rótulo | label-l 14/20, 500 | `on-surface`; por estado, abaixo | **Desvio:** o rótulo minimizado do M3 é body-small 12/16 ([119], [134]), o tamanho de quando ele divide o espaço com o contorno. Fora do contorno, ele é o título do campo: fica o tamanho de hoje (14 px, 500, `SPEC.md` §5.8), o title-s que o projeto faz com label-l em 500 (SPEC-M §2.3) |
+| Rótulo | label-l 14/20, 500 | `on-surface` em repouso; por estado, abaixo | **Dois desvios.** Tamanho: o rótulo minimizado do M3 é body-small 12/16 ([119], [134]), o tamanho de quando ele divide o espaço com o contorno. Fora do contorno, ele é o título do campo: fica o tamanho de hoje (14 px, 500, `SPEC.md` §5.8), o title-s que o projeto faz com label-l em 500 (SPEC-M §2.3). Cor: em repouso, o rótulo do outlined é `on-surface-variant` [135]. Fica `on-surface` (15,49; o `on-surface-variant` daria 8,41 e passaria): fora do contorno, o rótulo é o nome visível do campo, e com a cor do placeholder ("E-mail" e "voce@exemplo.com") os dois se leriam como a mesma coisa. É a cor de hoje (`SPEC.md` §5.8) |
 | Ajuda e erro | body-m 14/20 | ajuda `on-surface-variant`; erro `error` | **Desvio:** o apoio do M3 é body-small [134]. Fica body-m, o papel da ajuda no resto do sistema (a ajuda do CTA do pagamento, etapa 7, 5.8) e o tamanho de hoje; as mensagens do app chegam a 73 caracteres ("Sobrenome inválido. Devem conter no mínimo 2 letras e não conter números") |
-| Contador "0/140" | o da ajuda, com algarismos tabulares | `on-surface-variant` | Contador tabular (SPEC-M §2.3); o Compose põe o contador no texto de apoio [119] |
+| Contador "0/140" | o da ajuda: o `.form-group__help` usa algarismos tabulares sempre (`font-variant-numeric: tabular-nums`), porque o componente não sabe que a ajuda é um contador; no CEP, o endereço com número também fica tabular, sem efeito visível | `on-surface-variant` | Contador tabular (SPEC-M §2.3); o Compose põe o contador no texto de apoio [119] |
 
 **Estados (a matriz inteira está na seção 6):**
 
@@ -549,7 +552,7 @@ O rótulo é `label` com `for` igual ao `id`, antes do campo; clicar nele leva o
 
 - **Texto, e-mail, tel e número:** o campo acima. O `type`, o `inputmode`, a máscara e o `autocomplete` de hoje ficam: o `autocomplete` é a técnica da 1.3.5 [149], e não bloquear o colar nem o preenchimento automático é o que a 3.3.8 pede [150] (o filtro de teclas da máscara só vale para celular e CEP, e o colar passa pelo `handleInput`).
 - **Senha:** o mesmo campo, `type="password"`, com o `autocomplete` de hoje (`current-password` no login, `new-password` no cadastro). **Sem botão de mostrar a senha nesta etapa:** é texto e lógica novos, fora do pacote. Se o usuário quiser: a 3.3.8 diz que mostrar a senha, como opção, ajuda algumas pessoas e não é exigência [150]; o Compose põe um botão de ícone no fim do campo ([126], [127]); o nome do botão ou muda com o estado e não usa `aria-pressed`, ou fica fixo e o estado vai no `aria-pressed` ([126], [127], [90]). Fica como pergunta (seção 12).
-- **Data:** o `date` nativo, com o ícone de calendário do navegador no fim (o `::-webkit-calendar-picker-indicator` continua com `cursor: pointer`). Não se troca: abrir o seletor por outro ícone pediria script. Com `color-scheme: light` (reset), o ícone nativo é escuro.
+- **Data:** o `date` nativo, com o ícone de calendário do navegador no fim (o `::-webkit-calendar-picker-indicator` continua com `cursor: pointer`). Não se troca: abrir o seletor por outro ícone pediria script. A máscara vazia e o ícone são do navegador, no idioma dele (a captura do Chromium em inglês mostra "mm/dd/yyyy"); com o `color-scheme: light` do reset, a sessão C confere o ícone na captura.
 - **`select`:** `appearance: none` e o `chevron-down` do Font Awesome (registrado no plugin), 20 px, em `on-surface-variant` (8,41 no painel, 7,97 no admin; o contorno é o que identifica o campo), a 12 px da borda. A lista de opções continua a nativa. O M3 tem o select filled e outlined com a mesma anatomia e o mesmo erro do campo [140], e o exposed dropdown só leitura usa um ícone final [129]. A seta não gira (o estado aberto da lista nativa não chega à página).
 - **`textarea` (a observação do modal):** o mesmo contorno, padding de 16 em todos os lados, `rows` de hoje (3: 72 px de texto, 104 de caixa) e `resize: vertical` de hoje. Passando de 3 linhas, o texto rola dentro, como o `MultiLine` do Compose depois do máximo [118]. O `field-sizing: content`, que faz o textarea crescer no material-web, fica de fora: só vale em alguns navegadores [131], e 140 caracteres dão cerca de 4 linhas em 390 (estimativa). O contador "0/140" continua sendo a ajuda (o Compose o põe no apoio [119]), no começo da linha, com algarismos tabulares, lido no foco pelo `aria-describedby` e sem região viva (anunciar a cada tecla seria tagarela [151]).
 
@@ -564,8 +567,16 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 
 **Modos de contraste:**
 
-- **`forced-colors: active`:** as cores do autor dão lugar às do sistema. Ficam os sinais que não são cor: o traço do somente leitura, a mensagem com ícone no erro, o anel no foco, a seta do `select` (`currentColor`).
-- **`prefers-contrast: more`:** o contorno passa de `outline` a `on-surface-variant` (8,41 no painel, 7,97 no diálogo); o somente leitura continua tracejado, na mesma cor.
+- **`forced-colors: active`:** as cores do autor dão lugar às do sistema. A parcial escreve as cores de sistema que o SPEC-M aceita nesses modos (§1.1, item 6), para cada estado ter a sua:
+  - editável: contorno contínuo em `CanvasText`;
+  - somente leitura: contorno **tracejado** em `CanvasText` (o traço não é cor e continua); texto em `CanvasText`;
+  - desabilitado: contorno, valor, rótulo e ajuda em `GrayText`, como o desabilitado do checkbox do material-web nas cores forçadas [114];
+  - erro: a mensagem com o ícone (a cor do erro some); foco: o anel; a seta do `select`, em `currentColor`.
+- **`prefers-contrast: more`:**
+  - editável: contorno contínuo em `on-surface-variant` (8,41 no painel, 7,97 no diálogo);
+  - somente leitura: contorno tracejado em `on-surface-variant`, a mesma cor do editável: o que separa os dois é o traço (e a falta de hover e de contorno aceso no foco);
+  - desabilitado: não muda (`outline-variant` e `--color-ink-disabled`; isento [98]).
+- **O traço de 1 px é o único sinal visível entre o editável e o somente leitura** (o leitor de tela diz "somente leitura"): a sessão C confere na captura em 390, com e sem `prefers-contrast: more`, que o traço se lê no tamanho real (seção 9).
 
 **Acessibilidade (resumo):** `label` com `for` [145]; `aria-describedby` com o erro ou a ajuda [146]; `aria-invalid` só depois da validação [143]; `required` nativo; o somente leitura e o desabilitado nativos [96]; a região viva só no CEP [153]; o anel de 3 px em todo foco (SPEC-M §1.1, item 4).
 
@@ -606,7 +617,7 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 | "Seus dados", "Seus pedidos" | `ProfileView.vue` (`h2`) |
 | "Excluir conta?" | `ProfileView.vue` → `BaseDialog` (`h2`) |
 
-- **`h1` (j): a regra global** (`--text-page`, de display-s 36/44 a display-m 45/52 [1], 500, `on-surface`), como no carrinho e no pagamento. No login e no cadastro, dentro do painel: o painel é a página inteira, e o login do admin precisa do título dentro dele (a ilustração fica atrás). Um título menor dentro do painel faria o login destoar das outras telas; o display no `low` não repete o hero, que é display num `primary-container`.
+- **`h1` (j): a regra global** (`--text-page`, do tamanho do display-s, 36 px, ao do display-m, 45 [1], com a entrelinha `--leading-display` de 1,12: cerca de 40 e 50 px, e não os 44 e 52 da escala; 500, `on-surface`), como no carrinho e no pagamento. No login e no cadastro, dentro do painel: o painel é a página inteira, e o login do admin precisa do título dentro dele (a ilustração fica atrás). Um título menor dentro do painel faria o login destoar das outras telas; o display no `low` não repete o hero, que é display num `primary-container`.
 - **`h2`:** a regra global (headline-s 24/32 [1]). Um `h1` por tela; `h1` → `h2`, sem salto. O `h2` do diálogo fica na top layer, depois do `h1`.
 - **Pares:** `on-surface` sobre o `low` (15,49) e sobre a `surface` (16,31, SPEC-M §2.2).
 
@@ -645,16 +656,17 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 **Posição: logo acima do botão de envio, dentro do formulário (desvio registrado do `SPEC.md` §5.8, que o punha no topo).**
 
 - O banner só aparece depois do envio, por uma falha que nenhum campo explica (credencial, falha genérica, WebCrypto). No cadastro em 390, o topo do formulário fica cerca de 740 px acima do botão (cerca de 870 com o aviso de conta salva; estimativa): a pessoa que apertou "Criar conta" não veria nada mudar além do botão voltando de "Criando conta…".
-- Junto do botão, a mensagem aparece onde a pessoa agiu. A lista de erros de campo do tutorial vai no topo [158], mas aqui os erros de campo ficam nos campos, e o envio leva o foco ao primeiro; o banner é outra coisa.
+- Junto do botão, a mensagem aparece onde a pessoa agiu. **É inferência, sem fonte:** a 3.3.3 trata da sugestão de correção, e não da posição [148]; o tutorial põe a lista de erros de campo no topo [158]. Aqui os erros de campo ficam nos campos, e o envio leva o foco ao primeiro; o banner é outra coisa (a falha que nenhum campo explica).
 - O mesmo lugar no login, onde tudo cabe na tela de qualquer jeito: uma regra só.
 
 **Estrutura e anúncio (k):**
 
-- `div.auth-form__envio` (coluna, sem `gap`, `margin-block-start: var(--space-2)`, como o `margin-top` de hoje no botão) → `div.auth-form__anuncio[role="alert"][aria-atomic="true"]`, **sempre no DOM, vazio sem erro, sem caixa** → `div.auth-alert` (`v-if`, com `margin-block-end: var(--space-4)`) → e então o `BaseButton` de envio.
+- `div.auth-form__envio` (coluna, sem `gap` e sem margem) → `div.auth-form__anuncio[role="alert"][aria-atomic="true"]`, **sempre no DOM, vazio sem erro, sem caixa** → `div.auth-alert` (`v-if`) → e então o `BaseButton` de envio, com a classe `.auth-form__submit` de hoje.
+- **Margens (o `_auth.scss` é dividido com o login do admin):** o `.auth-form__submit` mantém o `margin-top: var(--space-2)` de hoje, que vale também no admin, onde o botão fica direto no formulário. A margem do banner vale só dentro do grupo: `.auth-form__envio .auth-alert { margin-block-end: var(--space-2) }`. Assim, o banner fica a 16 px do botão (8 + 8), e a caixa do admin, no topo do painel, não ganha margem nenhuma.
 - **Por quê:** o contêiner do erro precisa estar no DOM desde o carregamento para a maioria dos leitores de tela o anunciar, e o `aria-atomic="true"` é preciso para o VoiceOver do iOS ler o erro depois de mais de um envio inválido [152]. Hoje o `role="alert"` nasce junto com a mensagem (`v-if`).
-- **O foco fica no botão:** é mensagem de erro sem mudança de contexto, o caso do `role="alert"` [151]. Levar o foco ao banner faria o leitor ouvir a mensagem pelo alerta e pelo foco (anúncio duplicado).
+- **O foco fica onde estava** (no botão, ou no campo em que a pessoa apertou Enter): é mensagem de erro sem mudança de contexto, o caso do `role="alert"` [151]. Levar o foco ao banner faria o leitor ouvir a mensagem pelo alerta e pelo foco (anúncio duplicado).
 - **Um segundo envio com o mesmo erro:** o handler zera a mensagem antes de tentar de novo (hoje), a caixa sai e volta, o conteúdo da região muda, e o alerta repete.
-- **Depois de mostrar o banner:** `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })` (seção 4). O jsdom não tem `scrollIntoView`: a chamada é opcional (`?.`).
+- **Depois de mostrar o banner:** `await nextTick()` e a rolagem do grupo de envio, `envioRef.value?.scrollIntoView?.({ block: "nearest" })` (um `ref` no `div.auth-form__envio`), em qualquer entrada, também no toque (seção 4). Não o `document.activeElement`: com Enter num campo, o foco fica no campo, longe do banner. O jsdom não tem `scrollIntoView`: a chamada é opcional (`?.`).
 - **Sem a caixa vazia no layout:** a região vazia tem altura 0 e fica no mesmo grupo do botão, sem `gap`; o formulário não ganha um vão a mais.
 
 **Com uma API (item 7 do pacote):** o banner comporta qualquer mensagem de uma a três linhas. O cadastro já tem a falha genérica ("Tente de novo"). O login trata toda falha como credencial errada (`handleLogin`): uma falha de rede pediria um texto que hoje não existe; fica para o plano da API. "E-mail já cadastrado" seria erro do campo E-mail (`aria-invalid`, foco nele), que o `FormGroup` já comporta; o texto também não existe hoje.
@@ -743,7 +755,7 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 **Cabeçalho:**
 
 - `header.profile-page__header`: `h1` "Sua conta" no início e "Sair" no fim, na mesma linha, `align-items: center`.
-- **"Sair":** `BaseButton variant="ghost" icon-start="sign-out-alt"` (text button, 44 px, tinta `primary`, hoje), que leva a `/login` (`handleLogout`, hoje). Pares sobre a `surface`: 6,13 em repouso, 5,48 no hover e 5,33 pressionado (medidos; mínimo 4,5); anel 6,15 (SPEC-M §2.2) e 5,34 pressionado.
+- **"Sair":** `BaseButton variant="ghost" icon-start="sign-out-alt"` (text button, 44 px, tinta `primary`, hoje), que leva a `/login` (`handleLogout`, hoje). Pares sobre a `surface`: 6,13 em repouso, 5,48 no hover e 5,33 pressionado (medidos; mínimo 4,5); anel 6,14 (medido; o SPEC-M §2.2 arredonda para 6,15) e 5,34 pressionado.
 - **Em 390:** "Sua conta" em display-s (cerca de 170 px) e o "Sair" (cerca de 90) cabem na linha de 358. Se o `h1` crescer (zoom), o cabeçalho quebra com `flex-wrap`, e o "Sair" vai para a linha de baixo, alinhado ao início.
 
 **Colunas:**
@@ -873,7 +885,7 @@ Todos passam de 3 (contorno, anel) e de 4,5 (texto). O contorno com hover (`on-s
 
 **Sem pedidos (i):** o `EmptyState` de hoje dentro do contêiner, abaixo do `h2`, com a ação "Ver cardápio" (filled; 5,82 contra o `low`). O visual é da etapa 10, que desenha o `EmptyState` do carrinho, do Cardápio e do perfil de uma vez; os pares de texto sobre o `low` já existem (15,49 e 8,41).
 
-**Comportamento:** 1440, itens de 601 px; 1024, 498; 390, 326, com a linha 2 quebrando para o rótulo de status quando não cabe (a data e a contagem somam cerca de 180 px, e o rótulo, cerca de 80, em 294 de conteúdo: cabe; o total "R$ 1.948,00" ainda cabe na linha 1).
+**Comportamento:** 1440, itens de 601 px; 1024, 498; 390, 326, com a linha 2 quebrando para o rótulo de status quando não cabe (a data e a contagem somam cerca de 180 px, o rótulo cerca de 80 e os vãos 24: cerca de 284 dos 294 px de conteúdo, cabe; quebra só em 320 px, com 224 de conteúdo, ou com zoom; o total "R$ 1.948,00" ainda cabe na linha 1).
 
 **Reservas:**
 
@@ -890,8 +902,8 @@ Sem desenhar o admin (etapa 9):
 |---|---|---|---|
 | Login do admin (`LoginAdminView.vue`) | O painel `low` de canto 28 sem sombra, os campos outlined e o banner novo, no topo (o `_login-admin.scss` usa o `_auth.scss`) | Sim, sobre a ilustração escura com a camada de hoje: o texto mede sobre o painel, não sobre a ilustração (SPEC-M §5.11) | A ilustração e o `scrim` (32%); o banner junto do botão e a região `role="alert"` sempre no DOM (o mesmo invólucro do 5.3, no arquivo dela); o bloco "Usar admin de teste", com borda tracejada em `outline-variant`; o "Voltar à loja" (link solto, não frase: text button?) |
 | Filtros `select` de Pedidos e Produtos | O campo outlined de 56 px com a seta do Font Awesome, sobre o `surface-container` da página (3,85) | Sim, na largura de hoje (até 16rem) | A densidade do painel (`SPEC.md` §5.11): se pedir campo denso, o de 48 dp do exemplo do Compose [119] entra como prop então |
-| Campos do `ModalProducts` | Os campos outlined sobre o `surface-container` do diálogo (3,85), com o select | Sim | O seletor de arquivo (`.file-picker`), que imita a ajuda e o erro do `FormGroup` com classes próprias: alinhar ao recuo de 16 e ao ícone na primeira linha. O `BaseDialog` é da etapa 10 |
-| Observação do modal Personalizar | O `textarea` outlined sobre o `surface-container` do diálogo (3,85), placeholder 7,97, contador tabular | Sim | O rótulo "Observação" fica em label-l 500, abaixo dos `h3` vizinhos em title-m 500: é o rótulo do campo, não título de seção. Se a superfície do diálogo mudar na etapa 10, os pares se medem de novo |
+| Campos do `ModalProducts` | Os campos outlined sobre o `surface-container` do diálogo (3,85), com o select; com erro, a mensagem toma o lugar da ajuda | Sim | O seletor de arquivo (`.file-picker`), que imita a ajuda e o erro do `FormGroup` com classes próprias: alinhar ao recuo de 16 e ao ícone na primeira linha, e decidir se o erro também toma o lugar da ajuda (hoje ele mostra os dois juntos, e os campos do mesmo diálogo passam a trocar um pelo outro). O `BaseDialog` é da etapa 10 |
+| Observação do modal Personalizar | O `textarea` outlined sobre o `surface-container` do diálogo (3,85), placeholder 7,97, contador tabular | **Sim, com uma linha no `ModalAdditional`.** Hoje ele passa `class="customize__section"` à raiz do `FormGroup` (`_modal.scss`: `display: flex`, `flex-direction: column`, `gap: var(--space-3)`, `min-width: 0`). Com as margens do 7.1, esse `gap` somaria 12 px: 20 do rótulo ao campo e 16 do campo ao contador, em vez de 8 e 4 (a captura `modal-bebida-390-viewport.png` já mostra os 12 de hoje). A classe não dá mais nada: o `FormGroup` já é coluna flex, o `min-width: 0` não muda a largura de um item de coluna, e o vão até as seções vizinhas vem do `gap` de `.customize__options` (`--space-6`). Sai a classe do `FormGroup` da observação (§9), e a seção fica no mesmo lugar | O rótulo "Observação" fica em label-l 500, abaixo dos `h3` vizinhos em title-m 500: é o rótulo do campo, não título de seção. Se a superfície do diálogo mudar na etapa 10, os pares se medem de novo |
 | Homes do acervo | O modal real mostra o campo novo | — | Efeito aceito (SPEC-M §11.4) |
 
 O `SearchBar` do painel não usa o `FormGroup` e continua com o `--color-input` (etapa 9).
@@ -909,14 +921,14 @@ Mesmo formato da §6 do SPEC-M, com a coluna de erro para o campo. "Anel" é o c
 | `FormGroup`: `textarea` | o do texto; 3 linhas (104 px); `resize: vertical`; contador "0/140" na ajuda, tabular | idem | idem | — | — | idem | — | idem |
 | `FormGroup`: somente leitura | contorno 1 px **tracejado** `outline`; valor e rótulo `on-surface` inteiros; `cursor: default` | — (sem hover) | só o anel encostado; o contorno não acende | — | — | — | — | — (não valida [131]) |
 | Ajuda do CEP (`live`) | texto body-m `on-surface-variant`, recuo 16; região `role="status"` desde a montagem | — | — | — | — | — | arco de 1em girando em `--dur-spin` (`motion-ok`); parado com movimento reduzido; "Buscando endereço…" | o erro da consulta no lugar da ajuda, anunciado |
-| `FormGroup` em `forced-colors` e `prefers-contrast: more` | cores do sistema; mais contraste: contorno `on-surface-variant` (8,41 e 7,97) | — | anel | — | — | — | — | ícone e texto ficam |
+| `FormGroup` em `forced-colors` e `prefers-contrast: more` | cores forçadas: contorno `CanvasText` (tracejado no somente leitura); mais contraste: contorno `on-surface-variant` (8,41 e 7,97), tracejado no somente leitura | — | anel | — | — | cores forçadas: tudo em `GrayText` [114]; mais contraste: não muda (isento [98]) | — | ícone e texto ficam |
 | Painel (`auth-panel`) | `surface-container-low`, canto 28, sem sombra; borda nos modos de contraste | — | — | — | — | — | — | — |
 | Banner de erro | `error-container`, canto 16; texto `on-error-container` (7,23); ícone `error` (4,99); acima do botão; região `role="alert"` sempre no DOM | — | não recebe foco (o foco fica no botão) | — | — | — | — | — |
 | Aviso de conta salva | `aviso-container`, canto 16; texto e ícone `aviso` (5,03); no topo; ligado ao botão por `aria-describedby` | — | — | — | — | — | — | — |
 | Banner e aviso em `forced-colors` e `prefers-contrast: more` | borda de 1 px (`CanvasText`; `outline` com mais contraste, 4,06 contra o painel) | — | — | — | — | — | — | — |
 | Botão de envio (Entrar, Criar conta) | filled M, `block` (5,82 contra o painel) | `primary-hover` | anel (5,83) | `primary-pressed`, cantos `forma-l` | — | hoje: `surface-container-highest` e `ink-disabled` (etapa 10) | "Entrando…", "Criando conta…", spinner e `aria-busy` (etapa 10) | — |
 | Link do rodapé do painel | `link-inline`: `on-surface` (15,49), sublinhado, 500; frase em `on-surface-variant` (8,41); 24 px de alvo | — | anel (5,83) | — | — | — | — | — |
-| "Sair" | text button, tinta `primary` (6,13 sobre a `surface`) | camada 8% (5,48) | anel (6,15) | camada 10% (5,33; anel 5,34) | — | — | — | — |
+| "Sair" | text button, tinta `primary` (6,13 sobre a `surface`) | camada 8% (5,48) | anel (6,14) | camada 10% (5,33; anel 5,34) | — | — | — | — |
 | "Salvar alterações" | tonal, 44 px, `block`; contêiner 1,16 contra o `low` (isento [98]); rótulo 7,22 | `secondary-container-hover` | anel (5,83) | `secondary-container-pressed`, cantos `forma-s` | — | — | "Salvando…" (etapa 10) | — |
 | "Excluir conta" (forma da Brasa até a etapa 10) | `danger`: tinta `error` (5,84 sobre o `low`), canto 8 | `error-container` (4,99) | anel (5,83) | `error-container` | — | — | — (o do diálogo, "Excluindo…", é da etapa 10) | — |
 | Contêiner do perfil | `surface-container-low`, canto 28, sem sombra; borda nos modos de contraste | — | — (não é interativo) | — | — | — | — | — |
@@ -941,7 +953,9 @@ Os estados de vazio seguem a §6 do `SPEC.md`: o perfil sem pedidos tem o `Empty
   - `describedBy`: o id do erro, se houver; senão, o da ajuda (hoje vão os dois);
   - a ajuda só renderiza sem erro;
   - `.is-readonly` só com `readonly`; `.is-disabled` com `disabled`.
-- **Espaçamento sem `gap` no grupo:** o rótulo leva `margin-block-end: var(--space-2)`, e as mensagens, `margin-block-start: var(--space-1)`. Assim, a região viva vazia do CEP não soma vão.
+- **Algarismos tabulares na ajuda, sempre:** `.form-group__help` com `font-variant-numeric: tabular-nums`, porque o componente não sabe quando a ajuda é o contador "0/140".
+- **Cores de sistema nos modos de contraste:** `CanvasText` (contorno, contínuo ou tracejado) e `GrayText` (desabilitado), as exceções do SPEC-M §1.1, item 6 (5.1).
+- **Espaçamento sem `gap` no grupo:** o rótulo leva `margin-block-end: var(--space-2)`, e as mensagens, `margin-block-start: var(--space-1)`. Assim, a região viva vazia do CEP não soma vão. Quem põe na raiz uma classe com `gap` soma esse vão às margens: por isso a observação do `ModalAdditional` perde a classe `customize__section` (5.9). Nenhum outro uso do `FormGroup` passa classe com `gap` (os filtros do admin passam `admin-page__filter`, só largura e margem de baixo).
 - **Classes que ficam:** `.form-group`, `.has-error`, `.form-group__label`, `.form-group__field`, `.form-group__field--select`, `.form-group__field--textarea`, `.form-group__help`, `.form-group__error`, `.form-group__spinner`; os ids `{id}-erro` e `{id}-ajuda` (os testes leem os dois).
 - **Tokens:** `--m3-outline`, `--m3-on-surface`, `--m3-on-surface-variant`, `--m3-primary`, `--m3-error`, `--m3-on-error-container`, `--m3-outline-variant`, `--color-ink-disabled`, `--m3-forma-m`, `--m3-body-l`, `--m3-body-m`, `--m3-label-l` (com as linhas), `--space-1` a `--space-4`, `--dur-spin`.
 - **Mixins:** `tipo`, `hover-capable`, `motion-ok`.
@@ -950,18 +964,18 @@ Os estados de vazio seguem a §6 do `SPEC.md`: o perfil sem pedidos tem o `Empty
 ### 7.2 `LoginView` (muda)
 
 - **Estrutura:** `div.auth-page.container` → `section.auth-panel` → `h1` → `form.auth-form` (E-mail, Senha, `div.auth-form__envio` com `div.auth-form__anuncio[role=alert][aria-atomic=true]` → `div.auth-alert` e o botão) → `p.auth-panel__footer`.
-- **Lógica:** a de hoje, mais a rolagem do foco depois de mostrar o banner (seção 8).
+- **Lógica:** a de hoje, mais a rolagem do grupo de envio depois de mostrar o banner (seção 8); um `ref` no `div.auth-form__envio`.
 
 ### 7.3 `RegisterView` (muda)
 
 - **Estrutura:** a do login, com o aviso `#aviso-conta-salva.auth-alert.auth-alert--warning` entre o `h1` e o formulário, a grade dos nomes e o CEP com `live`.
-- **Lógica:** a de hoje, mais a rolagem do foco depois do banner.
+- **Lógica:** a de hoje, mais a rolagem do grupo de envio depois do banner.
 
 ### 7.4 `ProfileView` (muda)
 
 - **Estrutura:** `div.profile-page.container` → `header.profile-page__header` (`h1`, "Sair") → `div.profile-page__layout` → `section.profile-page__secao` "Seus dados" (formulário, CEP com `live`, "Salvar alterações" `block`, `div.profile-delete` com o `danger`) e `section.profile-page__secao` "Seus pedidos" (`ul.profile-orders` → `li.profile-order` → `div.profile-order__head`, `div.profile-order__meta`, `details.profile-order__details` → `summary.profile-order__summary` com os dois chevrons e o `OrderSummary`; ou o `EmptyState`) → `BaseDialog`.
 - **Classes:** sai `.profile-page__card` (vira `.profile-page__secao`); entram `.profile-order__total`, `.profile-order__chevron`; ficam `.profile-order`, `.profile-order__number`, `.profile-order__meta`, `.profile-order__status`, `.profile-order__details`, `.profile-order__summary` (o `flow.mjs` lê o número e a linha; ver a seção 9).
-- **Lógica:** a de hoje, mais a rolagem do foco depois do aviso de "Salvar alterações" (seção 8).
+- **Lógica:** a de hoje, mais a última entrada (como no `CartView`) e a rolagem do foco depois do aviso de "Salvar alterações", só pelo teclado (seção 8).
 
 ### 7.5 Parciais
 
@@ -1016,7 +1030,7 @@ Os estados de vazio seguem a §6 do `SPEC.md`: o perfil sem pedidos tem o `Empty
 | `m3-error` | `m3-error-container` | 4,99 | Ícone do banner; "Excluir conta" no hover e pressionado |
 | `m3-aviso` | `m3-aviso-container` | 5,03 | Texto e ícone do aviso de conta salva |
 | `m3-info` | `m3-info-container` | 5,00 | Rótulo de status "Recebido" |
-| `m3-primary` / `m3-secondary` | `m3-surface` | 6,13 / 6,15 | "Sair" e o anel dele (SPEC-M §2.2) |
+| `m3-primary` / `m3-secondary` | `m3-surface` | 6,13 / 6,14 | "Sair" e o anel dele (o SPEC-M §2.2 arredonda o anel para 6,15) |
 | `m3-outline` | `m3-surface` | 4,27 | Borda do painel e dos contêineres do perfil com `prefers-contrast: more` (o SPEC-M arredonda para 4,28) |
 
 ### Medidos e descartados ou isentos
@@ -1050,8 +1064,10 @@ Os estados de vazio seguem a §6 do `SPEC.md`: o perfil sem pedidos tem o `Empty
 | `span` com a seta no `select`; `.is-readonly` e `.is-disabled` separados | `FormGroup` | 5.1 |
 | `live` no CEP | `RegisterView`, `ProfileView` | 5.1 |
 | Região `role="alert"` com `aria-atomic` sempre no DOM, com a caixa por `v-if`, junto do botão | `LoginView`, `RegisterView` | [152] (5.3) |
-| Depois de mostrar o banner: `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })` | `LoginView`, `RegisterView` | O botão empurrado não fica sob a toolbar (seção 4) |
-| Depois do `toastStore.show` do "Salvar alterações": a mesma rolagem | `ProfileView` | O aviso não cobre o botão focado em 390 (seção 4); a `PaymentView` faz o mesmo (etapa 7) |
+| Depois de mostrar o banner: `await nextTick()` e `envioRef.value?.scrollIntoView?.({ block: "nearest" })`, com um `ref` no `div.auth-form__envio`, em qualquer entrada (também no toque) | `LoginView`, `RegisterView` | O banner e o botão ficam à vista e acima da toolbar, mesmo com o foco num campo depois de Enter (seção 4) |
+| A última entrada (`pointerdown` ou `keydown`, na captura do `document`, com os ouvintes tirados no `onBeforeUnmount`), como no `CartView` | `ProfileView` | Só o teclado rola depois do aviso (seção 4) |
+| Depois do `toastStore.show` do "Salvar alterações", só se a última entrada foi de teclado: `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })` | `ProfileView` | O aviso não cobre o botão focado em 390 (seção 4); o precedente é o `CartView` (etapa 7, correção do `/code-review`), e não a `PaymentView`, que rola sempre |
+| Tirar `class="customize__section"` do `FormGroup` da observação (uma linha de template; a seção não muda de lugar) | `ModalAdditional` | O `gap` da classe somaria 12 px às margens do campo (5.9) |
 | `:global(html:has(.profile-page):has(.toast-region .toast))`: `scroll-padding-bottom` somando `--m3-toast-reserva` abaixo de `md`, e o `scroll-padding-top` de `md` a `lg` | `_profile.scss` | C43 [76] (seção 4) |
 | `variant="danger"` no "Excluir conta" da tela (era `ghost`) e `block` no "Salvar alterações" | `ProfileView` | 5.7 |
 | Linha do pedido sem "·": o total na linha 1; a data, a contagem e o status em parágrafos | `ProfileView` | 7.g (5.8) |
@@ -1070,7 +1086,7 @@ Todos reais. **Nenhuma palavra muda.** Mudam três apresentações:
 | Texto | Antes | Depois | Motivo |
 |---|---|---|---|
 | "17/10/2026, 19:15 · 1 item · R$ 29,49" | uma linha com dois "·" | o total na linha do número; a data e a contagem em parágrafos lado a lado | A regra 7.g da etapa 7, confirmada pelo usuário (5.8) |
-| Banner de erro | no topo do formulário | logo acima do botão de envio | O erro aparece onde a pessoa agiu (5.3); desvio registrado do `SPEC.md` §5.8 |
+| Banner de erro | no topo do formulário | logo acima do botão de envio | O erro aparece onde a pessoa agiu (5.3; inferência); desvio registrado do `SPEC.md` §5.8 |
 | "Criar conta" e "Entrar" do rodapé do painel | em 700, centrados | em 500, alinhados ao início | O M3 dá Medium ao destaque [1]; uma borda só no painel (5.2) |
 
 Ficam como estão:
@@ -1103,10 +1119,12 @@ src/components/FormGroup.vue                 seta do select, mensagens (erro no 
                                              classes is-readonly e is-disabled
 src/assets/styles/components/_form-group.scss   outlined de 56 px, canto 12, estados (5.1), somente leitura
                                              tracejado, desabilitado, select, textarea, modos de contraste
-src/views/auth/LoginView.vue                 região do banner junto do botão, rolagem do foco
+src/views/auth/LoginView.vue                 região do banner junto do botão, rolagem do grupo de envio
 src/views/auth/RegisterView.vue              idem; aviso no topo; CEP com live
 src/views/auth/ProfileView.vue               seções, danger, Salvar block, CEP com live, linha do pedido,
-                                             Ver itens com chevrons, rolagem depois do aviso
+                                             Ver itens com chevrons, última entrada e rolagem depois do
+                                             aviso só pelo teclado
+src/components/ModalAdditional.vue           só tirar class="customize__section" do FormGroup da observação
 src/assets/styles/pages/auth/_auth.scss      painel, banner, aviso, grupo de envio, rodapé
 src/assets/styles/pages/auth/_register.scss  grade dos nomes com align-items: start
 src/assets/styles/pages/auth/_profile.scss   cabeçalho, grade, seções, item, rótulo de status, Ver itens,
@@ -1115,7 +1133,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
                                              e os 3 pares que saem
 ```
 
-**Não mexer:** `BurgerStack.vue`, `AssinaturaEncaixe.vue`, `src/direcoes/`, `src/services/`, `src/stores/`, os composables de validação e de CEP, os handlers, `BaseButton`, `BaseDialog`, `EmptyState`, `AppToast` e `toast.js` (etapa 10), `OrderSummary` (só a tipografia da etapa 7), `ModalAdditional` (recebe o campo sem mudar), `LoginAdminView`, `ModalProducts`, `OrderManagement` e `ProductManagement` (etapa 9), `_motion.scss` (nenhuma classe animada nova).
+**Não mexer:** `BurgerStack.vue`, `AssinaturaEncaixe.vue`, `src/direcoes/`, `src/services/`, `src/stores/`, os composables de validação e de CEP, os handlers, `BaseButton`, `BaseDialog`, `EmptyState`, `AppToast` e `toast.js` (etapa 10), `OrderSummary` (só a tipografia da etapa 7), o resto do `ModalAdditional` e o `_modal.scss` (a única mudança no modal é tirar a classe da observação), `LoginAdminView`, `ModalProducts`, `OrderManagement` e `ProductManagement` (etapa 9), `_motion.scss` (nenhuma classe animada nova).
 
 **Testes:**
 
@@ -1129,12 +1147,13 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
   - as máscaras de hoje (celular e CEP) continuam.
 - `src/__tests__/auth.test.js` (o caso do `LoginView` montado, como o plano pede, ou um `LoginView.test.js`, a critério da sessão C):
   - a região `[role="alert"][aria-atomic="true"]` existe vazia na montagem; depois da senha errada, contém "E-mail ou senha incorretos.", logo antes do botão de envio no DOM;
-  - o e-mail continua preenchido; a chamada a `scrollIntoView` não quebra no jsdom.
+  - o e-mail continua preenchido; a chamada a `scrollIntoView` não quebra no jsdom (sem o método, nada acontece; com ele num espião, ela cai no `div.auth-form__envio`).
 - `src/__tests__/RegisterView.test.js`: os de hoje ficam. Entram:
   - o aviso `#aviso-conta-salva` antes do `form` no DOM;
   - o CEP com `role="status"` na montagem, contendo a ajuda;
   - no envio vazio, `aria-invalid` e `aria-describedby` com os ids de erro, e o erro do CEP no lugar da ajuda;
-  - com a falha do cadastro, a região `role="alert"` com "Não foi possível criar a conta. Tente de novo.".
+  - com a falha do cadastro (o teste simula a falha como os de hoje simulam a consulta), a região `role="alert"` com "Não foi possível criar a conta. Tente de novo.", e a rolagem no `div.auth-form__envio` (espião no `scrollIntoView`).
+- `src/__tests__/ModalAdditional.test.js`: o `FormGroup` da observação sem a classe `customize__section`.
 - `src/__tests__/ProfileView.test.js`: os de hoje ficam. Entram:
   - o rótulo de status "Recebido" é um `p`, sem `role`, sem `tabindex` e sem ser botão;
   - a linha do pedido não tem "·", e o total está em `.profile-order__total`;
@@ -1151,8 +1170,13 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 - `keyboard.mjs`:
   - a ordem do Tab no cadastro em 390 (seção 5.5), com e sem CEP único da cidade (com a resposta do ViaCEP simulada por `page.route`);
   - o `focusNotCovered` em `#/login`, `#/register` e `#/profile` também com `KB_ALTURA=800`;
-  - **o aviso sobre o "Salvar alterações":** em 390 (844 e 800), chegar ao botão pelo Tab, apertar Enter e conferir que o retângulo do botão com o anel não fica inteiro dentro do retângulo do `.toast` (nem cruza a toolbar). Mutação: sem a rolagem da `ProfileView`, o botão fica coberto;
-  - **o banner no cadastro em 390:** com a falha simulada, o botão focado não fica sob a toolbar, e o banner está à vista;
+  - **o aviso sobre o "Salvar alterações":** em 390 (844 e 800), chegar ao botão pelo Tab, apertar Enter e conferir que o retângulo do botão com o anel não fica inteiro dentro do retângulo do `.toast` (nem cruza a toolbar). Mutação: sem a rolagem da `ProfileView`, o botão fica coberto (a mutação parte do botão em parte visível, posto pelo Tab). **E pelo ponteiro:** com o botão já à vista, clicar em "Salvar alterações" não rola a página (o `scrollY` antes e depois do aviso é o mesmo), como a conferência do carrinho;
+  - **o banner no cadastro, "Enter no CEP em 390, com a falha simulada"** (844 e 800):
+    - **a falha:** `page.addInitScript` esconde o `crypto.subtle` antes de o app carregar (`Object.defineProperty(globalThis.crypto, "subtle", { get: () => undefined })`). O guarda do próprio app (`canHashPasswords`, `src/utils/password.js`) recusa o hash, e o `handleRegister` mostra a mensagem do WebCrypto. **Por quê:** é um estado real (o site aberto por HTTP num IP da rede, CLAUDE.md, "Problemas conhecidos"), não mexe em serviço nem em store, e a mensagem mais longa (3 linhas em 390) é o pior caso para a rolagem. A "falha do cadastro com conta salva" não serve: com conta salva, o cadastro dá certo e substitui a anterior (é o que o aviso diz);
+    - **os passos:** a resposta do ViaCEP simulada por `page.route` (com rua e bairro, para o formulário ficar válido); preencher os campos; levar o foco ao CEP; apertar Enter;
+    - **a conferência:** o foco continua no CEP; a região `role="alert"` tem a mensagem; o retângulo do banner e o do botão estão dentro da janela e não cruzam a toolbar. Mutação: sem a rolagem do grupo de envio, o banner fica fora da vista ou sob a toolbar;
+  - **o traço do somente leitura** (achado da revisão): a sessão C olha, na captura de `#/profile` em 390, com e sem `prefers-contrast: more`, se o tracejado de 1 px de Rua, Bairro, Cidade e UF se distingue do contorno contínuo dos campos de cima no tamanho real. Se não se ler, volta à sessão principal;
+  - **a região do CEP com o foco nele** (inferência, seção 11): conferência manual, com um leitor de tela, se o resultado da consulta é lido duas vezes;
   - o anel interno do "Ver itens" (o `ringOf` aceita o `outline-offset` negativo, como nos itens encostados);
   - o `keyboard.mjs` roda no Chromium: as provas valem para ele.
 - `axe-scan.mjs`: os estados abaixo.
@@ -1215,15 +1239,19 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 | Risco | Resposta |
 |---|---|
 | O campo misturar a forma do Expressive com as cores do M3 padrão | As cores tonais reprovam a 1.4.11 nos tokens do projeto (1,53 e 1,05, medidos); a forma de 12 é a do Expressive [125]. Desvio registrado em 5.1. As medidas são do M3, não necessariamente do Expressive [29] |
-| O rótulo em label-l e a ajuda em body-m divergirem do body-small do M3 ([119], [134]) | Desvios registrados, com motivo (5.1): fora do contorno, o rótulo é título do campo; a ajuda segue o papel da ajuda no sistema e as mensagens longas do app |
+| O rótulo em label-l e a ajuda em body-m divergirem do body-small do M3 ([119], [134]), e o rótulo em repouso ficar `on-surface`, e não `on-surface-variant` [135] | Desvios registrados, com motivo (5.1): fora do contorno, o rótulo é título do campo e não pode ter a cor do placeholder; a ajuda segue o papel da ajuda no sistema e as mensagens longas do app |
 | O erro do campo que aparece no `blur` não ser anunciado na hora | Decisão desta etapa, contra a tagarelice [151]: no envio, o foco vai ao primeiro erro, lido pelo `aria-describedby` [158]. O exemplo "Invalid entry" da 4.1.3 [151] pesa contra; a sessão principal decide (seção 12) |
 | A instrução da senha só existir no placeholder, que some ao digitar e é cortado em 390 | O placeholder não substitui a instrução [156]; a captura `register-390-full.png` já o mostra cortado. O erro repete a regra no `blur`. Pergunta ao usuário (seção 12) |
-| O aviso "Dados salvos." cobrir inteiro o "Salvar alterações" focado em 390 | A reserva do aviso no `scroll-padding` e a rolagem do foco depois do aviso (seção 4); o `keyboard.mjs` mede, com mutação |
-| O banner empurrar o botão focado para baixo da toolbar | A rolagem do foco depois do banner (seção 4) |
-| A rolagem do foco não acontecer no clique do Safari e do Firefox do macOS | O `activeElement` é o `body`: nada rola, e não há foco a cobrir [76]. Pelo teclado, vale (como na etapa 7) |
+| O aviso "Dados salvos." cobrir inteiro o "Salvar alterações" focado em 390 | A reserva do aviso no `scroll-padding` e a rolagem do foco depois do aviso, só pelo teclado (seção 4); o `keyboard.mjs` mede, com mutação |
+| A rolagem depois do aviso fazer a página pular no toque | No Chrome do Android, o toque põe o foco no botão, e a página subiria cerca de 100 px. O perfil segue o `CartView` (etapa 7): guarda a última entrada e só rola pelo teclado. Pelo toque e pelo mouse, o aviso pode cobrir o botão, sem anel à vista e sem foco de teclado a cobrir [76] |
+| O banner nascer fora da vista quando o envio vem de Enter num campo (o foco fica no campo, a cerca de 740 px do banner em 390) | A view rola o grupo de envio (banner e botão), e não o `activeElement`, em qualquer entrada (seção 4); o `keyboard.mjs` mede "Enter no CEP em 390, com a falha simulada" |
+| Com Enter num campo do topo, o campo focado sair da vista para cima quando o grupo de envio rola | Custo aceito: o banner é a resposta ao envio; o leitor de tela ouve o alerta, e o próximo Tab traz o campo de volta. Com Enter no CEP, o campo fica à vista, logo acima do grupo (estimativa, seção 4) |
+| O banner junto do botão sem fonte que o sustente | É inferência: a 3.3.3 trata da sugestão, não da posição [148], e o tutorial põe a lista de erros de campo no topo [158]. Fica como desvio a confirmar (seção 12) |
 | A região `role="alert"` vazia na página | Vazia, ela não tem o que anunciar; é o que a ARIA19 pede [152]. O teste confere que ela existe vazia na montagem |
 | A região do CEP anunciar junto com o foco no primeiro erro, no envio vazio | Um anúncio a mais, educado ("O CEP é obrigatório"); aceito |
 | No perfil, a região do CEP anunciar o texto fixo depois da consulta, e não o endereço | Os textos não mudam (§8.1 do SPEC-M); o endereço vai aos campos somente leitura logo abaixo |
+| O `p#CEP-ajuda` ser, ao mesmo tempo, conteúdo da região `role="status"` e alvo do `aria-describedby`: com o foco no CEP, o resultado da consulta pode ser lido duas vezes (pela região e pela descrição) | Inferência: não encontrei no dossiê como os leitores tratam uma descrição que também é região viva. A sessão C confere à mão, com um leitor de tela (seção 9). Se ler duas vezes, a saída é a região viva fora do `aria-describedby` (uma cópia escondida, como a descrição do campo do material-web [133]), decisão da sessão principal |
+| No perfil, com CEP único da cidade, a "Rua" virar "Rua e número", editável e obrigatória, sem anúncio | A região do CEP anuncia "Buscando endereço…" e depois o texto fixo, e não a troca da rua (texto de hoje). Quem não vê a troca descobre no envio: o foco vai à rua, com "Informe a rua e o número." (`focusFirstError` e `useManualAddress`, hoje). Aceito: anunciar a troca seria texto novo |
 | O somente leitura tracejado não ter fonte no M3 | Não encontrei estilo de somente leitura ([123], [134], [135]); fica o sinal do sistema, na cor que passa 3:1, e ele sobrevive às cores forçadas (o traço não é cor) |
 | `appearance: none` no `select` | A lista de opções continua nativa; a seta é `currentColor`, visível nas cores forçadas |
 | O ícone de calendário do `date` variar entre navegadores | É o controle nativo; não se troca (5.1) |
@@ -1250,7 +1278,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 
 - **a.** `FormGroup` outlined nas cores do M3 padrão, com a forma do Expressive: sem fundo, contorno `outline` de 1 px (4,06 e 3,85), canto 12, 56 px, padding 16; rótulo acima (`Above`), label-l 500 (desvio), em `primary` no foco e `error` no erro; valor e placeholder em body-l; ajuda e erro em body-m (desvio), 4 px abaixo, recuo de 16, o erro no lugar da ajuda, com ícone; hover `on-surface`; foco `primary` mais o anel encostado; somente leitura tracejado em `outline`, texto inteiro; desabilitado em `outline-variant` e 38%; `select` com `appearance: none` e chevron; `date` nativo; `textarea` de 3 linhas com o contador na ajuda; sem botão de mostrar a senha; a prop `live` no CEP. Sai o fundo `surface-container-highest` da SPEC-M §5.8.
 - **b.** Painel `surface-container-low`, canto 28, sem sombra, 440 e 560 px, padding 16, 24 e 32; o `h1` na regra global, dentro do painel; página `surface` sem nada em volta; em 390, o painel na largura toda; rodapé com o link na frase (`link-inline`, exceção da 2.5.8), em 500, alinhado ao início.
-- **c.** Banner `error-container`, canto 16, texto `on-error-container` (7,23), ícone `error`, sem a borda esquerda; logo acima do botão (desvio do `SPEC.md` §5.8); região `role="alert"` com `aria-atomic` sempre no DOM; o foco fica no botão, e a view rola o foco para a vista; o admin recebe o visual agora e a posição na etapa 9.
+- **c.** Banner `error-container`, canto 16, texto `on-error-container` (7,23), ícone `error`, sem a borda esquerda; logo acima do botão (desvio do `SPEC.md` §5.8, inferência); região `role="alert"` com `aria-atomic` sempre no DOM; o foco fica onde estava (no botão, ou no campo do Enter), e a view rola o grupo de envio (banner e botão) para a vista, em qualquer entrada; a margem do banner vale só dentro do grupo; o admin recebe o visual agora e a posição na etapa 9.
 - **d.** Aviso de conta salva igual ao do pagamento, sem botão, no topo antes do formulário, ligado ao botão por `aria-describedby`.
 - **e.** "Entrar" e "Criar conta" filled M `block`, com o `loading` de hoje até a etapa 10; "Salvar alterações" tonal 44 px `block`.
 - **f.** Nome e Sobrenome lado a lado a partir de `sm`, com `align-items: start`; o resto numa coluna; rua e bairro manuais depois do CEP; 16 px entre os grupos; o erro empurra o resto; Tab na ordem do DOM.
@@ -1259,17 +1287,22 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 - **i.** Histórico em lista segmentada (`lowest`, 20/4, vão de 2); "Pedido #1001" como `p` em title-m 500, com o total na mesma linha; data e contagem em parágrafos, sem "·"; "Recebido" como rótulo de status (não chip), `info` sobre `info-container`, `forma-s`; "Ver itens" nativo, com os chevrons trocados por `details[open]` e cara de text button; o `OrderSummary` só com a tipografia; sem pedidos, o `EmptyState` no contêiner.
 - **j.** Um `h1` por tela; `h2` nos contêineres do perfil; o ritmo do carrinho.
 - **k.** Erro no `blur` e a cada digitação depois dele; foco no primeiro erro; banner `role="alert"`; o CEP com `role="status"` (apresentação); o erro do campo sem região viva.
-- **l.** A reserva de hoje cobre a toolbar; o aviso "Dados salvos." pede a reserva da etapa 7 e a rolagem do foco; o banner pede a mesma rolagem; o `keyboard.mjs` mede em 844 e 800.
-- **m.** O login do admin, os filtros, o `ModalProducts` e a observação recebem o campo e o painel agora (tabela de 5.9).
+- **l.** A reserva de hoje cobre a toolbar; o aviso "Dados salvos." pede a reserva da etapa 7 e a rolagem do foco só pelo teclado (o precedente do `CartView`); o banner pede a rolagem do grupo de envio, também no toque; o `keyboard.mjs` mede em 844 e 800, com "Enter no CEP" e a falha do WebCrypto simulada.
+- **m.** O login do admin, os filtros, o `ModalProducts` e a observação recebem o campo e o painel agora (tabela de 5.9); a observação perde a classe `customize__section` no `ModalAdditional`, para o `gap` dela não somar às margens do campo.
 
 **Em aberto, para o usuário (ou a sessão principal):**
 
 1. **Botão de mostrar a senha:** não entra (é texto e lógica novos). Se o usuário quiser, as fontes estão em 5.1 ([150], [126], [127], [90]).
 2. **A instrução da senha:** "Mínimo de 6 caracteres, com letra e número" está só no placeholder, que some ao digitar [156] e é cortado em 390. Recomendação: o mesmo texto passa a ser a ajuda do campo (`helper`), visível sempre; o placeholder sai ou fica. Muda a apresentação de um texto que o `SPEC.md` define como placeholder: decisão do usuário.
-3. **O anúncio do erro do campo no `blur`** (sessão principal): sem região viva (recomendação desta etapa, 5.1) ou anunciado.
+3. **O anúncio do erro do campo no `blur`:** decidido pela sessão principal (§13): sem região viva, como recomenda a 5.1.
 4. **"Ver meus pedidos" com âncora:** `/profile#seus-pedidos` no botão da confirmação (arquivo da etapa 7), para quem chega em 390 cair nos pedidos (5.6).
 5. **Dois textos de validação:** "O email é obrigatório" e "Email inválido" escrevem "email", contra o "E-mail" padronizado do `SPEC.md` (§8, [CON-09]), e "Email inválido" não sugere a correção [148].
-6. **Desvios a confirmar:** o banner junto do botão (do `SPEC.md` §5.8); o rótulo em label-l e a ajuda em body-m (do M3); o texto do banner em `on-error-container` (da sugestão da SPEC-M §5.8).
+6. **Desvios a confirmar:**
+   - o banner junto do botão (do `SPEC.md` §5.8; inferência, sem fonte sobre a posição);
+   - o rótulo em label-l e a ajuda em body-m (o M3 usa body-small);
+   - o rótulo em repouso em `on-surface`, e não no `on-surface-variant` do outlined [135]: fora do contorno, ele é o nome visível do campo, e com a cor do placeholder os dois se leriam como a mesma coisa;
+   - o texto do banner em `on-error-container` (da sugestão da SPEC-M §5.8);
+   - o "Excluir conta" da tela já no `danger`, com a forma da Brasa até a etapa 10: troca a cor agora (de `primary` para `error`), e a forma só na etapa 10.
 
 **Fora:**
 
@@ -1282,7 +1315,7 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 
 **Para outras etapas:**
 
-- **Etapa 9:** no `LoginAdminView`, a ilustração e o `scrim`, o banner junto do botão com a região sempre no DOM, o bloco do admin de teste e o "Voltar à loja"; a densidade dos filtros (campo de 48 como prop, se pedir); o seletor de arquivo do `ModalProducts` alinhado à ajuda e ao erro do campo; os chips de status do painel e se o rótulo de status vira componente `M3*`; o `SearchBar` com o `--color-input`.
+- **Etapa 9:** no `LoginAdminView`, a ilustração e o `scrim`, o banner junto do botão com a região sempre no DOM, o bloco do admin de teste e o "Voltar à loja"; a densidade dos filtros (campo de 48 como prop, se pedir); o seletor de arquivo do `ModalProducts` alinhado à ajuda e ao erro do campo, inclusive se o erro dele toma o lugar da ajuda, como nos campos do mesmo diálogo (hoje o `.file-picker` mostra os dois juntos); os chips de status do painel e se o rótulo de status vira componente `M3*`; o `SearchBar` com o `--color-input`.
 - **Etapa 10:** o `danger` (os dois "Excluir conta"), o `loading` ("Entrando…", "Criando conta…", "Salvando…", "Excluindo…") e o desabilitado do `BaseButton`, com o nome M3 do `--color-ink-disabled` para o botão e o campo; o `BaseDialog` (o sheet de altura inteira para duas linhas; o erro de exclusão que fica atrás dele); o `EmptyState` dentro do contêiner; o `AppToast`, que herda ou absorve a reserva do aviso também no perfil.
 - **Etapa 11:** os pares de `PARES_COMUNS` sobre o `--color-input` e os apelidos.
 
@@ -1290,4 +1323,55 @@ src/utils/contraste.js                       PARES_CONTA (9 pares), os "onde" e 
 
 ## 13. Revisão
 
-A preencher pela sessão principal.
+Revisão feita pela sessão principal em 23/11/2026, com um revisor (subagente só de leitura) e as correções do designer.
+
+### Revisor, volta 1: "aprovado: sim"
+
+- **Método:** o prompt `revisor-conta.md` (tipos do juiz da rodada 2) e dez pontos de atenção da sessão principal. O revisor conferiu o desenho contra o pacote, o plano, o `CLAUDE.md`, o SPEC-M, o `SPEC.md`, a etapa 7, a pesquisa da etapa 8, o código (o `FormGroup`, as três views, as parciais, os usos no admin e no modal, o `contraste.js`, o `flow.mjs` e o `keyboard.mjs`) e as capturas.
+- **Pares:** mediu todos os que o desenho dá como medidos, com `lerTokens` e `medirPar`. Todos batem; o 6,15 do anel do "Sair" dá 6,14 pelo método do topo (o SPEC-M arredonda).
+- **Resultado:** nenhum bloqueante, 2 importantes e 14 menores. A lista, com as linhas, fica no registro da sessão (`pacotes\revisao-conta-volta-1.md`, na pasta de estado do plano).
+
+| Nº | Achado | Gravidade | Como ficou |
+|---|---|---|---|
+| 1 | Com Enter dentro de um campo do cadastro, o banner nasce acima do botão, fora da vista; a rolagem do elemento ativo não o alcança | Importante | A view rola o grupo de envio (banner e botão) com `block: "nearest"`, em qualquer entrada; o `keyboard.mjs` ganha "Enter no CEP em 390", com a falha do WebCrypto simulada por `page.addInitScript` no navegador do teste (§4, §5.3, §9) |
+| 2 | A `.customize__section` na raiz do `FormGroup` da observação soma o `gap` dela às margens do campo (20 e 16 px no lugar de 8 e 4) | Importante | A classe sai do `FormGroup` da observação no `ModalAdditional` (uma linha; ela só dava `display`, `flex-direction`, `gap` e `min-width`, e o vão entre as seções vem do `.customize__options`) (§5.9, §7.1, §9) |
+| 3 | O `p#CEP-ajuda` é região viva e alvo do `aria-describedby`: leitura dupla possível | Menor | Risco no §11 (inferência, "não encontrei"); conferência manual com leitor de tela na sessão C |
+| 4 | "O erro aparece onde a pessoa agiu" sem fonte | Menor | Marcado como inferência; o desvio fica nos "Desvios a confirmar" |
+| 5 | Wireframe do perfil em 390 com o "Recebido" quebrado | Menor | Cabe numa linha em 390 (cerca de 284 de 294 px); quebra só em 320 px ou com zoom |
+| 6 | "Canto 4, como hoje" | Menor | Canto 8 (`--radius-sm`) |
+| 7 | `h1` em 45/52 e 36/44; 6,15 | Menor | 45/50 e 36/40 (`--leading-display`); 6,14 |
+| 8 | `_auth.scss` dividido com o `LoginAdminView` | Menor | O `.auth-form__submit` mantém a margem fora do grupo; a margem do banner vale só em `.auth-form__envio .auth-alert` |
+| 9 | Rótulo do outlined em `on-surface`, e não `on-surface-variant` [135], sem registro | Menor | Desvio registrado, com o motivo |
+| 10 | "Excluir conta" já no `danger` da Brasa | Menor | Nos "Desvios a confirmar" |
+| 11 | A rolagem depois do aviso vale também para o toque | Menor | O perfil segue o `CartView` (só com a última entrada de teclado); o banner rola também no toque |
+| 12 | Desabilitado e somente leitura nos modos de contraste | Menor | `forced-colors`: `CanvasText` contínuo, `CanvasText` tracejado e `GrayText`; `prefers-contrast: more`: `on-surface-variant` contínuo e tracejado; a sessão C olha o traço na captura em 390 |
+| 13 | "Rua" vira "Rua e número" sem anúncio | Menor | Risco aceito no §11; o envio leva o foco à rua, com "Informe a rua e o número." |
+| 14 | O `.file-picker` do `ModalProducts` mostra ajuda e erro juntos | Menor | Na lista da etapa 9 |
+| 15 | Contador "0/140" tabular | Menor | O `.form-group__help` usa `tabular-nums` sempre |
+| 16 | "O `date` mostra dd/mm/aaaa sempre" | Menor | Depende do idioma do navegador; a captura mostra "mm/dd/yyyy"; os outros navegadores ficam "não conferido" |
+
+- **Os dez pontos de atenção:** o revisor confirmou o contorno `outline` contra cada fundo (4,06 sobre o `low`; 3,85 sobre o `surface-container` do modal, do `ModalProducts` e das páginas do admin), o foco (contorno e anel viram uma faixa verde de 4 px; coerente com o `_a11y.scss`), o somente leitura distinto do desabilitado, a prop `live` como apresentação, a linha do pedido sem "·" pela regra 7.g, a conta do aviso sobre o "Salvar alterações" em 390 e a regra "escopo só de frontend" (nada muda em `src/services/`, nas stores, nos dados de exemplo nem nas esperas simuladas).
+- **Correções:** o designer aplicou os 16 achados só neste arquivo (89 linhas entram, 56 saem). A volta 2 não rodou: as correções seguiram só a lista.
+
+### Decisões da sessão principal
+
+1. **Banner (achado 1):** rolar o grupo de envio, e não o elemento ativo. A falha simulada do `keyboard.mjs` fica no navegador do teste (`addInitScript`), sem mudar código do app nem a camada simulada.
+2. **Observação (achado 2):** tirar a classe no `ModalAdditional`, que não depende de empate de especificidade. É a única linha fora das três telas e do `FormGroup` que a sessão C muda.
+3. **Rolagem depois do aviso (achado 11):** o precedente do `CartView` (correção do `/code-review` da etapa 7).
+4. **Em aberto nº 3 (anúncio do erro do campo no `blur`):** fica sem região viva, como recomenda a 5.1. O erro entra no `aria-describedby` e é lido quando o campo recebe o foco; no envio, o banner e o foco no primeiro erro cobrem o anúncio. Uma região viva por campo deixaria a tela "tagarela" [151].
+
+### O que fica para o usuário (do §12)
+
+- Nº 1: o botão de mostrar a senha (não entra sem pedido).
+- Nº 2: a instrução da senha como ajuda do campo, além do placeholder.
+- Nº 4: a âncora `/profile#seus-pedidos` no "Ver meus pedidos" da confirmação.
+- Nº 5: "O email é obrigatório" e "Email inválido" com "E-mail" e uma sugestão de correção.
+- Nº 6: os desvios a confirmar.
+
+### O que a sessão C mede (o desenho estimou pelo CSS)
+
+- O traço de 1 px do somente leitura na captura em 390, e as cores dele em `forced-colors` e em `prefers-contrast: more`.
+- O "Recebido" numa linha em 390.
+- O `keyboard.mjs`: "Enter no CEP em 390" com a falha do WebCrypto; o aviso "Dados salvos." sobre o "Salvar alterações" em 844 e 800; o caso do ponteiro sem pulo; o foco não coberto em todas as rotas da etapa.
+- Com leitor de tela, à mão: a leitura do CEP (região viva e `aria-describedby`) e a troca para "Rua e número".
+- As capturas do que o `FormGroup` muda fora das três telas: o login do admin, os filtros do admin, o `ModalProducts` e a observação do modal Personalizar.
