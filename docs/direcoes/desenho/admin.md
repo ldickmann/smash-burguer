@@ -13,7 +13,7 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 - **Rótulo de status vira componente** (`M3RotuloStatus`, decisão j): "Pendente" em `aviso`, "Em preparo" e "A caminho" em `info`, "Concluído" em `sucesso`, todos com 5,00 a 5,03. O "Recebido" do perfil passa a usá-lo (uma linha).
 - **Atalhos:** o selo vira o badge do M3, em `error` ([35], [212]), com o "9+" de hoje. **Toasts no pé** em todas as larguras do painel: no topo, o aviso "Produto criado." cobriria inteiro o "Novo produto" focado em 1024.
 - **Login do admin:** o `scrim` de 32% sobre a ilustração; o banner junto do botão, numa região `role="alert"` sempre no DOM (o invólucro da loja); "Voltar à loja" vira text button.
-- **Um token novo** (`--m3-navegacao-largura`), 9 pares novos medidos, nenhuma dependência, nenhum ícone novo, nenhum texto novo. Três pontos vão ao usuário (§12): o preço da linha no card do pedido ("R$ 25,90 cada", recomendado), os rótulos da navegação e a categoria vazia em Produtos.
+- **Um token novo** (`--m3-navegacao-largura`), 9 pares novos medidos, nenhuma dependência, nenhum ícone novo, nenhum texto novo. Três pontos foram ao usuário (§12), que escolheu as recomendações em 24/11/2026: "R$ 25,90 cada" no preço da linha do card do pedido, os rótulos da navegação iguais ao `h1` ("Produtos", "Pedidos", "Relatórios") e o aviso de vazio ("Nada nesta categoria por enquanto", texto que já existe) na categoria esvaziada de Produtos.
 - **Ficam para a etapa 10:** os botões de ícone (`iconOnly`, com a forma da Brasa até lá), o `danger`, o `loading`, o desabilitado, o `BaseDialog`, o `EmptyState` e o `AppToast`. **Para a 11:** o `ProductCard`, o `_product-card.scss`, o `useTilt` e sete apelidos que ficam sem uso.
 
 ---
@@ -138,9 +138,9 @@ As medidas abaixo são estimativas pelo CSS e pelas capturas de hoje; a sessão 
 │ title-l 500, x 28       │ │ ⌕  Buscar…                      │ 48 px, até 22rem   iconOnly 44   alvo 44 │ cabeçalho sticky, sem borda
 │                         │ ╰─────────────────────────────────╯ contorno outline                       │
 │   ◫ Painel              │                                                              ↕ --space-5  │
-│   ⑂ Gestão de Produtos  │  Pedidos                         h1, --text-page (45/50), 500              │
-│ (▣ Gestão de Pedidos   )│                                                              ↕ --space-5  │
-│   ↗ Relatórios de Vendas│  Status                          label-l 500                              │
+│   ⑂ Produtos            │  Pedidos                         h1, --text-page (45/50), 500              │
+│ (▣ Pedidos             )│                                                              ↕ --space-5  │
+│   ↗ Relatórios          │  Status                          label-l 500                              │
 │                         │  ╭──────────────────────────╮                                             │
 │  itens de 56 px,        │  │ Todos                  ⌄ │  FormGroup select, 56 px, até 16rem         │
 │  margem de 12,          │  ╰──────────────────────────╯                                             │
@@ -153,8 +153,8 @@ As medidas abaixo são estimativas pelo CSS e pelas capturas de hoje; a sessão 
 │                         │  │ Rua dos Bobos, 0 on-surface-var.  │ │ Av. Paulista, 123                │  │
 │                         │  │ (11) 99999-9999  tabular          │ │ (11) 98888-8888                  │  │
 │                         │  │ Itens                             │ │ Itens                            │  │
-│                         │  │ 2× Smash Burger        R$ 25,90 * │ │ 1× Veggie Burger       R$ 22,90  │  │
-│                         │  │ 1× Coca-Cola            R$ 8,00   │ │ 1× Suco de Abacaxi      R$ 6,00  │  │
+│                         │  │ 2× Smash Burger    R$ 25,90 cada  │ │ 1× Veggie Burger   R$ 22,90 cada │  │
+│                         │  │ 1× Coca-Cola        R$ 8,00 cada  │ │ 1× Suco de Abacaxi  R$ 6,00 cada │  │
 │                         │  │ ───────────────── outline-variant │ │ ──────────────────────────────── │  │
 │                         │  │ Total                  R$ 59,80   │ │ Total                  R$ 28,90  │  │
 │                         │  │ (Atualizar status)  Detalhes      │ │ (Atualizar status)  Detalhes     │  │
@@ -166,7 +166,7 @@ As medidas abaixo são estimativas pelo CSS e pelas capturas de hoje; a sessão 
   sticky, 100dvh)
 ```
 
-Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, com o rótulo em 700; `◫ ⑂ ▣ ↗ ↦` são os ícones de hoje (`tachometer-alt`, `utensils`, `shopping-cart`, `chart-line`, `sign-out-alt`); `[🔔¹]` é o botão de ícone com o selo; `(AU)` é o avatar. `*` marca o preço da linha, que é o preço unitário (pergunta 1 da §12; com a recomendação, "R$ 25,90 cada"). Com itens de 56 px, os quatro destinos vão de y 72 a 308 (cabeça de 64, 8 de recuo, 4 × 56 e 3 vãos de 4); o "Sair" fica no pé da janela.
+Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, com o rótulo em 700; `◫ ⑂ ▣ ↗ ↦` são os ícones de hoje (`tachometer-alt`, `utensils`, `shopping-cart`, `chart-line`, `sign-out-alt`); `[🔔¹]` é o botão de ícone com o selo; `(AU)` é o avatar. O preço da linha é o unitário com "cada" (decisão do usuário, §12). Com itens de 56 px, os quatro destinos vão de y 72 a 308 (cabeça de 64, 8 de recuo, 4 × 56 e 3 vãos de 4); o "Sair" fica no pé da janela.
 
 ### Wireframe da moldura com Pedidos em 390
 
@@ -187,8 +187,8 @@ Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, c
 ││ Rua dos Bobos, 0               ││
 ││ (11) 99999-9999                ││
 ││ Itens                          ││
-││ 2× Smash Burger       R$ 25,90 ││
-││ 1× Coca-Cola           R$ 8,00 ││
+││ 2× Smash Burger  R$ 25,90 cada ││
+││ 1× Coca-Cola      R$ 8,00 cada ││
 ││ ────────────────────────────── ││
 ││ Total                 R$ 59,80 ││
 ││ (Atualizar status)  Detalhes   ││
@@ -209,9 +209,9 @@ Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, c
 ││ title-l 500          "Fechar"  │░│ cabeça de 64 px
 ││                                │░│
 ││ ◫ Painel                       │░│ itens de 56 px, como na coluna
-││ ⑂ Gestão de Produtos           │░│ (o foco vai ao 1º)
-││(▣ Gestão de Pedidos           )│░│ item atual: pílula, rótulo 700
-││ ↗ Relatórios de Vendas         │░│
+││ ⑂ Produtos                     │░│ (o foco vai ao 1º)
+││(▣ Pedidos                     )│░│ item atual: pílula, rótulo 700
+││ ↗ Relatórios                   │░│
 ││                                │░│ ░ = scrim sobre a página;
 ││                                │░│ o skip link, o cabeçalho e o main
 ││                                │░│ ficam inert (o aviso, não)
@@ -440,7 +440,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 | Forma | Largura | Prós | Contras | Fica? |
 |---|---|---|---|---|
-| Coluna fixa com rótulos (gaveta standard [164]; rail expandido [174]) | 240 px (`--m3-navegacao-largura`): o mínimo da folha da gaveta [165] e dentro dos 220 a 360 do rail expandido [174] | Rótulos ao lado do ícone, numa linha ([182], [26]); "Relatórios de Vendas" cabe (estimativa abaixo); o comportamento de hoje (`SPEC.md` §5.11) | Ocupa 240 px; a partir de 1024, sobram 720 | **Sim, a partir de `lg`** |
+| Coluna fixa com rótulos (gaveta standard [164]; rail expandido [174]) | 240 px (`--m3-navegacao-largura`): o mínimo da folha da gaveta [165] e dentro dos 220 a 360 do rail expandido [174] | Rótulos ao lado do ícone, numa linha ([182], [26]); "Relatórios", o rótulo mais longo depois da decisão do usuário (§12), cabe com folga (estimativa abaixo, feita com o rótulo antigo); o comportamento de hoje (`SPEC.md` §5.11) | Ocupa 240 px; a partir de 1024, sobram 720 | **Sim, a partir de `lg`** |
 | Rail recolhido | 96 px [173] | Pouco espaço | Rótulos de até 20 caracteres em label-m quebram [175]; o modo AUTO esconde rótulos com 4 itens [170] | Não |
 | Gaveta modal | 240 px, sobre o `scrim` | Fechada por padrão; o fluxo de hoje; §13.8 ("a gaveta fechada em 390"); sobretudo para celular ([160], [161]) | Em descontinuação no MDC [161] | **Sim, abaixo de `lg`** |
 | Rail expandido modal dispensável (`hideOnCollapse`) | 220 a 360 [174] | O substituto Expressive da gaveta modal [180] | Descrito para tablet e desktop ([169], [180]); a diferença visual para a gaveta é pequena (abaixo) | Fica a anatomia da gaveta |
@@ -453,7 +453,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **O corte fica em 1024 (`lg`), e não em 840:** a classe expandida começa em 840 dp [189], e a pesquisa registra que manter 1024 é decisão do projeto. Os breakpoints não mudam (SPEC-M §2.9), e o `AdminLayout` já usa `lg` (`DESKTOP_QUERY`).
 - **Uma altura de item nos dois contêineres: 56 px,** o indicador da gaveta [164] e do rail expandido [176]. É desvio da SPEC-M §5.11, que dizia 44 sem fonte (os dossiês não cobriam a navegação); a decisão é da sessão principal (volta 1). As classes de largura valem pela janela, e não pelo aparelho [189]: a altura não muda com o tipo de entrada.
 - **Largura é token:** `--m3-navegacao-largura: 15rem` (hoje `240px` escrito direto em `_admin-layout.scss` e em `_sidebar-admin.scss`). A mesma largura nos dois contêineres; na gaveta, com `max-width: 85vw` (hoje), sobra área do `scrim` para tocar e fechar em 320 px.
-- **"Relatórios de Vendas" numa linha em 240 (estimativa):** o rótulo em label-l 500 tem cerca de 138 px; com o recuo de 16, o ícone de 20, o vão de 8 e o recuo de 24 no fim ([165], [176]), o item tem cerca de 206 px; com a margem de 12 dos dois lados ([165], [168]), 230 dos 240. Com zoom, o rótulo quebra, e o item cresce (`min-height`). A sessão C mede; se não couber, o token vai a 16rem, dentro dos 220 a 360 [174].
+- **"Relatórios de Vendas" numa linha em 240 (estimativa feita antes da decisão do usuário, que encurtou os rótulos para "Produtos", "Pedidos" e "Relatórios"; fica como folga do pior caso):** o rótulo em label-l 500 tem cerca de 138 px; com o recuo de 16, o ícone de 20, o vão de 8 e o recuo de 24 no fim ([165], [176]), o item tem cerca de 206 px; com a margem de 12 dos dois lados ([165], [168]), 230 dos 240. Com zoom, o rótulo quebra, e o item cresce (`min-height`). A sessão C mede; se não couber, o token vai a 16rem, dentro dos 220 a 360 [174].
 
 ### 4.2 A gaveta (decisão c; o detalhe em 5.1)
 
@@ -462,16 +462,16 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **Modal de fato (novo):** o skip link, o cabeçalho e o `main` ganham `inert` enquanto ela está aberta abaixo de `lg`. O APG pede o que está fora do modal inerte e escurecido [199]; com o `inert`, o Tab e o leitor de tela ficam na gaveta e na interface do navegador, como no `<dialog>` modal [200]. **O contêiner deixa de ser `aside` (decisão da sessão principal, volta 1):** vira `div#admin-sidebar`, e, só abaixo de `lg`, recebe `role="dialog"`, `aria-modal="true"` e `aria-label="Menu do painel"` (o papel, o estado e o nome que o APG pede [199]; o `aria-modal` vale porque o resto está bloqueado de fato). A partir de `lg`, o `div` fica sem papel e sem nome, e o landmark é a `nav` "Seções do painel", que passa a envolver a coluna inteira (a marca, os destinos e o "Sair"), para nada da coluna ficar fora de um landmark [210]. A pesquisa não achou fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]; a decisão é do projeto: a gaveta encobre a página com o `scrim`, e um foco atrás dela ficaria sob o fundo escuro.
 - **A exceção do `inert`: a região dos avisos.** O `AppToast` fica no `App.vue`, fora do `AdminLayout` e do conjunto `inert`. Fica de fora de propósito (aceito pela sessão principal): com `inert`, a região viva sairia da árvore de acessibilidade, e um aviso dado com a gaveta aberta não seria anunciado. O custo é o botão "Fechar aviso" alcançável pelo Tab com a gaveta aberta, se houver aviso na tela.
 - **A volta do foco (corrigida na volta 1):** o `focus()` num elemento ainda `inert` não faz nada (o revisor testou no Chromium). Ao fechar com `returnFocus` (Esc, "Fechar" e clique no fundo), a ordem é: `isSidebarOpen = false` (e o `unlock()`), depois `await nextTick()` (o Vue tira o `inert` do cabeçalho no flush) e só então `toggleButton?.focus()`. Hoje o Esc e o "Fechar" devolvem o foco ao botão (sem `inert`); o clique no `scrim` passa a devolver também. A F85 reprova o foco que não volta ao gatilho [202]; o exemplo do Compose devolve o foco ao botão [167]. **O jsdom não pega a falha** (não implementa o `inert`): a prova é no Chromium (seção 9).
-- **Troca de rota:** o foco vai ao `main`, o destino mais lógico que o APG aceita [199]. Pelo `afterEach` do router quando o caminho muda (hoje); **quando só a query muda** (por exemplo, "Gestão de Pedidos" em `/admin/orders?status=pending`), o `afterEach` sai cedo (`to.path === from.path`) e o foco cairia no `body`. Por isso, no `watch` da rota do `AdminLayout`: se o foco estava dentro da gaveta quando ela fechou, depois do `nextTick` ele vai ao `main` (`mainRef.value?.focus({ preventScroll: true })`).
+- **Troca de rota:** o foco vai ao `main`, o destino mais lógico que o APG aceita [199]. Pelo `afterEach` do router quando o caminho muda (hoje); **quando só a query muda** (por exemplo, "Pedidos" em `/admin/orders?status=pending`), o `afterEach` sai cedo (`to.path === from.path`) e o foco cairia no `body`. Por isso, no `watch` da rota do `AdminLayout`: se o foco estava dentro da gaveta quando ela fechou, depois do `nextTick` ele vai ao `main` (`mainRef.value?.focus({ preventScroll: true })`).
 
 ### 4.3 O item atual por rota (decisões b e r; §13.8)
 
 | Rota | Item com `aria-current="page"` | Por quê |
 |---|---|---|
 | `/admin` | "Painel" | Correspondência exata (hoje) |
-| `/admin/products` (com ou sem `?q=`) | "Gestão de Produtos" | O `RouterLink` compara a rota e os parâmetros, e não a query (conferido no `useLink` do vue-router instalado) |
-| `/admin/orders` (com ou sem `?status=` e `?q=`) | "Gestão de Pedidos" | Idem |
-| `/admin/reports` | "Relatórios de Vendas" | Idem |
+| `/admin/products` (com ou sem `?q=`) | "Produtos" | O `RouterLink` compara a rota e os parâmetros, e não a query (conferido no `useLink` do vue-router instalado) |
+| `/admin/orders` (com ou sem `?status=` e `?q=`) | "Pedidos" | Idem |
+| `/admin/reports` | "Relatórios" | Idem |
 | `/admin/profile` | nenhum | A rota vem do menu do avatar; o `h1` "Meu perfil" e o título da aba dizem onde se está, como o `/register` na loja (desenho da Conta, §4) |
 | `/admin/settings` | nenhum | Idem |
 
@@ -486,7 +486,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 ### 4.5 Ordem do Tab
 
-- **A partir de `lg`:** skip link → busca → "Notificações" → "Tarefas" → avatar → "Painel", "Gestão de Produtos", "Gestão de Pedidos", "Relatórios de Vendas" → "Sair" → `main`. É a ordem do DOM de hoje, que segue a leitura da faixa de cima (a marca não recebe foco) e depois a coluna.
+- **A partir de `lg`:** skip link → busca → "Notificações" → "Tarefas" → avatar → "Painel", "Produtos", "Pedidos", "Relatórios" → "Sair" → `main`. É a ordem do DOM de hoje, que segue a leitura da faixa de cima (a marca não recebe foco) e depois a coluna.
 - **Abaixo de `lg`:** skip link → "Alternar menu" → busca → "Notificações" → "Tarefas" → avatar → `main`. Com a gaveta aberta: o foco começa em "Painel"; Tab e Shift+Tab andam entre "Fechar", os quatro links e "Sair" (o skip link, o cabeçalho e o `main` estão `inert`); a exceção é a região dos avisos, fora do `inert` (4.2): com um aviso na tela, o "Fechar aviso" também entra no Tab.
 - **Menu do avatar aberto:** as setas andam entre os itens; Tab fecha o menu (hoje).
 
@@ -516,7 +516,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | Campo | Origem |
 |---|---|
 | Marca | "Smash Burger" (`SidebarAdmin.vue`, `p.admin-sidebar__brand`); sai o `text-transform: uppercase` |
-| Destinos | `menuItems` do `SidebarAdmin.vue`: "Painel" (`tachometer-alt`), "Gestão de Produtos" (`utensils`), "Gestão de Pedidos" (`shopping-cart`), "Relatórios de Vendas" (`chart-line`) |
+| Destinos | `menuItems` do `SidebarAdmin.vue`: "Painel" (`tachometer-alt`), "Produtos" (`utensils`), "Pedidos" (`shopping-cart`), "Relatórios" (`chart-line`) |
 | "Sair" | `button` com `sign-out-alt`, `useAdminLogout()` |
 | "Fechar" | `BaseButton variant="ghost" icon-only icon-start="xmark" label="Fechar"`, só com `closable` |
 | "Alternar menu" | `BaseButton variant="ghost" icon-only icon-start="bars"`, `aria-controls="admin-sidebar"`, `aria-expanded` |
@@ -581,7 +581,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **A volta do foco (bloqueante da volta 1):** o `closeSidebar({ returnFocus })` passa a ser assíncrono: `isSidebarOpen.value = false`, `unlock()`, e, com `returnFocus`, `await nextTick()` antes de `toggleButton?.focus()`. O `focus()` num elemento ainda `inert` não faz nada (testado pelo revisor no Chromium): sem o `nextTick`, o Esc, o "Fechar" e o fundo perderiam o foco (regressão do Esc e do "Fechar", que hoje funcionam).
 - **Clique no fundo:** `@click="closeSidebar({ returnFocus: true })"` (hoje sem `returnFocus`).
 - **Troca de rota com a gaveta aberta:** no `watch` de `route.fullPath`, antes de fechar, guardar se o foco estava dentro do `div#admin-sidebar` (`sidebarRef.value?.$el.contains(document.activeElement)`); fechar; e, se estava, `await nextTick()` e `mainRef.value?.focus({ preventScroll: true })`. Cobre a troca só de query, em que o `afterEach` do router não move o foco (4.2). Quando o caminho muda, o `afterEach` também leva o foco ao `main`; os dois chegam ao mesmo lugar.
-- **Item da rota atual:** clicar em "Gestão de Pedidos" estando em `/admin/orders` exatamente não navega (o router não troca a rota), e a gaveta continua aberta, com o foco no link (hoje).
+- **Item da rota atual:** clicar em "Pedidos" estando em `/admin/orders` exatamente não navega (o router não troca a rota), e a gaveta continua aberta, com o foco no link (hoje).
 - **Trava de rolagem:** a de hoje (`useScrollLock`).
 - **O que o leitor de tela ouve:** ao abrir, o diálogo "Menu do painel" e o foco em "Painel" (link; "página atual" se for a rota), dentro de "Seções do painel" (navegação); a página atrás não existe para ele (`inert`). Ao fechar, "Alternar menu", botão, recolhido.
 
@@ -779,7 +779,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **Bloco do cliente:** `div.order-info__block` (coluna, `gap: var(--space-1)`); o nome em body-m `on-surface`; o endereço e o telefone em body-m `on-surface-variant` (7,56), `overflow-wrap: anywhere`.
 - **Itens:** cada linha é flex com `justify-content: space-between`, `gap: var(--space-3)`: "2× Smash Burger" (`2×` tabular) e o preço (tabular, `white-space: nowrap`), em body-m `on-surface`.
   - **O "×" fica:** a regra do "·" da etapa 7 (7.g) tira o separador que junta dados de tipos diferentes; o "×" é a notação de quantidade do resumo da loja ("{quantidade}× {nome}", `SPEC.md` §4.1), e não um separador.
-  - **O preço da linha é o unitário** (`item.price`): "2× Smash Burger R$ 25,90" com o Total R$ 59,80. Pergunta 1 da §12; a recomendação é "R$ 25,90 cada", o texto do diálogo "Detalhes" ("{preço} cada"), sem conta nova na view. Com ela, o preço da linha fica em body-m `on-surface`, tabular, com o "cada" no mesmo texto.
+  - **O preço da linha é o unitário** (`item.price`), agora com "cada" (decisão do usuário, §12): "2× Smash Burger R$ 25,90 cada" com o Total R$ 59,80, o texto do diálogo "Detalhes" ("{preço} cada"), sem conta nova na view. O preço da linha fica em body-m `on-surface`, tabular, com o "cada" no mesmo texto, em todas as linhas (também na quantidade 1).
 - **Total:** `p.order-info__total`, flex entre "Total" (label-l 500) e o valor (title-m 500, tabular), com o divisor de 1 px `--m3-outline-variant` em cima e `padding-top: var(--space-2)`: o único divisor do card.
 - **Ações (rodapé):** "Atualizar status" (tonal `sm`) e "Detalhes" (texto `sm`), nessa ordem, alinhados ao início. Texto do tonal 7,22; "Detalhes" 5,23 sobre o `high` (hover 4,71; pressionado 4,59; anel 5,25 e 4,60). O desabilitado do "Atualizar status" é da etapa 10 (hoje: `surface-container-highest` e `--color-ink-disabled`).
 
@@ -863,7 +863,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
   - **sem descrição:** o `p` não existe; o preço sobe;
   - **imagem `data:`** (enviada no painel): sem `<source>` (o `M3Foto` já trata);
   - **imagem que falha:** o ícone `utensils` em `surface-container` (7,97), na mesma forma; a grade mistura as três categorias, e o `burger` de hoje ficaria errado numa bebida;
-  - **categoria vazia sem busca:** a lista fica vazia, sem `EmptyState` (hoje). Pergunta 3 da §12.
+  - **categoria vazia sem busca:** mostra o `EmptyState` com "Nada nesta categoria por enquanto" (`TEXTOS.vazio`, de `src/utils/textosLoja.js`) e o ícone do Cardápio, no lugar da lista (decisão do usuário, §12). Vale para Hambúrgueres, Bebidas e Sobremesas; em "Destaques", que sorteia hambúrgueres, também, se não sobrar nenhum. O visual do `EmptyState` é da etapa 10.
 
 **O diálogo "Excluir produto?" (n):**
 
@@ -1202,9 +1202,17 @@ Todos reais. **Nenhuma palavra muda.** Mudam só apresentações:
 | "Limpar busca" | `link-inline` dentro da região | text button fora da região | [78], [153] (5.3) |
 | A ajuda do seletor de imagem | junto com o erro | some com o erro | [131] (5.8) |
 
-Ficam como estão (todos os da tabela de conteúdo do pacote, §3): a navegação, "Alternar menu", "Fechar", "Sair", "Buscar…", "Buscar produtos e pedidos", os nomes dos atalhos com o número, "9+", "Menu de {nome}", "Meu perfil", "Configurações", os `h1`, os KPIs, o `EmptyState` do gráfico, os filtros e as opções, os textos dos cards, dos diálogos, do `ModalProducts`, do perfil, das Configurações e do login, os avisos.
+**Textos que mudam por decisão do usuário (24/11/2026, seção 12):**
 
-**Perguntas de texto ao usuário:** seção 12 (o preço da linha no card do pedido; os rótulos da navegação; o texto da categoria vazia em Produtos).
+| Texto | Antes | Depois | Onde |
+|---|---|---|---|
+| Preço da linha no card do pedido | "R$ 25,90" (o unitário, sem indicação) | "R$ 25,90 cada" (o "{preço} cada" do diálogo "Detalhes") | `OrderManagement.vue`, o card (5.6) |
+| Rótulos da navegação | "Gestão de Produtos", "Gestão de Pedidos", "Relatórios de Vendas" | "Produtos", "Pedidos", "Relatórios" (os nomes do `h1` e do título da aba; "Painel" já era igual) | `SidebarAdmin.vue`, `menuItems` (5.1) |
+| Categoria esvaziada em Produtos | nada (só o filtro) | `EmptyState` com "Nada nesta categoria por enquanto", o texto do Cardápio (`src/utils/textosLoja.js`, `TEXTOS.vazio`) | `ProductManagement.vue` (5.7); o visual do `EmptyState` é da etapa 10 |
+
+Ficam como estão (todos os da tabela de conteúdo do pacote, §3): "Alternar menu", "Fechar", "Sair", "Buscar…", "Buscar produtos e pedidos", os nomes dos atalhos com o número, "9+", "Menu de {nome}", "Meu perfil", "Configurações", os `h1`, os KPIs, o `EmptyState` do gráfico, os filtros e as opções, os textos dos cards, dos diálogos, do `ModalProducts`, do perfil, das Configurações e do login, os avisos.
+
+**Perguntas de texto ao usuário:** respondidas em 24/11/2026 (seção 12); as três mudanças estão na tabela acima.
 
 ---
 
@@ -1285,6 +1293,7 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
 - `src/__tests__/AdminLayout.test.js` (novo, ou um bloco do `adminPanel.test.js`, a critério da sessão C): com `matchMedia` abaixo de `lg`, a gaveta abre, o `div#admin-sidebar` tem `role="dialog"`, `aria-modal="true"` e "Menu do painel", e o `header`, o `main` e o skip link ganham `inert`; Esc, "Fechar" e o clique no `scrim` tiram o `inert` **antes** do `focus()` (um espião no `focus` do botão confere que, quando ele é chamado, o `header` já não tem `inert`); a troca de rota fecha e tira o `inert`; a troca só de query, com o foco num link da gaveta, leva o foco ao `main`; a partir de `lg`, nenhum `inert`, nenhum `role` nem `aria-label` no `div`. **O jsdom não implementa o `inert`:** a prova de que o foco chega ao botão é a do Chromium (e2e, abaixo).
 - `src/__tests__/LoginAdminView.test.js` (novo): a região `[role=alert][aria-atomic=true]` existe vazia na montagem; com a senha errada, "E-mail ou senha incorretos." dentro dela, logo antes do botão de envio; o ícone num `span.auth-alert__icon`; "Voltar à loja" é link para `/` com as classes do `BaseButton`; o bloco do admin de teste só com o `devTestAdmin()` (o `build-config.test.js` continua conferindo o build).
 - `src/__tests__/ProfileView.test.js`: o `.profile-order__status` continua `p`, sem papel e sem `tabindex`, agora com `m3-status--info`.
+- **As decisões do usuário (§12):** no `OrderManagement.test.js`, a linha do item no card mostra "{preço} cada" (por `formatPrice`, também na quantidade 1) e o card não calcula total de linha; no teste da navegação (`adminPanel.test.js` ou `AdminLayout.test.js`), os quatro destinos são "Painel", "Produtos", "Pedidos" e "Relatórios" e nenhum "Gestão de…"; no `ProductManagement.test.js`, com a categoria escolhida sem produto e sem busca, aparece o `EmptyState` com "Nada nesta categoria por enquanto" e nenhuma lista. Os e2e e o `axe-scan.mjs` que procuram os rótulos antigos mudam junto.
 - `src/__tests__/admin-estilo.test.js` (novo, no padrão do `conta-estilo.test.js`, com as parciais compiladas pelo `sass-embedded` e pelo `<style scoped>`): nenhum `--color-*`, `--text-2xl`, `--elev-*`, `--radius-sm` nem `--radius-round` nas parciais do painel; nenhum `text-transform: uppercase`; nenhum `240px`; o item com `min-height: 3.5rem` na coluna e na gaveta; o item atual com `--m3-secondary-container`, `--m3-on-secondary-container` e `font-weight: 700`; o anel interno no item; o menu do perfil em `--m3-surface-container`, com a linha do "Sair" no `::after`; o `.admin-card` com `height: 100%`; a regra `html:has(.admin-layout) .toast-region` com `top: auto`; o `transform` da gaveta só dentro de `prefers-reduced-motion: no-preference`; o `.admin-sidebar` no `_motion.scss`; o card em `--m3-surface-container-high` sem `box-shadow`; o selo em `--m3-error`; a busca com `min-height: 3rem` e contorno `--m3-outline`, sem `translate`; as regras de `forced-colors` (item atual com `Highlight`, selo, rótulo, cards, gaveta); os `:global()` do aviso no pé e da reserva; e todos os pares de `PARES_ADMIN` acima do mínimo.
 
 **e2e (`.claude/e2e/`):**
@@ -1294,7 +1303,7 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
   - a marca com `text-transform: none` e o texto "Smash Burger";
   - em 390: a gaveta fechada ao carregar; aberta, o `#admin-sidebar` com `role="dialog"` e `aria-modal`, o `main` e o `header` com `inert`, o foco em "Painel";
   - **a volta do foco, no Chromium (bloqueante da volta 1):** abrir a gaveta em 390 e fechá-la pelo Esc, pelo "Fechar" e pelo clique no `scrim`, e conferir, nas três, que o `document.activeElement` é o "Alternar menu". Mutação: com o `focus()` antes do `nextTick`, o foco fica no `body`. O jsdom não pega isso (não implementa o `inert`);
-  - **a troca de rota:** pelo link "Gestão de Produtos", o foco vai ao `main`; **e a troca só de query:** em `#/admin/orders?status=pending`, abrir a gaveta e clicar (ou Enter) em "Gestão de Pedidos": a gaveta fecha, a rota passa a `#/admin/orders`, e o `document.activeElement` é o `main#conteudo` (sem a correção, é o `body`);
+  - **a troca de rota:** pelo link "Produtos", o foco vai ao `main`; **e a troca só de query:** em `#/admin/orders?status=pending`, abrir a gaveta e clicar (ou Enter) em "Pedidos": a gaveta fecha, a rota passa a `#/admin/orders`, e o `document.activeElement` é o `main#conteudo` (sem a correção, é o `body`);
   - em 1440: o `#admin-sidebar` sem `role`, e a `nav` "Seções do painel" contém a marca e o "Sair";
   - os status: `.m3-status` (no lugar do `.status-chip`) com "Pendente,Em preparo";
   - os seletores de hoje que ficam: `.admin-sidebar`, `.admin-sidebar__item`, `.admin-overlay`, `.navbar-profile__avatar`, `.navbar-profile__menu`, `.kpi__value`, `.order-info__total`, `#statusFilter`.
@@ -1372,7 +1381,7 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
 | As fontes divergirem na janela compacta (navigation bar [187] [179], rail recolhido [188], expandido modal [169]) | Decisão do projeto, registrada (4.1): o fluxo do `SPEC.md` e a §13.8 pedem a gaveta; a bar mudaria o fluxo e repetiria a pílula da loja |
 | A gaveta modal sem fonte do W3C que a classifique | Não encontrei fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]. Abaixo de `lg`, o `div` tem `role="dialog"`, `aria-modal` e nome [199], e o `inert` dá o fundo inerte e o foco preso, como a H102 descreve para o `<dialog>` [200]; o `aria-modal` só vale porque o bloqueio é real [199] |
 | O `focus()` no "Alternar menu" ainda `inert` não fazer nada (bloqueante da volta 1) | O `closeSidebar` espera o `nextTick` (o `inert` sai no flush) antes do `focus()`; a prova é no Chromium (`check-admin.mjs`), porque o jsdom não implementa o `inert` (4.2, 5.1, 9) |
-| O foco cair no `body` na troca só de query (o `afterEach` sai cedo com o mesmo caminho) | O `watch` da rota do `AdminLayout` leva o foco ao `main` depois do `nextTick` quando ele estava na gaveta; o `check-admin.mjs` confere o caso "Gestão de Pedidos" a partir de `?status=pending` (4.2) |
+| O foco cair no `body` na troca só de query (o `afterEach` sai cedo com o mesmo caminho) | O `watch` da rota do `AdminLayout` leva o foco ao `main` depois do `nextTick` quando ele estava na gaveta; o `check-admin.mjs` confere o caso "Pedidos" a partir de `?status=pending` (4.2) |
 | A região dos avisos fora do `inert` com a gaveta aberta | Aceito: com `inert`, a região viva não anunciaria; o custo é o "Fechar aviso" no Tab, se houver aviso (4.2) |
 | O item atual só pela cor (1,23 contra a coluna) | O rótulo em 700, pela lista de pistas da G182 [215] e o "shape or text" da [99], e o `aria-current` por programa [207]; nos modos de contraste, a borda (5.1). **Inferência registrada:** a G182 trata de texto colorido, e aqui a cor está no fundo; não encontrei técnica nem falha da W3C sobre o item atual marcado só pelo fundo. **A pílula da loja tem o mesmo ponto:** fica para a etapa 12 (§12) |
 | O `aside` como complementary em volta da navegação [210] | Resolvido pela sessão principal: vira `div`, e a `nav` envolve a coluna inteira, para a marca e o "Sair" ficarem num landmark [210] (5.1) |
@@ -1388,9 +1397,9 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
 | A reserva rolar a página para quem usa o mouse | Só com o botão nos 120 px de baixo e aviso na tela; aceito (4.6) |
 | O selo em `error` ler como erro | É o badge do M3 [35], com o exemplo de pendências [212]; o mesmo badge do carrinho. O nome diz "pedidos pendentes" |
 | O `EmptyState` do gráfico parecer um gráfico quebrado | O texto é o de hoje ("indisponível nesta versão"); o visual é da etapa 10 |
-| "Relatórios de Vendas" não caber em 240 | Estimativa de 230 com as margens (4.1); a sessão C mede; o token sobe para 16rem se preciso |
-| O preço unitário na linha do card ler como total da linha | Pergunta 1 ao usuário (§12), com a recomendação "R$ 25,90 cada": o total da linha faria a view calcular preço, contra a regra "nenhuma tela calcula preço por conta própria" |
-| A categoria esvaziada no painel ficar sem aviso em Produtos | Pergunta 3 ao usuário (§12) |
+| Um rótulo da navegação não caber em 240 | Com os rótulos curtos da decisão do usuário (§12), o mais longo é "Relatórios"; o pior caso antigo ("Relatórios de Vendas") dava 230 com as margens (4.1); a sessão C mede, também com zoom; o token sobe para 16rem se preciso |
+| O preço unitário na linha do card ler como total da linha | "R$ 25,90 cada" (decisão do usuário, §12): o total da linha faria a view calcular preço, contra a regra "nenhuma tela calcula preço por conta própria" |
+| A categoria esvaziada no painel ficar sem aviso em Produtos | O `EmptyState` com o texto do Cardápio (decisão do usuário, §12) |
 | Os `role="region"` dos cards (um por pedido e por KPI) encherem a lista de landmarks | É o comportamento de hoje (`SPEC.md` §5.11), com nomes únicos [211]; não encontrei no dossiê um limite de regiões |
 | A ilustração do login mostrar comida que a casa não vende | Fica pela SPEC-M §5.11, com `alt=""` e atrás do `scrim` (5.11) |
 | A busca de 166 px em 390 | "Buscar…" cabe; o texto digitado rola dentro do campo; em Produtos e Pedidos o resultado aparece logo abaixo |
@@ -1442,6 +1451,13 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
 2. **Os rótulos da navegação iguais ao `h1`.** A coluna diz "Gestão de Produtos", "Gestão de Pedidos" e "Relatórios de Vendas", e a tela que abre diz "Produtos", "Pedidos" e "Relatórios" (no `h1` e no título da aba). Usar o mesmo nome nos dois lugares ("Painel", "Produtos", "Pedidos", "Relatórios") ajuda a se achar, e os rótulos curtos cabem com folga em 240 px e com zoom. **Recomendo usar o mesmo nome;** o desenho funciona com os dois.
 3. **O aviso de vazio na categoria esvaziada de Produtos.** Se o painel excluir todos os produtos de uma categoria, a tela mostra o filtro e mais nada (hoje o `EmptyState` só aparece com busca). Mostrar o `EmptyState` também aí, com o texto do Cardápio ("Nada nesta categoria por enquanto", `src/utils/textosLoja.js`). **Recomendo mostrar;** sem resposta, fica como hoje.
 
+**Respostas do usuário (24/11/2026, pelo AskUserQuestion), todas na recomendação:**
+
+1. **O preço da linha:** a opção (c), "R$ 25,90 cada", o "{preço} cada" do diálogo "Detalhes", sem conta nova na view.
+2. **Os rótulos da navegação:** passam a ser os nomes do `h1`: "Painel", "Produtos", "Pedidos" e "Relatórios" (`SidebarAdmin.vue`, `menuItems`). Os testes e scripts que procuram "Gestão de…" ou "Relatórios de Vendas" mudam junto (sessão C). A medida "'Relatórios de Vendas' numa linha" deixa de valer: o rótulo mais longo passa a ser "Relatórios".
+3. **A categoria esvaziada em Produtos:** mostra o `EmptyState` com "Nada nesta categoria por enquanto" (`TEXTOS.vazio`, de `src/utils/textosLoja.js`), quando a categoria escolhida não tem produto e não há busca. O visual do `EmptyState` é da etapa 10; o ícone é o do Cardápio. Nada muda na store: a view só lê a lista que já recebe.
+4. **A pílula da loja (pendência da etapa 12):** o usuário escolheu levar o rótulo em 700 ao item atual da `M3BarraFerramentas` **na etapa 12**, com a G182 [215]. Esta etapa não mexe na loja.
+
 **Fora:**
 
 - gráfico, tendência ("+12%"), comparação com o mês anterior, filtro por data, ordenação, paginação, tabela de dados, ações em massa;
@@ -1455,7 +1471,7 @@ src/utils/contraste.js                                     PARES_ADMIN (9), os "
 
 - **Etapa 10:** o `iconOnly` ("Alternar menu", "Fechar" da gaveta e dos diálogos, os atalhos), o `danger` ("Excluir", "Excluir produto", "Restaurar"), o `loading` ("Entrando…", o "Salvar" que espera a imagem) e o desabilitado ("Atualizar status" em "Concluído") do `BaseButton`; o `BaseDialog` (o contêiner e o sheet dos diálogos do painel e do `ModalProducts`); o `EmptyState` (o gráfico, Pedidos e Produtos sem resultado); o `AppToast`, que herda ou absorve o aviso no pé do painel e a reserva desta etapa (`:global` em `_admin-layout.scss`), acerta a entrada (hoje `translateY(-8px)`, de cima, também no pé) e decide o botão de imagem como `BaseButton`, se fizer sentido.
 - **Etapa 11:** apagar o `ProductCard.vue`, o `_product-card.scss`, o `useTilt.js`, o `CarouselBurguer.vue` e as classes do `_motion.scss` que eram deles; os apelidos que ficaram sem uso (seção 7); os pares de `PARES_COMUNS` sobre o `--color-input`.
-- **Etapa 12 (pendência registrada pela sessão principal; a decisão é do usuário):** conferir o item atual da pílula da `M3BarraFerramentas` contra a 1.4.1, com a G182 [215]. Lá ele também é marcado só pelo fundo (`secondary-container` contra o `surface-container` da pílula), sem troca de peso.
+- **Etapa 12 (decisão do usuário, 24/11/2026):** o item atual da pílula da `M3BarraFerramentas` ganha o rótulo em 700, como no painel, pela G182 [215]. Lá ele também é marcado só pelo fundo (`secondary-container` contra o `surface-container` da pílula). A etapa 12 confere a largura da pílula com o peso novo em 390 e 360.
 
 ---
 
@@ -1494,13 +1510,19 @@ Escrita pela sessão principal em 24/11/2026.
 - Ruling: o designer pôs a `nav` "Seções do painel" em volta da coluna inteira (a marca, o "Fechar" e o "Sair"). Sem o `aside`, a marca e o "Sair" ficariam fora de um landmark a partir de `lg` [210]. A sessão principal aceita. Custo se estiver errado: o "Fechar" e a marca ficam dentro do landmark de navegação, sem efeito no teclado.
 - Ruling: a pílula da loja com o item atual marcado só pelo fundo fica como pendência da etapa 12, e a decisão é do usuário. Custo se estiver errado: a loja continua como está até lá.
 
-### O que fica para o usuário
+### Decisões do usuário (24/11/2026)
 
-As três perguntas da §12: o preço da linha no card do pedido (recomendada a opção c), os rótulos da navegação iguais ao `h1` e o aviso de vazio na categoria esvaziada de Produtos.
+O usuário respondeu as três perguntas da §12 e a pendência da pílula, todas na recomendação:
+- "R$ 25,90 cada" no card do pedido;
+- os rótulos da navegação iguais ao `h1`;
+- o aviso de vazio na categoria esvaziada de Produtos;
+- o peso 700 no item atual da pílula da loja na etapa 12.
+
+As mudanças estão na §8 ("Textos que mudam por decisão do usuário") e na §12 ("Respostas do usuário").
 
 ### O que a sessão C mede (o desenho estimou pelo CSS)
 
-- "Relatórios de Vendas" numa linha na coluna de 240 px, também com zoom de 200%.
+- Os rótulos da navegação ("Relatórios" é o mais longo, depois da decisão do usuário) numa linha na coluna de 240 px, também com zoom de 200%.
 - O foco devolvido pelos diálogos fora do aviso no pé.
 - O foco no `main` depois da troca de rota com a gaveta `inert`, inclusive na troca só de query.
 - Os três fechamentos da gaveta no Chromium (Esc, "Fechar" e fundo) e a mutação que reprova sem o `nextTick`.
