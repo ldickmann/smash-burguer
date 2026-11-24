@@ -4,19 +4,6 @@
 @use "../base/breakpoints" as *;
 @use "../base/m3" as *;
 
-// Foco não coberto pelo aviso (2.4.11, técnica C43): enquanto há aviso (toast) na tela, a rolagem do
-// foco soma a altura de um aviso, no pé abaixo de md e no topo a partir dele. É o que tira o CTA de baixo
-// do aviso da conferência com o cardápio. A etapa 10 (AppToast) herda ou absorve a regra (§4)
-:global(html:has(.payment-page):has(.toast-region .toast)) {
-  @include below(md) {
-    scroll-padding-bottom: calc(var(--m3-barra-reserva) + var(--m3-toast-reserva));
-  }
-
-  @include up(md) {
-    scroll-padding-top: calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva));
-  }
-}
-
 // O ritmo do Cardápio: a página a 20 e 40 px do cabeçalho; o h1 (regra global) a 20 e 32 px do conteúdo
 .payment-page {
   padding-block: var(--space-5) var(--space-8);

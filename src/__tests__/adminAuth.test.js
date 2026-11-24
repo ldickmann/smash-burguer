@@ -109,13 +109,13 @@ describe('login do admin', () => {
     await wrapper.find('input#email').setValue(SAVED_ADMIN.email);
     await wrapper.find('input#password').setValue(SAVED_ADMIN.password);
     await wrapper.find('form').trigger('submit');
-    expect(wrapper.find('button[type="submit"]').attributes('aria-busy')).toBe('true');
+    expect(wrapper.find('button[type="submit"]').classes()).toContain('is-loading');
 
     await vi.advanceTimersByTimeAsync(1000);
     await flushPromises();
 
     const button = wrapper.find('button[type="submit"]');
-    expect(button.attributes('aria-busy')).toBeUndefined();
+    expect(button.classes()).not.toContain('is-loading');
     expect(button.text()).toBe('Entrar');
     expect(wrapper.find('[role="alert"]').text()).toContain('E-mail ou senha incorretos.');
     expect(router.currentRoute.value.path).toBe('/admin/login');

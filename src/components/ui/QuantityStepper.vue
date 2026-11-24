@@ -1,31 +1,28 @@
 <template>
   <div class="stepper" role="group" :aria-label="`Quantidade de ${label}`">
+    <!-- No limite, aria-disabled no lugar do disabled: o botão continua focável, e o foco não cai no
+         viewport quando ele chega ao limite (desenho dos componentes base, §5.4) -->
     <BaseButton
       variant="secondary"
       icon-only
       icon-start="minus"
       :label="`Diminuir ${label}`"
-      :disabled="modelValue <= min"
+      :aria-disabled="modelValue <= min ? 'true' : undefined"
       @click="change(-1)"
     />
-    <output class="stepper__value tabular" aria-live="polite">
-      <Transition :name="direction > 0 ? 'stepper-up' : 'stepper-down'">
-        <span :key="modelValue" class="stepper__digit">{{ modelValue }}</span>
-      </Transition>
-    </output>
+    <output class="stepper__value tabular" aria-live="polite">{{ modelValue }}</output>
     <BaseButton
       variant="secondary"
       icon-only
       icon-start="plus"
       :label="`Aumentar ${label}`"
-      :disabled="modelValue >= max"
+      :aria-disabled="modelValue >= max ? 'true' : undefined"
       @click="change(1)"
     />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 
 const props = defineProps({
@@ -50,12 +47,9 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const direction = ref(1);
-
 const change = (step) => {
   const next = Math.min(props.max, Math.max(props.min, props.modelValue + step));
   if (next === props.modelValue) return;
-  direction.value = step;
   emit("update:modelValue", next);
 };
 </script>

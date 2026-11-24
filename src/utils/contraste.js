@@ -82,8 +82,8 @@ export const PARES_HOME = [
   { frente: "m3-on-surface", fundo: "m3-surface", minimo: 4.5, onde: "texto principal, marca, títulos das seções e h3 dos Adicionais; h1 do Cardápio e título do EmptyState; marca, h1 e valor dos filtros do painel" },
   { frente: "m3-primary", fundo: "m3-surface", minimo: 4.5, onde: "text button Ver cardápio do feed e dos Adicionais; categoria marcada contra a barra do Cardápio; Voltar ao cardápio (filled) na confirmação; Sair no perfil; contorno e rótulo com foco da busca e dos filtros do painel, Novo produto e Limpar busca" },
   { frente: "m3-secondary", fundo: "m3-surface", minimo: 3, onde: "anel de foco" },
-  { frente: "m3-on-surface", fundo: "m3-surface-container", minimo: 4.5, onde: "marca no rodapé e títulos das seções do modal; valor e rótulo do campo no diálogo, e o contorno no hover; cabeça e rótulos dos itens do menu do perfil do painel" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container", minimo: 4.5, onde: "rótulos da toolbar e textos do rodapé; rótulo das categorias desmarcadas; descrição e ajuda do modal; placeholder, contador e seta do campo no diálogo, e o contorno com prefers-contrast: more; ícones do menu do perfil do painel" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container", minimo: 4.5, onde: "marca no rodapé; cabeça e rótulos dos itens do menu do perfil do painel" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container", minimo: 4.5, onde: "rótulos da toolbar e textos do rodapé; rótulo das categorias desmarcadas; ícones do menu do perfil do painel" },
   { frente: "m3-secondary", fundo: "m3-surface-container", minimo: 3, onde: "anel de foco na toolbar e anel interno da categoria desmarcada; anel interno dos itens do menu do perfil do painel" },
   { frente: "m3-on-secondary-container", fundo: "m3-secondary-container", minimo: 4.5, onde: "item atual da toolbar e Adicionar tonal; forma de pagamento marcada (nome, descrição e ícone); item atual da navegação do painel, avatar e botão de imagem do ModalProducts" },
   { frente: "m3-secondary", fundo: "m3-secondary-container", minimo: 3, onde: "anel de foco no item atual da toolbar; anel interno da forma de pagamento marcada e do item atual da navegação do painel" },
@@ -106,12 +106,12 @@ export const PARES_HOME = [
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-highest", minimo: 4.5, onde: "descrição no card" },
   { frente: "m3-primary", fundo: "m3-surface-container-highest", minimo: 3, onde: "contêiner do split contra o card" },
   { frente: "m3-secondary", fundo: "m3-surface-container-highest", minimo: 3, onde: "anel de foco no card" },
-  { frente: "m3-on-surface", fundo: "m3-surface-container-high", minimo: 4.5, onde: "título da folha e nome nos chips dos Adicionais; títulos, valores, textos e dd dos cards do painel" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-high", minimo: 4.5, onde: "ingredientes na folha e acréscimo nos chips dos Adicionais; rótulos dos KPIs, notas, dt, endereço e telefone dos cards do painel e descrição do card de produto" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container-high", minimo: 4.5, onde: "título da folha e nome nos chips dos Adicionais; títulos, valores, textos e dd dos cards do painel; título, textos, campos e títulos das seções do diálogo a partir de md" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-high", minimo: 4.5, onde: "ingredientes na folha e acréscimo nos chips dos Adicionais; rótulos dos KPIs, notas, dt, endereço e telefone dos cards do painel e descrição do card de produto; descrição, ajuda, placeholder, dt e ícone do Fechar do diálogo a partir de md" },
 
   // Listas segmentada e agrupada
-  { frente: "m3-on-surface", fundo: "m3-surface-container-low", minimo: 4.5, onde: "h2 e h3 das duas listas; títulos do resumo e das seções do carrinho e do pagamento, endereço e Total; valor e rótulo do campo, contorno no hover, h1 do painel, h2 do perfil e link do rodapé do painel" },
-  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-low", minimo: 4.5, onde: "aviso de lista vazia nas bebidas e sobremesas; Subtotal, linhas do resumo compacto, ajuda do CTA do pagamento e aviso do visitante no carrinho; placeholder, ajuda, seta e botão de mostrar a senha do campo, frase do rodapé do painel, texto de exclusão e contorno do campo com prefers-contrast: more; itens da gaveta do painel e texto do bloco do admin de teste" },
+  { frente: "m3-on-surface", fundo: "m3-surface-container-low", minimo: 4.5, onde: "h2 e h3 das duas listas; títulos do resumo e das seções do carrinho e do pagamento, endereço e Total; valor e rótulo do campo, contorno no hover, h1 do painel, h2 do perfil e link do rodapé do painel; título, textos e campos do sheet abaixo de md" },
+  { frente: "m3-on-surface-variant", fundo: "m3-surface-container-low", minimo: 4.5, onde: "aviso de lista vazia nas bebidas e sobremesas; Subtotal, linhas do resumo compacto, ajuda do CTA do pagamento e aviso do visitante no carrinho; placeholder, ajuda, seta e botão de mostrar a senha do campo, frase do rodapé do painel, texto de exclusão e contorno do campo com prefers-contrast: more; itens da gaveta do painel e texto do bloco do admin de teste; descrição, ajuda e ícone do Fechar no sheet abaixo de md" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface", minimo: 4.5, onde: "aviso de lista vazia no feed e frase dos Adicionais; frase do Cardápio e texto do EmptyState; itens da coluna do painel, ícones da barra, lupa e placeholder da busca, seta dos filtros e linha do resultado da busca" },
   { frente: "m3-on-surface", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "título e preço dos itens das listas; ingredientes e adicionais do modal; nome e total do item do carrinho e nome da forma de pagamento; número, total e resumo do pedido no perfil" },
   { frente: "m3-on-surface-variant", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "apoio e descrição dos itens; acréscimo dos adicionais, ingrediente removido, legenda do montador e contorno do checkbox; detalhes do item do carrinho, descrição e ícone da forma de pagamento e contorno do rádio desmarcado; data, contagem e detalhes do pedido no perfil" },
@@ -125,12 +125,12 @@ export const PARES_HOME = [
 // da tabela de Error, error sobre error-container)
 export const PARES_OUTRAS_TELAS = [
   { frente: "m3-error", fundo: "m3-surface", minimo: 4.5, onde: "texto de erro" },
-  { frente: "m3-on-error-container", fundo: "m3-error-container", minimo: 4.5, onde: "texto do banner de erro do login e do cadastro" },
-  { frente: "m3-error", fundo: "m3-error-container", minimo: 4.5, onde: "ícone do banner de erro; Remover do carrinho e Excluir conta no hover e pressionado" },
+  { frente: "m3-on-error-container", fundo: "m3-error-container", minimo: 4.5, onde: "texto do banner de erro do login, do cadastro e do diálogo de exclusão da conta" },
+  { frente: "m3-error", fundo: "m3-error-container", minimo: 4.5, onde: "ícone do banner de erro do login, do cadastro e do diálogo de exclusão da conta" },
   { frente: "m3-sucesso", fundo: "m3-sucesso-container", minimo: 4.5, onde: "rótulo de status (M3RotuloStatus) Concluído" },
   { frente: "m3-aviso", fundo: "m3-aviso-container", minimo: 4.5, onde: "rótulo de status (M3RotuloStatus) Pendente; texto e ícone do aviso sem endereço no pagamento e do aviso de conta salva" },
   { frente: "m3-info", fundo: "m3-info-container", minimo: 4.5, onde: "rótulo de status (M3RotuloStatus) Em preparo, A caminho e Recebido (no perfil)" },
-  { frente: "m3-inverse-on-surface", fundo: "m3-inverse-surface", minimo: 4.5, onde: "aviso (toast) em inverse-surface" },
+  { frente: "m3-inverse-on-surface", fundo: "m3-inverse-surface", minimo: 4.5, onde: "aviso (toast): texto, ícone de erro e Fechar aviso; anel interno dos botões do aviso" },
 ];
 
 // 3. Os dos componentes reais que aparecem também nas Homes do acervo (modal Personalizar, toast e
@@ -159,8 +159,6 @@ export const PARES_COMUNS = [
 // cobrem: vêm da lista que o tokens-contrast.mjs media até a etapa 1. Saem quando a tela migrar.
 export const PARES_TELAS_BRASA = [
   { frente: "m3-on-primary", fundo: "m3-sucesso", minimo: 4.5, onde: "face Adicionado do botão da Brasa" },
-  { frente: "m3-sucesso", fundo: "m3-surface-container-high", minimo: 4.5, onde: "ícone de sucesso no toast" },
-  { frente: "m3-on-surface", fundo: "m3-camada-hover", sobre: "m3-surface-container", minimo: 4.5, onde: "botão ghost no hover" },
 ];
 
 // 5. Os do Cardápio e do modal Personalizar (etapa 6; docs/direcoes/desenho/cardapio.md, §8). A camada
@@ -171,8 +169,8 @@ export const PARES_CARDAPIO = [
   { frente: "m3-primary", fundo: "m3-surface-container-lowest", minimo: 4.5, onde: "caixa marcada do checkbox dos ingredientes; texto e chevron do Ver itens no perfil" },
   { frente: "m3-primary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 3, onde: "caixa marcada com a linha do ingrediente pressionada" },
   { frente: "m3-on-surface-variant", fundo: "m3-camada-pressionada", sobre: "m3-surface-container", minimo: 4.5, onde: "rótulo da categoria desmarcada, pressionada; ícone do item do menu do perfil do painel pressionado" },
-  { frente: "m3-primary", fundo: "m3-surface-container", minimo: 4.5, onde: "categoria marcada contra a desmarcada (sinal além da cor, 1.4.1); contorno e rótulo do campo com foco no diálogo" },
-  { frente: "m3-outline", fundo: "m3-surface-container-lowest", minimo: 3, onde: "borda do QuantityStepper sobre as linhas dos adicionais; borda do QuantityStepper no item do carrinho e da forma de pagamento com prefers-contrast: more" },
+  { frente: "m3-primary", fundo: "m3-surface-container", minimo: 4.5, onde: "categoria marcada contra a desmarcada (sinal além da cor, 1.4.1)" },
+  { frente: "m3-outline", fundo: "m3-surface-container-lowest", minimo: 3, onde: "borda dos botões do QuantityStepper (tonal) sobre as linhas dos adicionais e no item do carrinho, e da forma de pagamento, com prefers-contrast: more" },
   { frente: "m3-on-surface", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "nome do ingrediente com a linha pressionada; nome da forma de pagamento desmarcada pressionada" },
   { frente: "m3-on-surface-variant", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "nome do ingrediente removido com a linha pressionada; descrição e controle da forma de pagamento desmarcada pressionada" },
   { frente: "m3-secondary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container", minimo: 3, onde: "anel interno da categoria desmarcada pressionada e do item do menu do perfil do painel pressionado" },
@@ -199,11 +197,8 @@ export const PARES_CARRINHO = [
 // 7. Os do Login, do Cadastro e do Perfil (etapa 8; docs/direcoes/desenho/conta.md, §8). Os que só ganham
 // uso estão nos grupos acima, com o "onde" ampliado.
 export const PARES_CONTA = [
-  { frente: "m3-outline", fundo: "m3-surface-container", minimo: 3, onde: "contorno do campo no diálogo (observação, ModalProducts) e da caixa do seletor de imagem" },
-  { frente: "m3-error", fundo: "m3-surface-container-low", minimo: 4.5, onde: "erro, rótulo e contorno do campo com erro no painel e no perfil; Excluir conta" },
-  { frente: "m3-error", fundo: "m3-surface-container", minimo: 4.5, onde: "erro, rótulo e contorno do campo com erro no diálogo; contorno, rótulo e mensagem do seletor de imagem com erro" },
+  { frente: "m3-error", fundo: "m3-surface-container-low", minimo: 4.5, onde: "erro, rótulo e contorno do campo com erro no painel, no perfil e no sheet; Excluir conta e as ações de perigo no sheet" },
   { frente: "m3-on-error-container", fundo: "m3-surface-container-low", minimo: 4.5, onde: "contorno e rótulo do campo com erro no hover (painel e perfil)" },
-  { frente: "m3-on-error-container", fundo: "m3-surface-container", minimo: 4.5, onde: "contorno e rótulo do campo com erro no hover (diálogo)" },
   { frente: "m3-primary", fundo: "m3-camada-primary-pressionada", sobre: "m3-surface", minimo: 4.5, onde: "Sair pressionado; text buttons da Home pressionados sobre a superfície; Limpar busca do painel pressionado" },
   { frente: "m3-secondary", fundo: "m3-camada-primary-pressionada", sobre: "m3-surface", minimo: 3, onde: "anel do Sair pressionado" },
   { frente: "m3-primary", fundo: "m3-camada-primary-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "Ver itens pressionado" },
@@ -218,11 +213,28 @@ export const PARES_ADMIN = [
   { frente: "m3-secondary", fundo: "m3-camada-pressionada", sobre: "m3-surface", minimo: 3, onde: "anel interno do item pressionado na coluna" },
   { frente: "m3-secondary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-low", minimo: 3, onde: "anel interno do item pressionado na gaveta" },
   { frente: "m3-on-surface", fundo: "m3-camada-pressionada", sobre: "m3-surface-container", minimo: 4.5, onde: "rótulo do item do menu do perfil pressionado" },
-  { frente: "m3-primary", fundo: "m3-surface-container-high", minimo: 4.5, onde: "Detalhes (texto) no card do pedido" },
+  { frente: "m3-primary", fundo: "m3-surface-container-high", minimo: 4.5, onde: "Detalhes (texto) no card do pedido; campo com foco e text buttons no diálogo a partir de md" },
   { frente: "m3-primary", fundo: "m3-camada-primary-pressionada", sobre: "m3-surface-container-high", minimo: 4.5, onde: "Detalhes pressionado" },
   { frente: "m3-secondary", fundo: "m3-camada-primary-pressionada", sobre: "m3-surface-container-high", minimo: 3, onde: "anel do Detalhes pressionado" },
-  { frente: "m3-error", fundo: "m3-surface-container-high", minimo: 4.5, onde: "Excluir (danger) no card de produto" },
-  { frente: "m3-secondary", fundo: "m3-surface-container-high", minimo: 3, onde: "anel de foco nos cards do painel e no aviso (toast)" },
+  { frente: "m3-error", fundo: "m3-surface-container-high", minimo: 4.5, onde: "Excluir (danger) no card de produto; campo com erro e perigo no diálogo a partir de md" },
+  { frente: "m3-secondary", fundo: "m3-surface-container-high", minimo: 3, onde: "anel de foco nos cards do painel e no diálogo a partir de md" },
+];
+
+// 9. Os dos componentes base (etapa 10; docs/direcoes/desenho/componentes-base.md, §8): o aviso em
+// inverse-surface, o perigo que escurece para on-error-container no hover e no pressionado e o diálogo
+// em surface-container-high. As camadas inversas medem o caso pior do aviso (o CSS usa currentColor).
+// Os que só ganham uso estão nos grupos acima, com o "onde" ampliado.
+export const PARES_COMPONENTES = [
+  { frente: "m3-inverse-primary", fundo: "m3-inverse-surface", minimo: 4.5, onde: "ação Desfazer do aviso" },
+  { frente: "m3-inverse-primary", fundo: "m3-camada-inversa-pressionada", sobre: "m3-inverse-surface", minimo: 4.5, onde: "Desfazer pressionado" },
+  { frente: "m3-inverse-on-surface", fundo: "m3-camada-inversa-pressionada", sobre: "m3-inverse-surface", minimo: 4.5, onde: "Fechar aviso pressionado, com o anel interno" },
+  { frente: "m3-on-error-container", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-high", minimo: 4.5, onde: "perigo pressionado no card de produto e no diálogo a partir de md" },
+  { frente: "m3-on-error-container", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-low", minimo: 4.5, onde: "perigo pressionado no perfil e no sheet" },
+  { frente: "m3-on-error-container", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-lowest", minimo: 4.5, onde: "Remover pressionado no item do carrinho" },
+  { frente: "m3-secondary", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-high", minimo: 3, onde: "anel do perigo e do Fechar pressionados no card e no diálogo" },
+  { frente: "m3-on-surface-variant", fundo: "m3-camada-pressionada", sobre: "m3-surface-container-high", minimo: 3, onde: "ícone do Fechar do diálogo pressionado" },
+  { frente: "m3-outline", fundo: "m3-surface-container-high", minimo: 3, onde: "contorno dos campos no diálogo a partir de md (observação, ModalProducts) e da caixa do seletor de imagem; borda do tonal com prefers-contrast: more no card" },
+  { frente: "m3-on-error-container", fundo: "m3-surface-container-high", minimo: 4.5, onde: "campo com erro no hover, no diálogo a partir de md" },
 ];
 
 export const PARES = [
@@ -234,4 +246,5 @@ export const PARES = [
   ...PARES_CARRINHO,
   ...PARES_CONTA,
   ...PARES_ADMIN,
+  ...PARES_COMPONENTES,
 ];

@@ -49,8 +49,8 @@ for (const w of widths) {
   await page.waitForTimeout(300);
   await page.getByRole('button', { name: 'Criar conta', exact: true }).click();
   await page.waitForTimeout(150);
-  const regLoading = await page.evaluate(() => { const b = document.querySelector('.auth-form button[type=submit]'); return { busy: b.getAttribute('aria-busy'), text: b.textContent.trim() }; });
-  check(regLoading.busy === 'true' && regLoading.text === 'Criando conta…', 'botão de cadastro em loading "Criando conta…"', JSON.stringify(regLoading));
+  const regLoading = await page.evaluate(() => { const b = document.querySelector('.auth-form button[type=submit]'); return { busy: b.classList.contains('is-loading'), ariaBusy: b.getAttribute('aria-busy'), text: b.textContent.trim() }; });
+  check(regLoading.busy === true && regLoading.ariaBusy === null && regLoading.text === 'Criando conta…', 'botão de cadastro em loading "Criando conta…"', JSON.stringify(regLoading));
   await page.waitForURL(/#\/login/, { timeout: 4000 }).catch(() => {});
   await page.waitForTimeout(200);
   const toastText = norm(await page.locator('.toast').first().textContent().catch(() => ''));
@@ -196,7 +196,7 @@ for (const w of widths) {
       text: regiao?.textContent.trim(),
       antesDoBotao: regiao?.nextElementSibling?.matches('button[type=submit]'),
       aVista: !!caixa && caixa.top >= 0 && caixa.bottom <= innerHeight,
-      busy: document.querySelector('.auth-form button[type=submit]').getAttribute('aria-busy'),
+      busy: document.querySelector('.auth-form button[type=submit]').classList.contains('is-loading') ? 'true' : null,
     };
   });
   check(banner.alert === 'alert' && banner.atomic === 'true' && banner.text === 'E-mail ou senha incorretos.' && elapsed <= 1500, 'senha errada: banner na região role="alert" em até 1,5 s', `${elapsed}ms`);
@@ -211,17 +211,17 @@ for (const w of widths) {
   // Pagamento
   console.log('Pagamento');
   await page.waitForTimeout(400);
-  const pay = await page.evaluate(() => ({ items: [...document.querySelectorAll('.order-summary__name')].map((n) => n.textContent.replace(/\s+/g, ' ').trim()), total: document.querySelector('.order-summary__value').textContent, disabled: [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido'))?.disabled, describedby: [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido'))?.getAttribute('aria-describedby') }));
+  const pay = await page.evaluate(() => ({ items: [...document.querySelectorAll('.order-summary__name')].map((n) => n.textContent.replace(/\s+/g, ' ').trim()), total: document.querySelector('.order-summary__value').textContent, disabled: [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido'))?.getAttribute('aria-disabled'), describedby: [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido'))?.getAttribute('aria-describedby') }));
   check(pay.items.some((i) => i.includes('Cheese Bacon')) && norm(pay.total) === 'R$ 29,49', 'resumo mostra o item e o total', `${pay.items} ${norm(pay.total)}`);
-  check(pay.disabled === true && pay.describedby === 'pagamento-ajuda', 'CTA desabilitado até escolher a forma de pagamento');
+  check(pay.disabled === 'true' && pay.describedby === 'pagamento-ajuda', 'CTA com aria-disabled (no Tab) até escolher a forma de pagamento');
   await page.locator('label.payment-option', { hasText: 'PIX' }).click();
-  const enabled = await page.evaluate(() => !([...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido')).disabled));
+  const enabled = await page.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Confirmar pedido')).getAttribute('aria-disabled') === null);
   check(enabled, 'CTA habilita depois de escolher PIX');
   await snap('payment');
   await page.getByRole('button', { name: /Confirmar pedido/ }).click();
   await page.waitForTimeout(100);
-  const loading = await page.evaluate(() => { const b = document.querySelector('.order-summary__cta button'); return { busy: b?.getAttribute('aria-busy'), text: b?.textContent.trim() }; });
-  check(loading.busy === 'true' && loading.text === 'Enviando pedido…', 'CTA em loading "Enviando pedido…"', JSON.stringify(loading));
+  const loading = await page.evaluate(() => { const b = document.querySelector('.order-summary__cta button'); return { busy: b?.classList.contains('is-loading'), ariaBusy: b?.getAttribute('aria-busy'), text: b?.textContent.trim() }; });
+  check(loading.busy === true && loading.ariaBusy === null && loading.text === 'Enviando pedido…', 'CTA em loading "Enviando pedido…"', JSON.stringify(loading));
   await page.waitForURL(/#\/confirmation/, { timeout: 3000 }).catch(() => {});
   await page.waitForTimeout(400);
 

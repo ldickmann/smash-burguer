@@ -1,22 +1,27 @@
-// BaseDialog (SPEC §4.1): <dialog> com showModal(), sheet no mobile.
-@use "../../base/breakpoints" as *;
+// BaseDialog (desenho dos componentes base, §5.2): <dialog> com showModal(). A partir de md, diálogo
+// em surface-container-high, canto 28 e elevacao-3; abaixo, sheet em surface-container-low, cantos de
+// 28 só em cima e elevacao-1, na altura do conteúdo (com teto) e sem alça. Título em headline-s 400;
+// divisores só quando o corpo rola.
+@use "@/assets/styles/base/breakpoints" as *;
+@use "@/assets/styles/base/m3" as *;
 
 .dialog {
   // Zera o padrão do <dialog>
   padding: 0;
   border: 0;
-  background: var(--color-surface-2);
-  color: var(--color-ink);
-  box-shadow: var(--elev-3);
+  background: var(--m3-surface-container-low);
+  color: var(--m3-on-surface);
+  box-shadow: var(--m3-elevacao-1);
 
-  // Mobile: sheet que sobe da base
+  // Abaixo de md: sheet preso ao pé, na altura do conteúdo, até 640 px e com o scrim à vista em cima
   width: 100%;
-  max-width: 100%;
-  height: calc(100dvh - var(--space-6));
+  max-width: 40rem;
   max-height: calc(100dvh - var(--space-6));
-  margin: auto 0 0;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  margin: auto auto 0;
+  border-radius: var(--m3-forma-xl) var(--m3-forma-xl) 0 0;
   overflow: hidden;
+
+  @include reserva-de-sombra;
 
   &[open] {
     display: flex;
@@ -28,7 +33,7 @@
   }
 
   &::backdrop {
-    background: var(--color-overlay);
+    background: var(--m3-scrim);
   }
 
   &[open]::backdrop {
@@ -42,10 +47,11 @@
   @include up(md) {
     width: calc(100% - 2 * var(--gutter));
     max-width: var(--dialog-max, 880px);
-    height: fit-content;
     max-height: calc(100dvh - 2 * var(--space-6));
     margin: auto;
-    border-radius: var(--radius-lg);
+    border-radius: var(--m3-forma-xl);
+    background: var(--m3-surface-container-high);
+    box-shadow: var(--m3-elevacao-3);
 
     &[open] {
       @include motion-ok {
@@ -65,38 +71,52 @@
 .dialog__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-3) var(--space-3) var(--space-2) var(--space-5);
+  border-block-end: 1px solid transparent;
 }
 
 .dialog__title {
-  font-family: var(--font-text);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  line-height: var(--leading-tight);
+  @include tipo(headline-s);
+
+  flex: 1;
+  color: var(--m3-on-surface);
+  letter-spacing: var(--m3-headline-s-tracking);
   text-transform: none;
-  letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 .dialog__close {
   flex-shrink: 0;
 }
 
+// O corpo é o contêiner de rolagem: termina acima do rodapé, e o scroll-padding dá a folga do anel
 .dialog__body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--space-5);
+  padding: var(--space-2) var(--space-5);
+  scroll-padding-block: var(--space-4);
+}
+
+.dialog__body--sem-rodape {
+  padding-bottom: var(--space-5);
 }
 
 .dialog__footer {
   flex-shrink: 0;
-  padding: var(--space-4) var(--space-5) calc(var(--space-4) + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--color-border);
-  background: var(--color-surface-2);
+  padding: var(--space-4) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom));
+  border-block-start: 1px solid transparent;
+}
+
+// Divisores: só a cor da borda troca, nada se move
+.dialog__panel.is-rolado .dialog__header {
+  border-block-end-color: var(--m3-outline-variant);
+}
+
+.dialog__panel.tem-mais .dialog__footer {
+  border-block-start-color: var(--m3-outline-variant);
 }
 
 @keyframes dialog-fade {

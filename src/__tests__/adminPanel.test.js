@@ -285,6 +285,11 @@ describe('telas do painel', () => {
     expect(dialogo.find('.admin-settings__dialog-text').text()).toContain('Não é possível desfazer.');
     const acoes = dialogo.find('.admin-settings__actions--fim');
     expect(acoes.findAll('button').map((b) => b.text())).toEqual(['Cancelar', 'Restaurar']);
+    // Confirmação destrutiva: alertdialog com a descrição ligada e o foco inicial no "Cancelar"
+    expect(dialogo.attributes('role')).toBe('alertdialog');
+    expect(dialogo.attributes('aria-describedby')).toBe('restaurar-texto');
+    expect(dialogo.find('#restaurar-texto').exists()).toBe(true);
+    expect(acoes.findAll('button')[0].attributes('autofocus')).toBeDefined();
   });
 
   it('Configurações restaura o cardápio e os pedidos, depois da confirmação', async () => {

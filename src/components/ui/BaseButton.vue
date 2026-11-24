@@ -35,8 +35,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref, useAttrs, watch } from "vue";
+import { computed, inject, nextTick, ref, useAttrs, watch } from "vue";
 import { RouterLink } from "vue-router";
+import { CHAVE_ANUNCIADOR, useAnnouncer } from "@/composables/useAnnouncer";
 
 defineOptions({ inheritAttrs: false });
 
@@ -59,13 +60,11 @@ const props = defineProps({
     default: "button",
     validator: (value) => ["button", "submit"].includes(value),
   },
-  // Botão alternável: vira aria-pressed (só quando informado)
-  pressed: { type: Boolean, default: undefined },
   // Face "Adicionado" com o check, do M3Botao da Home (só existe quando informada)
   retorno: { type: Boolean, default: undefined },
   iconStart: { type: [String, Array], default: "" },
   iconEnd: { type: [String, Array], default: "" },
-  // Botão quadrado só com ícone: `label` vira o aria-label (obrigatório)
+  // Botão de ícone do Expressive (redondo; a forma vem da variant): `label` vira o aria-label (obrigatório)
   iconOnly: { type: Boolean, default: false },
   label: { type: String, default: "" },
   to: { type: [String, Object], default: undefined },
@@ -75,13 +74,19 @@ const props = defineProps({
 const attrs = useAttrs();
 const root = ref(null);
 const lockedWidth = ref("");
+// Região viva do diálogo (a página atrás dele é inerte) ou, fora dele, a do App.vue
+const anunciar = inject(CHAVE_ANUNCIADOR, null) ?? useAnnouncer().announce;
 
 if (props.iconOnly && !props.label) {
   console.warn("BaseButton: `iconOnly` exige `label`.");
 }
 
+// aria-disabled repassado por quem usa (o seletor no limite, o CTA do pagamento): o botão continua
+// focável, mas o clique não faz nada, como o soft-disabled do material-web
+const ariaDisabled = computed(() => attrs["aria-disabled"] === true || attrs["aria-disabled"] === "true");
+
 // Link desabilitado ou carregando não navega: vira <a> sem href
-const isInert = computed(() => props.disabled || props.loading);
+const isInert = computed(() => props.disabled || props.loading || ariaDisabled.value);
 const isLink = computed(() => Boolean(props.to || props.href));
 
 const tag = computed(() => {
@@ -105,23 +110,22 @@ const elementAttrs = computed(() => {
   }
 
   if (isLink.value && props.disabled) result["aria-disabled"] = "true";
-  if (props.loading) result["aria-busy"] = "true";
-  if (props.pressed !== undefined) result["aria-pressed"] = String(props.pressed);
   if (props.iconOnly) result["aria-label"] = props.label;
 
   return result;
 });
 
-// Mapa do SPEC-material §4.1: primary vira filled, secondary vira tonal e ghost vira texto.
-// danger, iconOnly e pressed ficam com a forma de hoje (.btn--legado) até o desenho deles (§4.2)
-const VARIANTE_M3 = { primary: "filled", secondary: "tonal", ghost: "texto" };
-const legado = computed(() => props.variant === "danger" || props.iconOnly || props.pressed !== undefined);
+// Mapa do SPEC-material §4.1 e do desenho dos componentes base (§5.5 e §5.6): primary vira filled,
+// secondary vira tonal, ghost vira texto e danger vira perigo (text button na tinta error). Com
+// iconOnly, a mesma variante dá o botão de ícone padrão, tonal ou filled
+const VARIANTE_M3 = { primary: "filled", secondary: "tonal", ghost: "texto", danger: "perigo" };
 
 const classes = computed(() => [
   "btn",
   `btn--${props.variant}`,
   `btn--${props.size}`,
-  legado.value ? "btn--legado" : ["m3-botao", `m3-botao--${VARIANTE_M3[props.variant]}`],
+  "m3-botao",
+  `m3-botao--${VARIANTE_M3[props.variant]}`,
   {
     "btn--block": props.block,
     "btn--icon-only": props.iconOnly,
@@ -141,13 +145,22 @@ const handleClick = (event) => {
   else if (typeof listener === "function") listener(event);
 };
 
-// Durante o loading a largura não diminui
+const elemento = () => root.value?.$el ?? root.value;
+const textoDoRotulo = () => elemento()?.querySelector?.(".btn__label")?.textContent.trim() ?? "";
+
+// Durante o loading a largura não diminui. O rótulo novo ("Entrando…") vai à região viva: o
+// aria-busy saiu, porque ele pode segurar o anúncio das mudanças do próprio botão. O watcher roda
+// antes da renderização, então o rótulo lido aqui ainda é o de repouso
 watch(
   () => props.loading,
   async (isLoading) => {
     if (isLoading) {
-      const el = root.value?.$el ?? root.value;
+      const el = elemento();
       if (el?.offsetWidth) lockedWidth.value = `${el.offsetWidth}px`;
+      const antes = textoDoRotulo();
+      await nextTick();
+      const depois = textoDoRotulo();
+      if (props.loading && depois && depois !== antes) anunciar(depois);
     } else {
       await nextTick();
       lockedWidth.value = "";

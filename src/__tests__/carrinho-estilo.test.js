@@ -27,8 +27,6 @@ const PARCIAIS = {
 const DESDE_SM = '@media (min-width: 480px)';
 const DESDE_MD = '@media (min-width: 768px)';
 const DESDE_LG = '@media (min-width: 1024px)';
-const ABAIXO_MD = '@media (max-width: 767.98px)';
-const DE_MD_A_XL = '@media (min-width: 768px) and (max-width: 1279.98px)';
 const GRUDADO = '@media (min-width: 1024px) and (min-height: 48rem)';
 const MOVIMENTO_OK = '@media (prefers-reduced-motion: no-preference)';
 const MOVIMENTO_REDUZIDO = '@media (prefers-reduced-motion: reduce)';
@@ -123,29 +121,16 @@ describe('token e mixin novos (§8)', () => {
   });
 });
 
-describe('foco não coberto pelo aviso (§4, decisão i)', () => {
-  const comAviso = (raiz) => `html:has(.${raiz}):has(.toast-region .toast)`;
-  const RESERVA_TOPO = 'calc(var(--navbar-h) + var(--space-4) + var(--m3-toast-reserva))';
-
+// A reserva do aviso saiu das páginas: o AppToast a absorveu numa regra que conta os avisos
+// (desenho dos componentes base, §4.5; conferida no componentes-estilo.test.js)
+describe('foco não coberto pelo aviso (§4, decisão i; absorvido pelo AppToast na etapa 10)', () => {
   it.each([
-    ['carrinho', 'cart-page', 'CartView.vue'],
-    ['pagamento', 'payment-page', 'PaymentView.vue'],
-  ])('%s: com aviso na tela, o scroll-padding do pé soma a reserva abaixo de md', (nome, raiz, arquivo) => {
+    ['carrinho', 'CartView.vue'],
+    ['pagamento', 'PaymentView.vue'],
+  ])('%s: a parcial não tem mais regra do aviso', (nome, arquivo) => {
     const code = escopado(css[nome], arquivo);
-    expect(valor(code, comAviso(raiz), 'scroll-padding-bottom', ABAIXO_MD)).toBe(
-      'calc(var(--m3-barra-reserva) + var(--m3-toast-reserva))'
-    );
-  });
-
-  it('pagamento: a reserva do topo vale a partir de md (o aviso cruza a coluna do resumo em qualquer largura)', () => {
-    const code = escopado(css.pagamento, 'PaymentView.vue');
-    expect(valor(code, comAviso('payment-page'), 'scroll-padding-top', DESDE_MD)).toBe(RESERVA_TOPO);
-  });
-
-  it('carrinho: a reserva do topo vale de md a xl; a partir de xl o aviso não cruza a coluna da lista, e a página não pula', () => {
-    const code = escopado(css.carrinho, 'CartView.vue');
-    expect(valor(code, comAviso('cart-page'), 'scroll-padding-top', DE_MD_A_XL)).toBe(RESERVA_TOPO);
-    expect(valor(code, comAviso('cart-page'), 'scroll-padding-top', DESDE_MD)).toBeUndefined();
+    expect(code).not.toMatch(/toast-region/);
+    expect(code).not.toMatch(/m3-toast-reserva/);
   });
 });
 

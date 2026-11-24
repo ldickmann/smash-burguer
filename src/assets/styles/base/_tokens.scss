@@ -42,12 +42,22 @@
   --m3-outline-variant: #c2c9bd;
   --m3-inverse-surface: #2d322c;
   --m3-inverse-on-surface: #eef2e9;
+  // Ação do aviso (snackbar): o inverse-primary do mesmo gerador, da mesma semente (etapa 10)
+  --m3-inverse-primary: #9fd49b;
   --m3-scrim: rgba(0, 0, 0, 0.32);
   // Camadas de estado (cor "on" com esta opacidade)
   --m3-camada-hover: rgba(24, 29, 23, 0.08);
   --m3-camada-pressionada: rgba(24, 29, 23, 0.1);
   --m3-camada-primary-hover: rgba(58, 105, 59, 0.08);
   --m3-camada-primary-pressionada: rgba(58, 105, 59, 0.1);
+  // Camadas sobre o aviso (inverse-on-surface com a opacidade da camada): só medem os pares do aviso,
+  // porque o CSS usa currentColor
+  --m3-camada-inversa-hover: rgba(238, 242, 233, 0.08);
+  --m3-camada-inversa-pressionada: rgba(238, 242, 233, 0.1);
+  // Desabilitado: on-surface a 10% no contêiner e a 38% no conteúdo, em rgba para compor com qualquer
+  // fundo (isento de contraste)
+  --m3-desabilitado-container: rgba(24, 29, 23, 0.1);
+  --m3-desabilitado-conteudo: rgba(24, 29, 23, 0.38);
   // Cores personalizadas harmonizadas com a semente
   --m3-sucesso: #196d25;
   --m3-sucesso-container: #a2f79d;
@@ -151,8 +161,8 @@
   // Entra no scroll-padding-top da rota (desenho do Cardápio, §4)
   --m3-categorias-altura: calc(var(--target-min) + 2 * var(--space-3));
   // Um aviso (toast) de até 3 linhas (de 72 a 92 px em 390, medido), o anel de 5 px do foco e um vão.
-  // No carrinho e no pagamento, soma-se ao scroll-padding enquanto há aviso na tela, para o foco não
-  // ficar debaixo dele (desenho do Carrinho, §4). A etapa 10 (AppToast) herda ou absorve esta reserva
+  // O AppToast soma uma reserva por aviso na tela (até 3) ao scroll-padding-bottom e ao pé da página,
+  // para o foco não ficar debaixo dele (desenho dos componentes base, §4.5)
   --m3-toast-reserva: 6.5rem;
   // Navegação do painel: a coluna fixa a partir de lg e a gaveta abaixo dele, com a mesma largura
   // (240 px: o mínimo da folha da gaveta e dentro dos 220 a 360 do rail expandido; desenho do admin, §4.1)
@@ -210,8 +220,8 @@
   --color-ink: var(--m3-on-surface);
   --color-ink-muted: var(--m3-on-surface-variant);
   --color-ink-subtle: var(--m3-on-surface-variant);
-  // on-surface a 38% sobre surface, já composto (desabilitado: isento de contraste)
-  --color-ink-disabled: #a2a79e;
+  // on-surface a 38% (desabilitado: isento de contraste); sobre a surface, compõe o #a2a79e de antes
+  --color-ink-disabled: var(--m3-desabilitado-conteudo);
 
   // Bordas
   --color-border-strong: var(--m3-outline);

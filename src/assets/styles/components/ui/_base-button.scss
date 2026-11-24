@@ -1,7 +1,7 @@
 // BaseButton (SPEC-material §4.1 e §6): o M3Botao da Home (scss/_botao.scss do material) com a API
-// de sempre. primary vira filled, secondary vira tonal e ghost vira texto; sm é o S de 40 px com
-// alvo de 44, md o S de 44 e lg o M de 56. danger, iconOnly e pressed (.btn--legado) ficam com a
-// forma de hoje e a pele M3 pelos apelidos até o desenho deles (§4.2, etapa 10).
+// de sempre. primary vira filled, secondary vira tonal, ghost vira texto e danger vira perigo; sm é
+// o S de 40 px com alvo de 44, md o S de 44 e lg o M de 56. O iconOnly, o carregando e o
+// desabilitado seguem o desenho dos componentes base (etapa 10, §5.5 a §5.9).
 @use "@/assets/styles/base/breakpoints" as *;
 @use "@/assets/styles/base/m3" as *;
 
@@ -146,125 +146,103 @@
   color: var(--m3-on-primary-container);
 }
 
-// A desenhar (danger, iconOnly e pressed): canto --radius-sm, borda de 1 px e as cores de hoje,
-// pelos apelidos. O :where() mantém a especificidade de antes, para o desabilitado continuar vencendo.
-.btn--legado {
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+// Perigo (danger): text button na tinta error, com a camada de estado. No hover e no pressionado a
+// tinta escurece para on-error-container: no surface-container-high, o error com a camada
+// pressionada daria 4,32 (desenho dos componentes base, §5.5). A troca de tinta é direta, sem
+// transição de cor
+.m3-botao--perigo {
+  @include camada-de-estado;
 
-  @include motion-ok {
-    transition: transform var(--dur-instant) var(--ease-out);
+  padding-inline: var(--space-3);
+  color: var(--m3-error);
 
-    &:active:not(:disabled, [aria-disabled="true"], .is-loading) {
-      transform: translateY(1px) scale(0.98);
+  @include hover-capable {
+    &:hover:not(:disabled, [aria-disabled="true"], .is-loading) {
+      color: var(--m3-on-error-container);
     }
+  }
+
+  &:active:not(:disabled, [aria-disabled="true"], .is-loading) {
+    color: var(--m3-on-error-container);
   }
 }
 
+// Botão de ícone do Expressive (§5.6): redondo, sm 40 (alvo de 44), md 44 e lg 56; ícone de 20 px
+// (24 no lg), como os ícones de apoio do campo e do painel. A variante decide: ghost é o padrão sem
+// contêiner, secondary o tonal, primary o filled e danger o padrão na tinta error
 .btn--icon-only {
   width: var(--target-min);
   padding: 0;
 
+  .btn__icon {
+    font-size: 1.25rem;
+  }
+
   &.btn--sm {
     width: 2.5rem;
+
+    // O alvo de 44 px cresce para os quatro lados
+    .btn__face--frente::after {
+      inset: -2px;
+    }
   }
 
   &.btn--lg {
     width: 3.5rem;
-  }
 
-  .btn__icon {
-    font-size: 1.125rem;
-  }
-}
-
-:where(.btn--legado).btn--primary {
-  background-color: var(--color-accent);
-  color: var(--color-accent-ink);
-
-  @include hover-capable {
-    &:hover {
-      background-color: var(--color-accent-hover);
-      box-shadow: var(--glow-accent);
+    .btn__icon {
+      font-size: 1.5rem;
     }
   }
 
-  &:active {
-    background-color: var(--color-accent-pressed);
-    box-shadow: none;
-  }
-}
+  // Tonal e filled: apertados, cantos forma-s (forma-m no lg)
+  &:is(.m3-botao--filled, .m3-botao--tonal) {
+    --m3-botao-forma-pressionada: var(--m3-forma-s);
 
-:where(.btn--legado).btn--secondary {
-  border-color: var(--color-border-strong);
-  background-color: transparent;
-  color: var(--color-ink);
-
-  @include hover-capable {
-    &:hover {
-      background-color: var(--color-surface-3);
+    &.btn--lg {
+      --m3-botao-forma-pressionada: var(--m3-forma-m);
     }
   }
+}
 
-  &:active {
-    background-color: var(--color-surface-4);
+.m3-botao--texto.btn--icon-only {
+  color: var(--m3-on-surface-variant);
+}
+
+// Mais contraste: o tonal (também o do seletor) ganha a borda outline, porque o contêiner mede de
+// 1,05 a 1,29 contra os fundos
+@media (prefers-contrast: more) {
+  .m3-botao--tonal {
+    border: 1px solid var(--m3-outline);
   }
 }
 
-:where(.btn--legado).btn--ghost {
-  background-color: transparent;
-  color: var(--color-ink-muted);
+// Carregando: as cores do repouso, com o hover e o pressionado neutros; o clique fica bloqueado
+.m3-botao.is-loading {
+  --m3-botao-fundo-hover: var(--m3-botao-fundo-repouso);
+  --m3-botao-fundo-pressionado: var(--m3-botao-fundo-repouso);
 
-  @include hover-capable {
-    &:hover {
-      background-color: var(--color-hover-ghost);
-      color: var(--color-ink);
-    }
-  }
-
-  &:active {
-    background-color: var(--color-surface-3);
-    color: var(--color-ink);
-  }
-}
-
-.btn--danger {
-  background-color: transparent;
-  color: var(--color-danger);
-
-  @include hover-capable {
-    &:hover {
-      background-color: var(--color-danger-soft);
-    }
-  }
-
-  &:active {
-    background-color: var(--color-danger-soft);
-  }
-}
-
-// Desabilitado: igual em todas as variantes, sem camada (§6, a desenhar). Nas do M3, os três fundos
-// das camadas também viram o do desabilitado.
-.btn:disabled,
-.btn[aria-disabled="true"] {
-  --m3-botao-fundo-repouso: var(--color-surface-4);
-  --m3-botao-fundo-hover: var(--color-surface-4);
-  --m3-botao-fundo-pressionado: var(--color-surface-4);
-
-  border-color: transparent;
-  background-color: var(--color-surface-4);
-  color: var(--color-ink-disabled);
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-// Carregando: o clique fica bloqueado
-.btn.is-loading {
   cursor: progress;
 }
 
-// Inerte (desabilitado ou carregando): o pressionado não troca a forma nem a cor, e o texto não
-// ganha camada, como o aperto de antes, que também não valia nesses estados
+// Desabilitado (§5.8): contêiner on-surface a 10% e conteúdo a 38%, isentos de contraste; o texto,
+// o perigo e o ícone padrão ficam sem contêiner. Sem camada e sem troca de forma (abaixo)
+.btn:is(:disabled, [aria-disabled="true"]) {
+  --m3-botao-fundo-repouso: var(--m3-desabilitado-container);
+  --m3-botao-fundo-hover: var(--m3-desabilitado-container);
+  --m3-botao-fundo-pressionado: var(--m3-desabilitado-container);
+
+  color: var(--m3-desabilitado-conteudo);
+  cursor: not-allowed;
+
+  @media (forced-colors: active) {
+    border-color: GrayText;
+    color: GrayText;
+  }
+}
+
+// Inerte (desabilitado ou carregando): o pressionado não troca a forma nem a cor, e o texto e o
+// perigo não ganham camada
 :is(.m3-botao--filled, .m3-botao--tonal):is(:disabled, [aria-disabled="true"], .is-loading):active {
   --m3-botao-fundo: var(--m3-botao-fundo-repouso);
 
@@ -279,7 +257,7 @@
   }
 }
 
-.m3-botao--texto:is(:disabled, [aria-disabled="true"], .is-loading)::before {
+:is(.m3-botao--texto, .m3-botao--perigo):is(:disabled, [aria-disabled="true"], .is-loading)::before {
   opacity: 0;
 }
 

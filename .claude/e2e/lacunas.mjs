@@ -47,14 +47,14 @@ for (const reduce of [true, false]) {
   });
   await page.getByRole('button', { name: 'Adicionar Cheese Bacon' }).click();
   await page.waitForTimeout(30);
-  const dlg = await page.evaluate(() => { const d = document.querySelector('dialog[open]'); const s = getComputedStyle(d); const b = getComputedStyle(d, '::backdrop'); const n = (x) => x.replace(/-[0-9a-f]{8}$/, ''); return { dialog: `${n(s.animationName)} ${s.animationDuration}`, backdrop: `${n(b.animationName)} ${b.animationDuration}` }; });
+  const dlg = await page.evaluate(() => { const d = document.querySelector('dialog[open]'); const s = getComputedStyle(d); const b = getComputedStyle(d, '::backdrop'); const n = (x) => x.replace(/-[0-9a-f]{8}$/, ''); const raiz = getComputedStyle(document.documentElement); const seg = (t) => { const v = raiz.getPropertyValue(t).trim(); return `${v.endsWith("ms") ? parseFloat(v) / 1000 : parseFloat(v)}s`; }; return { dialog: `${n(s.animationName)} ${s.animationDuration}`, backdrop: `${n(b.animationName)} ${b.animationDuration}`, slow: seg('--dur-slow'), base: seg('--dur-base'), fast: seg('--dur-fast') }; });
   await page.keyboard.press('Escape');
   if (reduce) {
     const bad = Object.entries(props).filter(([, v]) => !/^opacity 0\.15s$|^(opacity, )*opacity 0\.15s(, 0\.15s)*$/.test(v) && !/^opacity 0\.15s/.test(v));
     check(bad.length === 0, 'reduzido: transições só de opacity em 150ms (botões, links, cards)', JSON.stringify(props));
-    check(dlg.dialog === 'dialog-fade 0.15s' && dlg.backdrop === 'dialog-fade 0.15s', 'reduzido: sheet e fundo do diálogo com opacidade em 150ms', JSON.stringify(dlg));
+    check(dlg.dialog === `dialog-fade ${dlg.fast}` && dlg.backdrop === `dialog-fade ${dlg.fast}`, 'reduzido: sheet e fundo do diálogo com opacidade em --dur-fast', JSON.stringify(dlg));
   } else {
-    check(dlg.dialog === 'dialog-sheet-in 0.4s' && dlg.backdrop === 'dialog-fade 0.24s', 'normal: sheet em 400ms e fundo em 240ms, como antes', JSON.stringify(dlg));
+    check(dlg.dialog === `dialog-sheet-in ${dlg.slow}` && dlg.backdrop === `dialog-fade ${dlg.base}`, 'normal: sheet em --dur-slow e fundo em --dur-base', JSON.stringify(dlg));
     check(!/color/.test(JSON.stringify(props)), 'normal: nenhuma transição de cor', JSON.stringify(props));
   }
   await ctx.close();

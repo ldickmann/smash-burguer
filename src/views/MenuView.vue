@@ -23,7 +23,16 @@
         </li>
       </ul>
 
-      <EmptyState v-else icon="utensils" :title="TEXTOS.vazio" text="Dê uma olhada nas outras categorias." />
+      <!-- A região existe sempre: o vazio que aparece depois de escolher a categoria é anunciado
+           (desenho dos componentes base, §5.3) -->
+      <div role="status" aria-atomic="true">
+        <EmptyState
+          v-if="!produtos.length"
+          icon="utensils"
+          :title="TEXTOS.vazio"
+          text="Dê uma olhada nas outras categorias."
+        />
+      </div>
     </section>
   </div>
 
