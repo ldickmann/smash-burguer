@@ -1035,3 +1035,391 @@ Na revisão do desenho do painel (24/11/2026), a sessão principal abriu duas p�
 
 - A G182 trata de **texto** colorido; o item atual do painel muda o **fundo** (a pílula, 1,23 contra a coluna) e quase não muda a cor do rótulo (cerca de 1,05). Ler o negrito como sinal suficiente para um fundo colorido é inferência, apoiada na lista de pistas da G182 e no "shape or text" da [99].
 - Não encontrei técnica nem falha da W3C sobre o item atual ou selecionado de uma navegação marcado só pelo fundo.
+
+## Etapa 10: componentes base (24/11/2026)
+
+Feita em 24/11/2026, com a verificação no mesmo dia. Um pesquisador abriu as páginas e devolveu 85 afirmações, com uma síntese de componentes, riscos e recomendação. Depois, um verificador reabriu cada URL e tentou derrubar cada afirmação, conferindo se a página diz aquilo, com a medida, a cor, o tempo ou o comportamento citado, e se a fonte é da classe declarada. A verificação baixou cada página e leu o trecho de cada afirmação no texto da página (nas páginas grandes, como o WAI-ARIA 1.2, o HTML Standard e as referências Kotlin, só as seções citadas); nos arquivos de código e de tokens do AndroidX e do material-web, conferiu o valor e a linha `VERSION`. As fontes [90] e [153] entram pelo que o dossiê já registra, sem reabertura. A seção responde às perguntas do desenho da etapa 10: o snackbar (cores, medidas, posição, tempo e fila), o diálogo e o modal bottom sheet, o estado vazio, o icon button do Expressive, o indicador de progresso e o botão carregando, o desabilitado e a ação destrutiva, e o seletor de quantidade. Ela completa as linhas `AppToast`, `BaseDialog`, `EmptyState` e `QuantityStepper` da §4.2 do SPEC-M (`docs/direcoes/SPEC-material.md`), as variantes "a desenhar" do `BaseButton` na §4.1 (`danger`, `iconOnly`, `loading` e `pressed`, mais o desabilitado) e as linhas "a desenhar" da §6, ligadas ao registro de que os dossiês não tinham fonte de snackbar, diálogo, estado vazio nem icon button. Das 85 afirmações, 82 ficaram inteiras (8 delas com ajuste de redação), 3 ficaram em parte e nenhuma caiu inteira. Da síntese do pesquisador, três trechos caíram em parte. Tudo isso está em "Refutadas na verificação (etapa 10)". O que a verificação achou e o pesquisador não trouxe está marcado "achado na verificação". As fontes que já tinham número mantêm o número ([58], [76], [90], [98], [151], [153], [166], [190], [193], [198], [199], [200] e [207]), e as novas vão de [216] a [275].
+
+### Fontes da etapa 10
+
+| Nº | Tipo | Título | URL | O que sustenta |
+|---|---|---|---|---|
+| [216] | documentação oficial | Snackbar (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/snackbar | O aviso breve no pé da tela, os três usos, o `SnackbarHost` no `Scaffold`, a ação, a duração e o resultado. |
+| [217] | documentação oficial | SnackbarHostState (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/SnackbarHostState | Um por vez, a fila, a duração padrão com e sem ação, o `withDismissAction` e as amostras (fila com um pendente e cores próprias). |
+| [218] | documentação oficial | SnackbarHost.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/SnackbarHost.kt | As durações em ms, o ajuste pela acessibilidade, a fila por Mutex, a entrada e a saída e a semântica. |
+| [219] | documentação oficial | Snackbar.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/Snackbar.kt | O KDoc (uma ação, o que não expira, o foco que não conta como ação), a largura, os espaços, o fechar e a ação. |
+| [220] | documentação oficial | SnackbarTokens.kt (AndroidX, VERSION v0_103) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/SnackbarTokens.kt | Cores, elevação, forma, tipografia, ícone e alturas do snackbar. |
+| [221] | documentação oficial | ShapeTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ShapeTokens.kt | Os raios dos cantos em dp. |
+| [222] | documentação oficial | ComposeMaterial3Flags.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/ComposeMaterial3Flags.kt | A flag do layout novo do snackbar, desligada por padrão (achado na verificação). |
+| [223] | documentação oficial | Scaffold.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/Scaffold.kt | A posição do snackbar e do FAB e o `FabSpacing`. |
+| [224] | documentação oficial | Snackbar (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/Snackbar.md | Anatomia, cores, forma, elevação, margem, âncora, durações, um por vez, animação e leitura pelo TalkBack. |
+| [225] | documentação oficial | AccessibilityManager (referência da API do Android) | https://developer.android.com/reference/android/view/accessibility/AccessibilityManager#getRecommendedTimeoutMillis(int,%20int) | O tempo recomendado pela acessibilidade e as flags de conteúdo. |
+| [226] | documentação oficial | Change time to take action (Ajuda de Acessibilidade do Android, Google) | https://support.google.com/accessibility/android/answer/9426889?hl=en | A opção "Time to take action" e os valores. |
+| [227] | referência técnica | Understanding SC 2.2.1 Timing Adjustable (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html | O que é limite de tempo, o exemplo do toast de 5 s e as saídas. |
+| [228] | documentação oficial | Dialogs (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/dialog | Usos, peças do `AlertDialog`, o `Dialog` com conteúdo próprio e o exemplo com cor, forma e ações. |
+| [229] | documentação oficial | DialogTokens.kt (AndroidX, VERSION v0_210) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/DialogTokens.kt | Cores, elevação, forma, tipografia e ícone do diálogo. |
+| [230] | documentação oficial | AlertDialog.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/AlertDialog.kt | Largura, padding, espaços, ordem das ações, alinhamento do título, elevação tonal e `paneTitle`. |
+| [231] | documentação oficial | Dialogs (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/Dialog.md | Básico e tela cheia, anatomia, cores, insets, scrim, alinhamento e acessibilidade. |
+| [232] | documentação oficial | Dialog (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/dialog.md | O `md-dialog`, o `returnValue`, o rótulo, o `type="alert"`, o foco preso, o `cancel` e os tokens. |
+| [233] | documentação oficial | _md-comp-dialog.scss (tokens v0_192 do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-comp-dialog.scss | Forma, elevação, ícone e ações do diálogo. |
+| [234] | documentação oficial | dialog.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/dialog/internal/dialog.ts | `showModal()`, papéis, foco ao abrir, divisores, rolagem e clique fora. |
+| [235] | referência técnica | Alert and Message Dialogs Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/ | O alert dialog, os papéis e o teclado. |
+| [236] | documentação oficial | Bottom sheets (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/bottom-sheets | O `ModalBottomSheet`, o `SheetState` e a saída da composição. |
+| [237] | documentação oficial | SheetBottomTokens.kt (AndroidX, VERSION v0_210) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/SheetBottomTokens.kt | Cor, forma, elevação, alça e foco da folha. |
+| [238] | documentação oficial | SheetDefaults.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/SheetDefaults.kt | Largura máxima, scrim, alça e insets. |
+| [239] | documentação oficial | ModalBottomSheet.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/ModalBottomSheet.kt | Uso, padrões, scrim, fechamento e voltar. |
+| [240] | documentação oficial | BottomSheet.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/BottomSheet.kt | A alça clicável, as ações semânticas, o `paneTitle` e o foco do modal. |
+| [241] | documentação oficial | Bottom sheets (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/BottomSheet.md | Standard e modal, medidas, cores, fechamento, voltar e a alça acessível. |
+| [242] | documentação oficial | Tile (empty) states (Wear OS) | https://developer.android.com/design/ui/wear/guides/surfaces/tiles/states | Tipos de estado vazio e a chamada à ação. É guia de relógio. |
+| [243] | documentação oficial | Empty states, Patterns (Material 1, não mantido) | https://m1.material.io/patterns/empty-states.html | O estado vazio básico, a imagem, a frase e as alternativas. É do Material 1. |
+| [244] | praticante | Designing Empty States in Complex Applications: 3 Guidelines (Nielsen Norman Group, Kate Kaplan, 19/09/2021) | https://www.nngroup.com/articles/empty-state-interface-design/ | O vazio depois de filtrar, a mensagem de status, as pistas e os caminhos diretos. |
+| [245] | documentação oficial | Icon buttons (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/icon-button | Tipos, APIs, o toggle, o contador de dois botões e a atualização Expressive. |
+| [246] | documentação oficial | IconButtonDefaults (androidx.compose.material3) | https://developer.android.com/reference/kotlin/androidx/compose/material3/IconButtonDefaults | Tamanhos, formas, versão das APIs e cores padrão e vibrant. |
+| [247] | documentação oficial | IconButtonDefaults.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/IconButtonDefaults.kt | A largura como ícone mais os dois espaços (achado na verificação). |
+| [248] | documentação oficial | XSmallIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/XSmallIconButtonTokens.kt | Altura, ícone, espaços, contorno e formas do XS. |
+| [249] | documentação oficial | SmallIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/SmallIconButtonTokens.kt | Altura, ícone, espaços, contorno e formas do S. |
+| [250] | documentação oficial | MediumIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/MediumIconButtonTokens.kt | Altura, ícone, espaços, contorno e formas do M. |
+| [251] | documentação oficial | LargeIconButtonTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/LargeIconButtonTokens.kt | Altura, ícone, espaços, contorno e formas do L. |
+| [252] | documentação oficial | XLargeIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/XLargeIconButtonTokens.kt | Altura, ícone, espaços, contorno e formas do XL. |
+| [253] | documentação oficial | IconButtonTokens.kt (`StandardIconButtonTokens`, AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/IconButtonTokens.kt | Cores do icon button padrão e do toggle. |
+| [254] | documentação oficial | FilledIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/FilledIconButtonTokens.kt | Cores do filled. |
+| [255] | documentação oficial | FilledTonalIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/FilledTonalIconButtonTokens.kt | Cores do tonal. |
+| [256] | documentação oficial | OutlinedIconButtonTokens.kt (AndroidX, VERSION 14_1_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/OutlinedIconButtonTokens.kt | Cores e contorno do outlined. |
+| [257] | documentação oficial | Icon button (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/icon-button.md | Ênfase, toggle, nome, `soft-disabled` e tokens. |
+| [258] | documentação oficial | icon-button.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/iconbutton/internal/icon-button.ts | `aria-pressed`, troca do nome, `disabled` e `soft-disabled`. |
+| [259] | documentação oficial | Icon button (docs do Material Components for Android) | https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/IconButton.md | Expressive, tipos, estilos por ênfase, ícones do toggle, tamanho padrão, alvo de 48 dp e descrição. |
+| [260] | documentação oficial | Progress indicators (Jetpack Compose) | https://developer.android.com/develop/ui/compose/components/progress | Tipos, o wavy, o circular centrado no que carrega e o exemplo do botão. |
+| [261] | documentação oficial | Progress (docs do material-web) | https://raw.githubusercontent.com/material-components/material-web/main/docs/components/progress.md | Atributos, rótulo e tokens. |
+| [262] | documentação oficial | progress.ts (material-web) | https://raw.githubusercontent.com/material-components/material-web/main/progress/internal/progress.ts | Papel e atributos ARIA do indicador. |
+| [263] | referência técnica | ARIA: aria-busy attribute (MDN) | https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-busy | O `aria-busy` em live regions, widgets e feeds. |
+| [264] | documentação oficial | FilledButtonTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/FilledButtonTokens.kt | Desabilitado e toggle do botão filled. |
+| [265] | documentação oficial | FilledTonalButtonTokens.kt (AndroidX, VERSION v0_103) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/FilledTonalButtonTokens.kt | Cores, desabilitado, altura, forma e ícone do tonal. |
+| [266] | documentação oficial | TextButtonTokens.kt (AndroidX, VERSION v0_11_0) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/TextButtonTokens.kt | Rótulo e desabilitado do botão de texto. |
+| [267] | documentação oficial | Button.kt (código-fonte do AndroidX) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/Button.kt | As cores padrão, o TODO do texto, o KDoc e a largura mínima. |
+| [268] | documentação oficial | Material Design 3 in Compose | https://developer.android.com/develop/ui/compose/designsystems/material3 | O "on-x" com alpha no desabilitado e os pares de contraste. |
+| [269] | referência técnica | Understanding SC 1.4.3 Contrast (Minimum) (W3C) | https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html | O componente inativo. |
+| [270] | referência técnica | Developing a Keyboard Interface (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ | O foco em controles desabilitados e a persistência do foco. |
+| [271] | referência técnica | ARIA: aria-disabled attribute (MDN) | https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-disabled | O que o `aria-disabled` faz e não faz, o estilo e o aviso ao reativar. |
+| [272] | referência técnica | disabled HTML attribute (MDN) | https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/disabled | Foco, eventos, envio e `:disabled`. |
+| [273] | referência técnica | HTML Standard, 8.1.7.3 Processing model (WHATWG) | https://html.spec.whatwg.org/multipage/webappapis.html#focus-fixup-rule | O foco quando o elemento focado deixa de ser focável ou é removido. |
+| [274] | referência técnica | Spinbutton Pattern (WAI-ARIA APG) | https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/ | Peças, teclado, papéis e propriedades do spinbutton. |
+| [275] | referência técnica | Quantity Spin Button Example (WAI-ARIA APG, atualizado em 28/10/2025) | https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/quantity-spinbutton/ | Botões fora do Tab, `aria-disabled` no limite, o `output` e o aviso de suporte. |
+| [58] | documentação oficial | Loading indicators (Jetpack Compose; já citada) | https://developer.android.com/develop/ui/compose/components/loading-indicator | Nesta etapa: pull-to-refresh, progresso não mensurável e o contido; nada sobre botão. |
+| [76] | referência técnica | Understanding SC 2.4.11 Focus Not Obscured (Minimum) (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html | Nesta etapa: a notificação fixa, o conteúdo que aparece sem iniciativa do usuário e o toast que desliza para um espaço vazio. |
+| [90] | referência técnica | Button Pattern (WAI-ARIA APG; já citada) | https://www.w3.org/WAI/ARIA/apg/patterns/button/ | Nesta etapa, pelo que o dossiê já registra (não reaberta): o rótulo fixo do toggle com `aria-pressed`. |
+| [98] | referência técnica | Understanding SC 1.4.11 Non-text Contrast (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html | Nesta etapa: por que os inativos ficam isentos, o ícone com contraste no lugar da borda e o contorno encorajado. |
+| [151] | referência técnica | Understanding SC 4.1.3 Status Messages (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html | Nesta etapa: o texto sobre a busca como mensagem de status, o "ocupado" e o "system available". |
+| [153] | referência técnica | ARIA22: Using role=status to present status messages (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA22 | Nesta etapa, pelo que o dossiê já registra (não reaberta): o `role="status"` presente antes da mensagem. |
+| [166] | documentação oficial | ScrimTokens.kt (AndroidX, VERSION v0_117; já citada) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ScrimTokens.kt | Nesta etapa, reaberta na verificação: a opacidade de 0,32 que a folha usa. |
+| [190] | documentação oficial | material-web, pasta `labs` (API do GitHub; já citada) | https://api.github.com/repos/material-components/material-web/contents/labs | Nesta etapa: não há snackbar, nem experimental. |
+| [193] | documentação oficial | Roadmap do material-web (já citada) | https://raw.githubusercontent.com/material-components/material-web/main/docs/roadmap.md | Nesta etapa: Snackbar e Bottom sheet não feitos; Dialog, Icon button e Progress indicators feitos no Material 1.0. |
+| [198] | documentação oficial | ElevationTokens.kt (AndroidX, VERSION v0_103; já citada) | https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/ElevationTokens.kt | Nesta etapa: Level3 de 6 dp, Level4 de 8 dp e Level5 de 12 dp. |
+| [199] | referência técnica | Dialog (Modal) Pattern (WAI-ARIA APG; já citada) | https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ | Nesta etapa: o foco inicial num passo difícil de desfazer e o botão visível de fechar. |
+| [200] | referência técnica | H102: Creating modal dialogs with the HTML dialog element (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Techniques/html/H102 | Nesta etapa, reaberta na verificação: o foco volta a quem abriu, se ele ainda estiver na página. |
+| [207] | referência técnica | Accessible Rich Internet Applications (WAI-ARIA) 1.2 (W3C; já citada) | https://www.w3.org/TR/wai-aria-1.2/ | Nesta etapa: `aria-busy`, `progressbar`, `aria-disabled` e `spinbutton`. |
+
+### Snackbar
+
+**Anatomia e medidas.**
+
+| Peça | Compose | Material Components for Android (Views) |
+|---|---|---|
+| Contêiner | `InverseSurface`, `Level3` (6 dp), `CornerExtraSmall` (4 dp) ([220], [198], [221]) | `colorSurfaceInverse`, elevação de 6 dp, `shapeAppearanceCornerExtraSmall` [224] |
+| Texto | `InverseOnSurface`, `BodyMedium` [220] | `colorOnSurfaceInverse`, `textAppearanceBodyMedium` [224] |
+| Ação | `InversePrimary`, `LabelLarge`, com a mesma cor no hover, no foco e no pressionado [220]; é um `TextButton` [219] | `colorPrimaryInverse` [224] |
+| Fechar | Ícone `InverseOnSurface` de 24 dp [220]; um `IconButton` com o ícone Close, a descrição da string `SnackbarDismiss` e uma dica (tooltip) acima [219] | `colorOnSurfaceInverse` [224] |
+| Altura | 48 dp com uma linha e 68 dp com duas [220] | não encontrei |
+| Largura | Até 600 dp, sem mínimo próprio [219] | não encontrei |
+| Espaços | 16 dp no início; no fim, 8 dp sem o fechar e 0 com ele; 12 dp de margem por fora na sobrecarga com `SnackbarData` [219] | Margem externa de 8 dp [224] |
+| Peças | No máximo uma ação; fechar ou cancelar é opcional [219] | Contêiner, texto, ação opcional e fechar opcional [224] |
+
+- O texto quebra linha. Com `actionOnNewLine`, a ação desce para uma linha própria, alinhada ao fim [219].
+- Achado na verificação: o Snackbar.kt tem dois layouts. O padrão (o legado) põe 6 dp em volta do texto e, com duas linhas, a primeira linha de base a 30 dp do topo, com os 68 dp de altura mínima. O novo põe 14 dp em volta do texto e usa só os 48 dp de mínimo, mas só vale com a flag `isSnackbarStylingFixEnabled`, que vem `false` e corrige o alinhamento vertical do texto de várias linhas ([219], [222]).
+- O doc do MDC não traz nota do Expressive, largura nem padding interno [224].
+- Raios do ShapeTokens.kt: ExtraSmall 4, Small 8, Medium 12, Large 16, LargeIncreased 20, ExtraLarge 28 (ExtraLargeTop: 28 só nos cantos de cima), ExtraLargeIncreased 32 e ExtraExtraLarge 48 dp; Full é círculo [221]. Elevação: Level3 de 6 dp, Level4 de 8 dp e Level5 de 12 dp [198].
+
+**Posição.**
+
+- O guia do Compose descreve o snackbar como aviso breve no pé da tela, que dá retorno sem interromper e some depois de alguns segundos. Os usos são confirmar uma ação com "Undo" depois de apagar um e-mail ou mensagem, avisar que o app ficou offline e confirmar que um formulário ou ajuste foi salvo [216]. O KDoc diz que ele aparece por pouco tempo, perto do pé da tela, não deve interromper e não exige ação para sumir [219].
+- No `Scaffold`, o snackbar fica centralizado na horizontal, descontados os insets laterais. Na vertical, fica logo acima do FAB, quando há FAB; sem FAB, logo acima da bottom bar; sem as duas, acima do inset de baixo. Os 16 dp do `FabSpacing` separam o FAB da barra ou da borda; entre o snackbar e o FAB, a folga é a margem de 12 dp do próprio snackbar ([223], [219]).
+- No MDC, o snackbar fica preso à borda de baixo do pai. O `setAnchorView` o põe acima de uma view, como um FAB, uma BottomAppBar ou uma BottomNavigationView [224].
+- Nenhuma das duas fontes fala de snackbar no topo nem de alinhar ao início em telas largas.
+
+**Tempo.**
+
+| Duração | Compose | MDC |
+|---|---|---|
+| Curta | `Short`: 4000 ms [218] | `LENGTH_SHORT`, sem ms no doc [224] |
+| Longa | `Long`: 10000 ms [218] | `LENGTH_LONG`, sem ms no doc [224] |
+| Indefinida | `Indefinite` (`Long.MAX_VALUE`): fica até a pessoa ou o programa dispensar ([218], [216]) | `LENGTH_INDEFINITE`: até ser dispensado ou até outro aparecer [224] |
+| Padrão | `Short` sem ação e `Indefinite` com ação ([217], [218]) | — |
+
+- O KDoc diz que um snackbar com ação não deve expirar nem sumir sozinho até a pessoa fazer outra ação. Achado na verificação: o mesmo trecho diz que mover o foco do teclado pelos elementos da página não conta como ação [219].
+- O `withDismissAction` vem `false`. A referência recomenda `true` com `Indefinite`, "for better accessibility" [217].
+- Antes de valer, o tempo passa pelo `calculateRecommendedTimeoutMillis` do gerenciador de acessibilidade, quando ele existe, com ícones e texto sempre marcados e controles só quando há ação. O código tem um TODO sobre ajustar esses números [218].
+- No Android, o `getRecommendedTimeoutMillis` (API 29) devolve o tempo recomendado para o usuário atual. Os controles devem ficar na tela pelo menos esse tempo, porque algumas pessoas precisam de mais tempo para revisar, alcançar ou acionar os controles com tecnologia assistiva. As flags são `FLAG_CONTENT_ICONS` (1), `FLAG_CONTENT_TEXT` (2) e `FLAG_CONTENT_CONTROLS` (4) [225].
+- A opção "Time to take action (Accessibility timeout)", do Android 10 em diante, escolhe por quanto tempo ficam na tela as mensagens temporárias que pedem ação: Padrão, 10 s, 30 s, 1 min ou 2 min. Nem todo app a respeita [226].
+- No MDC, o snackbar some por tempo, por uma interação em outro ponto da tela ou por arraste [224].
+- O `showSnackbar()` devolve `ActionPerformed` (a pessoa tocou a ação) ou `Dismissed` (dispensou sem a ação) [216]. Achado na verificação: no exemplo do guia, um comentário diz que a duração padrão é `Short` numa chamada com ação, mas a referência e o código dão `Indefinite` nesse caso ([216], [217], [218]).
+- 2.2.1 [227]: todo processo que ocorre sem iniciativa do usuário depois de um tempo é limite de tempo. No exemplo da página, um toast de 5 s num cliente de e-mail não impõe limite, porque a mesma informação está na caixa de entrada. Sem outro meio de achar a informação, cada mensagem tem de cumprir a 2.2.1: desligar, ajustar até dez vezes o padrão, estender com aviso de 20 s, ou cair numa exceção. Desligar o limite é melhor que ajustá-lo.
+
+**Fila.**
+
+- Compose: no máximo um snackbar por vez. Um pedido feito com outro visível fica suspenso até o atual ser mostrado e resolvido; se quem pediu é cancelado, o aviso sai da tela ou da fila ([217], [218]). O código usa um Mutex, que o comentário chama de fila justa: o segundo pedido espera o atual ser dispensado, acionado ou cancelado [218].
+- Uma amostra da referência deixa só um snackbar na fila, com um canal `CONFLATED` [217].
+- MDC: só um aparece por vez, e mostrar um novo dispensa os anteriores [224].
+
+**Movimento.** No Compose, a entrada leva a opacidade de 0 a 1 com o `FastEffects` e a escala de 0,8 a 1 com o `FastSpatial`, os dois do esquema de movimento; a saída faz o inverso, e o item sai da lista quando a opacidade termina. O arquivo não traz milissegundos nem curva [218]. No MDC, a animação padrão é `fade` [224].
+
+**Semântica e acessibilidade.**
+
+- Compose: o snackbar visível é uma live region `Polite`, tem `paneTitle` (string `SnackbarPaneTitle`) e uma ação semântica `dismiss`, para a tecnologia assistiva dispensá-lo [218].
+- MDC: o texto vai sozinho aos serviços de acessibilidade, e leitores como o TalkBack o leem. O doc não trata de tempo para quem usa serviço de acessibilidade [224].
+- 2.4.11 [76], nesta etapa: uma notificação fixa, como um banner de cookies, falha se esconder inteiro o componente focado. Passam o banner modal, o scroll padding e, para notificações que não pedem ação, fechar quando perdem o foco. Conteúdo que aparece sem iniciativa do usuário, como avisos do sistema, não pode impedir o item focado de ficar visível. Entre os desenhos que passam, a página cita toasts que deslizam para um espaço vazio da página.
+
+**Na web.** O material-web não tem snackbar. O roadmap o põe em "New components", entre os que a equipe não construiu [193], e a pasta `labs` não tem nada parecido [190].
+
+**Amostra de personalização (não é diretriz).** Uma amostra da referência faz um snackbar próprio, com a ação em `inversePrimary` e, na variante de erro, o botão da ação em `errorContainer` com texto `error` [217].
+
+**Leitura da verificação (inferência).** A ação pede `inverse-primary` ([220], [224]), e a §2.2 do SPEC-M tem `inverse-surface` e `inverse-on-surface`, mas não `inverse-primary`. O `AppToast` de hoje já pausa o tempo no hover e no foco; a pausa no foco combina com o KDoc, para o qual navegar com o foco não é ação [219].
+
+### Diálogo e bottom sheet
+
+**Diálogo básico.**
+
+| Ponto | Compose | MDC (Views) | material-web |
+|---|---|---|---|
+| Contêiner | `SurfaceContainerHigh`, `Level3`, `CornerExtraLarge` [229]; elevação tonal 0 [230] | `colorSurfaceContainerHigh`, `shapeAppearanceCornerExtraLarge` [231] | `surface-container-high`, `level3`, `corner-extra-large` ([232], [233]) |
+| Largura | De 280 a 560 dp [230] | Inset de 24 dp nas laterais e de 80 dp em cima e embaixo [231] | não encontrei |
+| Padding | 24 dp (20 com ponteiro de precisão) [230] | não encontrei | não encontrei |
+| Ícone | Opcional; `Secondary`, 24 dp [229]; 16 dp abaixo dele [230] | `colorSecondary`; precisa de descrição [231] | `secondary`, 24 px [233] |
+| Título | `HeadlineSmall` em `OnSurface` [229]; 16 dp abaixo; centralizado quando há ícone, no início quando não há [230] | `colorOnSurface`, `textAppearanceHeadlineSmall`; o overlay padrão alinha ícone e título ao início, e o "Centered" os centraliza [231] | `on-surface`, headline-small [232] |
+| Texto | `BodyMedium` em `OnSurfaceVariant` [229]; 24 dp abaixo (16 com ponteiro de precisão) [230] | `colorOnSurfaceVariant`, `textAppearanceBodyMedium` [231] | `on-surface-variant`, body-medium [232] |
+| Ações | `Primary`, `LabelLarge` [229]; numa FlowRow alinhada ao fim, 8 dp entre os botões; lado a lado, o confirmar fica depois do dispensar; empilhados, o confirmar vem primeiro [230] | Botões de texto alinhados ao fim [231] | `primary`, label-large, camada de estado `primary` no hover, no foco e no pressionado [233] |
+| Divisor | — | Opcional [231] | Em cima e embaixo, quando o conteúdo rola e não está no topo ou no fim [234] |
+| Scrim | O conteúdo de baixo aparece escurecido [228]; sem valor na página | 32% (`backgroundDimAmount`) [231] | — |
+| Rolagem | O texto ocupa só o espaço que sobra; o arquivo não implementa rolagem [230] | não encontrei | Volta ao topo ao abrir [234] |
+| Nome do painel | `paneTitle` com a string `Dialog` [230] | — | — |
+
+- Usos (Compose): o diálogo mostra mensagens ou pede entrada numa camada acima do app, de forma interruptiva. Os exemplos são confirmar uma ação (como apagar um arquivo), pedir entrada e escolher numa lista. O `AlertDialog` tem `icon`, `title`, `text`, `onDismissRequest` (chamado, por exemplo, ao tocar fora), `confirmButton` e `dismissButton`, e os exemplos usam `TextButton` nos dois. Para formulário e vários botões, a página manda usar o `Dialog` com conteúdo próprio [228].
+- No exemplo de `Dialog` com imagem, o card usa `surfaceContainerHigh` e `shapes.extraLarge`, o texto é bodyMedium em `onSurfaceVariant`, e as ações ficam no fim, 8 dp uma da outra, com 24 dp de padding; o comentário diz que os diálogos do Material alinham as ações ao fim [228].
+- O KDoc diz que os diálogos trazem prompts importantes num fluxo e podem exigir uma ação, comunicar informação ou ajudar a concluir uma tarefa [230]. O MDC diz que o básico interrompe com informação, detalhes ou ações urgentes (alertas, seleção rápida, confirmação), que o diálogo desativa o app enquanto está aberto e que, interruptivo de propósito, deve ser usado com moderação [231].
+- Achado na verificação: o alinhamento do título diverge. O Compose centraliza ícone e título quando há ícone [230]; o overlay padrão do MDC os alinha ao início [231].
+
+**Tela cheia.** No MDC, o diálogo de tela cheia ocupa a tela com ações que pedem uma série de tarefas, como criar um evento de calendário, e é o único sobre o qual outro diálogo pode abrir. Não há implementação própria: usa-se o `DialogFragment`. A anatomia é contêiner, cabeçalho, ícone de fechar, botão de texto e divisor opcional [231].
+
+**Comportamento na web (material-web).**
+
+- O `md-dialog` se comporta como o `<dialog>` nativo e fecha por `<form method="dialog">`; o `value` do botão vira o `returnValue`. O diálogo é rotulado pelo título, ou por `aria-label` quando não tem título [232].
+- Abre com `showModal()`; põe `role="alertdialog"` só com `type="alert"`, não usa `aria-modal`, e o `aria-labelledby` aponta para o título [234].
+- Foco ao abrir: o filho com `autofocus`; senão, o primeiro focável, pelo comportamento nativo; sem filhos focáveis, o próprio diálogo [234]. O foco fica preso por padrão, e o `no-focus-trap` só deve ser usado se o diálogo ficar mais acessível sem a armadilha [232]. Ao fechar, o código não devolve o foco por conta própria [234]; quem devolve é o `<dialog>` nativo, a quem abriu, se ele ainda estiver na página [200].
+- O clique fora do conteúdo dispara `cancel` e fecha; o comentário do código diz que o `<dialog>` nativo não faz isso [234]. O evento `cancel` vem do clique no scrim ou do Esc [232].
+- O `type="alert"` serve a mensagens importantes que exigem resposta, como confirmações de erro e de ação. Achado na verificação: o exemplo da página é uma confirmação de exclusão com "Cancel" antes de "Delete", os dois como text buttons, sem cor própria no "Delete" [232].
+
+**APG: o que é novo em relação a [199] e [200].**
+
+- [199], nesta etapa: num passo final difícil de desfazer, como apagar dados ou concluir uma transação, pode ser melhor pôr o foco inicial na ação menos destrutiva, e o padrão de alert dialog costuma ser usado nesses casos. Num diálogo que só informa ou continua um processo, o foco pode ir ao elemento mais usado, como OK ou Continuar. A página recomenda fortemente que o Tab passe por um elemento visível com papel `button` que feche o diálogo, como um ícone de fechar ou um Cancelar.
+- [235]: o alert dialog é um diálogo modal que interrompe para comunicar uma mensagem importante e obter resposta; os exemplos são prompts de confirmação de ação e de erro. Papel `alertdialog` no elemento que contém a mensagem e os botões; `aria-modal="true"`, só se o resto ficar bloqueado e encoberto de fato; nome por `aria-labelledby` (título visível) ou `aria-label`; `aria-describedby` apontando para a mensagem. O papel permite tratamento especial, como um som de alerta. O teclado é o do diálogo modal.
+- [200], nesta etapa: com o `<dialog>` modal, o navegador devolve o foco a quem abriu, se ele ainda estiver na página.
+
+**Modal bottom sheet.**
+
+| Ponto | Compose | MDC (Views) |
+|---|---|---|
+| Contêiner | `SurfaceContainerLow`, `CornerExtraLargeTop` (28 dp só em cima), `Level1` no modal e no standard [237]; elevação tonal 0 [239] | `colorSurfaceContainerLow`, `shapeAppearanceCornerExtraLarge`, elevação de 1 dp [241] |
+| Largura máxima | 640 dp ([238], [239]) | 640 dp [241] |
+| Alça | 32 × 4 dp em `OnSurfaceVariant` [237]; 22 dp de padding vertical, forma extraLarge, sem alpha, descrição da string `BottomSheetDragHandleDescription` e dica acima [238]; vem por padrão, mas o parâmetro aceita `null` [239] | Opcional na anatomia; a `BottomSheetDragHandleView` tem mínimo de 48 dp de largura e altura, e é preciso reservar 48 dp no topo da folha [241] |
+| Foco | Indicador de foco `Secondary` [237] | — |
+| Scrim | Cor do scrim com opacidade de 0,32 ([238], [166]); tem descrição (`Strings.CloseSheet`) [239] | Sobre um scrim, sem valor no doc [241] |
+| Fechar | Toque no scrim, com `shouldDismissOnClickOutside` (padrão true); voltar, com `shouldDismissOnBackPress` (padrão true) e voltar preditivo [239] | Toque fora, arraste até o fim e voltar preditivo automático nos componentes modais [241] |
+| Insets | O modal respeita os insets seguros de cima e de baixo [238] | — |
+
+- O KDoc do `ModalBottomSheet` diz que a folha modal é alternativa a menus inline e a diálogos simples no celular, sobretudo para listas longas de ações ou itens com descrições e ícones. Como os diálogos, ela fica na frente do app, desativa o resto e fica até ser confirmada, dispensada ou até uma ação exigida ser feita ([239], [240]). No MDC, a modal bloqueia o resto, e a standard convive com o conteúdo [241].
+- A alça é clicável: expandida, dispensa a folha; parcialmente expandida, expande. Com os gestos ligados, ganha ações semânticas: dispensar sempre, expandir quando está parcial e recolher quando há estado parcial. A folha tem `paneTitle` (`BottomSheetPaneTitle`) [240].
+- No MDC, a `BottomSheetDragHandleView` recebe comandos de acessibilidade para expandir e recolher (TalkBack, Voice Access, Switch Access): um toque alterna entre expandida e recolhida, e o toque duplo esconde a folha. O doc não diz se a folha precisa de um botão de fechar à parte [241].
+- Achado na verificação: o KDoc do `BottomSheet.kt` diz que o `ModalBottomSheet` cuida sozinho da janela de diálogo, do scrim e da gestão de foco [240]. O `ModalBottomSheet` é marcado `@ExperimentalMaterial3Api` [239].
+- O guia do Compose mostra o `ModalBottomSheet` com o conteúdo em coluna e o `SheetState` com `show()` e `hide()`, e pede tirar a folha da composição quando ela esconde. A página não traz medidas nem orientação de acessibilidade [236].
+- Soma da verificação: a alça de 4 dp com 22 dp em cima e embaixo ocupa 48 dp de altura [238].
+
+**Leitura da verificação (inferência).** A §4.2 do SPEC-M põe o `BaseDialog` em `surface-container`; as três fontes dão `surface-container-high` ao diálogo ([229], [231], [232]) e `surface-container-low` à folha ([237], [241]). O `BaseDialog` de hoje já abre com `showModal()`, fecha no clique fora, como o material-web [234], e devolve o foco a quem abriu, como pede a H102 [200].
+
+### Estado vazio
+
+- Não encontrei componente nem diretriz de estado vazio no M3 (Compose, MDC ou material-web). A página do M2 não abriu.
+- Wear OS [242], guia de tile de relógio: estado vazio nem sempre é erro ou falta de dado; pode ser uma sessão encerrada ou uma mensagem positiva. Todo estado vazio deve ter uma chamada clara à ação, para a pessoa saber como resolver ou saber mais. O "sem dados" deve dizer a causa e como corrigir. Quando o vazio é o estado mais comum, uma imagem pode deixá-lo com cara de completo.
+- Material 1 [243], que a própria página diz não ser mais mantido (ela manda usar o M3): o estado vazio surge quando o conteúdo não pode ser mostrado, como uma lista sem itens ou uma busca sem resultado; falha do sistema é erro, não estado vazio. O básico é uma imagem não interativa com uma frase: imagem sutil e neutra em relação ao fundo; frase de tom positivo, coerente com a marca e sem parecer acionável. No "não faça", a imagem é viva e a frase parece uma chamada à ação. As alternativas são conteúdo inicial, conteúdo educativo e, na busca sem resultado exato, os resultados mais próximos, sob um título que deixe claro que não são exatos.
+- NN/g [244], praticante: um painel em branco depois de filtrar deixa a pessoa sem saber se ainda carrega, se falhou ou se o filtro estava errado. Terminado o processamento, uma mensagem curta de que não há dados para aquele filtro resolve; mostrar "No records" durante o carregamento engana. O vazio serve a pistas de aprendizado e a caminhos diretos (links) para a tarefa que o preenche; enquanto processa, um indicador de progresso.
+- 4.1.3 [151], nesta etapa: a lista de resultados não é mensagem de status, mas um texto breve sobre a busca, como "Searching...", "18 results returned" ou "No results returned", é, quando não leva o foco nem recarrega a página. A página não fala de filtro. Quando uma mensagem de "ocupado" some, um status não visível, como "system available", pode comunicar a mudança.
+- As fontes divergem na ação: o Wear OS pede uma chamada clara à ação em todo estado vazio [242], a NN/g pede caminhos diretos para a tarefa [244], e o Material 1 pede uma frase que não pareça acionável [243].
+
+**Leitura da verificação (inferência).** Nenhuma fonte dá medidas. Na categoria vazia do cardápio, a frase que aparece depois do filtro é texto sobre o resultado, o caso da [151], e cabe numa região `role="status"` presente antes da mensagem [153].
+
+### Icon button
+
+**Tipos e estilos.**
+
+- Compose [245]: os botões de ícone mostram ações comuns e precisam de um ícone de sentido claro. Há dois tipos: o padrão, que abre outro elemento, como menu ou busca, e o toggle, para ações binárias, como favoritar. As APIs são `IconButton`, `FilledIconButton`, `FilledTonalIconButton` e `OutlinedIconButton`, e as versões toggle.
+- MDC [259]: quatro estilos, em ordem de ênfase: filled, tonal, outlined e standard. O toggle usa o ícone contornado desmarcado e o preenchido marcado.
+- material-web [257]: o padrão não tem fundo nem contorno e é o de menor ênfase; o filled tem o maior impacto; o tonal fica no meio, bom para uma ação secundária ao lado de uma de ênfase alta; o outlined é de ênfase média.
+
+**Cores (Compose, tokens 14_1_0).**
+
+| Estilo | Contêiner | Ícone | Toggle desmarcado | Toggle marcado | Desabilitado |
+|---|---|---|---|---|---|
+| Padrão [253] | — | `OnSurfaceVariant` | Ícone `OnSurfaceVariant` | Ícone `Primary` | Ícone `OnSurface` a 0,38 |
+| Filled [254] | `Primary` | `OnPrimary` | `SurfaceContainer` com `OnSurfaceVariant` | `Primary` com `OnPrimary` | Contêiner `OnSurface` a 0,1; ícone `OnSurface` a 0,38 |
+| Tonal [255] | `SecondaryContainer` | `OnSecondaryContainer`, também no hover, no foco e no pressionado | Igual ao padrão | `Secondary` com `OnSecondary` | Contêiner `OnSurface` a 0,1; ícone `OnSurface` a 0,38 |
+| Outlined [256] | Contorno `OutlineVariant` | `OnSurfaceVariant` | Contorno `OutlineVariant` | `InverseSurface` com `InverseOnSurface` | Ícone `OnSurface` a 0,38, contorno `OutlineVariant`; marcado e desabilitado, contêiner `OnSurface` a 0,1 |
+
+- material-web [257]: contêiner de 40 × 40 px, ícone de 24 px e forma `corner-full`; o outlined tem contorno `outline` de 1 px; o marcado do filled fica em `primary`, e o do tonal, em `secondary-container`.
+- Referência [246]: o `iconButtonColors()` usa o `LocalContentColor`, e o desabilitado é esse conteúdo com o alpha `DisabledOpacity`; o `iconButtonVibrantColors()` traz as "recommended high contrast colors". A borda do `outlinedIconButtonBorder` usa o `LocalContentColor`; a versão vibrant usa a cor da especificação.
+
+**Tamanhos, larguras e formas do Expressive (dp).**
+
+| Tamanho | Altura | Ícone | Espaço de cada lado (narrow / uniform / wide) | Largura (narrow / uniform / wide) | Contorno do outlined | Quadrado | Pressionado | Marcado, redondo | Marcado, quadrado |
+|---|---|---|---|---|---|---|---|---|---|
+| XS [248] | 32 | 20 | 4 / 6 / 10 | 28 / 32 / 40 | 1 | Medium (12) | Small (8) | Medium (12) | Full |
+| S [249] | 40 | 24 | 4 / 8 / 14 | 32 / 40 / 52 | 1 | Medium (12) | Small (8) | Medium (12) | Full |
+| M [250] | 56 | 24 | 12 / 16 / 24 | 48 / 56 / 72 | 1 | Large (16) | Medium (12) | Large (16) | Full |
+| L [251] | 96 | 32 | 16 / 32 / 48 | 64 / 96 / 128 | 2 | ExtraLarge (28) | Large (16) | ExtraLarge (28) | Full |
+| XL [252] | 136 | 40 | 32 / 48 / 72 | 104 / 136 / 184 | 3 | ExtraLarge (28) | Large (16) | ExtraLarge (28) | Full |
+
+- O redondo é `CornerFull` em todos os tamanhos; os raios em dp vêm de [221]. A largura é o ícone mais os dois espaços, como o `IconButtonDefaults.kt` calcula; a soma é da verificação [247].
+- Compose [245]: cinco tamanhos, três larguras (uniform, a padrão, narrow e wide), cantos redondos ou quadrados. O botão troca de forma ao pressionar (`IconButtonDefaults.shapes()`) e o toggle, também ao marcar (`toggleableShapes()`). Num button group padrão, o botão pressionado interage com os vizinhos.
+- Referência [246]: os tamanhos por `IconButtonWidthOption` (padrão `Uniform`), o `shapes()` e o `toggleableShapes()` dizem "Added in 1.5.0", sem marca de experimental na página. Há forma redonda, quadrada, pressionada e marcada (redonda e quadrada) para cada tamanho.
+- MDC [259]: no Expressive, os botões de ícone ganharam formas e tamanhos e trocam de forma ao pressionar e ao marcar; o small é o tamanho padrão; as medidas padrão dão alvo de toque de 48 dp.
+
+**Nome acessível e toggle.**
+
+- MDC [259]: botão só de ícone sempre precisa de `contentDescription`, para o leitor de tela.
+- material-web [257]: nome por `aria-label`. O toggle usa `toggle`, `selected` e um segundo ícone em `slot="selected"`; o `aria-label-selected` dá um rótulo mais descritivo quando marcado. O `disabled` não é focável; o `soft-disabled` fica desabilitado e focável, recomendado em toolbars para a descoberta, com link para a APG.
+- material-web [258]: com `toggle`, o `<button>` interno recebe `aria-pressed` true ou false; quando `aria-label` e `aria-label-selected` existem, o nome passa ao segundo com o botão marcado. O `disabled` vira o atributo nativo; o `soft-disabled` vira `aria-disabled`, sem `disabled`, mantém o foco e bloqueia o clique na fase de captura.
+- Compose [245]: o exemplo de toggle troca o ícone contornado pelo preenchido e troca também a `contentDescription` ("Selected icon button" e "Unselected icon button."), num `IconButton` comum.
+- [90], pelo que o dossiê já registra: a APG pede que o rótulo de um toggle com `aria-pressed` não mude com o estado.
+
+**Leitura da verificação (inferência).** O `iconOnly` da §4.1 do SPEC-M tem 44 px; o S do Compose tem 40 dp de contêiner [249], e o MDC pede alvo de 48 dp [259].
+
+### Indicador de progresso e botão carregando
+
+- Compose [260]: determinado ou indeterminado, linear ou circular. O Expressive acrescenta o `LinearWavyProgressIndicator` e o `CircularWavyProgressIndicator` ao lado dos flat, com estilo arredondado, altura de trilho variável e forma de onda. O wavy aumenta a altura do componente, pode ficar menos visível em tamanhos muito pequenos e serve a processos mais longos, quando cabe um estilo mais expressivo. Mesmo no determinado, a onda anda sozinha; `waveSpeed = 0.dp` a para.
+- Compose [260]: o indicador circular deve ficar centrado no contêiner ou na página que carrega, "such as a button or card". No exemplo, o botão "Start loading" é trocado por um indicador linear enquanto carrega.
+- [58], nesta etapa: o loading indicator serve também ao pull-to-refresh e cabe quando o progresso não é mensurável ou não precisa ser mostrado; a versão contida dá contraste extra sobre o conteúdo. A página não fala de botão.
+- material-web [261]: `md-circular-progress` e `md-linear-progress`; `indeterminate`; `value` de 0 a `max` (padrão 1); `four-color` só no indeterminado. A página pede um `aria-label` descritivo, como "Page refresh progress" ou "Download progress". Tokens: o circular tem 48 px, traço de 8,3333% do tamanho e cor `primary`; o linear tem trilho `surface-container-highest` de 4 px. Nada sobre indicador dentro de botão.
+- material-web [262]: o componente põe `role="progressbar"` fixo, o `aria-label`, `aria-valuemin="0"` e `aria-valuemax` igual ao `max`, e omite o `aria-valuenow` no indeterminado.
+- `aria-busy` [207], nesta etapa: indica que o elemento está sendo modificado e que a tecnologia assistiva pode esperar o fim antes de expor as mudanças. O padrão é false, e ele vale em todos os elementos. Com true, a tecnologia assistiva pode ignorar as mudanças e tratá-las como uma atualização única quando ele volta a false. Os usos descritos são um lote de mudanças numa live region e um widget que ficaria sem os filhos obrigatórios durante a atualização.
+- `progressbar` [207], nesta etapa: mostra o progresso de tarefas demoradas. O `aria-valuenow` deve existir e deve ser omitido quando o progresso é indeterminado; sem valores, o mínimo é 0 e o máximo, 100. Ao carregar uma região, o autor aponta o `aria-describedby` dela para o indicador e põe `aria-busy="true"` na região até terminar. O valor é sempre só leitura, e o nome acessível é obrigatório.
+- MDN [263]: o `aria-busy` atrasa os anúncios de live regions e também sinaliza mudanças em widgets e feeds. A página não diz que o leitor de tela anuncia "ocupado" e não trata de botões.
+- [151], nesta etapa: entre os exemplos de mensagem de status estão um ícone de "ocupado" que aparece depois que a pessoa aciona um processo, anunciado como "application busy", e uma barra de progresso com anúncios de tempos em tempos.
+- Não encontrei orientação do M3 para progresso dentro de um botão além da frase do circular centrado no que carrega [260].
+
+### Desabilitado e ação destrutiva
+
+**Cores e opacidades do desabilitado.**
+
+| Variante | Contêiner | Rótulo e ícone | Fonte |
+|---|---|---|---|
+| Filled | `OnSurface` a 0,1; elevação `Level0` | `OnSurfaceVariant` a 0,38 | [264] (v0_11_0) |
+| Tonal | `OnSurface` a 0,12 | `OnSurface` a 0,38 | [265] (v0_103) |
+| Texto | Transparente no `textButtonColors()` [267]; o arquivo de tokens tem `OnSurface` a 0,1 | `OnSurfaceVariant` a 0,38 | [266] (v0_11_0), [267] |
+| Icon button filled e tonal | `OnSurface` a 0,1 | `OnSurface` a 0,38 | [254], [255] (14_1_0) |
+| Icon button padrão | — | `OnSurface` a 0,38 nos tokens; no `iconButtonColors()`, o `LocalContentColor` com a mesma opacidade | [253], [246] |
+| Icon button outlined | — (marcado: `OnSurface` a 0,1) | `OnSurface` a 0,38; contorno `OutlineVariant` | [256] |
+
+- Button.kt [267]: o `buttonColors()` lê o FilledButtonTokens, e o `filledTonalButtonColors()`, o FilledTonalButtonTokens (com 0,12). O `textButtonColors()` usa contêiner transparente nos dois estados e conteúdo `Primary`, com o comentário "TODO replace with the token value once it's corrected"; o token do rótulo habilitado diz `OnSurfaceVariant` [266]. O `MinWidth` é 58 dp.
+- O KDoc do Button.kt diz que o filled serve a ações importantes e finais que completam um fluxo ("Save", "Join now", "Confirm") e que o de texto serve a ações menos destacadas, inclusive em diálogos e cards [267].
+- O tonal tem 40 dp de altura, `CornerFull` e ícone de 18 dp [265]. O filled como toggle: desmarcado `SurfaceContainer` com `OnSurfaceVariant`, marcado `Primary` com `OnPrimary` [264].
+- Material 3 in Compose [268]: uma nota diz que, nos estados desabilitados do M3, continua aceitável usar as cores "on-x" com alpha. A página pede on-primary sobre primary, e o mesmo nos outros pares, para dar contraste.
+
+**Ação destrutiva.** Não encontrei botão destrutivo nem orientação de ação destrutiva no M3. O Button.kt não contém "error", "destructive" nem "delete" [267]; o doc de diálogo do MDC não trata disso [231]; a página de tema do Compose não fala do papel error [268]. O mais perto é o `type="alert"` do material-web, cujo exemplo de exclusão usa dois text buttons sem cor própria [232], e a amostra de snackbar com a ação em `errorContainer` e `error` [217].
+
+**W3C e MDN.**
+
+- 1.4.3 [269]: o texto de um componente inativo não tem requisito de contraste. Inativo é o componente visível mas não operável no momento; os exemplos são um controle `disabled` do HTML e um botão de envio que só ativa depois dos campos obrigatórios.
+- 1.4.11 [98], nesta etapa: os inativos ficam isentos porque uma solução única tem sido difícil, embora distingui-los fosse bom para algumas pessoas; a página espera, no futuro, variar a apresentação dos desabilitados pela preferência da pessoa, como com um ícone. Um controle com conteúdo visível (texto ou um ícone com contraste suficiente) dispensa borda, e num ícone de uma cor a imagem inteira é o objeto gráfico. Contornar os controles é encorajado, sem ser exigido.
+- APG [270]: os navegadores tiram do Tab os inputs com `disabled`. Em alguns contextos, sobretudo dentro de widgets compostos, é melhor manter o elemento focável com `aria-disabled="true"`, porque quem usa leitor de tela descobre muito menos o que não recebe foco. Na convenção dos exemplos, o `disabled` cabe quando o estado pode ser inferido pelos vizinhos (o "Previous" na primeira página; o "Up" desabilitado no primeiro item, com o "Down" ao lado), e o `aria-disabled` quando o elemento precisa continuar descobrível (Copiar, Recortar e Colar numa toolbar; opções, itens de menu, abas e itens de árvore).
+- MDN [271]: o `aria-disabled="true"` só expõe o estado. Não muda o foco, não aplica o `:disabled` nem o estilo do navegador e não bloqueia a função, que precisa de JavaScript; o `pointer-events: none` não impede o teclado. Um uso é o envio de formulário indisponível que deve ficar no Tab. Estiliza-se por `[aria-disabled="true"]`, com contraste quando o conteúdo for importante, e em `forced-colors` com `GrayText`; ao reativar, avisa-se a pessoa.
+- MDN [272]: o controle com `disabled` não recebe foco nem eventos de navegação (cliques e os de foco), não vai no envio do formulário e casa com `:disabled`. O Firefox, ao contrário dos outros, mantém entre recargas o estado desabilitado dinâmico de um `<button>`, e o `autocomplete` controla isso. A página não fala de desabilitar um controle que está com o foco.
+- `aria-disabled` [207], nesta etapa: marca o elemento como perceptível mas não operável e vale para ele e para os descendentes focáveis. Elementos desabilitados podem ficar fora do Tab, e o autor deve mudar também a aparência. O estado está sendo descontinuado como global, e o autor não deve usá-lo em elementos que a linguagem de base não consegue desabilitar sozinha; `button` está entre os papéis que o aceitam.
+- HTML Standard [273]: a cada atualização da renderização, se a área focada não é mais focável, o navegador roda os passos de foco do viewport. Os exemplos são um elemento que ganha `hidden` e um `input` que fica desabilitado; em geral isso dispara `blur` e talvez `change`. Se o elemento focado é removido, há uma correção síncrona, sem `blur` nem `change`.
+- APG [270], persistência do foco: se o elemento ativo some, como num diálogo que fecha ou num item apagado, e o foco não é gerido, o navegador leva o foco ao `body`, o que na prática é perder o foco. A página pede pôr o foco no botão que abriu o diálogo ou no item seguinte ao apagado.
+
+### Seletor de quantidade
+
+- Spinbutton [274]: restringe o valor a um conjunto ou faixa de valores discretos. Costuma ter três peças: um campo com o valor, um botão de aumentar e um de diminuir. O campo costuma ser o único focável, porque as setas fazem o papel dos botões, e em geral deixa editar o valor. Teclado: cima e baixo mudam o valor; Home e End vão ao mínimo e ao máximo, se existirem; Page Up e Page Down são opcionais; digitar vale se o campo for editável; o foco fica no campo. Papéis: `spinbutton` no elemento focável, `aria-valuenow`, `aria-valuemin` e `aria-valuemax` quando conhecidos, `aria-valuetext` quando o número não é amigável, nome por `aria-labelledby` (rótulo visível) ou `aria-label`, e `aria-invalid` fora da faixa.
+- Exemplo de quantidade [275]: cada quantidade é um `input type="text"` com `role="spinbutton"`, e o campo e os botões aparecem como um só campo, com um único indicador de foco. Os botões têm nome pelo `title` ("Remove adult", "Add adult"), o sinal visual em `aria-hidden`, `aria-controls` para o campo e `tabindex="-1"`: ficam fora do Tab, mas acessíveis por toque e por voz. No limite, o botão ganha `aria-disabled="true"`. Um `output` (status, polite) anuncia o valor quando um botão é usado e depois se esvazia (3 s num trecho, 2000 ms na tabela). A faixa vai por `aria-valuemin` e `aria-valuemax`, sem ligar o texto de ajuda por `aria-describedby`. A animação do foco só roda sem movimento reduzido. A página avisa de falhas de suporte, sobretudo no celular e no toque, e diz que o código não é para produção.
+- `spinbutton` [207], nesta etapa: uma faixa de escolhas discretas. Os filhos se limitam a um textbox e/ou dois botões, ou o papel vai no próprio input, com os botões ao lado. Achado na verificação: o foco vai ao textbox, as setas aumentam e diminuem, e os botões de aumentar e diminuir não devem entrar no Tab. O nome é obrigatório, e o `aria-valuenow` vale 0 por padrão, sem mínimo nem máximo.
+- Achado na verificação: o guia de icon buttons do Compose tem um contador com dois botões de ícone ("Decrease count button" e "Increase count button") e um texto no meio; segurar um botão repete a ação a cada 100 ms. A página não trata do anúncio do valor nem do limite [245].
+
+**Foco no limite.**
+
+- Um botão focado que recebe `disabled` deixa de ser focável, e o navegador leva o foco ao viewport, com `blur` [273]; a APG chama o foco no `body` de perda de foco [270].
+- A convenção da APG aceita o `disabled` quando o estado é inferível pelo vizinho, como o "Up" com o "Down" ao lado [270]; o exemplo de quantidade usa `aria-disabled` no limite [275].
+
+**Leitura da verificação (inferência).** O `QuantityStepper` de hoje é um `role="group"` com dois botões e um `output` `aria-live="polite"`, e a §6 do SPEC-M diz "no limite: `disabled` real". Se o foco está no "−" quando a quantidade chega ao mínimo, o `disabled` leva o foco ao viewport [273]. A convenção da APG sobre vizinhos [270] não trata desse caso; o `aria-disabled` com o bloqueio por código [271], como no exemplo [275], evita a perda.
+
+### Riscos da etapa 10
+
+- **Aviso que some antes de ser lido:** o curto do Compose dura 4 s [218], e o Android estica o tempo pela configuração de acessibilidade ([225], [226]); não encontrei equivalente na web. A 2.2.1 só dispensa o toast quando a informação está em outro lugar [227].
+- **"Desfazer" que expira:** o KDoc pede que snackbar com ação não expire, e mover o foco não conta como ação [219]; o Compose usa `Indefinite` com ação e recomenda o botão de fechar [217]. O comentário do guia que dá `Short` como padrão nesse caso diverge da referência ([216], [217]).
+- **Aviso que cobre o foco:** uma notificação fixa que esconde inteiro o item focado falha na 2.4.11 [76]; o snackbar fica no pé, logo acima do FAB ou da barra [223].
+- **Fila divergente:** o Compose enfileira todos ([217], [218]), a amostra deixa um pendente [217], e o MDC troca o anterior pelo novo [224].
+- **Movimento:** a entrada do snackbar usa escala [218], e a onda do wavy anda sem parar, mesmo no determinado [260].
+- **Foco perdido ao fechar:** o `<dialog>` nativo devolve o foco a quem abriu, se ele ainda estiver na página [200]; se o gatilho sumiu, o navegador leva o foco ao `body` [270]. O `dialog.ts` não guarda o gatilho [234].
+- **Clique no scrim:** o diálogo do material-web fecha no clique fora, e o `<dialog>` nativo não [234]; a folha do Compose fecha no toque no scrim [239].
+- **Alça sem alternativa:** no Android, a alça tem ações semânticas e alvo de 48 dp ([240], [241]); a alça é opcional [241], e a APG recomenda fortemente um botão visível de fechar [199].
+- **Confirmação destrutiva com foco no botão perigoso:** a APG sugere o foco na ação menos destrutiva [199]; o `md-dialog` foca o primeiro focável quando não há `autofocus` [234].
+- **Spinner sem nome:** o `progressbar` exige nome [207], e o material-web pede `aria-label` ([261], [262]); o `aria-busy` atrasa anúncios, e nenhuma fonte diz que o leitor de tela o anuncia num botão ([207], [263]).
+- **Botão trocado pelo indicador:** no exemplo do Compose, o botão some e o indicador entra no lugar [260]; o elemento focado que some leva o foco ao `body` ([270], [273]).
+- **Desabilitado sem contraste:** a WCAG isenta o componente inativo ([269], [98]), mas a 1.4.11 diz que distingui-lo ajudaria algumas pessoas [98]; o MDN pede contraste quando o controle com `aria-disabled` segue focável e tem conteúdo importante [271].
+- **Botão que perde o foco:** desabilitar o botão focado leva o foco ao viewport [273]. Vale para o "−" e o "+" no limite e para o botão de envio que vira "carregando".
+- **Desabilitado fora do Tab:** quem usa leitor de tela descobre menos o que não recebe foco [270].
+- **Ícone sem nome:** todo botão só de ícone precisa de nome ([257], [259]).
+- **Nome que muda com o estado:** o exemplo do Compose troca a `contentDescription` do toggle [245], e o material-web troca o `aria-label` junto com o `aria-pressed` [258]; a APG pede rótulo fixo [90].
+- **Cores do toggle e do contorno divergem:** o tonal marcado é `Secondary` no Compose [255] e `secondary-container` no material-web [257]; o contorno do outlined é `OutlineVariant` no Compose [256] e `outline` no material-web [257]. A 1.4.11 aceita o ícone com contraste no lugar da borda [98].
+- **Tokens de versões diferentes:** o tonal desabilitado usa 0,12 e `OnSurface` (v0_103), e o filled e o texto usam 0,1 e `OnSurfaceVariant` (v0_11_0) ([264], [265], [266]); o rótulo do text button tem um TODO no código [267].
+- **Layout do snackbar em transição:** o padding vertical muda de 6 para 14 dp quando a flag nova for ligada ([219], [222]).
+- **Estado vazio precoce:** "No records" mostrado durante o carregamento engana [244].
+- **Spinbutton no toque:** a APG avisa de falhas de suporte no celular e no toque [275].
+- **APIs experimentais:** o `ModalBottomSheet` é `@ExperimentalMaterial3Api` [239].
+
+### Não encontrei (etapa 10)
+
+- Snackbar no topo da tela ou alinhado ao início em telas largas ([223], [224]).
+- Os milissegundos do `LENGTH_SHORT` e do `LENGTH_LONG` no doc do MDC [224]; a duração e a curva da entrada do snackbar no Compose, que vêm do esquema de movimento [218].
+- Snackbar no material-web, nem em `labs` ([190], [193]).
+- Equivalente web do "Time to take action" do Android ([225], [226]).
+- Orientação do M3 para ação destrutiva: texto ou cor do botão de confirmar, botão em `error` ([231], [267], [268]).
+- Componente ou diretriz de estado vazio no M3, no developer.android.com (fora o tile do Wear OS [242]) e no material-web; medidas de estado vazio em qualquer fonte.
+- Orientação do M3 para progresso dentro de um botão, além do circular centrado no que carrega [260].
+- Rolagem do texto longo no `AlertDialog` do Compose [230] e no doc do MDC [231]; o valor do scrim do diálogo no Compose [228].
+- A barra do diálogo de tela cheia no Compose; o MDC só lista as peças [231].
+- O valor do scrim no doc da folha do MDC [241].
+- Se o leitor de tela anuncia o `aria-busy` num botão ([207], [263]).
+- Página do W3C ou do MDN que diga o que acontece com o foco quando um `<button>` focado fica `disabled` ([270], [272]); a regra está no HTML Standard [273].
+- Um seletor de quantidade com esse nome no M3; o mais perto é o contador do Compose [245].
+- Os textos das strings `SnackbarDismiss`, `SnackbarPaneTitle`, `CloseSheet`, `BottomSheetDragHandleDescription` e `Dialog`.
+
+### Não abriu (etapa 10)
+
+| URL | Motivo |
+|---|---|
+| https://m2.material.io/design/communication/empty-states.html | Na pesquisa, devolveu só o título "Material Design" (página feita com JavaScript); usou-se a do Material 1 [243]. |
+| https://raw.githubusercontent.com/androidx/androidx/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/internal/BottomSheet.kt | HTTP 404 na pesquisa; o arquivo certo está fora de `internal` [240]. |
+| https://api.github.com/search/code?q=BottomSheetPartialExpandDescription+repo:androidx/androidx | HTTP 401 na pesquisa; nada foi tirado dali. |
+| https://developer.android.com/develop/ui/compose/quick-guides/content/create-progress-indicator | Abriu na pesquisa, mas o código está em iframes; nada dela foi usado. |
+| https://raw.githubusercontent.com/material-components/material-components-android/master/docs/components/Button.md | Abriu na pesquisa; só introduz os botões e liga para o IconButton.md [259]. Nada dela foi usado. |
+| https://html.spec.whatwg.org/multipage/interaction.html#focus-fixup-rule | Abriu na pesquisa; a regra não está nessa página, e sim em webappapis.html [273]. |
+| MotionScheme e MotionSchemeKeyTokens.kt (valores do `FastEffects` e do `FastSpatial`) | Não abertos. |
+| Strings.kt do Material 3 | Não aberto. |
+| m3.material.io (snackbar, dialogs, bottom sheets, icon buttons, progress indicators, buttons) | Só funciona com JavaScript; não foi tentado. |
+
+### Refutadas na verificação (etapa 10)
+
+1. **A7, em parte:** "vêm do esquema de movimento (molas)". O arquivo cita só os tokens `FastEffects` e `FastSpatial` do esquema de movimento; não diz que são molas [218], e os valores não foram abertos.
+2. **A12, em parte:** "14 dp de padding vertical em volta do texto". Os 14 dp só valem com a flag `isSnackbarStylingFixEnabled`, que vem `false`; no layout padrão, o texto tem 6 dp em cima e embaixo e, com duas linhas, a primeira linha de base fica a 30 dp do topo ([219], [222]). O resto (600 dp, 16 dp no início, 8 ou 0 dp no fim, 12 dp por fora, `actionOnNewLine`) ficou.
+3. **A39, em parte:** "o arquivo não faz gestão de foco". O ModalBottomSheet.kt não tem código de foco, mas o KDoc do BottomSheet.kt diz que o `ModalBottomSheet` cuida sozinho da janela de diálogo, do scrim e da gestão de foco [240]. Cai junto o risco da síntese que dizia que o `ModalBottomSheet.kt` não gere o foco.
+4. **Síntese (componentes e recomendação), em parte:** o snackbar "acima do FAB (16 dp)" e "com 16 px de folga". No Scaffold.kt, os 16 dp separam o FAB da barra ou da borda; o snackbar começa logo acima do FAB, e a folga vem dos 12 dp de margem da sobrecarga com `SnackbarData` ([223], [219]).
+5. **Síntese (riscos), em parte:** "o `dialog.ts` não devolve o foco (A33)" como causa de foco perdido ao fechar o diálogo. O código não devolve, mas usa o `<dialog>` nativo com `showModal()`, e a H102 diz que o navegador devolve o foco a quem abriu, se ele ainda estiver na página [200]. O risco fica para o gatilho que sumiu [270].
+6. **Síntese (não encontrei), em parte:** "fonte que trate a alternativa de dois botões e um número como seletor de quantidade". O guia de icon buttons do Compose tem esse desenho num contador, sem o nome de seletor de quantidade [245], e o ARIA 1.2 aceita o papel `spinbutton` no input com dois botões ao lado [207].
+
+Ajustes de redação, sem derrubada: A4 (a amostra só diz que deixa um snackbar na fila, com o canal `CONFLATED`; não diz qual pedido fica), A21 (o toast que desliza aparece entre os desenhos de conteúdo aberto pelo usuário que passam), A33 (o foco no próprio diálogo vem do tratamento da armadilha de foco, quando não há filhos focáveis), A41 (o doc diz que os componentes modais têm voltar preditivo automático, sem descrever o fechamento pelo voltar), A60 (o nome só troca quando `aria-label` e `aria-label-selected` existem), A62 (a página diz que a onda pode ficar menos visível em tamanhos muito pequenos, não que some), A63 (no exemplo, o botão é trocado por um indicador linear) e A83 (a página diz que o spinbutton costuma ter três peças; não diz que os botões são opcionais).
