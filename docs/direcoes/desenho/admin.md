@@ -6,14 +6,14 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 
 **Resumo:**
 
-- **Navegação por largura (pesquisa da etapa 9):** a partir de `lg`, uma coluna fixa de 240 px com os rótulos sempre à vista, na superfície da página: a gaveta standard, que o Expressive passa a chamar de rail expandido ([161], [170], [186]). Abaixo de `lg`, a mesma lista numa gaveta modal sobre o `scrim`, fechada por padrão, como hoje (`SPEC.md` §5.11; SPEC-M §13.8). O item atual é a pílula `secondary-container` da loja, na largura do item, com o rótulo em 700 ([164], [161]): a troca de fundo sozinha não passa na 1.4.1 ([98], [99]).
-- **A gaveta passa a ser modal de fato:** o resto da página fica `inert` enquanto ela está aberta (o efeito que a H102 descreve para o `<dialog>` [200]), e o clique no fundo devolve o foco ao "Alternar menu" ([199], [202]).
-- **Uma superfície só na moldura:** cabeçalho, coluna e página em `surface` ([196], [164], [174]); o cabeçalho fica grudado em todas as larguras; a marca fica na cabeça da coluna e da gaveta ([179], [184]). A busca vira um campo outlined de 48 px, a linguagem do `FormGroup`, e não a search bar em pílula [62].
-- **Cards:** filled, canto 12, sem sombra, em `surface-container-high`, e não no `highest` da recomendação: o "Detalhes" (texto) pressionado dá 4,38 no `highest` e 4,59 no `high` (medidos). KPIs com o valor em headline-m tabular. Os pedidos ficam em cards; o card de produto vira `M3CartaoProduto`, com o `M3Foto` e o `useCartaoProduto` da loja, na horizontal em 390.
+- **Navegação por largura (pesquisa da etapa 9):** a partir de `lg`, uma coluna fixa de 240 px com os rótulos sempre à vista, na superfície da página: a gaveta standard, que o Expressive passa a chamar de rail expandido ([161], [170], [186]). Abaixo de `lg`, a mesma lista numa gaveta modal sobre o `scrim`, fechada por padrão, como hoje (`SPEC.md` §5.11; SPEC-M §13.8). Itens de 56 px nas duas ([164], [176]). O item atual é a pílula `secondary-container` da loja, na largura do item, com o rótulo em 700: a troca de fundo sozinha não passa na 1.4.1 ([98], [99]), e a G182 lista o negrito entre as pistas além da cor [215] (escrita para texto colorido; aplicá-la ao fundo é inferência).
+- **A gaveta passa a ser modal de fato:** o contêiner deixa de ser `aside` e vira `div`, com `role="dialog"` e `aria-modal` abaixo de `lg`; o resto da página fica `inert` enquanto ela está aberta (o efeito que a H102 descreve para o `<dialog>` [200]), menos a região dos avisos. Ao fechar, o foco volta ao "Alternar menu" depois do `nextTick`, quando o `inert` já saiu ([199], [202]).
+- **Uma superfície só na moldura:** cabeçalho, coluna e página em `surface` ([196], [164], [174]); o cabeçalho fica grudado em todas as larguras; a marca fica num lugar só, a cabeça da coluna e da gaveta ([179], [184]). A busca vira um campo outlined de 48 px, a linguagem do `FormGroup`, e não a search bar em pílula [62].
+- **Cards:** filled, canto 12, sem sombra, em `surface-container-high`, e não no `highest` da recomendação: o "Detalhes" (texto) pressionado dá 4,38 no `highest` e 4,59 no `high` (medidos). KPIs com o valor em headline-m tabular. Os pedidos ficam em cards; o card de produto vira `M3CartaoProduto`, com o `M3Foto` da loja, o `responsiveImage` e o `formatPrice` (sem o estado "Adicionado" do fluxo de compra), na horizontal em 390.
 - **Rótulo de status vira componente** (`M3RotuloStatus`, decisão j): "Pendente" em `aviso`, "Em preparo" e "A caminho" em `info`, "Concluído" em `sucesso`, todos com 5,00 a 5,03. O "Recebido" do perfil passa a usá-lo (uma linha).
 - **Atalhos:** o selo vira o badge do M3, em `error` ([35], [212]), com o "9+" de hoje. **Toasts no pé** em todas as larguras do painel: no topo, o aviso "Produto criado." cobriria inteiro o "Novo produto" focado em 1024.
 - **Login do admin:** o `scrim` de 32% sobre a ilustração; o banner junto do botão, numa região `role="alert"` sempre no DOM (o invólucro da loja); "Voltar à loja" vira text button.
-- **Um token novo** (`--m3-navegacao-largura`), 10 pares novos medidos, nenhuma dependência, nenhum ícone novo, nenhum texto novo. Três pontos vão ao usuário (§12): o preço da linha no card do pedido, os rótulos da navegação e a categoria vazia em Produtos.
+- **Um token novo** (`--m3-navegacao-largura`), 9 pares novos medidos, nenhuma dependência, nenhum ícone novo, nenhum texto novo. Três pontos vão ao usuário (§12): o preço da linha no card do pedido ("R$ 25,90 cada", recomendado), os rótulos da navegação e a categoria vazia em Produtos.
 - **Ficam para a etapa 10:** os botões de ícone (`iconOnly`, com a forma da Brasa até lá), o `danger`, o `loading`, o desabilitado, o `BaseDialog`, o `EmptyState` e o `AppToast`. **Para a 11:** o `ProductCard`, o `_product-card.scss`, o `useTilt` e sete apelidos que ficam sem uso.
 
 ---
@@ -31,8 +31,8 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 
 | Na Brasa (capturas `admin-*` da etapa 8) | No M3 | Por quê |
 |---|---|---|
-| Sidebar `surface-container-low` com borda à direita; marca "SMASH BURGER" em caixa alta | Coluna em `surface`, sem borda; "Smash Burger" em title-l 500 na cabeça da coluna | A gaveta standard e o rail expandido ficam em Surface, Level0 ([164], [174], [181]); a marca no cabeçalho do rail [179]; a grafia da marca (CLAUDE.md; SPEC-M §0) |
-| Item atual em `primary-container`, com a barra de 3 px à esquerda | Pílula `secondary-container` na largura do item, rótulo `on-secondary-container` em 700, `aria-current` | Indicador ativo em SecondaryContainer ([164], [161], [178]); o negrito no ativo [161]; o item atual da pílula da loja (SPEC-M §5.11) |
+| Sidebar `aside` `surface-container-low` com borda à direita; marca "SMASH BURGER" em caixa alta; itens de 44 px | Coluna `div` em `surface`, sem borda, com a `nav` como landmark; "Smash Burger" em title-l 500 na cabeça da coluna; itens de 56 px | A gaveta standard e o rail expandido ficam em Surface, Level0 ([164], [174], [181]); o complementary é para conteúdo de apoio [210]; a marca no cabeçalho do rail [179]; o indicador de 56 dp ([164], [176]); a grafia da marca (CLAUDE.md; SPEC-M §0) |
+| Item atual em `primary-container`, com a barra de 3 px à esquerda | Pílula `secondary-container` na largura do item, rótulo `on-secondary-container` em 700, `aria-current` | Indicador ativo em SecondaryContainer ([164], [161], [178]); o negrito no ativo, padrão do MDC [161], como pista além da cor pela G182 [215] (inferência: ela trata de texto colorido); o item atual da pílula da loja (SPEC-M §5.11) |
 | Cabeçalho fixo `surface-container-low` com borda embaixo | Cabeçalho grudado (`sticky`) em `surface`, sem borda, 64 px | Top app bar pequena: 64 dp [195], Surface, Level0 [196]; a linguagem do cabeçalho da loja (SPEC-M §5.11) |
 | Busca: campo cinza (`--color-input`) de canto 8 | Campo outlined de 48 px, sem fundo, contorno `outline`, canto 12, lupa no início | O campo do sistema (etapa 8) na medida densa do Compose [119]; não é a search bar em pílula [62] |
 | Selo verde-escuro (`primary`), canto 8 | Badge do M3: `error` / `on-error`, label-s, 16 px, canto `full`; "9+" | Badge de número de pendências [212], na cor do badge do M3 [35]; o mesmo badge do FAB da loja |
@@ -85,17 +85,19 @@ Fontes: `docs/direcoes/SPEC-material.md` (SPEC-M); `SPEC.md` (a Brasa, para o fl
 - **KPIs em `primary-container`: saíram (repetição).** Seriam a faixa da confirmação e o contêiner do hero da Home, e `primary` só marca ação (SPEC-M §2.2). Entrou o filled card com o valor em headline-m.
 - **Tabela de dados: saiu (inviável e fora do pacote).** Em 390, ela pediria rolagem horizontal ou viraria cards de qualquer jeito; uma tabela convida a ordenar por coluna, que não existe (pacote, item 3). Entrou o card por pedido (5.6).
 - **Ícones de status: saíram (inventado).** Chama e moto dariam ao status um sentido que o texto não tem, e o check lembra o filter chip marcado [60]. Entrou o rótulo só com texto (5.5).
-- **Variante do `M3CartaoLanche`: trocada (inviável).** O card da Home depende do `usePersonalizar` e do split; uma prop de admin misturaria a compra e a gestão no mesmo componente. Entrou o `M3CartaoProduto`, que reaproveita o `M3Foto` e o `useCartaoProduto` (5.7).
-- **Gaveta como `<dialog>`: trocada (inviável).** O mesmo `aside` é a coluna fixa a partir de `lg`; trocar o elemento por largura pediria dois componentes ou mover a `nav` de lugar. Entrou o `inert` no resto da página, o mesmo efeito que a H102 descreve para o diálogo modal [200], sem trocar a marcação (5.1).
+- **Variante do `M3CartaoLanche`: trocada (inviável).** O card da Home depende do `usePersonalizar` e do split; uma prop de admin misturaria a compra e a gestão no mesmo componente. Entrou o `M3CartaoProduto`, que reaproveita o `M3Foto` (5.7).
+- **Gaveta como `<dialog>`: trocada (inviável).** O mesmo contêiner é a coluna fixa a partir de `lg`; trocar o elemento por largura pediria dois componentes ou mover a `nav` de lugar. Entrou o `inert` no resto da página, o mesmo efeito que a H102 descreve para o diálogo modal [200], sem trocar o elemento; o papel de diálogo vai por atributo, só abaixo de `lg` (5.1, volta 1).
 - **Cards em `highest`: trocados (acessibilidade, medido).** O "Detalhes" é text button sobre o card: pressionado, dá 4,38 no `highest` e 4,59 no `high`; no hover, 4,50 e 4,71 (medidos; mínimo 4,5). Entrou o `surface-container-high` (5.4).
 - **Selo em `aviso`: trocado.** O badge do M3 é de erro [35], e o do FAB da loja também; o selo é uma contagem, e não um status. O `aviso` fica no rótulo "Pendente" (5.2).
 - **Toasts no topo: trocados (acessibilidade).** Em 1024, o aviso vai de x 576 a 992, na altura do cabeçalho da página; depois de criar um produto pelo teclado, o foco volta ao "Novo produto" (x de cerca de 856 a 992), que fica inteiro sob o aviso (2.4.11 [76]). Entrou o aviso no pé, com a reserva no `scroll-padding` (seção 4).
 - **Login em duas colunas: saiu (repetição).** A ilustração fica atrás do painel (SPEC-M §5.11), e a coluna de marca já saiu do login da loja (desenho da Conta, §2).
-- **Marca no cabeçalho (SPEC-M §5.11): movida.** A partir de `lg`, a cabeça da coluna fica na mesma faixa de 64 px do cabeçalho, e a linha de cima se lê como uma barra só; em 390, o cabeçalho não tem lugar para ela (seção 3). Entrou a marca na cabeça da coluna e da gaveta ([179], [184]).
+- **Marca no cabeçalho (SPEC-M §5.11): movida, por escolha.** A marca fica num lugar só, a cabeça da coluna e da gaveta, onde o rail põe o logo ([179], [184]). A partir de `lg`, essa cabeça fica na mesma faixa de 64 px do cabeçalho, e a linha de cima se lê como uma barra só. (Abaixo de `md`, o cabeçalho também não teria lugar para ela; de `md` a `lg` teria, e a escolha é não repetir a marca fora da gaveta.)
 
 ### Desenho final
 
 As seções 3 a 12 abaixo. As decisões do item 6 do pacote estão em 4.1 e 5.1 (a, b, c, d), 5.2 (e, f, g), 5.3 (h, p, r), 5.4 (i), 5.6 (j, n), 5.5 (k), 5.7 (l, n), 5.8 (m), 5.9 e 5.10 (o, n), 5.11 (q), 4.6 (s) e na seção 6 (t), e numa linha cada na seção 12.
+
+**Volta 1 do revisor aplicada** (24/11/2026): os 16 achados e as decisões da sessão principal (`correcoes-admin-volta-1.md`, na pasta de estado do plano).
 
 ---
 
@@ -106,8 +108,9 @@ As seções 3 a 12 abaixo. As decisões do item 6 do pacote estão em 4.1 e 5.1 
 1. Skip link "Pular para o conteúdo" (hoje).
 2. `header.admin-header` → `nav` "Ferramentas do painel": "Alternar menu" (só abaixo de `lg`), a busca, "Notificações", "Tarefas" e o avatar com o menu.
 3. `div.admin-overlay` (o `scrim`, só com a gaveta aberta).
-4. `aside#admin-sidebar` "Menu do painel": a marca (e o "Fechar", na gaveta), a `nav` "Seções do painel" com os quatro destinos, e o "Sair" no pé.
+4. `div#admin-sidebar` (era `aside`; abaixo de `lg`, `role="dialog"` com `aria-modal` e o nome "Menu do painel") → `nav` "Seções do painel", com a coluna inteira dentro: a marca (e o "Fechar", na gaveta), os quatro destinos e o "Sair" no pé.
 5. `main#conteudo` com a tela.
+6. Fora do `AdminLayout`, no `App.vue`: a região dos avisos (`AppToast`), que não entra no `inert` (5.1).
 
 A partir de `lg`, uma grade: a coluna de `--m3-navegacao-largura` à esquerda, ocupando a altura toda, e, à direita, o cabeçalho em cima e o `main` embaixo. A ordem do DOM não muda.
 
@@ -139,9 +142,9 @@ As medidas abaixo são estimativas pelo CSS e pelas capturas de hoje; a sessão 
 │ (▣ Gestão de Pedidos   )│                                                              ↕ --space-5  │
 │   ↗ Relatórios de Vendas│  Status                          label-l 500                              │
 │                         │  ╭──────────────────────────╮                                             │
-│  itens de 44 px,        │  │ Todos                  ⌄ │  FormGroup select, 56 px, até 16rem         │
+│  itens de 56 px,        │  │ Todos                  ⌄ │  FormGroup select, 56 px, até 16rem         │
 │  margem de 12,          │  ╰──────────────────────────╯                                             │
-│  vão de 4               │                                                              ↕ --space-5  │
+│  vão de 4 (y 72 a 308)  │                                                              ↕ --space-5  │
 │                         │  ╭ card high, canto 12, pad. 16 ─────╮ ╭ card ──────────────────────────╮  │
 │                         │  │ Pedido #1             ( Pendente )│ │ Pedido #2          ( Em preparo )│  │
 │                         │  │ title-m 500    M3RotuloStatus     │ │                    info          │  │
@@ -163,7 +166,7 @@ As medidas abaixo são estimativas pelo CSS e pelas capturas de hoje; a sessão 
   sticky, 100dvh)
 ```
 
-Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, com o rótulo em 700; `◫ ⑂ ▣ ↗ ↦` são os ícones de hoje (`tachometer-alt`, `utensils`, `shopping-cart`, `chart-line`, `sign-out-alt`); `[🔔¹]` é o botão de ícone com o selo; `(AU)` é o avatar. `*` marca o preço da linha, que é o preço unitário (pergunta 1 da §12).
+Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, com o rótulo em 700; `◫ ⑂ ▣ ↗ ↦` são os ícones de hoje (`tachometer-alt`, `utensils`, `shopping-cart`, `chart-line`, `sign-out-alt`); `[🔔¹]` é o botão de ícone com o selo; `(AU)` é o avatar. `*` marca o preço da linha, que é o preço unitário (pergunta 1 da §12; com a recomendação, "R$ 25,90 cada"). Com itens de 56 px, os quatro destinos vão de y 72 a 308 (cabeça de 64, 8 de recuo, 4 × 56 e 3 vãos de 4); o "Sair" fica no pé da janela.
 
 ### Wireframe da moldura com Pedidos em 390
 
@@ -205,20 +208,20 @@ Legenda: `( … )` na coluna é a pílula `secondary-container` do item atual, c
 ││ Smash Burger              [✕]  │░│ elevacao-1; acima do scrim (32%)
 ││ title-l 500          "Fechar"  │░│ cabeça de 64 px
 ││                                │░│
-││ ◫ Painel                       │░│ itens de 56 px (o foco vai ao 1º)
-││ ⑂ Gestão de Produtos           │░│
+││ ◫ Painel                       │░│ itens de 56 px, como na coluna
+││ ⑂ Gestão de Produtos           │░│ (o foco vai ao 1º)
 ││(▣ Gestão de Pedidos           )│░│ item atual: pílula, rótulo 700
 ││ ↗ Relatórios de Vendas         │░│
 ││                                │░│ ░ = scrim sobre a página;
-││                                │░│ o cabeçalho e o main ficam inert
-││                                │░│
+││                                │░│ o skip link, o cabeçalho e o main
+││                                │░│ ficam inert (o aviso, não)
 ││ ────────────────────────────── │░│
 ││ ↦ Sair                         │░│
 │╰────────────────────────────────╯░│
 └──────────────────────────────────┘
 ```
 
-Fecha com Esc, com o "Fechar", com o clique no `scrim` e ao trocar de rota. Nos três primeiros, o foco volta ao "Alternar menu"; na troca de rota, vai ao `main` (5.1).
+Fecha com Esc, com o "Fechar", com o clique no `scrim` e ao trocar de rota. Nos três primeiros, o foco volta ao "Alternar menu" depois do `nextTick` (quando o `inert` já saiu do cabeçalho); na troca de rota, vai ao `main`, também quando só a query muda (5.1). Em 390 × 844, os destinos vão de y 72 a 308, e o "Sair" fica no pé (cerca de y 772 a 828, com o divisor acima; estimativa).
 
 ### Wireframe de Produtos em 1440 (Destaques)
 
@@ -385,15 +388,17 @@ Sem erro, no lugar da mensagem: "PNG, JPEG ou WebP, com até 300 kB." (`IMAGE_HE
 ```
 1440 (canto superior direito)                     390
              [🔔¹]  [☑¹]  (AU)                    [☰] ╭ ⌕ Busc… ╮ [🔔¹][☑¹](AU)
-              ╭ menu, high, canto 16 ─────╮         ╭ menu, até a largura útil ──╮
+              ╭ menu, surface-container ──╮         ╭ menu, até a largura útil ──╮
               │ Admin User   title-s       │         │ Admin User                 │
               │ ────────────────────────── │         │ ─────────────────────────  │
               │ (👤 Meu perfil           ) │ foco    │ 👤 Meu perfil              │
               │  ⚙ Configurações           │         │ ⚙ Configurações            │
+              │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │         │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─    │
               │  ↦ Sair                    │         │ ↦ Sair                     │
               ╰────────────────────────────╯         ╰────────────────────────────╯
-              itens de 44 px; elevacao-2;            alinhado ao fim do avatar
-              mín. 13rem
+              canto 16; itens de 44 px;              alinhado ao fim do avatar
+              elevacao-2; mín. 13rem;
+              a linha antes do "Sair" é CSS (::after), sem filho no DOM
 ```
 
 ### Wireframe do login do admin com erro em 1440 e 390
@@ -446,6 +451,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **A partir de `lg`:** a coluna fixa em `surface`, sem canto, sem sombra e sem borda. A gaveta standard e o rail expandido standard têm o mesmo contêiner (Surface, Level0 [164]; Surface, `CornerNone`, Level0 [174], [181]): as duas fontes dão o mesmo desenho.
 - **Abaixo de `lg`:** a gaveta modal, com a anatomia da `ModalDrawerSheet` ([164], [165]), e não a do rail largo modal (SurfaceContainer, Level2, `CornerLarge` [174]). **Motivo:** a da gaveta está documentada em detalhe (tokens e código), e a diferença é pequena sobre o `scrim`; nada disso existe pronto para a web ([190] a [193]).
 - **O corte fica em 1024 (`lg`), e não em 840:** a classe expandida começa em 840 dp [189], e a pesquisa registra que manter 1024 é decisão do projeto. Os breakpoints não mudam (SPEC-M §2.9), e o `AdminLayout` já usa `lg` (`DESKTOP_QUERY`).
+- **Uma altura de item nos dois contêineres: 56 px,** o indicador da gaveta [164] e do rail expandido [176]. É desvio da SPEC-M §5.11, que dizia 44 sem fonte (os dossiês não cobriam a navegação); a decisão é da sessão principal (volta 1). As classes de largura valem pela janela, e não pelo aparelho [189]: a altura não muda com o tipo de entrada.
 - **Largura é token:** `--m3-navegacao-largura: 15rem` (hoje `240px` escrito direto em `_admin-layout.scss` e em `_sidebar-admin.scss`). A mesma largura nos dois contêineres; na gaveta, com `max-width: 85vw` (hoje), sobra área do `scrim` para tocar e fechar em 320 px.
 - **"Relatórios de Vendas" numa linha em 240 (estimativa):** o rótulo em label-l 500 tem cerca de 138 px; com o recuo de 16, o ícone de 20, o vão de 8 e o recuo de 24 no fim ([165], [176]), o item tem cerca de 206 px; com a margem de 12 dos dois lados ([165], [168]), 230 dos 240. Com zoom, o rótulo quebra, e o item cresce (`min-height`). A sessão C mede; se não couber, o token vai a 16rem, dentro dos 220 a 360 [174].
 
@@ -453,8 +459,10 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 - **Abre** pelo "Alternar menu"; o foco vai ao primeiro link (hoje).
 - **Fecha** com Esc, com o "Fechar", com o clique no `scrim` e ao trocar de rota (hoje).
-- **Modal de fato (novo):** o skip link, o cabeçalho e o `main` ganham `inert` enquanto ela está aberta abaixo de `lg`. O APG pede o que está fora do modal inerte e escurecido [199]; com o `inert`, o Tab e o leitor de tela ficam na gaveta e na interface do navegador, como no `<dialog>` modal [200]. Sem `role="dialog"` nem `aria-modal`: o `aside` continua sendo o mesmo elemento da coluna fixa, e o `inert` já esconde o resto das tecnologias assistivas. A pesquisa não achou fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]; a decisão é do projeto: a gaveta encobre a página com o `scrim`, e um foco atrás dela ficaria sob o fundo escuro.
-- **A volta do foco (novo no clique no fundo):** o Esc e o "Fechar" já devolvem o foco ao "Alternar menu"; o clique no `scrim` passa a devolver também (hoje o foco fica no link que some). A F85 reprova o foco que não volta ao gatilho [202]; o exemplo do Compose devolve o foco ao botão [167]. Na troca de rota, o foco vai ao `main` (o `afterEach` do router, hoje), o destino mais lógico que o APG aceita [199].
+- **Modal de fato (novo):** o skip link, o cabeçalho e o `main` ganham `inert` enquanto ela está aberta abaixo de `lg`. O APG pede o que está fora do modal inerte e escurecido [199]; com o `inert`, o Tab e o leitor de tela ficam na gaveta e na interface do navegador, como no `<dialog>` modal [200]. **O contêiner deixa de ser `aside` (decisão da sessão principal, volta 1):** vira `div#admin-sidebar`, e, só abaixo de `lg`, recebe `role="dialog"`, `aria-modal="true"` e `aria-label="Menu do painel"` (o papel, o estado e o nome que o APG pede [199]; o `aria-modal` vale porque o resto está bloqueado de fato). A partir de `lg`, o `div` fica sem papel e sem nome, e o landmark é a `nav` "Seções do painel", que passa a envolver a coluna inteira (a marca, os destinos e o "Sair"), para nada da coluna ficar fora de um landmark [210]. A pesquisa não achou fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]; a decisão é do projeto: a gaveta encobre a página com o `scrim`, e um foco atrás dela ficaria sob o fundo escuro.
+- **A exceção do `inert`: a região dos avisos.** O `AppToast` fica no `App.vue`, fora do `AdminLayout` e do conjunto `inert`. Fica de fora de propósito (aceito pela sessão principal): com `inert`, a região viva sairia da árvore de acessibilidade, e um aviso dado com a gaveta aberta não seria anunciado. O custo é o botão "Fechar aviso" alcançável pelo Tab com a gaveta aberta, se houver aviso na tela.
+- **A volta do foco (corrigida na volta 1):** o `focus()` num elemento ainda `inert` não faz nada (o revisor testou no Chromium). Ao fechar com `returnFocus` (Esc, "Fechar" e clique no fundo), a ordem é: `isSidebarOpen = false` (e o `unlock()`), depois `await nextTick()` (o Vue tira o `inert` do cabeçalho no flush) e só então `toggleButton?.focus()`. Hoje o Esc e o "Fechar" devolvem o foco ao botão (sem `inert`); o clique no `scrim` passa a devolver também. A F85 reprova o foco que não volta ao gatilho [202]; o exemplo do Compose devolve o foco ao botão [167]. **O jsdom não pega a falha** (não implementa o `inert`): a prova é no Chromium (seção 9).
+- **Troca de rota:** o foco vai ao `main`, o destino mais lógico que o APG aceita [199]. Pelo `afterEach` do router quando o caminho muda (hoje); **quando só a query muda** (por exemplo, "Gestão de Pedidos" em `/admin/orders?status=pending`), o `afterEach` sai cedo (`to.path === from.path`) e o foco cairia no `body`. Por isso, no `watch` da rota do `AdminLayout`: se o foco estava dentro da gaveta quando ela fechou, depois do `nextTick` ele vai ao `main` (`mainRef.value?.focus({ preventScroll: true })`).
 
 ### 4.3 O item atual por rota (decisões b e r; §13.8)
 
@@ -467,8 +475,8 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | `/admin/profile` | nenhum | A rota vem do menu do avatar; o `h1` "Meu perfil" e o título da aba dizem onde se está, como o `/register` na loja (desenho da Conta, §4) |
 | `/admin/settings` | nenhum | Idem |
 
-- **"Um item ativo por rota" (§13.8) se lê "no máximo um":** o `SPEC.md` diz "para nunca haver dois itens ativos" (§5.11) e "um único item ativo por rota" (§13.8); a definição do `aria-current` pede um só marcado no conjunto, e o ausente vale `false` [207]. O `check-admin.mjs` confere um nas quatro primeiras rotas e nenhum nas duas do menu.
-- **Achado (atalhos):** pelo mesmo motivo da query, em `/admin/orders` os dois atalhos do cabeçalho ("Notificações" e "Tarefas", links para `/admin/orders?status=…`) também recebem `aria-current="page"` do `RouterLink` hoje: a página fica com três "página atual". Os atalhos passam `aria-current="false"` pelo `BaseButton` ("false" é valor válido [207]): o atributo chega ao `RouterLink` como atributo herdado e cai no `<a>`, junto com o dele (inferência pelo repasse de atributos do Vue; a sessão C confere no DOM que fica o "false"; se não ficar, o `BaseButton` não muda e a saída vira pergunta à sessão principal). O item atual é um só, o da coluna.
+- **"Um item ativo por rota" (§13.8): decisão da sessão principal (volta 1).** A §13.8 se lê como "nunca dois itens ativos" (o `SPEC.md` §5.11 diz "para nunca haver dois itens ativos"). Em Meu perfil e Configurações, que não estão na navegação, nenhum item fica ativo: o `aria-current` só marca a página que está no conjunto [207]. O `check-admin.mjs` confere um nas quatro primeiras rotas e nenhum nas duas do menu.
+- **Achado (atalhos):** pelo mesmo motivo da query, em `/admin/orders` os dois atalhos do cabeçalho ("Notificações" e "Tarefas", links para `/admin/orders?status=…`) também recebem `aria-current="page"` do `RouterLink` hoje; em `?status=preparing`, o "Notificações" (`?status=pending`) também sai marcado (o revisor conferiu no vue-router 4.6.4: o `isExactActive` não olha a query). Os atalhos passam `aria-current="false"` pelo `BaseButton` ("false" é valor válido [207]); o revisor conferiu que o atributo repassado vence o do `RouterLink`. **Alternativa:** a prop `aria-current-value="false"` do `RouterLink`, se o `BaseButton` a repassar. Aceito pela sessão principal. O item atual é um só, o da coluna.
 
 ### 4.4 O cabeçalho (decisão d; o detalhe em 5.1)
 
@@ -479,7 +487,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 ### 4.5 Ordem do Tab
 
 - **A partir de `lg`:** skip link → busca → "Notificações" → "Tarefas" → avatar → "Painel", "Gestão de Produtos", "Gestão de Pedidos", "Relatórios de Vendas" → "Sair" → `main`. É a ordem do DOM de hoje, que segue a leitura da faixa de cima (a marca não recebe foco) e depois a coluna.
-- **Abaixo de `lg`:** skip link → "Alternar menu" → busca → "Notificações" → "Tarefas" → avatar → `main`. Com a gaveta aberta: o foco começa em "Painel"; Tab e Shift+Tab andam entre "Fechar", os quatro links e "Sair" (o resto está `inert`).
+- **Abaixo de `lg`:** skip link → "Alternar menu" → busca → "Notificações" → "Tarefas" → avatar → `main`. Com a gaveta aberta: o foco começa em "Painel"; Tab e Shift+Tab andam entre "Fechar", os quatro links e "Sair" (o skip link, o cabeçalho e o `main` estão `inert`); a exceção é a região dos avisos, fora do `inert` (4.2): com um aviso na tela, o "Fechar aviso" também entra no Tab.
 - **Menu do avatar aberto:** as setas andam entre os itens; Tab fecha o menu (hoje).
 
 ### 4.6 Foco não coberto (2.4.11 [76]; decisão s)
@@ -488,6 +496,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **A gaveta:** é modal (4.2): o foco não sai dela, e nada da página fica focável debaixo do `scrim`.
 - **O aviso (toast) no pé (decisão desta etapa; 5.3):**
   - **por que no pé:** no topo, a partir de `md`, o aviso fica a `calc(var(--navbar-h) + var(--space-3))` do topo, alinhado à direita (`_app-toast.scss`); em 1024 ele vai de x 576 a 992, e o "Novo produto" (de cerca de 856 a 992, a cerca de 90 px do topo) fica inteiro sob ele depois de criar um produto pelo teclado, quando o foco volta ao botão. Com a página no topo, não há como rolar o botão para baixo do aviso. Em 1440, o aviso (x 872 a 1288) cobre só a ponta do botão (x 1270 a 1408);
+  - **a regra que move o aviso (volta 1):** em `layouts/_admin-layout.scss`, `:global(html:has(.admin-layout) .toast-region) { top: auto; bottom: calc(var(--space-4) + env(safe-area-inset-bottom)); }`, em todas as larguras, sem mexer no `right` e na `width` da parcial do aviso. **Especificidade:** a regra do `.toast-region` com escopo, a partir de `md`, é uma classe mais o atributo do escopo (0,2,0); a do painel é `html` (0,0,1), o `:has(.admin-layout)` (0,1,0) e a classe (0,1,0): 0,2,1, e vence sem `!important`. **Dois registros:** a entrada do aviso continua com o `translateY(-8px)` de hoje (ele desce de cima também no pé) até a etapa 10; e mover o aviso por fora da parcial dele é novo (o precedente do carrinho e do perfil só mexe no `scroll-padding`). A etapa 10 herda ou absorve a regra;
   - **a reserva:** enquanto há aviso, `html:has(.admin-layout):has(.toast-region .toast)` soma `calc(var(--m3-toast-reserva) + var(--space-4))` (120 px) ao `scroll-padding-bottom`, em todas as larguras: o aviso de uma linha tem 60 px, e o de três, cerca de 92, a 16 px do pé (C43 [76]; a regra da etapa 7). Sem aviso, o painel zera o `--m3-barra-reserva` da loja abaixo de `lg` (não há toolbar no painel);
   - **o "Atualizar status":** o foco fica no botão depois do aviso, e o `scroll-padding` sozinho não rola nada. A `OrderManagement` faz `await nextTick()` e `document.activeElement?.scrollIntoView?.({ block: "nearest" })` depois do `toast.show`, **só quando a última entrada foi de teclado** (o precedente do `CartView`, etapa 7, e do `ProfileView`, etapa 8). Em 390, com o card de baixo encostado no pé, o botão sobe para cima do aviso;
   - **os diálogos (editar, criar, excluir, restaurar):** ao fechar, o `BaseDialog` devolve o foco a quem abriu com `focus()`, que respeita o `scroll-padding` (o Chromium centraliza na área útil o elemento inteiro dentro da reserva; construção da etapa 7). Se o aviso nascer depois do `focus()`, a reserva não vale para ele: a sessão C mede no `keyboard.mjs` e, se o botão ficar coberto, usa a mesma rolagem só pelo teclado na view (seção 9);
@@ -499,7 +508,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 ### 5.1 Moldura: layout, cabeçalho, coluna e gaveta (decisões a, b, c, d)
 
-- **Arquivos e raiz:** `src/layouts/AdminLayout.vue` (`div.admin-layout`) e `layouts/_admin-layout.scss`; `src/components/admin/layout/SidebarAdmin.vue` (`aside#admin-sidebar.admin-sidebar`) e `components/admin/_sidebar-admin.scss`; `TheNavbarAdmin.vue` (`nav.navbar-admin`) e `components/admin/_navbar-admin.scss`.
+- **Arquivos e raiz:** `src/layouts/AdminLayout.vue` (`div.admin-layout`) e `layouts/_admin-layout.scss`; `src/components/admin/layout/SidebarAdmin.vue` (`div#admin-sidebar.admin-sidebar`, que era `aside`) e `components/admin/_sidebar-admin.scss`; `TheNavbarAdmin.vue` (`nav.navbar-admin`) e `components/admin/_navbar-admin.scss`.
 - **Objetivo:** chegar a qualquer seção e às ferramentas em um toque, saber sempre onde se está, e deixar a largura para o trabalho.
 
 **Conteúdo:**
@@ -511,13 +520,19 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | "Sair" | `button` com `sign-out-alt`, `useAdminLogout()` |
 | "Fechar" | `BaseButton variant="ghost" icon-only icon-start="xmark" label="Fechar"`, só com `closable` |
 | "Alternar menu" | `BaseButton variant="ghost" icon-only icon-start="bars"`, `aria-controls="admin-sidebar"`, `aria-expanded` |
-| Nomes | `aside aria-label="Menu do painel"`; `nav aria-label="Seções do painel"`; `nav aria-label="Ferramentas do painel"` (hoje) |
+| Nomes | `nav aria-label="Seções do painel"` e `nav aria-label="Ferramentas do painel"` (hoje); "Menu do painel" passa do `aria-label` do `aside` ao do diálogo, só abaixo de `lg` |
+
+**Estrutura da coluna (muda na volta 1; decisão da sessão principal: o `aside` vira `div`):**
+
+- `div#admin-sidebar.admin-sidebar(.is-drawer)` → `nav.admin-sidebar__nav[aria-label="Seções do painel"]` (o `ref` do `focusFirst`, hoje) → `div.admin-sidebar__head` (a marca e, na gaveta, o "Fechar") → `div.admin-sidebar__lista` (os quatro `RouterLink`) → `div.admin-sidebar__footer` (o "Sair").
+- **Abaixo de `lg` (`closable`):** o `div` recebe `role="dialog"`, `aria-modal="true"` e `aria-label="Menu do painel"` (por `v-bind` condicional); a partir de `lg`, nenhum dos três (um `div` sem papel não leva nome).
+- **Por que a `nav` envolve a coluna inteira:** sem o `aside`, a marca e o "Sair" ficariam fora de qualquer landmark a partir de `lg`, e o APG pede todo o conteúdo dentro de algum [210]. Quem entra na `nav` ouve a marca, os destinos e o "Sair"; o "Fechar" só existe na gaveta, que já é o diálogo. O `focusFirst` de hoje (`querySelector("a")`) continua achando "Painel": a marca é `p`, e o "Fechar", `button`.
 
 **Layout (`_admin-layout.scss`):**
 
 - `div.admin-layout`: `min-height: 100dvh`, fundo `--m3-surface` (sai o `--color-surface-sunken`).
 - **Abaixo de `lg`:** bloco; `header.admin-header` `position: sticky; top: 0; z-index: var(--z-navbar); height: var(--navbar-h); background: var(--m3-surface)`; o `main` no fluxo.
-- **A partir de `lg`:** `display: grid; grid-template-columns: var(--m3-navegacao-largura) minmax(0, 1fr); grid-template-rows: auto 1fr`. O `aside` na coluna 1, linhas 1 a −1, `position: sticky; top: 0; height: 100dvh; overflow-y: auto`; o cabeçalho na coluna 2, linha 1, grudado; o `main` na coluna 2, linha 2. Saem o `left: 240px` do cabeçalho e o `margin-left: 240px` do `main`.
+- **A partir de `lg`:** `display: grid; grid-template-columns: var(--m3-navegacao-largura) minmax(0, 1fr); grid-template-rows: auto 1fr`. O `div#admin-sidebar` na coluna 1, linhas 1 a −1, `position: sticky; top: 0; height: 100dvh; overflow-y: auto`; o cabeçalho na coluna 2, linha 1, grudado; o `main` na coluna 2, linha 2. Saem o `left: 240px` do cabeçalho e o `margin-left: 240px` do `main`.
 - `main.admin-main`: `padding: var(--space-5) var(--gutter) var(--space-8)`; `max-width: calc(var(--container-max) + 2 * var(--gutter))`; `min-width: 0`; texto base em body-m (`tipo(body-m)` com o tracking do papel): a densidade do `SPEC.md` §5.11 ("texto de tabelas e cards `--text-sm`"), que já é o de hoje.
 
 **Cabeçalho (`_navbar-admin.scss`):**
@@ -535,12 +550,13 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | Posição | `sticky`, altura da janela | `position: fixed; inset-block: 0; inset-inline-start: 0`; `z-index: var(--z-sidebar)`, acima do `scrim` (`--z-overlay`) e do cabeçalho (`--z-navbar`) | hoje |
 | Largura | `--m3-navegacao-largura` | a mesma, com `max-width: 85vw` | [165], [174] |
 | Cabeça | 64 px (`--navbar-h`), na faixa do cabeçalho; a marca em title-l 500, `on-surface`, a `calc(var(--space-3) + var(--space-4))` da borda (28 px, alinhada aos ícones dos itens) | a mesma, com o "Fechar" no fim, a 8 px da borda | [179], [184] |
-| Lista | `nav`: `padding-block: var(--space-2)`; itens com `gap: var(--space-1)` | igual | [173] |
-| Item | 44 px (`--target-min`), como a pílula ancorada da loja | 56 px (`3.5rem`), o indicador da gaveta | SPEC-M §5.11; [164] |
-| Pé | divisor de 1 px `--m3-outline-variant` (decorativo), recuado 12 px dos lados; "Sair" com a anatomia do item | igual | [160] (divisor entre seções) |
+| Lista | `div.admin-sidebar__lista`: `padding-block: var(--space-2)`; itens com `gap: var(--space-1)`; `flex: 1` (empurra o pé para baixo) | igual | [173] |
+| Item | 56 px (`min-height: 3.5rem`) | 56 px | [164], [176]; desvio da SPEC-M §5.11 (44) |
+| Pé | divisor de 1 px `--m3-outline-variant` (decorativo), recuado 12 px dos lados; "Sair" com a anatomia do item, a `--space-2` do pé | igual | [160] (divisor entre seções) |
 
 - **Sem divisor sob a cabeça** (hoje há): a lista começa logo abaixo da marca, como no exemplo da gaveta [160].
-- **Altura do item por largura:** a gaveta é para toque e tem os 56 dp do indicador do M3 [164]; a coluna fixa é para o ponteiro e tem os 44 da densidade do painel (`SPEC.md` §5.11) e da pílula da loja a partir de `lg` (SPEC-M §4.1).
+- **Uma altura só (volta 1):** 56 px na coluna e na gaveta, o indicador da gaveta [164] e do rail expandido [176]. A SPEC-M §5.11 dizia 44 sem fonte (os dossiês não cobriam a navegação): é o quarto desvio da §5.11, aceito pela sessão principal. Sai o motivo "toque na gaveta, ponteiro na coluna": as classes de largura valem pela janela, e não pelo aparelho [189].
+- **Contas com 56 (estimativas):** na coluna e na gaveta, a cabeça de 64 e o recuo de 8 põem os destinos de y 72 a 308 (4 × 56 e 3 vãos de 4); o pé (divisor, 8 e o "Sair" de 56) ocupa cerca de 73 px no fim. Com 900 de altura (1440 × 900), sobram cerca de 520 px entre a lista e o pé; com 768 (1024 × 768) e 844 (390 × 844), 380 e cerca de 460. A coluna só rola por dentro abaixo de cerca de 400 px de altura.
 
 **O item da navegação (decisão b):**
 
@@ -549,11 +565,11 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **Rótulo:** label-l 500 (14/20, tracking do papel) [164], `white-space: normal`.
 - **Inativo:** `on-surface-variant` (8,86 na coluna; 8,41 na gaveta) [164], [178].
 - **Atual (`[aria-current="page"]`):** fundo `--m3-secondary-container`, ícone e rótulo `--m3-on-secondary-container` (7,22), **rótulo em 700**. O indicador e as cores são os da gaveta e do rail ([164], [161], [178]); o rótulo em `on-secondary-container` é o da gaveta ([164], [161]); o rail usa `Secondary` [178], e fica o da gaveta e da pílula da loja.
-  - **Por que o 700:** o indicador contra a coluna dá 1,23 (1,16 na gaveta; medidos). A troca de fundo dentro do componente fica fora da 1.4.11 e, sozinha, não passa na 1.4.1 ([98], [99]). O negrito no ativo vem ligado por padrão na gaveta do MDC [161], e a ênfase do sistema vem "dos pares de cor e do peso" (SPEC-M §0). Com o peso, o item atual se distingue sem depender da cor; o `aria-current` diz o mesmo ao leitor de tela [207].
+  - **Por que o 700 (refeito na volta 1):** o indicador contra a coluna dá 1,23 (1,16 na gaveta; medidos), e a cor do rótulo quase não muda (cerca de 1,05, medida do revisor). A troca de fundo dentro do componente fica fora da 1.4.11 e, sozinha, não passa na 1.4.1 ([98], [99]). A 1.4.1 pede informação além da cor, "such as shape or text" [99]; a G182, técnica suficiente dela, lista o negrito entre as pistas visuais além da cor e pede a informação também por programa (1.3.1) [215]. **É inferência:** a G182 foi escrita para **texto** colorido, e aqui a cor está no **fundo**; o dossiê não tem técnica nem falha da W3C sobre o item atual de uma navegação marcado só pelo fundo (pesquisa, "Achado da sessão principal"). A informação por programa é o `aria-current="page"` [207]. O desenho do item (o negrito no ativo) vem do padrão da gaveta do MDC [161], que não é fonte da WCAG; a ênfase do sistema vem "dos pares de cor e do peso" (SPEC-M §0). A medida do revisor: "Relatórios de Vendas" tem 134,6 px em 500 e 135,3 em 700, sem pulo de layout.
   - **A pílula sai da barra de 3 px da Brasa** e do `primary-container` (o par "item selecionado", 13,24, sai do `contraste.js`).
 - **Hover e pressionado:** a camada de estado (`camada-de-estado`: `currentColor` a 8% e 10% [12]). O M3 escurece o rótulo inativo para `on-surface` no hover [164]; fica só a camada, como na pílula da loja.
-- **Foco:** anel interno (`anel-interno`, SPEC-M §6): com 4 px entre os itens, o anel de fora (2 + 3 px) invadiria o vizinho. Pares: 6,14 na coluna e 5,83 na gaveta; 4,99 no item atual; pressionado, 5,03 e 4,78 (medidos).
-- **"Sair":** a mesma anatomia, sem estado atual. O `aria-label="Sair"` de hoje repete o texto visível e fica (o nome contém o rótulo visível [214]).
+- **Foco:** anel interno (`anel-interno`, SPEC-M §6): com 4 px entre os itens, o anel de fora (2 + 3 px) invadiria o vizinho. Com 56 px, o anel interno contorna o item de 56 por dentro e não muda a conta. Pares: 6,14 na coluna e 5,83 na gaveta; 4,99 no item atual; pressionado, 5,03 e 4,78 (medidos).
+- **"Sair":** a mesma anatomia (56 px), sem estado atual, dentro da `nav`, depois do divisor. O `aria-label="Sair"` de hoje repete o texto visível e fica (o nome contém o rótulo visível [214]).
 
 **A gaveta (decisão c):**
 
@@ -561,12 +577,15 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **Abrir (`motion-ok`):** a gaveta entra de `transform: translateX(-100%)` para `none`, com a opacidade, em `--dur-base` e `--m3-ease-emphasized-decelerate` (o movimento de hoje, `SPEC.md` §7.5; SPEC-M §7.7 manda seguir a Brasa com as curvas novas). A tabela da SPEC-M §2.8 lista a gaveta em `--dur-slow`; fica o `--dur-base` da §7.7 e do código. O `scrim` entra por opacidade em `--dur-base`.
 - **Reduzido:** só opacidade, em `--dur-fast`, na gaveta e no `scrim` (hoje). A classe `.admin-sidebar` entra na lista de `transform: none` do `_motion.scss`, como rede de segurança: o `@keyframes` com `transform` só roda dentro de `motion-ok`.
 - **Fechar:** some na hora (hoje), nos três modos. Uma saída animada deixaria a gaveta à vista com o foco já de volta ao botão.
-- **`inert` (lógica de apresentação, `AdminLayout.vue`):** um `computed` `gavetaAberta = isSidebarOpen && !isDesktop`; o skip link, o `header` e o `main` recebem `:inert="gavetaAberta || undefined"` (o `undefined` tira o atributo). Ao cruzar `lg` com a gaveta aberta, o `handleMediaChange` de hoje já fecha a trava, e o `inert` sai junto.
+- **`inert` (lógica de apresentação, `AdminLayout.vue`):** um `computed` `gavetaAberta = isSidebarOpen && !isDesktop`; o skip link, o `header` e o `main` recebem `:inert="gavetaAberta || undefined"` (o `undefined` tira o atributo). Ao cruzar `lg` com a gaveta aberta, o `handleMediaChange` de hoje já fecha a trava, e o `inert` sai junto. **Fica de fora a região dos avisos** (`AppToast`, no `App.vue`): com `inert`, a região viva sairia da árvore de acessibilidade e não anunciaria (aceito pela sessão principal; 4.2).
+- **A volta do foco (bloqueante da volta 1):** o `closeSidebar({ returnFocus })` passa a ser assíncrono: `isSidebarOpen.value = false`, `unlock()`, e, com `returnFocus`, `await nextTick()` antes de `toggleButton?.focus()`. O `focus()` num elemento ainda `inert` não faz nada (testado pelo revisor no Chromium): sem o `nextTick`, o Esc, o "Fechar" e o fundo perderiam o foco (regressão do Esc e do "Fechar", que hoje funcionam).
 - **Clique no fundo:** `@click="closeSidebar({ returnFocus: true })"` (hoje sem `returnFocus`).
+- **Troca de rota com a gaveta aberta:** no `watch` de `route.fullPath`, antes de fechar, guardar se o foco estava dentro do `div#admin-sidebar` (`sidebarRef.value?.$el.contains(document.activeElement)`); fechar; e, se estava, `await nextTick()` e `mainRef.value?.focus({ preventScroll: true })`. Cobre a troca só de query, em que o `afterEach` do router não move o foco (4.2). Quando o caminho muda, o `afterEach` também leva o foco ao `main`; os dois chegam ao mesmo lugar.
+- **Item da rota atual:** clicar em "Gestão de Pedidos" estando em `/admin/orders` exatamente não navega (o router não troca a rota), e a gaveta continua aberta, com o foco no link (hoje).
 - **Trava de rolagem:** a de hoje (`useScrollLock`).
-- **O que o leitor de tela ouve:** ao abrir, o foco em "Painel" (link; "página atual" se for a rota), dentro de "Seções do painel" (navegação) e de "Menu do painel"; a página atrás não existe para ele (`inert`). Ao fechar, "Alternar menu", botão, recolhido.
+- **O que o leitor de tela ouve:** ao abrir, o diálogo "Menu do painel" e o foco em "Painel" (link; "página atual" se for a rota), dentro de "Seções do painel" (navegação); a página atrás não existe para ele (`inert`). Ao fechar, "Alternar menu", botão, recolhido.
 
-**Acessibilidade (resumo):** dois `nav` com nomes distintos, sem a palavra "navegação" ([210], [211]); o `aside` fica (contrato; a pesquisa lembra que o complementary é apoio ao conteúdo [210]; seção 11); `aria-current` só no item exato [207]; os links da coluna não viram `menu` nem `menubar` ([203], [204]); o "Alternar menu" com nome fixo e `aria-expanded` (um nome que muda com o estado repetiria a informação; inferência da pesquisa a partir de [179], [180] e [159]).
+**Acessibilidade (resumo):** dois `nav` com nomes distintos, sem a palavra "navegação" ([210], [211]); o `aside` sai, porque o complementary é para conteúdo de apoio [210], e a `nav` envolve a coluna inteira; abaixo de `lg`, o contêiner é o diálogo modal [199]; `aria-current` só no item exato [207]; os links da coluna não viram `menu` nem `menubar` ([203], [204]); o "Alternar menu" com nome fixo e `aria-expanded` (um nome que muda com o estado repetiria a informação; inferência da pesquisa a partir de [179], [180] e [159]).
 
 **Comportamento:** 1440 e 1024, a coluna fixa; abaixo de 1024, a gaveta, fechada ao carregar; 390, a gaveta de 240 sobre uma faixa de 150 px de `scrim`.
 
@@ -623,9 +642,10 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | Itens | "Meu perfil" (`user`), "Configurações" (`cog`), "Sair" (`sign-out-alt`) |
 
 - **Avatar:** o `button.navbar-profile__avatar` fica com o alvo de 44 × 44, canto `full`, com a camada de estado (`on-surface-variant` a 8% e 10%) e o anel; dentro dele, um `span` de 32 px (`2rem`), canto `full`, fundo `--m3-secondary-container` e as iniciais em label-l 500 `--m3-on-secondary-container` (7,22). O avatar da top app bar tem 32 dp [196], e o alvo precisa ser maior que o desenho (inferência da pesquisa, com [196] e [78]; o projeto pede 44, SPEC-M §1.1). **Por que `secondary-container`:** o avatar é um controle (abre o menu), e a regra do sistema põe `secondary-container` nos círculos que agem e `tertiary-container` nos que informam (SPEC-M §2.2); o `primary-container` é do FAB e do hero. Contra a `surface`, o círculo dá 1,23: um controle com texto dispensa borda [98]. Sai o `--radius-round` (o `full` faz o círculo; o apelido fica para o acervo, decisão a).
-- **Menu:** `div.navbar-profile__menu` em `--m3-surface-container-high`, canto 16 (`--m3-forma-l`), `--m3-elevacao-2`, `padding: var(--space-2)`, `min-width: 13rem` (hoje) e `max-width: min(20rem, calc(100vw - 2 * var(--gutter)))`, alinhado ao fim do avatar, `reserva-de-sombra`. **Não encontrei** o contêiner do menu no dossiê (a pesquisa cobre o teclado [205] e o menu preso a campo [130]); fica o da folha de ingredientes, a outra superfície que flutua sobre a página (SPEC-M §4.1).
-- **Cabeça:** o nome em title-s (label-l 500), `on-surface` (13,93), `overflow-wrap: anywhere`, com um divisor `outline-variant` embaixo (hoje).
-- **Itens:** a anatomia do item da navegação com 44 px: pílula (`full`) na largura do menu, ícone de 20 px em `on-surface-variant` (7,56), rótulo label-l 500 em `on-surface` (13,93), camada de estado (pressionado: 11,46), anel interno (5,25; pressionado 4,32). Sem divisor antes do "Sair": dentro do `role="menu"`, um filho sem papel de item seria inválido, e o padrão do dossiê lista só os papéis de item [205].
+- **Menu (cor trocada na volta 1):** `div.navbar-profile__menu` em `--m3-surface-container`, canto 16 (`--m3-forma-l`), `--m3-elevacao-2`, `padding: var(--space-2)`, `min-width: 13rem` (hoje) e `max-width: min(20rem, calc(100vw - 2 * var(--gutter)))`, alinhado ao fim do avatar, `reserva-de-sombra`. **Não encontrei** a cor do contêiner do menu no dossiê (a pesquisa cobre o teclado [205] e o menu preso a campo [130]). A escolha é pela diferença das superfícies vizinhas: o menu abre sobre a página (`surface`) e, abaixo do cabeçalho, sobre os cards (`surface-container-high`); no `high`, ele teria a cor do card sobre o qual abre. O `surface-container` não é nenhum dos dois (1,11 contra a página e 1,05 contra o card, medidos; a separação vem também da sombra).
+- **Cabeça:** o nome em title-s (label-l 500), `on-surface` (14,68 sobre o `surface-container`), `overflow-wrap: anywhere`, com um divisor `outline-variant` embaixo (hoje).
+- **Itens:** a anatomia do item da navegação (pílula `full` na largura do menu, ícone e rótulo), com 44 px, o alvo do projeto (não encontrei a altura do item de menu no dossiê): ícone de 20 px em `on-surface-variant` (7,97), rótulo label-l 500 em `on-surface` (14,68), camada de estado (hover 12,56, pressionado 12,06; ícone pressionado 6,55), anel interno (5,53; pressionado 4,54). Todos medidos sobre o `surface-container`.
+- **O "Sair" separado por CSS (volta 1):** o `button` do "Sair" ganha `margin-block-start: var(--space-2)` e uma linha de 1 px `--m3-outline-variant` desenhada pelo `::after` (a camada de estado usa o `::before`), recuada 12 px dos lados, no vão acima dele. A linha não cria filho no DOM: o `role="menu"` continua só com os `menuitem` [205]. É a mesma separação do "Sair" na coluna: os dois primeiros itens levam a uma tela, o último sai do painel.
 - **`role="menu"` fica:** o menu button com `role="menu"` e `menuitem` é o padrão do APG [79], [205], também com itens que navegam [206]; o aviso contra o `menu` vale para a navegação típica do site ([203], [204]), que é a coluna. O teclado de hoje fica: Enter e Espaço abrem e focam o primeiro item [79]; setas com volta nas pontas, Home e End, Esc fecha e devolve o foco, Tab fecha [205]; o clique fora fecha. As setas no botão e a busca por letra são opcionais ([79], [205]) e não entram.
 - **Movimento:** o menu aparece por opacidade em `--m3-dur-mola-efeitos-rapida` com `--m3-mola-efeitos-rapida` (um `<Transition>` em volta do `v-show`), igual com e sem movimento reduzido (opacidade não conta como movimento [77]); sem `transform`, sem classe nova no `_motion.scss`.
 - **Reservas:** nome longo quebra na cabeça; só "Administrador" quando o admin não tem nome (`TheNavbarAdmin`, hoje); as iniciais são duas no máximo.
@@ -664,7 +684,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | Login | `h1` "Painel administrativo" |
 
 - Um `h1` por tela; sem salto de nível.
-- **Landmarks:** `header` (banner, um só, no topo [210]); `nav` "Ferramentas do painel" com o `role="search"` dentro; `aside` "Menu do painel" com a `nav` "Seções do painel"; `main#conteudo` com `tabindex="-1"`; o skip link. Cada `AdminCard` é uma `region` nomeada pelo título (hoje, `SPEC.md` §5.11): os nomes repetidos são únicos ("Pedido #1", "Pedido #2", os quatro KPIs), como pedem [210] e [211].
+- **Landmarks:** `header` (banner, um só, no topo [210]); `nav` "Ferramentas do painel" com o `role="search"` dentro; a `nav` "Seções do painel", com a coluna inteira dentro (o `aside` sai, volta 1; abaixo de `lg`, dentro do diálogo "Menu do painel"); `main#conteudo` com `tabindex="-1"`; o skip link. Cada `AdminCard` é uma `region` nomeada pelo título (hoje, `SPEC.md` §5.11): os nomes repetidos são únicos ("Pedido #1", "Pedido #2", os quatro KPIs), como pedem [210] e [211].
 
 ### 5.4 `AdminCard` e KPIs (decisão i)
 
@@ -674,6 +694,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 **Visual (filled card [63]):**
 
 - Fundo `--m3-surface-container-high`, canto 12 (`--m3-forma-m`), **sem sombra** (sai o `--elev-1`), `padding: var(--space-4)`, coluna com `gap: var(--space-3)`, `reserva-de-sombra`.
+- **`height: 100%` no `.admin-card` (volta 1):** nas grades, o `li` estica até a altura da linha (`align-items: stretch`), e o card precisa preenchê-lo para o rodapé (`margin-top: auto`) alinhar as ações entre os cards. Fica o `height: 100%` no card, e não o `li` flex: a regra mora no componente, e vale para todas as grades (pedidos e KPIs) sem regra nas views. Fora de grade (Meu perfil, Configurações), o pai tem altura automática, e o `100%` não muda nada.
 - **Por que `high`, e não o `highest` da SPEC-M §5.11 (desvio, medido):** o "Detalhes" do card de pedido é text button em `primary`. Sobre o `highest`, dá 4,99 em repouso, 4,50 no hover e **4,38 pressionado**, abaixo do 4,5 de texto; sobre o `high`, 5,23, 4,71 e 4,59. A cor do filled card não está nas fontes do dossiê ([63] não a traz); o `highest` veio do card do feed da Home, que não tem text button. O card de produto segue o mesmo fundo (5.7), para o painel ter um card só.
 - **Contra a página:** o `high` dá 1,17 sobre a `surface` (medido). **A 1.4.11 não se aplica:** o card não é componente de interface nem gráfico necessário para entender o conteúdo; o título e o texto o identificam [98]. Nos modos de contraste, a borda da `reserva-de-sombra` o desenha.
 - **Sem hover, sem foco, sem cursor:** só os botões reagem (SPEC-M §0).
@@ -707,7 +728,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 - **Slot padrão:** o texto. Nenhum emit.
 - **Estrutura:** `p.m3-status.m3-status--{tom}` com o slot. **Raiz `p`:** é o elemento do perfil hoje (o `ProfileView.test.js` confere), e cabe no `header` do card e no `dd` do diálogo.
-- **Visual:** label-l 500 (14/20), `padding: var(--space-1) var(--space-2)` (28 px de altura), canto `--m3-forma-s` (8; chips em small [7]), `flex-shrink: 0`, `white-space: nowrap`, `reserva-de-sombra`. **Sem** camada, cursor, foco, papel ARIA ou ícone: não é chip, porque o chip do M3 é interativo [60] [141] (desenho da Conta, 5.8).
+- **Visual:** label-l 500 (14/20), `letter-spacing: var(--m3-label-l-tracking)` (o do `.profile-order__status` de hoje, `_profile.scss` L183, para o "Recebido" ficar igual ao que a etapa 8 aprovou), `padding: var(--space-1) var(--space-2)` (28 px de altura), canto `--m3-forma-s` (8; chips em small [7]), `flex-shrink: 0`, `white-space: nowrap`, `reserva-de-sombra`. **Sem** camada, cursor, foco, papel ARIA ou ícone: não é chip, porque o chip do M3 é interativo [60] [141] (desenho da Conta, 5.8).
 - **Mapa do painel** (apresentação, na `OrderManagement`; nenhuma store muda):
 
 | `status` | Texto (`STATUS_LABELS`) | `tom` | Par (medido) |
@@ -719,7 +740,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 - **"Em preparo" e "A caminho" no mesmo `info`:** o texto distingue; a cor é sinal a mais, e não o único (1.4.1 [99]).
 - **O contêiner contra o card:** 1,04 a 1,05 sobre o `high` (1,10 sobre o `surface-container` do diálogo; medidos). **A 1.4.11 não se aplica:** o rótulo não é controle, e o texto (5,00 a 5,03 sobre o contêiner) leva o estado [98]. Nos modos de contraste, a borda da `reserva-de-sombra` desenha a caixa, e o texto fica.
-- **O perfil passa a usá-lo nesta etapa:** no `ProfileView.vue`, `<p class="profile-order__status">{{ order.status }}</p>` vira `<M3RotuloStatus class="profile-order__status" tom="info">{{ order.status }}</M3RotuloStatus>` (uma linha e o import). Em `_profile.scss`, a regra `.profile-order__status` fica só com o `margin-inline-start: auto` (o resto vai para o componente). O teste de hoje continua valendo: um `p`, sem papel, sem `tabindex`, sem ser botão.
+- **O perfil passa a usá-lo nesta etapa:** no `ProfileView.vue`, `<p class="profile-order__status">{{ order.status }}</p>` vira `<M3RotuloStatus class="profile-order__status" tom="info">{{ order.status }}</M3RotuloStatus>` (uma linha e o import). Em `_profile.scss`, a regra `.profile-order__status` fica só com o `margin-inline-start: auto` (o resto, inclusive o `letter-spacing`, vai para o componente). O `ProfileView.test.js` continua valendo: um `p`, sem papel, sem `tabindex`, sem ser botão. **O `conta-estilo.test.js` muda (volta 1):** as asserções do `.profile-order__status` sobre cor, fundo, canto, padding, tipo, peso, a falta de cursor e de camada e a borda de `forced-colors` (L406–418) passam para o teste de estilo do componente (seção 9); no `conta-estilo.test.js` fica só a margem (L404).
 - **Movimento:** nenhum; o texto troca direto quando o status muda.
 - **Reserva:** status desconhecido não chega à tela (o `afterHydrate` da store tira o pedido fora do formato; hoje); o texto `?? order.status` de hoje fica, com `tom="info"`.
 
@@ -749,7 +770,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 - Cada pedido tem cliente, itens, total e duas ações: de 8 a 12 linhas e um conteúdo coerente com ações próprias, o caso do card [63]. Numa lista segmentada, com vãos de 2 px e cantos de 4 por dentro [8], pedidos diferentes de 300 px de altura se leriam como um bloco só; a lista segmentada serve a linhas curtas do mesmo tipo (o histórico do perfil, o carrinho).
 - **Contra os "cards SaaS iguais":** sem sombra, sem hover, sem enfeite; o único fundo de cor é o do status; o conteúdo de cada card é diferente.
-- **Grade:** `ul.orders-list[role=list]`, 1 coluna abaixo de `md`, 2 de `md` a `xl`, 3 a partir de `xl` (hoje), `gap: var(--space-4)`, `align-items: stretch` (o rodapé com `margin-top: auto` alinha as ações na linha).
+- **Grade:** `ul.orders-list[role=list]`, 1 coluna abaixo de `md`, 2 de `md` a `xl`, 3 a partir de `xl` (hoje), `gap: var(--space-4)`, `align-items: stretch`; o `li` estica, o `AdminCard` o preenche (`height: 100%`, 5.4), e o rodapé com `margin-top: auto` alinha as ações na linha.
 
 **Hierarquia dentro do card:**
 
@@ -758,7 +779,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 - **Bloco do cliente:** `div.order-info__block` (coluna, `gap: var(--space-1)`); o nome em body-m `on-surface`; o endereço e o telefone em body-m `on-surface-variant` (7,56), `overflow-wrap: anywhere`.
 - **Itens:** cada linha é flex com `justify-content: space-between`, `gap: var(--space-3)`: "2× Smash Burger" (`2×` tabular) e o preço (tabular, `white-space: nowrap`), em body-m `on-surface`.
   - **O "×" fica:** a regra do "·" da etapa 7 (7.g) tira o separador que junta dados de tipos diferentes; o "×" é a notação de quantidade do resumo da loja ("{quantidade}× {nome}", `SPEC.md` §4.1), e não um separador.
-  - **O preço da linha é o unitário** (`item.price`): "2× Smash Burger R$ 25,90" com o Total R$ 59,80. Pergunta 1 da §12.
+  - **O preço da linha é o unitário** (`item.price`): "2× Smash Burger R$ 25,90" com o Total R$ 59,80. Pergunta 1 da §12; a recomendação é "R$ 25,90 cada", o texto do diálogo "Detalhes" ("{preço} cada"), sem conta nova na view. Com ela, o preço da linha fica em body-m `on-surface`, tabular, com o "cada" no mesmo texto.
 - **Total:** `p.order-info__total`, flex entre "Total" (label-l 500) e o valor (title-m 500, tabular), com o divisor de 1 px `--m3-outline-variant` em cima e `padding-top: var(--space-2)`: o único divisor do card.
 - **Ações (rodapé):** "Atualizar status" (tonal `sm`) e "Detalhes" (texto `sm`), nessa ordem, alinhados ao início. Texto do tonal 7,22; "Detalhes" 5,23 sobre o `high` (hover 4,71; pressionado 4,59; anel 5,25 e 4,60). O desabilitado do "Atualizar status" é da etapa 10 (hoje: `surface-container-highest` e `--color-ink-disabled`).
 
@@ -805,10 +826,10 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 | Ação | "Novo produto" (filled `md`, `plus`) |
 | Filtro | `FormGroup` "Categoria": "Destaques" (4 hambúrgueres sorteados ao abrir), "Hambúrgueres", "Bebidas", "Sobremesas" |
 | Cards | `filteredProducts` (hoje); chave `` `${product.category}-${product.id}` `` |
-| Foto | `product.image` por `useCartaoProduto` (`imagem`, com `responsiveImage`) |
+| Foto | `product.image` por `responsiveImage` (`@/composables/useResponsiveImage`) |
 | Nome | `product.name` (`h2`) |
 | Descrição | `product.description` |
-| Preço | `useCartaoProduto` → `preco` (`formatPrice`) |
+| Preço | `formatPrice(product.price)` (`@/utils/formatters`) |
 | Ações | "Editar" (`secondary`, `sm`) e "Excluir" (`danger`, `sm`, `trash-can`) |
 | Vazio da busca | `EmptyState` "Nenhum produto encontrado" / "Confira o texto da busca ou escolha outra categoria." (`magnifying-glass`) |
 | Avisos | "Produto atualizado.", "Produto criado.", "Produto excluído." |
@@ -822,7 +843,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 - **Slot `acoes`:** os botões (o slot `actions` de hoje, com o nome em português das peças `M3*`). Nenhum emit.
 - **Estrutura:** `article.m3-cartao-produto` → `M3Foto.m3-cartao-produto__foto` (`forma="cartao"`, 4:3, `:alt="produto.name"`, `:icone="['fas', 'utensils']"`, `:falhou`, `@erro`) → `div.m3-cartao-produto__corpo` → `h{n}.m3-cartao-produto__nome` → `p.m3-cartao-produto__descricao` (`v-if`) → `p.m3-cartao-produto__preco.tabular` → `div.m3-cartao-produto__acoes` (o slot).
-- **Lógica:** `useCartaoProduto(() => props.produto, { sizes })`, de onde vêm `imagem`, `preco` e `imagemFalhou` (o resto do composable não é usado). `sizes`: `"(min-width: 1280px) 280px, (min-width: 768px) 30vw, (min-width: 480px) 45vw, 7rem"` (estimativa pela grade abaixo; a sessão C confere a imagem escolhida em 390 e 1440).
+- **Lógica (trocada na volta 1):** sem o `useCartaoProduto`, que traz o estado "Adicionado", o temporizador e o `atributosAdicionar` do fluxo de compra. O card usa direto um `computed` com `responsiveImage(props.produto.image, { sizes })`, um `computed` com `formatPrice(props.produto.price)` e um `ref(false)` para a imagem que falha, ligado ao `@erro` do `M3Foto`. `sizes`: `"(min-width: 1280px) 280px, (min-width: 768px) 30vw, (min-width: 480px) 45vw, 7rem"` (estimativa pela grade abaixo; a sessão C confere a imagem escolhida em 390 e 1440).
 - **O que reaproveita do card da loja (`M3CartaoLanche`) e o que não:**
   - **reaproveita:** o filled card com padding de 8 e a foto recuada, com a forma `cartao` do `M3Foto` (canto 16 abaixo de `md`, 28 a partir dele) [63], [34]; o nome em title-m 500; a descrição em body-m com o corte de 2 linhas (`linhas(2)`); o preço em title-m 500 tabular; a reserva da foto;
   - **não reaproveita:** o split, a folha e o `usePersonalizar` (o admin não compra); o destaque (os itens são equivalentes [64]); o `highest` (fica o `high` do painel, 5.4); o título em title-l a partir de `md` (o painel é denso).
@@ -879,7 +900,7 @@ No `yarn dev`, entre o formulário e o "Voltar à loja": a linha tracejada em `o
 
 **O seletor de arquivo (`.file-picker`), alinhado ao `FormGroup`:**
 
-- **O rótulo "Imagem"** (`span#image-rotulo.file-picker__label`): label-l 500 `on-surface`, a 8 px da caixa, como o rótulo do campo; `error` com erro.
+- **O rótulo "Imagem"** (`span.file-picker__label`, sem `id`: nada o referencia; o nome do campo é o texto do `label` do botão): label-l 500 `on-surface`, a 8 px da caixa, como o rótulo do campo; `error` com erro.
 - **A caixa (`div.file-picker__campo`, nova):** contorno de 1 px `--m3-outline` (3,85 sobre o `surface-container` do diálogo), canto 12, `min-height: 3.5rem`, `display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3)`, `padding-inline: var(--space-2) var(--space-4)`. Com erro, o contorno passa a `--m3-error` (5,54). Sem hover na caixa: ela não é interativa (só o botão dentro). **Por quê:** os campos vizinhos se mostram pelo contorno; a caixa faz o seletor se ler como mais um campo do formulário, e não como um botão solto entre campos.
 - **O botão (`label.file-picker__button[for=image]`, com o `input` escondido dentro, hoje):** a forma e as cores do tonal `md` do `BaseButton`: 44 px, `--m3-secondary-container` e `--m3-on-secondary-container` (7,22), label-l 500, `padding-inline: var(--space-5)`, a troca de forma (`troca-de-forma(var(--m3-forma-full), var(--m3-forma-s))`, com os três fundos em `--m3-botao-fundo`, como o tonal) e o anel no `:has(:focus-visible)` (3 px `secondary`, afastado 2 px; os 6 px entre o botão e o contorno comportam o anel). É `label`, e não `BaseButton`: o clique precisa cair no `input` de arquivo (hoje).
 - **O nome do arquivo** (`span.file-picker__name`): body-m `on-surface-variant` (7,97), `overflow-wrap: anywhere`; quebra para baixo do botão, dentro da caixa, quando o nome é longo.
@@ -990,11 +1011,11 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 
 | Componente | Padrão | Hover | Foco | Pressionado | Selecionado | Desabilitado | Carregando |
 |---|---|---|---|---|---|---|---|
-| Item da navegação (coluna, `lg`+) | sem fundo; ícone e rótulo `on-surface-variant` (8,86); label-l 500; 44 px, pílula na largura do item | camada 8% | anel interno (6,14) | camada 10% (7,26; anel 5,03) | `aria-current="page"`: `secondary-container` / `on-secondary-container` (7,22), rótulo em 700; anel 4,99 | — | — |
+| Item da navegação (coluna, `lg`+) | sem fundo; ícone e rótulo `on-surface-variant` (8,86); label-l 500; 56 px, pílula na largura do item | camada 8% | anel interno (6,14) | camada 10% (7,26; anel 5,03) | `aria-current="page"`: `secondary-container` / `on-secondary-container` (7,22), rótulo em 700; anel 4,99 | — | — |
 | Item da navegação (gaveta, abaixo de `lg`) | o mesmo sobre `surface-container-low` (8,41), 56 px | camada 8% | anel interno (5,83) | camada 10% (6,90; anel 4,78) | o mesmo da coluna | — | — |
 | Item da navegação nos modos de contraste | `forced-colors`: texto do sistema | — | anel | — | `forced-colors`: borda de 2 px `Highlight` (o precedente da pílula da loja); `prefers-contrast: more`: borda de 1 px `outline` (4,27 e 4,06) | — | — |
 | Coluna (`lg`+) | `surface`, sem canto, sem sombra, sem borda | — | — | — | — | — | — |
-| Gaveta | `surface-container-low`, cantos de 16 no lado de dentro, `elevacao-1`, sobre o `scrim` (32%); o resto `inert` | — | o foco entra no 1º link | — | aberta: `aria-expanded="true"` no "Alternar menu" | — | — |
+| Gaveta | `div` com `role="dialog"`, `aria-modal` e "Menu do painel"; `surface-container-low`, cantos de 16 no lado de dentro, `elevacao-1`, sobre o `scrim` (32%); o skip link, o cabeçalho e o `main` `inert` (o aviso, não) | — | o foco entra no 1º link; ao fechar, volta ao "Alternar menu" depois do `nextTick` | — | aberta: `aria-expanded="true"` no "Alternar menu" | — | — |
 | Gaveta nos modos de contraste | borda de 1 px (`CanvasText`; `outline` com mais contraste) | — | — | — | — | — | — |
 | "Alternar menu", "Fechar", atalhos (até a etapa 10) | ghost `iconOnly` da Brasa: 44 × 44, ícone `on-surface-variant` (8,86) | fundo `camada-hover`, ícone `on-surface` (13,92) | anel | fundo `surface-container-high` (13,93) | — | — | — |
 | Selo do atalho | some no 0; com pedidos: `error` / `on-error` (6,46), label-s 500, mín. 16 px, `full`; "9+" acima de 9 | — | — (`aria-hidden`; o foco é do link) | — | — | — | — |
@@ -1002,8 +1023,8 @@ Mesmo formato da §6 do SPEC-M. "Anel" é o contorno de 3 px em `--m3-secondary`
 | Busca | sem fundo; contorno 1 px `outline` (4,27), canto 12, 48 px; lupa e placeholder `on-surface-variant` (8,86) | contorno `on-surface` | contorno `primary` (6,13) + anel encostado (6,14) | — | — | — | — |
 | Busca nos modos de contraste | `forced-colors`: contorno `CanvasText`; mais contraste: contorno `on-surface-variant` (8,86) | — | anel | — | — | — | — |
 | Avatar | alvo 44, círculo de 32 `secondary-container` com as iniciais `on-secondary-container` (7,22) | camada 8% no alvo | anel (6,14) | camada 10% | menu aberto: `aria-expanded="true"` | — | — |
-| Menu do perfil | `surface-container-high`, canto 16, `elevacao-2`; nome em title-s `on-surface` (13,93) | — | o foco vai ao 1º item | — | — | — | — |
-| Item do menu | pílula de 44 px; ícone `on-surface-variant` (7,56), rótulo `on-surface` (13,93) | camada 8% | anel interno (5,25) | camada 10% (11,46; anel 4,32) | — | — | — |
+| Menu do perfil | `surface-container`, canto 16, `elevacao-2`; nome em title-s `on-surface` (14,68); a linha antes do "Sair" por CSS (`::after`, `outline-variant`) | — | o foco vai ao 1º item | — | — | — | — |
+| Item do menu | pílula de 44 px; ícone `on-surface-variant` (7,97), rótulo `on-surface` (14,68) | camada 8% (12,56) | anel interno (5,53) | camada 10% (12,06; ícone 6,55; anel 4,54) | — | — | — |
 | `AdminCard` (`default` e `kpi`) | `surface-container-high`, canto 12, sem sombra; título title-m 500 (`kpi`: label-l 500 `on-surface-variant`) | — (sem hover) | — (só os botões) | — | — | — | `aria-busy` só (sem opacidade) |
 | Card de produto (`M3CartaoProduto`) | `surface-container-high`, canto 12, padding 8, foto 4:3; nome title-m 500, descrição body-m, preço title-m 500 | — (sem hover) | — (só os botões) | — | — | — | foto: reserva `surface-container`; falha: ícone `utensils` |
 | Cards nos modos de contraste | borda de 1 px (`CanvasText`; com mais contraste, `outline`, 4,27 contra a `surface`) | — | — | — | — | — | — |
@@ -1030,7 +1051,7 @@ Os estados de vazio seguem a §6 do `SPEC.md`: Pedidos e Produtos (com busca) se
 - **Props:** `produto: { type: Object, required: true }`; `nivelTitulo: { type: [Number, String], default: 2 }`.
 - **Slots:** `acoes`. **Emits:** nenhum.
 - **Estrutura:** `article.m3-cartao-produto` → `M3Foto.m3-cartao-produto__foto` → `div.m3-cartao-produto__corpo` (`h{n}.m3-cartao-produto__nome`, `p.m3-cartao-produto__descricao`, `p.m3-cartao-produto__preco.tabular`) → `div.m3-cartao-produto__acoes`.
-- **Usa:** `M3Foto`, `useCartaoProduto` (`imagem`, `preco`, `imagemFalhou`).
+- **Usa:** `M3Foto`, `responsiveImage` (`@/composables/useResponsiveImage`), `formatPrice` (`@/utils/formatters`) e um `ref(false)` para a imagem que falha; **não** usa o `useCartaoProduto` (o "Adicionado", o temporizador e o `atributosAdicionar` são do fluxo de compra; volta 1).
 - **Tokens:** `--m3-surface-container-high`, `--m3-forma-m`, `--m3-on-surface`, `--m3-on-surface-variant`, `--m3-title-m` (e a linha), `--m3-body-m` (e a linha e o tracking), `--space-1` a `--space-4`.
 - **Mixins:** `tipo`, `linhas`, `reserva-de-sombra`, `up`.
 - **Referências:** [63], [34], [64], [H19].
@@ -1040,33 +1061,33 @@ Os estados de vazio seguem a §6 do `SPEC.md`: Pedidos e Produtos (com busca) se
 - **Props:** `tom: { type: String, default: "info", validator: (v) => ["info", "aviso", "sucesso"].includes(v) }`.
 - **Slots:** padrão. **Emits:** nenhum.
 - **Estrutura:** `p.m3-status.m3-status--{tom}`.
-- **Tokens:** `--m3-info`, `--m3-info-container`, `--m3-aviso`, `--m3-aviso-container`, `--m3-sucesso`, `--m3-sucesso-container`, `--m3-forma-s`, `--m3-label-l` (e a linha), `--space-1`, `--space-2`.
+- **Tokens:** `--m3-info`, `--m3-info-container`, `--m3-aviso`, `--m3-aviso-container`, `--m3-sucesso`, `--m3-sucesso-container`, `--m3-forma-s`, `--m3-label-l` (a linha e o `--m3-label-l-tracking`), `--space-1`, `--space-2`.
 - **Mixins:** `tipo`, `reserva-de-sombra`.
 - **Referências:** [7], [60], [141], [98], [99].
 
 ### 7.3 `AdminLayout` (muda)
 
 - **Estrutura:** a de hoje (skip link, `header.admin-header` com o `TheNavbarAdmin`, `div.admin-overlay`, `SidebarAdmin`, `main#conteudo.admin-main`).
-- **Lógica de apresentação:** o `computed` `gavetaAberta`; `:inert="gavetaAberta || undefined"` no skip link, no `header` e no `main`; `closeSidebar({ returnFocus: true })` no clique do `scrim`.
-- **Parcial:** a grade a partir de `lg`; o cabeçalho `sticky`; o `main` sem `padding-top`; o `scrim` em `--m3-scrim`; os `:global()` do aviso no pé e da reserva (4.6); sem `240px` escrito.
+- **Lógica de apresentação:** o `computed` `gavetaAberta`; `:inert="gavetaAberta || undefined"` no skip link, no `header` e no `main` (a região dos avisos, no `App.vue`, fica de fora); o `closeSidebar` assíncrono, com `await nextTick()` antes do `toggleButton?.focus()` (volta 1, bloqueante); `closeSidebar({ returnFocus: true })` no clique do `scrim`; no `watch` da rota, o foco ao `main` depois do `nextTick` quando ele estava na gaveta (a troca só de query).
+- **Parcial:** a grade a partir de `lg`; o cabeçalho `sticky`; o `main` sem `padding-top`; o `scrim` em `--m3-scrim`; os `:global()` do aviso no pé (`html:has(.admin-layout) .toast-region`, 4.6) e da reserva; sem `240px` escrito.
 
 ### 7.4 `SidebarAdmin` (muda)
 
 - **API:** `closable` (`Boolean`, `false`); emite `close`; expõe `focusFirst` (hoje).
-- **Estrutura:** a de hoje.
-- **Parcial:** coluna e gaveta pela tabela de 5.1; o item; a marca sem caixa alta; o divisor do pé; os `@keyframes` com `transform` só em `motion-ok`.
+- **Estrutura (muda na volta 1):** `div#admin-sidebar.admin-sidebar` no lugar do `aside`, com `role="dialog"`, `aria-modal="true"` e `aria-label="Menu do painel"` só com `closable`; a `nav` "Seções do painel" envolve a cabeça, a lista e o pé (5.1).
+- **Parcial:** coluna e gaveta pela tabela de 5.1; o item de 56 px; a marca sem caixa alta; o divisor do pé; os `@keyframes` com `transform` só em `motion-ok`.
 
 ### 7.5 `TheNavbarAdmin`, `SearchBar`, `NotificationBar`, `UserProfileBar` (mudam)
 
 - **`TheNavbarAdmin`:** API e lógica de hoje; a parcial muda os recuos (5.1).
 - **`SearchBar`:** API de hoje; a parcial vira o campo outlined de 48 (5.2); a lupa sem `translate`.
 - **`NotificationBar`:** API de hoje; `aria-current="false"` em cada `BaseButton`; o selo com o visual do badge (5.2).
-- **`UserProfileBar`:** API e teclado de hoje; o `span` do círculo dentro do botão; o `<Transition>` de opacidade no menu; a parcial (5.2).
+- **`UserProfileBar`:** API e teclado de hoje; o `span` do círculo dentro do botão; o `<Transition>` de opacidade no menu; uma classe no `button` do "Sair" (para a linha por `::after`); a parcial, com o menu em `surface-container` (5.2).
 
 ### 7.6 `AdminCard` e `ModalProducts` (mudam)
 
-- **`AdminCard`:** API de hoje; sai a opacidade do `.is-loading`; a parcial (5.4).
-- **`ModalProducts`:** API de hoje; o `div.modal-product__par` em volta de Preço e Quantidade; o `div.file-picker__campo` em volta do botão e do nome; a ajuda só sem erro; `imageDescribedBy` com um id só; o ícone do erro num `span` (5.8).
+- **`AdminCard`:** API de hoje; sai a opacidade do `.is-loading`; `height: 100%`; a parcial (5.4).
+- **`ModalProducts`:** API de hoje; o `div.modal-product__par` em volta de Preço e Quantidade; o `div.file-picker__campo` em volta do botão e do nome; o rótulo "Imagem" sem `id`; a ajuda só sem erro; `imageDescribedBy` com um id só; o ícone do erro num `span` (5.8).
 
 ### 7.7 Views (mudam)
 
@@ -1078,7 +1099,8 @@ Os estados de vazio seguem a §6 do `SPEC.md`: Pedidos e Produtos (com busca) se
 
 ### O que fica sem uso (para a etapa 11, salvo quando dito)
 
-- **`ProductCard.vue`:** nada da produção o usa depois desta etapa. O único import que sobra é o do `CarouselBurguer.vue`, que já não é importado por ninguém e sai na etapa 11 (SPEC-M §4.4). Com ele saem o `_product-card.scss`, o `useTilt.js` e, do `_motion.scss`, as classes `.add-btn__inner`, `.add-btn__face` e `.product-card`.
+- **`ProductCard.vue`:** nada da produção o usa depois desta etapa. O único import que sobra é o do `CarouselBurguer.vue`, que já não é importado por ninguém e sai na etapa 11 (SPEC-M §4.4); ele fica, e a PR registra que a busca o acha. Com ele saem, na etapa 11, o `_product-card.scss`, o `useTilt.js` e, do `_motion.scss`, as classes `.add-btn__inner`, `.add-btn__face` e `.product-card`.
+- **Comentários que citam o `ProductCard` (volta 1):** a sessão C reescreve o comentário da linha 1 do `pages/admin/_product-management.scss` (que passa a falar da grade do `M3CartaoProduto`) e pode trocar **só o comentário** do `src/components/M3CartaoLanche.vue` (L4) e do `src/composables/useCartaoProduto.js` (L2 e L9). **Resultado esperado da busca do plano por `ProductCard`** (fora de `src/direcoes/`): o `ProductCard.vue`, o `_product-card.scss` e o `CarouselBurguer.vue`, mais nada.
 - **Apelidos que ficam sem uso em `src/`** (conferido com `grep`, fora de `src/direcoes/` e do `_tokens.scss`): `--color-accent-soft` (só a sidebar), `--color-warning`, `--color-warning-soft`, `--color-info-soft`, `--color-success-soft` (só os chips de hoje), `--color-input` (só a busca) e `--text-2xl` (só o KPI). Ficam com uso fora do painel: `--color-success` e `--color-info` (o aviso), `--color-overlay` e `--color-surface-2` (o `BaseDialog`, etapa 10), `--elev-1` e `--color-sheen` (só no `_product-card.scss`, que sai na 11), `--color-surface-sunken` e `--color-surface-1` (só no `_footer.scss` e no `_navbar.scss`, folhas da moldura da Brasa que saem na etapa 11, SPEC-M §4.4). Os testes que citam alguns desses nomes (`conta-estilo.test.js`) a sessão C confere. O `--radius-round` fica pela decisão (a) (o acervo).
 - **Pares:** o "item atual da sidebar" (`PARES_TELAS_BRASA`) sai já na sessão C; os de `PARES_COMUNS` com o `--color-input` ficam sem nenhum uso e saem com os apelidos.
 - **Ícones:** nenhum fica sem uso (o `burger` continua no `M3Foto` e no feed).
@@ -1103,8 +1125,7 @@ O resto usa o que existe: `--m3-forma-m`, `--m3-forma-l`, `--m3-forma-s`, `--m3-
 | `m3-on-surface-variant` | `m3-camada-pressionada` sobre `m3-surface-container-low` | 4,5 | 6,90 | Item da gaveta pressionado |
 | `m3-secondary` | `m3-camada-pressionada` sobre `m3-surface` | 3 | 5,03 | Anel interno do item pressionado na coluna |
 | `m3-secondary` | `m3-camada-pressionada` sobre `m3-surface-container-low` | 3 | 4,78 | Anel interno do item pressionado na gaveta |
-| `m3-on-surface` | `m3-camada-pressionada` sobre `m3-surface-container-high` | 4,5 | 11,46 | Item do menu do perfil pressionado |
-| `m3-secondary` | `m3-camada-pressionada` sobre `m3-surface-container-high` | 3 | 4,32 | Anel interno do item do menu pressionado |
+| `m3-on-surface` | `m3-camada-pressionada` sobre `m3-surface-container` | 4,5 | 12,06 | Rótulo do item do menu do perfil pressionado (no hover, 12,56; volta 1, o menu passou a `surface-container`) |
 | `m3-primary` | `m3-surface-container-high` | 4,5 | 5,23 | "Detalhes" (texto) no card do pedido |
 | `m3-primary` | `m3-camada-primary-pressionada` sobre `m3-surface-container-high` | 4,5 | 4,59 | "Detalhes" pressionado (no hover, 4,71) |
 | `m3-secondary` | `m3-camada-primary-pressionada` sobre `m3-surface-container-high` | 3 | 4,60 | Anel do "Detalhes" pressionado |
@@ -1114,8 +1135,11 @@ O resto usa o que existe: `--m3-forma-m`, `--m3-forma-l`, `--m3-forma-s`, `--m3-
 
 | Par | Medido | O que acontece |
 |---|---|---|
-| `m3-secondary` sobre `m3-surface-container-high` (`PARES_TELAS_BRASA`, "anel de foco no toast e nos menus") | 5,25 | Passa a `PARES_ADMIN`: anel nos cards, no menu do perfil e no aviso |
-| `m3-on-surface` / `m3-on-surface-variant` sobre `m3-surface-container-high` (`PARES_HOME`, folha) | 13,93 / 7,56 | O "onde" ganha: títulos, valores, textos, notas, `dt` e cabeça do menu; rótulos dos KPIs, endereço e telefone, descrição do produto, ícones do menu |
+| `m3-secondary` sobre `m3-surface-container-high` (`PARES_TELAS_BRASA`, "anel de foco no toast e nos menus") | 5,25 | Passa a `PARES_ADMIN`: anel nos cards e no aviso (o menu foi para o `surface-container`) |
+| `m3-on-surface` / `m3-on-surface-variant` sobre `m3-surface-container-high` (`PARES_HOME`, folha) | 13,93 / 7,56 | O "onde" ganha: títulos, valores, textos, notas e `dt` dos cards; rótulos dos KPIs, endereço e telefone, descrição do produto |
+| `m3-on-surface` / `m3-on-surface-variant` sobre `m3-surface-container` (`PARES_HOME`) | 14,68 / 7,97 | Ganham: cabeça e rótulos dos itens do menu do perfil / ícones do menu (volta 1) |
+| `m3-secondary` sobre `m3-surface-container` (`PARES_HOME`, mín. 3) | 5,53 | Ganha: anel interno dos itens do menu |
+| `m3-on-surface-variant` e `m3-secondary` sobre `m3-camada-pressionada` sobre `m3-surface-container` (`PARES_CARDAPIO`) | 6,55 / 4,54 | Ganham: ícone e anel interno do item do menu pressionado |
 | `m3-on-surface-variant` sobre `m3-surface` | 8,86 | Ganha: itens da coluna, ícones da barra, lupa e placeholder da busca, seta dos filtros, linha da busca |
 | `m3-on-surface-variant` sobre `m3-surface-container-low` | 8,41 | Ganha: itens da gaveta; texto do bloco do admin de teste |
 | `m3-on-secondary-container` sobre `m3-secondary-container` | 7,22 | Ganha: item atual da navegação, avatar, botão de imagem |
@@ -1133,7 +1157,8 @@ O resto usa o que existe: `--m3-forma-m`, `--m3-forma-l`, `--m3-forma-s`, `--m3-
 
 ### Medidos e descartados ou isentos
 
-- `m3-secondary-container` contra `m3-surface` / `m3-surface-container-low`: 1,23 / 1,16. O indicador do item atual: troca de fundo dentro do componente, fora da 1.4.11 [98]; a 1.4.1 fica coberta pelo rótulo em 700 [161] e pelo `aria-current` (5.1).
+- `m3-secondary-container` contra `m3-surface` / `m3-surface-container-low`: 1,23 / 1,16. O indicador do item atual: troca de fundo dentro do componente, fora da 1.4.11 [98]; para a 1.4.1, o rótulo em 700, pela lista de pistas da G182 [215] (inferência: ela trata de texto colorido) e o "shape or text" da [99], e o `aria-current` por programa (5.1).
+- `m3-surface-container` (menu do perfil) contra `m3-surface` e contra `m3-surface-container-high`: 1,11 e 1,05. Superfície flutuante, separada também pela `elevacao-2`; não é componente [98]; nos modos de contraste, a borda.
 - `m3-surface-container-high` contra `m3-surface`: 1,17. O card contra a página: não é componente [98].
 - `m3-surface-container-highest` contra `m3-surface`: 1,22; `m3-primary` sobre `m3-camada-primary-pressionada` sobre `m3-surface-container-highest`: 4,38 (hover 4,50). Por isso o card fica no `high` (5.4).
 - `m3-aviso-container`, `m3-info-container`, `m3-sucesso-container` contra `m3-surface-container-high`: 1,05, 1,05 e 1,04 (1,10 contra o `surface-container` do diálogo). O texto leva o estado [98].
@@ -1145,13 +1170,15 @@ O resto usa o que existe: `--m3-forma-m`, `--m3-forma-l`, `--m3-forma-s`, `--m3-
 
 | O que | Onde | Por quê |
 |---|---|---|
-| `inert` no skip link, no cabeçalho e no `main` com a gaveta aberta abaixo de `lg` | `AdminLayout` | Gaveta modal de fato ([199], [200]) |
-| O clique no `scrim` devolve o foco ao "Alternar menu" | `AdminLayout` | F85 [202]; [167] |
+| `inert` no skip link, no cabeçalho e no `main` com a gaveta aberta abaixo de `lg` (a região dos avisos fica de fora) | `AdminLayout` | Gaveta modal de fato ([199], [200]) |
+| O contêiner da coluna vira `div`; abaixo de `lg`, `role="dialog"`, `aria-modal` e "Menu do painel"; a `nav` envolve a coluna inteira | `SidebarAdmin` | [199], [210] (decisão da sessão principal) |
+| `closeSidebar` assíncrono: fecha, `await nextTick()`, e só então foca o "Alternar menu"; o clique no `scrim` também devolve o foco | `AdminLayout` | F85 [202]; [167]; o `focus()` em `inert` não faz nada (4.2) |
+| Na troca de rota com a gaveta aberta e o foco dentro dela, o foco ao `main` depois do `nextTick` | `AdminLayout` | A troca só de query, em que o `afterEach` não move o foco (4.2) |
 | `aria-current="false"` nos dois atalhos | `NotificationBar` | Um item atual por página [207] (4.3) |
 | Região `role="status"` com `aria-atomic` sempre no DOM; "Limpar busca" fora dela | `ProductManagement`, `OrderManagement` | [153] (5.3) |
 | Mapa `status` → `tom` | `OrderManagement` | O rótulo de status (5.5) |
 | A última entrada e a rolagem só pelo teclado depois do aviso do "Atualizar status" | `OrderManagement` | 2.4.11 [76]; o precedente do `CartView` (4.6) |
-| O aviso no pé e a reserva no `scroll-padding` enquanto há aviso (`:global`) | `_admin-layout.scss` | 4.6 |
+| O aviso no pé (`:global(html:has(.admin-layout) .toast-region)`, `top: auto`, `bottom` com a área segura) e a reserva no `scroll-padding` enquanto há aviso | `_admin-layout.scss` | 4.6 |
 | O erro do seletor de imagem no lugar da ajuda (DOM e `aria-describedby`) | `ModalProducts` | [131] (5.8) |
 | O invólucro do banner com a região `role="alert"` e `aria-atomic` sempre no DOM, e a rolagem do grupo de envio | `LoginAdminView` | [152] (5.11) |
 | O `<Transition>` de opacidade no menu | `UserProfileBar` | 5.2 |
@@ -1186,23 +1213,29 @@ Ficam como estão (todos os da tabela de conteúdo do pacote, §3): a navegaçã
 ```
 src/assets/styles/base/_tokens.scss                        --m3-navegacao-largura
 src/assets/styles/base/_motion.scss                        .admin-sidebar na lista de transform: none
-src/layouts/AdminLayout.vue                                inert, foco de volta no clique do scrim
+src/layouts/AdminLayout.vue                                inert, closeSidebar assíncrono (nextTick antes do
+                                                           focus), foco de volta no clique do scrim, foco ao
+                                                           main na troca de rota com a gaveta aberta
 src/assets/styles/layouts/_admin-layout.scss               grade em lg, cabeçalho sticky, scrim, aviso no pé
                                                            e a reserva (:global)
-src/components/admin/layout/SidebarAdmin.vue               (marcação de hoje)
-src/assets/styles/components/admin/_sidebar-admin.scss     coluna, gaveta, item, marca, pé
+src/components/admin/layout/SidebarAdmin.vue               div no lugar do aside; role="dialog", aria-modal e
+                                                           o nome abaixo de lg; a nav envolve a coluna
+src/assets/styles/components/admin/_sidebar-admin.scss     coluna, gaveta, item de 56, marca, pé
 src/components/admin/layout/TheNavbarAdmin.vue             (marcação de hoje)
 src/assets/styles/components/admin/_navbar-admin.scss      recuos e vãos
 src/components/admin/layout/navbar/SearchBar.vue           (marcação de hoje)
 src/assets/styles/components/admin/navbar/_search-bar.scss campo outlined de 48, lupa sem translate
 src/components/admin/layout/navbar/NotificationBar.vue     aria-current="false"
 src/assets/styles/components/admin/navbar/_notification-bar.scss  selo do M3
-src/components/admin/layout/navbar/UserProfileBar.vue      círculo de 32, Transition de opacidade
-src/assets/styles/components/admin/navbar/_user-profile-bar.scss  avatar, menu, itens
+src/components/admin/layout/navbar/UserProfileBar.vue      círculo de 32, Transition de opacidade, classe do
+                                                           "Sair"
+src/assets/styles/components/admin/navbar/_user-profile-bar.scss  avatar, menu em surface-container, itens,
+                                                           a linha antes do "Sair" (::after)
 src/components/admin/AdminCard.vue                         (marcação de hoje)
-src/assets/styles/components/admin/_admin-card.scss        filled card high, sem sombra, sem opacidade
-src/components/admin/ModalProducts.vue                     par Preço e Quantidade, caixa do seletor, erro no
-                                                           lugar da ajuda
+src/assets/styles/components/admin/_admin-card.scss        filled card high, sem sombra, sem opacidade,
+                                                           height: 100%
+src/components/admin/ModalProducts.vue                     par Preço e Quantidade, caixa do seletor, rótulo
+                                                           sem id, erro no lugar da ajuda
 src/assets/styles/components/admin/_modal-products.scss    seletor alinhado ao FormGroup
 src/components/admin/M3CartaoProduto.vue                   novo
 src/assets/styles/components/admin/_m3-cartao-produto.scss novo
@@ -1222,42 +1255,53 @@ src/assets/styles/pages/auth/_profile.scss                 .profile-order__statu
 src/assets/styles/pages/admin/_admin-page.scss             cabeçalho, filtro, linha da busca, KPI; sai
                                                            o comentário com "Archivo"
 src/assets/styles/pages/admin/_admin-dashboard.scss        card do gráfico
-src/assets/styles/pages/admin/_product-management.scss     grade de 1, 2, 3 e 4 colunas
+src/assets/styles/pages/admin/_product-management.scss     grade de 1, 2, 3 e 4 colunas; o comentário da L1
+                                                           sem o ProductCard
+src/components/M3CartaoLanche.vue                          só o comentário da L4 (cita o ProductCard)
+src/composables/useCartaoProduto.js                        só os comentários da L2 e da L9 (citam o ProductCard)
 src/assets/styles/pages/admin/_order-management.scss       card do pedido e diálogo, sem caixa alta
 src/assets/styles/pages/admin/_sales-reports.scss          grade e lista
 src/assets/styles/pages/admin/_admin-profile.scss          card de 40rem, dl
 src/assets/styles/pages/admin/_admin-settings.scss         card de 40rem, ações ao início
 src/assets/styles/pages/admin/_login-admin.scss            --m3-scrim, bloco do admin de teste
-src/utils/contraste.js                                     PARES_ADMIN (10), os "onde" e as mudanças de grupo
+src/utils/contraste.js                                     PARES_ADMIN (9), os "onde" e as mudanças de grupo
                                                            da seção 8, e o par que sai
 ```
 
-**Não mexer:** `BurgerStack.vue`, `AssinaturaEncaixe.vue`, `src/direcoes/`, `src/services/`, `src/stores/`, os dados de exemplo, `src/router/index.js`, `FormGroup.vue` e `_auth.scss` (etapa 8), `BaseButton`, `BaseDialog`, `EmptyState`, `AppToast` e as parciais deles (etapa 10), `M3BarraSuperior`, `M3BarraFerramentas` e as parciais (etapa 4), `M3CartaoLanche`, `M3Foto` e o `useCartaoProduto`, `ProductCard.vue`, `_product-card.scss` e `useTilt.js` (saem na 11), o plugin do Font Awesome (nenhum ícone novo).
+**Não mexer:** `BurgerStack.vue`, `AssinaturaEncaixe.vue`, `src/direcoes/`, `src/services/`, `src/stores/`, os dados de exemplo, `src/router/index.js`, `FormGroup.vue` e `_auth.scss` (etapa 8), `BaseButton`, `BaseDialog`, `EmptyState`, `AppToast` e as parciais deles (etapa 10), `M3BarraSuperior`, `M3BarraFerramentas` e as parciais (etapa 4), `M3Foto`, `ProductCard.vue`, `_product-card.scss`, `useTilt.js` e `CarouselBurguer.vue` (saem na 11), o plugin do Font Awesome (nenhum ícone novo). **Só o comentário:** `M3CartaoLanche.vue` (L4) e `useCartaoProduto.js` (L2 e L9); o código dos dois não muda.
+
+**A busca do `ProductCard` (verificação do plano; volta 1):** depois desta etapa, a busca por `ProductCard` fora de `src/direcoes/` acha o `ProductCard.vue`, o `_product-card.scss` e o `CarouselBurguer.vue`, mais nada. A PR registra que o `CarouselBurguer.vue` fica (sem uso, sai na etapa 11).
 
 **Testes:**
 
 - `src/__tests__/M3RotuloStatus.test.js` (novo): raiz `p`, sem `role` nem `tabindex`; a classe do `tom` (`info` por padrão; `aviso`, `sucesso`); o validador recusa outro valor; o slot.
-- `src/__tests__/M3CartaoProduto.test.js` (novo): o nome em `h2` por padrão e em `h3` com `nivelTitulo`; a descrição só com texto; o preço por `formatPrice`; o slot `acoes`; a foto com `alt` igual ao nome; a imagem `data:` sem `<source>`; a falha com o ícone `utensils`; nenhum botão "Adicionar".
+- **O estilo do `M3RotuloStatus`** (num `m3-rotulo-status-estilo.test.js` ou no `admin-estilo.test.js`, a critério da sessão C): recebe as asserções que hoje estão no `src/__tests__/conta-estilo.test.js` (L406–418) sobre o `.profile-order__status` (cor e fundo por tom, `--m3-forma-s`, `var(--space-1) var(--space-2)`, `--m3-label-l`, 500, sem `cursor`, sem `::before`, `1px solid CanvasText` em `forced-colors`), mais o `letter-spacing: var(--m3-label-l-tracking)`.
+- `src/__tests__/conta-estilo.test.js`: o caso do rótulo de status sai; fica só a margem do `.profile-order__status` (L404).
+- `src/__tests__/M3CartaoProduto.test.js` (novo): o nome em `h2` por padrão e em `h3` com `nivelTitulo`; a descrição só com texto; o preço por `formatPrice`; o slot `acoes`; a foto com `alt` igual ao nome; a imagem `data:` sem `<source>`; a falha com o ícone `utensils`; nenhum botão "Adicionar" nem `data-adicionado`.
 - `src/__tests__/ProductManagement.test.js`: o stub do `ProductCard` vira o do `M3CartaoProduto` (prop `produto`, slot `acoes`); a região `role="status"` com `aria-atomic` existe vazia sem busca e tem o resultado com `?q=`; o "Limpar busca" fica fora da região.
 - `src/__tests__/OrderManagement.test.js`: os rótulos em português com o tom certo ("Pendente" `m3-status--aviso`, "Em preparo" e "A caminho" `--info`, "Concluído" `--sucesso`), no card e no diálogo; os `h3` "Cliente" e "Itens"; a região da busca; com a última entrada de teclado, o `scrollIntoView` (espião) cai no "Atualizar status" depois do aviso; com a de ponteiro, não.
 - `src/__tests__/ModalProducts.test.js`: com erro de imagem, `aria-describedby="image-erro"` e sem o `#image-ajuda`; sem erro, `image-ajuda`; o par Preço e Quantidade no mesmo `div.modal-product__par`; o `file-picker__campo` com `.has-error` no pai.
 - `src/__tests__/adminPanel.test.js`: o stub do `ProductCard` troca pelo do `M3CartaoProduto`; os testes da busca seguem com a região sempre no DOM.
-- `src/__tests__/AdminLayout.test.js` (novo, ou um bloco do `adminPanel.test.js`, a critério da sessão C): com `matchMedia` abaixo de `lg`, a gaveta abre e o `header`, o `main` e o skip link ganham `inert`; Esc, "Fechar" e o clique no `scrim` fecham e devolvem o foco ao "Alternar menu"; a troca de rota fecha e tira o `inert`; a partir de `lg`, nenhum `inert`.
+- `src/__tests__/AdminLayout.test.js` (novo, ou um bloco do `adminPanel.test.js`, a critério da sessão C): com `matchMedia` abaixo de `lg`, a gaveta abre, o `div#admin-sidebar` tem `role="dialog"`, `aria-modal="true"` e "Menu do painel", e o `header`, o `main` e o skip link ganham `inert`; Esc, "Fechar" e o clique no `scrim` tiram o `inert` **antes** do `focus()` (um espião no `focus` do botão confere que, quando ele é chamado, o `header` já não tem `inert`); a troca de rota fecha e tira o `inert`; a troca só de query, com o foco num link da gaveta, leva o foco ao `main`; a partir de `lg`, nenhum `inert`, nenhum `role` nem `aria-label` no `div`. **O jsdom não implementa o `inert`:** a prova de que o foco chega ao botão é a do Chromium (e2e, abaixo).
 - `src/__tests__/LoginAdminView.test.js` (novo): a região `[role=alert][aria-atomic=true]` existe vazia na montagem; com a senha errada, "E-mail ou senha incorretos." dentro dela, logo antes do botão de envio; o ícone num `span.auth-alert__icon`; "Voltar à loja" é link para `/` com as classes do `BaseButton`; o bloco do admin de teste só com o `devTestAdmin()` (o `build-config.test.js` continua conferindo o build).
 - `src/__tests__/ProfileView.test.js`: o `.profile-order__status` continua `p`, sem papel e sem `tabindex`, agora com `m3-status--info`.
-- `src/__tests__/admin-estilo.test.js` (novo, no padrão do `conta-estilo.test.js`, com as parciais compiladas pelo `sass-embedded` e pelo `<style scoped>`): nenhum `--color-*`, `--text-2xl`, `--elev-*`, `--radius-sm` nem `--radius-round` nas parciais do painel; nenhum `text-transform: uppercase`; nenhum `240px`; o item atual com `--m3-secondary-container`, `--m3-on-secondary-container` e `font-weight: 700`; o anel interno no item; o `transform` da gaveta só dentro de `prefers-reduced-motion: no-preference`; o `.admin-sidebar` no `_motion.scss`; o card em `--m3-surface-container-high` sem `box-shadow`; o selo em `--m3-error`; a busca com `min-height: 3rem` e contorno `--m3-outline`, sem `translate`; as regras de `forced-colors` (item atual com `Highlight`, selo, rótulo, cards, gaveta); os `:global()` do aviso no pé e da reserva; e todos os pares de `PARES_ADMIN` acima do mínimo.
+- `src/__tests__/admin-estilo.test.js` (novo, no padrão do `conta-estilo.test.js`, com as parciais compiladas pelo `sass-embedded` e pelo `<style scoped>`): nenhum `--color-*`, `--text-2xl`, `--elev-*`, `--radius-sm` nem `--radius-round` nas parciais do painel; nenhum `text-transform: uppercase`; nenhum `240px`; o item com `min-height: 3.5rem` na coluna e na gaveta; o item atual com `--m3-secondary-container`, `--m3-on-secondary-container` e `font-weight: 700`; o anel interno no item; o menu do perfil em `--m3-surface-container`, com a linha do "Sair" no `::after`; o `.admin-card` com `height: 100%`; a regra `html:has(.admin-layout) .toast-region` com `top: auto`; o `transform` da gaveta só dentro de `prefers-reduced-motion: no-preference`; o `.admin-sidebar` no `_motion.scss`; o card em `--m3-surface-container-high` sem `box-shadow`; o selo em `--m3-error`; a busca com `min-height: 3rem` e contorno `--m3-outline`, sem `translate`; as regras de `forced-colors` (item atual com `Highlight`, selo, rótulo, cards, gaveta); os `:global()` do aviso no pé e da reserva; e todos os pares de `PARES_ADMIN` acima do mínimo.
 
 **e2e (`.claude/e2e/`):**
 
 - `check-admin.mjs`:
   - um único `.admin-sidebar__item[aria-current="page"]` nas quatro rotas da coluna, **nenhum em `#/admin/profile` e `#/admin/settings`**, e um só `[aria-current="page"]` na página inteira em `#/admin/orders?status=pending`;
   - a marca com `text-transform: none` e o texto "Smash Burger";
-  - em 390: a gaveta fechada ao carregar; aberta, o `main` e o `header` com `inert`, o foco em "Painel"; Esc, "Fechar" e o clique no `scrim` fecham e devolvem o foco ao "Alternar menu" (o clique no fundo é o caso novo); a troca de rota fecha e leva o foco ao `main`;
+  - em 390: a gaveta fechada ao carregar; aberta, o `#admin-sidebar` com `role="dialog"` e `aria-modal`, o `main` e o `header` com `inert`, o foco em "Painel";
+  - **a volta do foco, no Chromium (bloqueante da volta 1):** abrir a gaveta em 390 e fechá-la pelo Esc, pelo "Fechar" e pelo clique no `scrim`, e conferir, nas três, que o `document.activeElement` é o "Alternar menu". Mutação: com o `focus()` antes do `nextTick`, o foco fica no `body`. O jsdom não pega isso (não implementa o `inert`);
+  - **a troca de rota:** pelo link "Gestão de Produtos", o foco vai ao `main`; **e a troca só de query:** em `#/admin/orders?status=pending`, abrir a gaveta e clicar (ou Enter) em "Gestão de Pedidos": a gaveta fecha, a rota passa a `#/admin/orders`, e o `document.activeElement` é o `main#conteudo` (sem a correção, é o `body`);
+  - em 1440: o `#admin-sidebar` sem `role`, e a `nav` "Seções do painel" contém a marca e o "Sair";
   - os status: `.m3-status` (no lugar do `.status-chip`) com "Pendente,Em preparo";
-  - os seletores de hoje que ficam: `.admin-overlay`, `.navbar-profile__avatar`, `.navbar-profile__menu`, `.kpi__value`, `.order-info__total`, `#statusFilter`.
+  - os seletores de hoje que ficam: `.admin-sidebar`, `.admin-sidebar__item`, `.admin-overlay`, `.navbar-profile__avatar`, `.navbar-profile__menu`, `.kpi__value`, `.order-info__total`, `#statusFilter`.
+- **Quem procura `aside` ou `.admin-sidebar` (o `aside` vira `div`; a sessão C confere):** o `check-admin.mjs` (L35, L41, L52, L57, L63 e L68: `.admin-sidebar` e `.admin-sidebar__item`, pela classe, que fica) e o `lacunas.mjs` (L110, L114 e L119, idem). Nenhum teste de `src/__tests__/` procura `aside` nem "Menu do painel" hoje (conferido com `grep`); o `axe-scan.mjs` passa a medir o diálogo da gaveta.
 - `keyboard.mjs`:
   - no bloco do admin, o seletor do avatar continua `.navbar-profile__avatar`;
-  - **a gaveta em 390:** aberta pelo teclado, Tab a partir do "Sair" não cai no `header` nem no `main` (estão `inert`), e Shift+Tab a partir de "Painel" vai ao "Fechar";
+  - **a gaveta em 390:** aberta pelo teclado, Tab a partir do "Sair" não cai no `header` nem no `main` (estão `inert`), e Shift+Tab a partir de "Painel" vai ao "Fechar"; o Esc devolve o foco ao "Alternar menu" (a mesma prova do `check-admin.mjs`, pelo teclado);
   - **o aviso sobre o "Atualizar status":** em 390 × 844 e 800, com o card de baixo encostado no pé, chegar ao botão pelo Tab, apertar Enter e conferir que o retângulo do botão com o anel não fica inteiro dentro do `.toast`. Mutação: sem a rolagem da view, fica coberto. Pelo ponteiro, a página não pula;
   - **o "Novo produto" depois de criar,** em 1024 × 768 e 1440 × 900, pelo teclado: o foco volta ao botão, e ele não fica sob o aviso (que agora está no pé). E os diálogos de editar e de restaurar com o botão de origem no pé, em 390: se o foco voltar coberto, a view ganha a mesma rolagem do "Atualizar status" (4.6);
   - o `focusNotCovered` nas seis rotas do painel em 1440 e 390.
@@ -1280,11 +1324,11 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 | Relatórios | `#/admin/reports` | `.top-products` |
 | Meu perfil | `#/admin/profile` | `.admin-profile__info` |
 | Configurações com o diálogo | `#/admin/settings` → "Restaurar cardápio original" | `dialog[open] #restaurar-titulo` |
-| Gaveta aberta (390) | `#/admin/orders` em 390 → "Alternar menu" | `#admin-sidebar.is-drawer` visível e `main[inert]` |
+| Gaveta aberta (390) | `#/admin/orders` em 390 → "Alternar menu" | `#admin-sidebar[role="dialog"]` visível e `main[inert]` |
 | Menu do perfil aberto | `#/admin/orders` → `.navbar-profile__avatar` | `#menu-perfil-admin` visível |
 | Login do admin com erro | `#/admin/login` com o cadastro na chave `admin` → e-mail certo, senha errada → "Entrar" → esperar a mensagem | `.admin-login .auth-form__anuncio .auth-alert` |
 
-**SPEC-M (no mesmo PR):** a linha "Admin" da §4.2 (desenhado: a coluna, a gaveta, o `AdminCard` em `high`) e a do `ProductCard` (`admin`) → `M3CartaoProduto`; a §5.11 ("a desenhar" → desenhado, com os desvios: o card em `high`, a gaveta em `elevacao-1`, a marca na coluna); a §6 (a linha "Item da sidebar admin"); a §2.2 (a regra do `error` com os badges do painel; "chip" → "rótulo de status" nos usos); a §4.4 (o `ProductCard` sem o admin). **CLAUDE.md:** a lista dos componentes base ganha o `M3RotuloStatus` (a sessão C confere). **README e TESTING:** os testes novos e a contagem.
+**SPEC-M (no mesmo PR):** a linha "Admin" da §4.2 (desenhado: a coluna, a gaveta, o `AdminCard` em `high`) e a do `ProductCard` (`admin`) → `M3CartaoProduto`; a §5.11 ("a desenhar" → desenhado, com os quatro desvios aceitos pela sessão principal: o card em `high`, a gaveta em `elevacao-1`, a marca na coluna e o item de 56 px; e o `aside` que vira `div`); a §6 (a linha "Item da sidebar admin"); a §2.2 (a regra do `error` passa a dizer "badges do carrinho e do painel"; "chip" → "rótulo de status" nos usos); a §4.4 (o `ProductCard` sem o admin). **CLAUDE.md:** a lista dos componentes base ganha o `M3RotuloStatus` (a sessão C confere). **README e TESTING:** os testes novos e a contagem.
 
 ---
 
@@ -1299,7 +1343,8 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 | [194] a [198] Top app bar e elevação | conceito (documentação e tokens) | 64 dp; TitleLarge; Surface, Level0; ícone de navegação no início e ações no fim; avatar de 32; níveis em dp | Cabeçalho, avatar, botões de ícone |
 | [199] a [202] Diálogo modal, H102, 2.4.3, F85 (W3C) | referência técnica | Fundo inerte; foco ao abrir e ao fechar; a falha do foco que não volta | Gaveta modal (`inert`, foco) |
 | [203] a [209] Disclosure, menubar, menu, menu button, `aria-current`, Menu Structure, G128 (W3C) | referência técnica | Navegação sem `menu`; o menu button do perfil; um item atual | Coluna, menu do perfil, item atual |
-| [210], [211] Landmarks (W3C) | referência técnica | Nomes únicos nos repetidos, sem o nome do papel | Os dois `nav`, o `aside`, as regiões dos cards |
+| [210], [211] Landmarks (W3C) | referência técnica | Nomes únicos nos repetidos, sem o nome do papel; o complementary é para conteúdo de apoio; todo conteúdo num landmark | Os dois `nav`, o `aside` que vira `div`, as regiões dos cards |
+| [215] G182 (W3C; achado da sessão principal) | referência técnica | Técnica suficiente da 1.4.1: o negrito entre as pistas visuais além da cor do texto, com a informação também por programa | O rótulo em 700 no item atual (aplicada a fundo colorido: inferência) |
 | [212], [213], [214] Badge e 2.5.3 | conceito e referência técnica | Badge de pendências; descrição pelo número; o texto visível no nome | Selo e nome dos atalhos |
 | [26] Pesquisa do Expressive (Google) | relato do autor | Tirar rótulos de texto piora | Rótulos sempre na coluna |
 | [61] Navigation bar | conceito | 3 a 5 destinos | Alternativa descartada |
@@ -1311,7 +1356,7 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 | [119], [125], [131], [135] a [139] Campo de texto | conceito (documentação e tokens) | Denso de 48; 56 padrão; erro no lugar do apoio; contorno por estado; recuo de 16 | Busca, filtros, seletor de imagem |
 | [151], [152], [153] 4.1.3, ARIA19, ARIA22 (W3C) | referência técnica | Região viva desde o carregamento; `aria-atomic`; tagarelice | Linha da busca, banner do login |
 | [76], [77], [78] 2.4.11, 2.3.3, 2.5.8 (W3C) | referência técnica | Foco não coberto (C43); opacidade não é movimento; link inline isento | Aviso no pé, menu, text buttons |
-| [96], [98], [99] 4.1.2, 1.4.11, 1.4.1 (W3C) | referência técnica | Troca de fundo fora da 1.4.11 e insuficiente na 1.4.1; contêiner e controle com texto | Item atual em 700, cards, rótulo |
+| [96], [98], [99] 4.1.2, 1.4.11, 1.4.1 (W3C) | referência técnica | Troca de fundo fora da 1.4.11 e insuficiente na 1.4.1; informação além da cor, "such as shape or text"; contêiner e controle com texto | Item atual em 700, cards, rótulo |
 | [H19] | pesquisa | Alvo apertado aumenta os toques errados | "Excluir" longe do "Editar" |
 | [8], [66], [81] | conceito e imprensa | Cantos 20/4; listas agrupadas | Por que os pedidos não são lista segmentada |
 
@@ -1325,14 +1370,18 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 |---|---|
 | A gaveta seguir um componente em descontinuação no Expressive [161] | É a mesma lista nos dois contêineres; a diferença para o rail largo modal (SurfaceContainer, Level2, `CornerLarge` [174]) é pequena sobre o `scrim`, e a troca é só de tokens. O guia que ainda mostra a gaveta permanente está desatualizado [185]; a coluna fixa tem o contêiner que as duas fontes dão (Surface, Level0) |
 | As fontes divergirem na janela compacta (navigation bar [187] [179], rail recolhido [188], expandido modal [169]) | Decisão do projeto, registrada (4.1): o fluxo do `SPEC.md` e a §13.8 pedem a gaveta; a bar mudaria o fluxo e repetiria a pílula da loja |
-| A gaveta modal sem `role="dialog"` | O `inert` dá o fundo inerte e o foco preso, como a H102 descreve para o `<dialog>` [200]; não encontrei fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]. O leitor de tela ouve a navegação nomeada, e nada atrás dela |
-| O `inert` no `main` atrasar o foco da troca de rota | O `watch` da rota fecha a gaveta antes do `nextTick` do `afterEach`; a sessão C confere no `check-admin.mjs` que o foco chega ao `main` |
-| O item atual só pela cor (1,23 contra a coluna) | O rótulo em 700 [161] e o `aria-current` [207]; nos modos de contraste, a borda (5.1). **A pílula da loja tem o mesmo ponto** (secondary-container contra o surface-container, sem troca de peso): fica registrado para a sessão principal, fora desta etapa (o arquivo é da etapa 4) |
-| O `aside` como complementary em volta da navegação [210] | Fica pelo contrato do pacote (o `aside` com a `nav` dentro) e porque o "Sair" precisa de um landmark (todo conteúdo num landmark [210]); a sessão principal decide se vira `div` num passo próprio |
+| A gaveta modal sem fonte do W3C que a classifique | Não encontrei fonte do W3C que decida entre diálogo e disclosure para a gaveta [199] [203]. Abaixo de `lg`, o `div` tem `role="dialog"`, `aria-modal` e nome [199], e o `inert` dá o fundo inerte e o foco preso, como a H102 descreve para o `<dialog>` [200]; o `aria-modal` só vale porque o bloqueio é real [199] |
+| O `focus()` no "Alternar menu" ainda `inert` não fazer nada (bloqueante da volta 1) | O `closeSidebar` espera o `nextTick` (o `inert` sai no flush) antes do `focus()`; a prova é no Chromium (`check-admin.mjs`), porque o jsdom não implementa o `inert` (4.2, 5.1, 9) |
+| O foco cair no `body` na troca só de query (o `afterEach` sai cedo com o mesmo caminho) | O `watch` da rota do `AdminLayout` leva o foco ao `main` depois do `nextTick` quando ele estava na gaveta; o `check-admin.mjs` confere o caso "Gestão de Pedidos" a partir de `?status=pending` (4.2) |
+| A região dos avisos fora do `inert` com a gaveta aberta | Aceito: com `inert`, a região viva não anunciaria; o custo é o "Fechar aviso" no Tab, se houver aviso (4.2) |
+| O item atual só pela cor (1,23 contra a coluna) | O rótulo em 700, pela lista de pistas da G182 [215] e o "shape or text" da [99], e o `aria-current` por programa [207]; nos modos de contraste, a borda (5.1). **Inferência registrada:** a G182 trata de texto colorido, e aqui a cor está no fundo; não encontrei técnica nem falha da W3C sobre o item atual marcado só pelo fundo. **A pílula da loja tem o mesmo ponto:** fica para a etapa 12 (§12) |
+| O `aside` como complementary em volta da navegação [210] | Resolvido pela sessão principal: vira `div`, e a `nav` envolve a coluna inteira, para a marca e o "Sair" ficarem num landmark [210] (5.1) |
+| O item de 56 px desviar da SPEC-M §5.11 (44) | Desvio aceito pela sessão principal, com fonte ([164], [176]); a SPEC-M dizia 44 sem fonte. A coluna cabe com folga em 768 de altura (5.1) |
 | Os botões de ícone com a forma da Brasa ao lado do avatar M3 | Até a etapa 10, como o "Remover" e o "Excluir conta"; em repouso, o ghost é só o ícone |
 | Os atalhos sem rótulo de texto visível | São ações da barra [194] [197], com o número no nome [212]; os rótulos da navegação ficam na coluna [26]. Não encontrei orientação do W3C sobre anunciar o número de um badge [214] |
-| Três "página atual" em `/admin/orders` (o `RouterLink` ignora a query) | Os atalhos passam `aria-current="false"` (4.3); o `check-admin.mjs` conta um só na página |
-| O card em `high`, e não no `highest` da SPEC-M e do feed da loja | Medido: o "Detalhes" pressionado dá 4,38 no `highest`. Desvio registrado; o card de produto do painel acompanha |
+| Três "página atual" em `/admin/orders` (o `RouterLink` ignora a query; em `?status=preparing`, também o "Notificações") | Os atalhos passam `aria-current="false"` (o revisor conferiu que vence no vue-router 4.6.4); a alternativa é a prop `aria-current-value`; o `check-admin.mjs` conta um só na página (4.3) |
+| O card em `high`, e não no `highest` da SPEC-M e do feed da loja | Medido: o "Detalhes" pressionado dá 4,38 no `highest`. Desvio aceito pela sessão principal; o card de produto do painel acompanha |
+| O menu do perfil abrir sobre um card da mesma cor | O menu passou a `surface-container` (1,11 contra a página e 1,05 contra o card), com a `elevacao-2`; não encontrei a cor do menu no dossiê (5.2) |
 | O card de produto na horizontal em 390 se afastar do card da loja | A foto, o nome, a descrição e o preço são os mesmos; só a disposição muda, para a tarefa de gerenciar. A partir de `sm`, ele é vertical como o da loja |
 | A região `role="status"` da busca anunciar a cada letra | `polite` [153]; é o comportamento de hoje (a região existia durante a digitação). A 4.1.3 alerta para a tagarelice [151]; a sessão C ouve com um leitor de tela; se incomodar, a saída é anunciar só depois de uma pausa (lógica nova; vira pergunta) |
 | O aviso no pé cobrir o botão de origem de um diálogo | A reserva no `scroll-padding` vale para o `focus()` do `BaseDialog` se o aviso já estiver na tela; a sessão C mede e, se faltar, a view rola só pelo teclado (4.6) |
@@ -1340,7 +1389,7 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 | O selo em `error` ler como erro | É o badge do M3 [35], com o exemplo de pendências [212]; o mesmo badge do carrinho. O nome diz "pedidos pendentes" |
 | O `EmptyState` do gráfico parecer um gráfico quebrado | O texto é o de hoje ("indisponível nesta versão"); o visual é da etapa 10 |
 | "Relatórios de Vendas" não caber em 240 | Estimativa de 230 com as margens (4.1); a sessão C mede; o token sobe para 16rem se preciso |
-| O preço unitário na linha do card ler como total da linha | Pergunta 1 ao usuário (§12) |
+| O preço unitário na linha do card ler como total da linha | Pergunta 1 ao usuário (§12), com a recomendação "R$ 25,90 cada": o total da linha faria a view calcular preço, contra a regra "nenhuma tela calcula preço por conta própria" |
 | A categoria esvaziada no painel ficar sem aviso em Produtos | Pergunta 3 ao usuário (§12) |
 | Os `role="region"` dos cards (um por pedido e por KPI) encherem a lista de landmarks | É o comportamento de hoje (`SPEC.md` §5.11), com nomes únicos [211]; não encontrei no dossiê um limite de regiões |
 | A ilustração do login mostrar comida que a casa não vende | Fica pela SPEC-M §5.11, com `alt=""` e atrás do `scrim` (5.11) |
@@ -1353,38 +1402,45 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 **Decidido (item 6 do pacote):**
 
 - **a.** Uma lista só: a partir de `lg`, a coluna fixa de 240 px em `surface`, sem canto, sombra nem borda (gaveta standard e rail expandido [164] [174]); abaixo de `lg`, a gaveta modal da anatomia da `ModalDrawerSheet` [164] [165], fechada por padrão; o corte fica em 1024; a largura vira o token `--m3-navegacao-largura` (15rem).
-- **b.** Item em pílula (`full`) na largura do item, com margem de 12 e padding de 16 e 24; 44 px na coluna e 56 na gaveta; ícone de 20 e rótulo label-l 500 em `on-surface-variant`; o atual em `secondary-container` / `on-secondary-container` com o rótulo em 700 (a 1.4.1); camada no hover e no pressionado; anel interno; `aria-current` só na rota exata; nenhum item atual em Meu perfil e Configurações; os atalhos com `aria-current="false"`; o "Sair" com a mesma anatomia, depois de um divisor `outline-variant`; sai a barra de 3 px.
-- **c.** Gaveta `surface-container-low`, cantos de 16 no lado de dentro, `elevacao-1` (desvio da SPEC-M, que sugeria `elevacao-3`: a fonte dá Level1 [164]), sobre o `--m3-scrim`; a marca e o "Fechar" na cabeça de 64 px; entra por `translateX` e opacidade em `motion-ok`, só opacidade no reduzido, some na hora ao fechar; `.admin-sidebar` no `_motion.scss`; o resto da página `inert` (sem `role="dialog"`); o foco no primeiro link ao abrir e de volta ao "Alternar menu" no Esc, no "Fechar" e no clique no fundo (novo); no `main` ao trocar de rota.
-- **d.** Cabeçalho `surface`, 64 px, sem borda, grudado em todas as larguras, sem mudar ao rolar; a marca na cabeça da coluna e da gaveta, não no cabeçalho; "Alternar menu" só abaixo de `lg`; Tab na ordem do DOM de hoje.
+- **b.** Item em pílula (`full`) na largura do item, com margem de 12 e padding de 16 e 24; **56 px na coluna e na gaveta** ([164], [176]; desvio aceito da SPEC-M §5.11); ícone de 20 e rótulo label-l 500 em `on-surface-variant`; o atual em `secondary-container` / `on-secondary-container` com o rótulo em 700 (a pista além da cor da G182 [215], aplicada a fundo por inferência, com o `aria-current` por programa); camada no hover e no pressionado; anel interno; `aria-current` só na rota exata; nenhum item atual em Meu perfil e Configurações (decisão da sessão principal); os atalhos com `aria-current="false"`; o "Sair" com a mesma anatomia, depois de um divisor `outline-variant`; sai a barra de 3 px.
+- **c.** Gaveta `surface-container-low`, cantos de 16 no lado de dentro, `elevacao-1` (desvio aceito da SPEC-M, que sugeria `elevacao-3`: a fonte dá Level1 [164]), sobre o `--m3-scrim`; o contêiner vira `div`, com `role="dialog"`, `aria-modal` e "Menu do painel" abaixo de `lg`, e a `nav` envolve a coluna inteira; a marca e o "Fechar" na cabeça de 64 px; entra por `translateX` e opacidade em `motion-ok`, só opacidade no reduzido, some na hora ao fechar; `.admin-sidebar` no `_motion.scss`; o skip link, o cabeçalho e o `main` `inert` (a região dos avisos, não); o foco no primeiro link ao abrir e de volta ao "Alternar menu", depois do `nextTick`, no Esc, no "Fechar" e no clique no fundo (novo); no `main` ao trocar de rota, também quando só a query muda.
+- **d.** Cabeçalho `surface`, 64 px, sem borda, grudado em todas as larguras, sem mudar ao rolar; a marca num lugar só, a cabeça da coluna e da gaveta, por escolha ([179], [184]; desvio aceito da SPEC-M §5.11); "Alternar menu" só abaixo de `lg`; Tab na ordem do DOM de hoje.
 - **e.** Busca como campo outlined de 48 px (o denso [119]), sem fundo, contorno `outline`, canto 12, lupa de 20 sem `translate`, até 22rem (cerca de 166 px em 390); não é a search bar em pílula [62]; sai o `--color-input`.
-- **f.** Selo como o badge do M3: `error` / `on-error` (6,46), 16 px, label-s, `full`; "9+" fica; sem animação; a regra do `error` na SPEC-M §2.2 passa a citar os badges do painel; os botões de ícone ficam com o `BaseButton iconOnly` de hoje até a etapa 10.
-- **g.** Avatar de 32 px em `secondary-container` num alvo de 44; menu em `surface-container-high`, canto 16, `elevacao-2` (o contêiner da folha; não encontrei o do menu); itens de 44 px na anatomia da navegação; `role="menu"` e o teclado de hoje ficam ([79], [205], [206]); o menu aparece por opacidade.
+- **f.** Selo como o badge do M3: `error` / `on-error` (6,46), 16 px, label-s, `full`; "9+" fica; sem animação; a regra do `error` na SPEC-M §2.2 passa a dizer "badges do carrinho e do painel" (aceito pela sessão principal); os botões de ícone ficam com o `BaseButton iconOnly` de hoje até a etapa 10.
+- **g.** Avatar de 32 px em `secondary-container` num alvo de 44; menu em `surface-container`, canto 16, `elevacao-2` (não encontrei a cor do menu; escolhida pela diferença da página e dos cards); itens de 44 px na anatomia da navegação; o "Sair" separado por uma linha em CSS (`::after`), sem filho no DOM; `role="menu"` e o teclado de hoje ficam ([79], [205], [206]); o menu aparece por opacidade.
 - **h.** Página em `surface`; o `h1` na regra global; o texto do painel em body-m; os filtros com 56 px, sem prop densa; o cabeçalho de Produtos com o `h1` e o filled "Novo produto".
-- **i.** `AdminCard` filled em `surface-container-high` (desvio medido do `highest`), canto 12, sem sombra, padding 16; título title-m 500 (`kpi`: label-l 500 `on-surface-variant`); valor em headline-m tabular; o rodapé sem divisor; o `loading` sem opacidade; KPIs em 1, 2 e 4 colunas; a 1.4.11 não se aplica ao card.
+- **i.** `AdminCard` filled em `surface-container-high` (desvio medido do `highest`, aceito pela sessão principal), canto 12, sem sombra, padding 16, `height: 100%` (o rodapé alinha na linha da grade); título title-m 500 (`kpi`: label-l 500 `on-surface-variant`); valor em headline-m tabular; o rodapé sem divisor; o `loading` sem opacidade; KPIs em 1, 2 e 4 colunas; a 1.4.11 não se aplica ao card.
 - **j.** Pedidos em cards separados (não lista segmentada), em 1, 2 e 3 colunas; `h2` "Pedido #{id}"; `h3` "Cliente" e "Itens" em title-s, sem caixa alta; o "×" fica; um divisor só, acima do Total; "Atualizar status" tonal e "Detalhes" texto, ao início.
-- **k.** O rótulo de status vira `M3RotuloStatus` (`tom`: `info`, `aviso`, `sucesso`), raiz `p`, sem camada, foco, ícone nem papel; os quatro status com o par de cada um (5,00 a 5,03); o perfil passa a usá-lo nesta etapa (uma linha).
-- **l.** `M3CartaoProduto` (`produto`, `nivelTitulo`, slot `acoes`), com o `M3Foto` e o `useCartaoProduto`; filled `high`, padding 8, foto 4:3; nome, descrição em 2 linhas, preço; "Editar" no início e "Excluir" no fim; na horizontal abaixo de `sm`; grade de 1, 2, 3 e 4 colunas; falha com `utensils`; nada mais usa o `ProductCard` (salvo o `CarouselBurguer`, já sem uso).
-- **m.** `ModalProducts` numa coluna, com Preço e Quantidade lado a lado a partir de `sm`; o seletor de imagem numa caixa com o contorno do campo e o botão tonal dentro; ajuda e erro com o recuo de 16; o erro no lugar da ajuda; "Cancelar" tonal e "Salvar" filled, ao fim.
+- **k.** O rótulo de status vira `M3RotuloStatus` (`tom`: `info`, `aviso`, `sucesso`), raiz `p`, com o `letter-spacing` do label-l, sem camada, foco, ícone nem papel; os quatro status com o par de cada um (5,00 a 5,03); o perfil passa a usá-lo nesta etapa (uma linha), e as asserções de estilo do "Recebido" vão do `conta-estilo.test.js` para o teste do componente.
+- **l.** `M3CartaoProduto` (`produto`, `nivelTitulo`, slot `acoes`), com o `M3Foto`, o `responsiveImage`, o `formatPrice` e um `ref(false)` para a falha, sem o `useCartaoProduto`; filled `high`, padding 8, foto 4:3; nome, descrição em 2 linhas, preço; "Editar" no início e "Excluir" no fim; na horizontal abaixo de `sm`; grade de 1, 2, 3 e 4 colunas; falha com `utensils`. Nada mais usa o `ProductCard`; a busca por ele acha só o `ProductCard.vue`, o `_product-card.scss` e o `CarouselBurguer.vue` (sem uso, sai na 11), depois de a sessão C reescrever o comentário do `_product-management.scss` e trocar só os comentários do `M3CartaoLanche.vue` e do `useCartaoProduto.js`.
+- **m.** `ModalProducts` numa coluna, com Preço e Quantidade lado a lado a partir de `sm`; o seletor de imagem numa caixa com o contorno do campo e o botão tonal dentro; o rótulo "Imagem" sem `id`; ajuda e erro com o recuo de 16; o erro no lugar da ajuda; "Cancelar" tonal e "Salvar" filled, ao fim.
 - **n.** "Detalhes" com a `dl` sem caixa alta, os itens com o unitário e a linha, o Total e o "Fechar" tonal; "Excluir produto?" e "Restaurar…?" com o seguro antes e o destrutivo por último, o foco no título; os avisos no pé, em todas as larguras do painel.
 - **o.** Painel com o `EmptyState` num card; Relatórios com os KPIs numa `ul` em 3 colunas a partir de `md` e a lista numerada num card de até 40rem; Meu perfil e Configurações em cards de até 40rem, com as ações ao início.
 - **p.** A região `role="status"` da busca sempre no DOM, com `aria-atomic`; "Limpar busca" como text button `sm`, fora da região.
 - **q.** Login com o `--m3-scrim` direto e `alt=""`; o painel da etapa 8; o banner junto do botão no invólucro da loja, com a região sempre no DOM, o ícone no `span` de 20 e a rolagem do grupo; o bloco do admin de teste com o tracejado `outline-variant`; "Voltar à loja" como text button alinhado ao início.
-- **r.** Um `h1` por tela, `h2` nos cards e nos diálogos, `h3` no pedido; sem salto; os dois `nav` com nomes distintos; o `aside`; o `main#conteudo` com o skip link.
-- **s.** O `scroll-padding-top` global cobre o cabeçalho; a gaveta é modal; o aviso vai para o pé, com a reserva de `--m3-toast-reserva` mais 16 px enquanto há aviso e a rolagem só pelo teclado depois do "Atualizar status".
+- **r.** Um `h1` por tela, `h2` nos cards e nos diálogos, `h3` no pedido; sem salto; os dois `nav` com nomes distintos; o `aside` vira `div` (a `nav` "Seções do painel" é o landmark da coluna; abaixo de `lg`, o diálogo); o `main#conteudo` com o skip link.
+- **s.** O `scroll-padding-top` global cobre o cabeçalho; a gaveta é modal; o aviso vai para o pé, pela regra `:global(html:has(.admin-layout) .toast-region)` em `_admin-layout.scss` (vence o escopo sem `!important`; a entrada continua `translateY(-8px)` até a etapa 10), com a reserva de `--m3-toast-reserva` mais 16 px enquanto há aviso e a rolagem só pelo teclado depois do "Atualizar status".
 - **t.** `forced-colors`: o item atual com `Highlight`; bordas de `CanvasText` nos cards, na gaveta, no menu, no rótulo e no selo; o contorno da busca em `CanvasText`. `prefers-contrast: more`: bordas em `outline` e o contorno da busca em `on-surface-variant`.
 
-**Para a sessão principal confirmar:**
+**Decidido pela sessão principal (volta 1, 24/11/2026; `correcoes-admin-volta-1.md`):**
 
-1. A regra da SPEC-M §2.2 sobre o `error` passa a incluir os badges do painel (5.2).
-2. Os três desvios da SPEC-M §5.11: o card em `high` (medido), a gaveta em `elevacao-1` (fonte) e a marca na coluna, e não no cabeçalho.
-3. A pílula da loja tem o mesmo ponto de 1.4.1 que o item da coluna resolve com o peso (seção 11): fica como está, ou ganha o 700 numa etapa própria?
-4. O `aside` em volta da navegação continua (contrato), ou vira `div` num passo próprio (seção 11)?
+1. **Os quatro desvios da SPEC-M §5.11, aceitos:** o `AdminCard` em `surface-container-high` (pelos pares do "Detalhes"); a gaveta em `elevacao-1` (pela fonte [164]); a marca na coluna, como escolha ([179], [184]); e o item de 56 px na coluna e na gaveta ([164], [176]; a SPEC-M dizia 44 sem fonte). A sessão C atualiza a §5.11 do SPEC-M com os quatro.
+2. **A regra do `error` na §2.2, aceita:** os selos de contagem do painel são badges, como o do carrinho [35]; a §2.2 passa a dizer "badges do carrinho e do painel". O rótulo "Pendente" continua em `aviso`: o selo conta, o rótulo diz o estado.
+3. **O `aside` vira `div`:** o complementary é para conteúdo de apoio [210]; a `nav` "Seções do painel" basta como landmark (e envolve a coluna inteira, 5.1), e abaixo de `lg` o contêiner é o diálogo. A §9 lista os scripts que procuram `.admin-sidebar`.
+4. **O `aria-current="false"` nos atalhos, aceito:** o revisor conferiu no vue-router 4.6.4 que o atributo repassado vence; a alternativa é a prop `aria-current-value` do `RouterLink`, se o `BaseButton` a repassar.
+5. **"Um item ativo por rota" (§13.8):** "nunca dois itens ativos"; em Meu perfil e Configurações, que não estão na navegação, nenhum item fica ativo [207].
+6. **O peso 700 fica,** com a [215] G182 e a [99] como fonte, e a aplicação a fundo colorido registrada como inferência (5.1).
 
 **Perguntas ao usuário (textos e o que só ele decide):**
 
-1. **O preço da linha no card do pedido.** Hoje, "2× Smash Burger" mostra "R$ 25,90", o preço de uma unidade, e o Total é R$ 59,80: quem soma as linhas (25,90 + 8,00) não chega ao total. Opções: (a) manter; (b) mostrar o total da linha, "R$ 51,80", como o resumo da loja e o diálogo "Detalhes" já fazem (a mesma conta que o diálogo já faz na tela); (c) mostrar "R$ 25,90 cada", o texto do diálogo. **Recomendo (b).**
-2. **Os rótulos da navegação.** A coluna diz "Gestão de Produtos", "Gestão de Pedidos" e "Relatórios de Vendas", e a tela que abre diz "Produtos", "Pedidos" e "Relatórios" (no `h1` e no título da aba). Opções: manter, ou usar o mesmo nome nos dois lugares ("Painel", "Produtos", "Pedidos", "Relatórios"). Um destino com um nome só ajuda a se achar, e os rótulos curtos cabem com folga em 240 px e com zoom. **Recomendo usar o mesmo nome;** o desenho funciona com os dois.
-3. **Categoria vazia em Produtos.** Se o painel excluir todos os produtos de uma categoria, a tela mostra o filtro e mais nada (hoje o `EmptyState` só aparece com busca). Mostrar o `EmptyState` também aí pediria um texto novo (por exemplo, o do Cardápio, "Nada nesta categoria por enquanto"). **Recomendo reaproveitar o texto do Cardápio;** sem resposta, fica como hoje.
+1. **O preço da linha no card do pedido.** Hoje, "2× Smash Burger" mostra "R$ 25,90", o preço de uma unidade, e o Total é R$ 59,80: quem soma as linhas (25,90 + 8,00) não chega ao total. Opções:
+   - (a) deixar como está;
+   - (b) mostrar o total da linha, "R$ 51,80": a view passaria a calcular preço (`price × quantity`), contra a regra "nenhuma tela calcula preço por conta própria". O diálogo "Detalhes" já faz essa conta hoje, mas é uma exceção que já existia, e não licença para outra;
+   - (c) mostrar "R$ 25,90 cada", o texto que o diálogo "Detalhes" já usa ("{preço} cada"): tira a ambiguidade sem conta nova.
+   
+   **Recomendo (c).**
+2. **Os rótulos da navegação iguais ao `h1`.** A coluna diz "Gestão de Produtos", "Gestão de Pedidos" e "Relatórios de Vendas", e a tela que abre diz "Produtos", "Pedidos" e "Relatórios" (no `h1` e no título da aba). Usar o mesmo nome nos dois lugares ("Painel", "Produtos", "Pedidos", "Relatórios") ajuda a se achar, e os rótulos curtos cabem com folga em 240 px e com zoom. **Recomendo usar o mesmo nome;** o desenho funciona com os dois.
+3. **O aviso de vazio na categoria esvaziada de Produtos.** Se o painel excluir todos os produtos de uma categoria, a tela mostra o filtro e mais nada (hoje o `EmptyState` só aparece com busca). Mostrar o `EmptyState` também aí, com o texto do Cardápio ("Nada nesta categoria por enquanto", `src/utils/textosLoja.js`). **Recomendo mostrar;** sem resposta, fica como hoje.
 
 **Fora:**
 
@@ -1397,11 +1453,57 @@ src/utils/contraste.js                                     PARES_ADMIN (10), os 
 
 **Para outras etapas:**
 
-- **Etapa 10:** o `iconOnly` ("Alternar menu", "Fechar" da gaveta e dos diálogos, os atalhos), o `danger` ("Excluir", "Excluir produto", "Restaurar"), o `loading` ("Entrando…", o "Salvar" que espera a imagem) e o desabilitado ("Atualizar status" em "Concluído") do `BaseButton`; o `BaseDialog` (o contêiner e o sheet dos diálogos do painel e do `ModalProducts`); o `EmptyState` (o gráfico, Pedidos e Produtos sem resultado); o `AppToast`, que herda ou absorve o aviso no pé do painel e a reserva desta etapa (`:global` em `_admin-layout.scss`) e decide o botão de imagem como `BaseButton`, se fizer sentido.
+- **Etapa 10:** o `iconOnly` ("Alternar menu", "Fechar" da gaveta e dos diálogos, os atalhos), o `danger` ("Excluir", "Excluir produto", "Restaurar"), o `loading` ("Entrando…", o "Salvar" que espera a imagem) e o desabilitado ("Atualizar status" em "Concluído") do `BaseButton`; o `BaseDialog` (o contêiner e o sheet dos diálogos do painel e do `ModalProducts`); o `EmptyState` (o gráfico, Pedidos e Produtos sem resultado); o `AppToast`, que herda ou absorve o aviso no pé do painel e a reserva desta etapa (`:global` em `_admin-layout.scss`), acerta a entrada (hoje `translateY(-8px)`, de cima, também no pé) e decide o botão de imagem como `BaseButton`, se fizer sentido.
 - **Etapa 11:** apagar o `ProductCard.vue`, o `_product-card.scss`, o `useTilt.js`, o `CarouselBurguer.vue` e as classes do `_motion.scss` que eram deles; os apelidos que ficaram sem uso (seção 7); os pares de `PARES_COMUNS` sobre o `--color-input`.
+- **Etapa 12 (pendência registrada pela sessão principal; a decisão é do usuário):** conferir o item atual da pílula da `M3BarraFerramentas` contra a 1.4.1, com a G182 [215]. Lá ele também é marcado só pelo fundo (`secondary-container` contra o `surface-container` da pílula), sem troca de peso.
 
 ---
 
 ## 13. Revisão
 
-A preencher pela sessão principal.
+Escrita pela sessão principal em 24/11/2026.
+
+### Método
+
+- **Revisor, volta 1:** o prompt `revisor-admin.md` (tipos do juiz da rodada 2) e oito pontos de atenção da sessão principal: os três desvios da SPEC-M §5.11, o peso 700 e as duas alturas do item, os avisos no pé, o `inert` e o foco, o `useCartaoProduto` e a busca do `ProductCard`, o `aria-current` dos atalhos, as perguntas ao usuário e o "Recebido" do perfil. O revisor conferiu o desenho contra o pacote, o plano, o `CLAUDE.md`, o SPEC-M, o `SPEC.md` §5.11, o desenho da Conta, a seção "Etapa 9" do dossiê e o código. Mediu os pares com o `src/utils/contraste.js`. No Chromium headless de uma página local, testou três coisas: o cabeçalho sticky, o `focus()` dentro de `inert` e a largura dos rótulos na Roboto Variable. Também conferiu o `isExactActive` no vue-router 4.6.4 instalado.
+- **Resultado da volta 1:** "aprovado: não", com 1 bloqueante, 6 importantes e 9 menores. Os pares novos e os da matriz bateram com a medição.
+- **Fonte nova:** para decidir o achado 2, a sessão principal abriu a G182 e o Understanding da 1.4.1. A G182 entrou no dossiê como [215], em "Achado da sessão principal (etapa 9)".
+- **Correções:** o designer aplicou os 16 achados e as decisões da sessão principal (`correcoes-admin-volta-1.md`), só neste arquivo. A volta 2 do revisor não rodou, porque as correções seguiram a lista. A sessão principal conferiu no texto o bloqueante (4.2), o achado 7 (4.2), o item atual por rota (4.3) e a §12.
+
+### Achados e o que mudou
+
+| # | Achado (gravidade) | Resposta |
+|---|---|---|
+| 1 | O `focus()` no "Alternar menu" rodava antes de o Vue tirar o `inert` do cabeçalho: o Esc, o "Fechar" e o clique no fundo perdiam o foco (bloqueante) | `await nextTick()` antes do `focus()` (4.2, 5.1, 7.3); prova no Chromium pelo `check-admin.mjs`, com mutação (seção 9) |
+| 2 | "O 700 basta para a 1.4.1" sem fonte (importante) | O 700 fica, com a [215] G182 e a [99]; a aplicação a fundo colorido fica registrada como inferência; o [161] fica só como fonte do desenho do item |
+| 3 | 44 px na coluna e 56 na gaveta, justificados por "toque × ponteiro", que o [189] desaconselha (importante) | 56 px nas duas formas ([164], [176]); quarto desvio da §5.11 |
+| 4 | A busca `ProductCard` da verificação do plano não passava (importante) | A sessão C reescreve o comentário do `_product-management.scss` e troca só o comentário do `M3CartaoLanche.vue` e do `useCartaoProduto.js`; a busca acha o `ProductCard.vue`, o `_product-card.scss` e o `CarouselBurguer.vue` (sem uso, sai na etapa 11) |
+| 5 | O "Recebido" perdia o espaçamento, e o `conta-estilo.test.js` quebrava (importante) | O `M3RotuloStatus` leva o `letter-spacing` do label-l; as asserções L406–418 vão para o teste do componente |
+| 6 | A pergunta do preço recomendava uma conta na view (importante) | A recomendação passa a ser "R$ 25,90 cada" (c) |
+| 7 | Na troca só de query, o foco caía no `body` (importante) | No `watch` da rota, o foco vai ao `main` depois do `nextTick` se estava na gaveta; o caso entra no `check-admin.mjs` |
+| 8 a 16 | O aviso fora do `inert`; a regra do aviso no pé; o card que não preenche o `li`; o menu da mesma cor dos cards; o motivo da marca; "um item ativo por rota"; o divisor do "Sair"; o `useCartaoProduto` no card do admin; o `id` solto (menores) | Aviso fora do `inert` aceito (o anúncio continua); regra escrita em `_admin-layout.scss`; `height: 100%`; menu em `surface-container`, com os pares medidos; marca como escolha; "nunca dois"; linha por CSS; card sem o composable; sem o `id` |
+
+### Decisões da sessão principal
+
+- Os quatro desvios da §5.11 aceitos (12, "Decidido pela sessão principal", item 1).
+- A §2.2 diz "badges do carrinho e do painel".
+- O `aside` vira `div`.
+- O `aria-current="false"` nos atalhos.
+- "Nunca dois itens ativos".
+- O peso 700 com a G182.
+- Ruling: o designer pôs a `nav` "Seções do painel" em volta da coluna inteira (a marca, o "Fechar" e o "Sair"). Sem o `aside`, a marca e o "Sair" ficariam fora de um landmark a partir de `lg` [210]. A sessão principal aceita. Custo se estiver errado: o "Fechar" e a marca ficam dentro do landmark de navegação, sem efeito no teclado.
+- Ruling: a pílula da loja com o item atual marcado só pelo fundo fica como pendência da etapa 12, e a decisão é do usuário. Custo se estiver errado: a loja continua como está até lá.
+
+### O que fica para o usuário
+
+As três perguntas da §12: o preço da linha no card do pedido (recomendada a opção c), os rótulos da navegação iguais ao `h1` e o aviso de vazio na categoria esvaziada de Produtos.
+
+### O que a sessão C mede (o desenho estimou pelo CSS)
+
+- "Relatórios de Vendas" numa linha na coluna de 240 px, também com zoom de 200%.
+- O foco devolvido pelos diálogos fora do aviso no pé.
+- O foco no `main` depois da troca de rota com a gaveta `inert`, inclusive na troca só de query.
+- Os três fechamentos da gaveta no Chromium (Esc, "Fechar" e fundo) e a mutação que reprova sem o `nextTick`.
+- A gaveta fechada em 390 e um item ativo por rota, nunca dois (§13.8).
+- O contraste dos rótulos de status e do selo no navegador.
+- O `forced-colors` e o `prefers-contrast: more` do item atual, dos cards e do rótulo.

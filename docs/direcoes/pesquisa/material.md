@@ -1023,3 +1023,15 @@ Achado na verificação: no ElevationTokens.kt, o Level0 vale 0 dp, o Level1, 1 
 5. **Síntese (recomendação), em parte:** abaixo de 600 px, "uma gaveta modal dispensável ... no formato do rail expandido modal com `hideOnCollapse` (A14, A25)". As duas páginas citadas descrevem o rail largo para tablet e desktop ([169], [180]), e a escolha recomendada e as demos dão a navigation bar na janela compacta ([179], [187]). Fica como inferência e decisão do projeto, com as fontes divergentes em "Riscos da etapa 9".
 
 Ajustes de redação, sem derrubada: A2 (a página não traz medidas da especificação, mas o código tem paddings de 16 dp e 12 dp), A14 (a página do rail não diz que o modal dispensável sai da tela; isso está em [180]), A41 (a search app bar abre a search view "quando selecionada", e a página chama as descrições de opcionais e muito encorajadas), A43 (a H102 descreve o foco limitado ao diálogo e à interface do navegador e o resto inerte e escondido das tecnologias assistivas, sem dizer "inoperável"), A44 (as técnicas suficientes incluem também a G59, a SCR27 e a PDF3), A45 (com o gatilho removido, conta o elemento interativo logo antes ou logo depois dele, e o foco em outro controle lógico não é falha), A56 (a página fala de solicitações pendentes numa navigation bar, não de pedidos), A57 (a página só lista os métodos, e os limites estão na tabela de propriedades) e a síntese sobre a barra superior (ela já fica dentro do `header` e já tem nome distinto).
+
+### Achado da sessão principal (etapa 9)
+
+Na revisão do desenho do painel (24/11/2026), a sessão principal abriu duas páginas da W3C para decidir se o peso do rótulo serve de sinal além da cor no item atual da navegação. A [99] já estava no dossiê; a [215] é nova.
+
+| Nº | Tipo | Título | URL | O que sustenta |
+|---|---|---|---|---|
+| [215] | referência técnica | G182: Ensuring that additional visual cues are available when text color differences are used to convey information (W3C) | https://www.w3.org/WAI/WCAG22/Techniques/general/G182 | Técnica suficiente da 1.4.1: quando a cor do texto transmite informação, pistas visuais como negrito, sublinhado, itálico e mudança de estilo ou de tamanho da fonte contam como distinção além da cor; a informação também precisa estar disponível por programa (1.3.1). |
+| [99] | referência técnica | Understanding SC 1.4.1 Use of Color (W3C; já citada) | https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html | Nesta etapa: a página pede informação além da cor, "such as shape or text", e lista como técnicas suficientes a G14, a G205, a G182 e a G183, e como falhas a F13, a F73 e a F81. Nenhuma trata de fundo colorido indicando seleção numa navegação. |
+
+- A G182 trata de **texto** colorido; o item atual do painel muda o **fundo** (a pílula, 1,23 contra a coluna) e quase não muda a cor do rótulo (cerca de 1,05). Ler o negrito como sinal suficiente para um fundo colorido é inferência, apoiada na lista de pistas da G182 e no "shape or text" da [99].
+- Não encontrei técnica nem falha da W3C sobre o item atual ou selecionado de uma navegação marcado só pelo fundo.
