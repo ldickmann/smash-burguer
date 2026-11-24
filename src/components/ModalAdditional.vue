@@ -52,7 +52,6 @@
         <FormGroup
           id="observacao"
           v-model="observation"
-          class="customize__section"
           label="Observação"
           type="textarea"
           :rows="3"
