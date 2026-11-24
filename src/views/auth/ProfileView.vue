@@ -309,6 +309,15 @@ const focusFirstError = async () => {
   if (field) formRef.value?.querySelector(`#${field}`)?.focus();
 };
 
+// Com o aviso na tela (de sucesso ou de erro, no mesmo lugar), o botão focado pelo teclado rola para
+// fora de baixo dele (a reserva fica no scroll-padding). O jsdom não tem scrollIntoView
+const avisar = async (aviso) => {
+  toastStore.show(aviso);
+  if (ultimaPorPonteiro) return;
+  await nextTick();
+  document.activeElement?.scrollIntoView?.({ block: "nearest" });
+};
+
 // Envio em andamento, inclusive a espera pela consulta do CEP: um segundo envio é ignorado
 let submitting = false;
 
@@ -329,15 +338,9 @@ const handleUpdateProfile = async () => {
 
     saving.value = true;
     await userStore.updateProfile(userInfo.value);
-    toastStore.show({ message: "Dados salvos.", variant: "success" });
-    // Com o aviso na tela, o botão focado pelo teclado rola para fora de baixo dele (a reserva fica no
-    // scroll-padding). O jsdom não tem scrollIntoView
-    if (!ultimaPorPonteiro) {
-      await nextTick();
-      document.activeElement?.scrollIntoView?.({ block: "nearest" });
-    }
+    await avisar({ message: "Dados salvos.", variant: "success" });
   } catch {
-    toastStore.show({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
+    await avisar({ message: "Não foi possível salvar. Tente de novo.", variant: "error" });
   } finally {
     saving.value = false;
     submitting = false;

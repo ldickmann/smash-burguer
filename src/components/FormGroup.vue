@@ -49,6 +49,7 @@
     <span v-else class="form-group__controle">
       <input
         :id="id"
+        ref="inputRef"
         :type="inputType"
         :value="displayValue"
         :name="name || id"
@@ -64,19 +65,22 @@
         class="form-group__field"
         :class="{ 'form-group__field--senha': isPassword }"
         @input="handleInput"
-        @blur="$emit('blur', $event)"
+        @blur="handleInputBlur"
         @keypress="handleKeyPress"
       />
       <!-- Toggle da APG: o nome fica fixo e o estado vai no aria-pressed; o foco fica no botão -->
       <button
         v-if="isPassword"
+        ref="toggleRef"
         type="button"
         class="form-group__mostrar"
         aria-label="Mostrar senha"
         :aria-pressed="passwordVisible ? 'true' : 'false'"
         :aria-controls="id"
         :disabled="disabled"
-        @click="passwordVisible = !passwordVisible"
+        @pointerdown="markTogglePress"
+        @click="togglePassword"
+        @blur="handleToggleBlur"
       >
         <font-awesome-icon :icon="['fas', passwordVisible ? 'eye-slash' : 'eye']" aria-hidden="true" />
       </button>
@@ -107,7 +111,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { maskPhone, maskCEP, MASK_DIGITS } from "@/utils/masks";
 
 const props = defineProps({
@@ -210,6 +214,46 @@ const describedBy = computed(() => {
 const isPassword = computed(() => props.type === "password");
 const passwordVisible = ref(false);
 const inputType = computed(() => (isPassword.value && passwordVisible.value ? "text" : props.type));
+
+const inputRef = ref(null);
+const toggleRef = ref(null);
+// O pointerdown vem antes do blur do campo: o clique no botão de mostrar não é saída do campo (no
+// Safari, o clique não foca o botão, e o blur chega sem relatedTarget)
+let togglePressed = false;
+const markTogglePress = () => {
+  togglePressed = true;
+};
+
+const togglePassword = () => {
+  togglePressed = false;
+  passwordVisible.value = !passwordVisible.value;
+};
+
+// Ir do campo ao botão de mostrar a senha não é sair do campo: a validação do blur esperaria
+// o fim da digitação, e o erro tomaria o lugar da ajuda no meio dela
+const handleInputBlur = (event) => {
+  if (togglePressed || (event.relatedTarget && event.relatedTarget === toggleRef.value)) return;
+  emit("blur", event);
+};
+
+// Do botão para fora do campo, sim: é a saída que o campo não anunciou
+const handleToggleBlur = (event) => {
+  togglePressed = false;
+  if (event.relatedTarget !== inputRef.value) emit("blur", event);
+};
+
+// No envio, a senha volta a type="password": o gerenciador de senhas do navegador procura o campo
+// de senha para oferecer salvar
+const hidePassword = () => {
+  passwordVisible.value = false;
+};
+let form = null;
+onMounted(() => {
+  if (!isPassword.value) return;
+  form = inputRef.value?.form ?? null;
+  form?.addEventListener("submit", hidePassword);
+});
+onBeforeUnmount(() => form?.removeEventListener("submit", hidePassword));
 
 const maskName = computed(() => props.mask?.toLowerCase() ?? "");
 const hasMask = computed(() => maskName.value in MASK_DIGITS);

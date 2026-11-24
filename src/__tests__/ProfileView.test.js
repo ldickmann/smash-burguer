@@ -331,6 +331,23 @@ describe('ProfileView no M3', () => {
     }
   });
 
+  // /code-review: o aviso de erro fica no mesmo lugar do de sucesso e também cobriria o botão
+  it('com o aviso de erro ao salvar, o foco também rola, se a última entrada foi do teclado', async () => {
+    const rolar = vi.fn();
+    Element.prototype.scrollIntoView = rolar;
+    try {
+      const { wrapper } = await mountProfile();
+      vi.spyOn(useUserStore(), 'updateProfile').mockRejectedValue(new Error('cota cheia'));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await wrapper.find('form').trigger('submit');
+      await flushPromises();
+      expect(rolar).toHaveBeenCalledTimes(1);
+      expect(rolar).toHaveBeenCalledWith({ block: 'nearest' });
+    } finally {
+      delete Element.prototype.scrollIntoView;
+    }
+  });
+
   it('sem pedidos, o EmptyState com "Ver cardápio" dentro da seção', async () => {
     const { wrapper } = await mountProfile();
     const secao = wrapper.findAll('section.profile-page__secao')[1];

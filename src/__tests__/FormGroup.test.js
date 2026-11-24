@@ -231,4 +231,48 @@ describe('FormGroup: mostrar a senha (decisão do usuário, §13)', () => {
     expect(controle().attributes('type')).toBe('password');
     expect(botao().attributes('aria-pressed')).toBe('false');
   });
+
+  // /code-review: ir do campo ao botão não é sair do campo (o erro não aparece no meio da digitação)
+  it('o foco que passa do campo ao botão não emite blur', async () => {
+    montar({ type: 'password' });
+    await controle().trigger('blur', { relatedTarget: botao().element });
+    expect(wrapper.emitted('blur')).toBeUndefined();
+  });
+
+  it('o clique no botão não emite blur, mesmo sem relatedTarget (o Safari não foca botões no clique)', async () => {
+    montar({ type: 'password' });
+    await botao().trigger('pointerdown');
+    await controle().trigger('blur', { relatedTarget: null });
+    expect(wrapper.emitted('blur')).toBeUndefined();
+  });
+
+  it('sair do botão para fora do campo emite blur; voltar ao campo, não', async () => {
+    montar({ type: 'password' });
+    await botao().trigger('blur', { relatedTarget: controle().element });
+    expect(wrapper.emitted('blur')).toBeUndefined();
+    await botao().trigger('blur', { relatedTarget: document.body });
+    expect(wrapper.emitted('blur')).toHaveLength(1);
+  });
+
+  it('sair do campo para outro lugar continua emitindo blur', async () => {
+    montar({ type: 'password' });
+    await controle().trigger('blur', { relatedTarget: document.body });
+    expect(wrapper.emitted('blur')).toHaveLength(1);
+  });
+
+  // /code-review: a senha vai como type="password" no envio, para o gerenciador de senhas a reconhecer
+  it('o envio do formulário esconde a senha de novo', async () => {
+    wrapper = mount(
+      {
+        components: { FormGroup },
+        template: '<form @submit.prevent><FormGroup id="campo" label="Senha" type="password" /></form>',
+      },
+      { attachTo: document.body, global: { stubs: { 'font-awesome-icon': true } } }
+    );
+    await wrapper.find('button.form-group__mostrar').trigger('click');
+    expect(wrapper.find('#campo').attributes('type')).toBe('text');
+    await wrapper.find('form').trigger('submit');
+    expect(wrapper.find('#campo').attributes('type')).toBe('password');
+    expect(wrapper.find('button.form-group__mostrar').attributes('aria-pressed')).toBe('false');
+  });
 });
